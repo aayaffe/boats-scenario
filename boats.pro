@@ -1,6 +1,11 @@
 TEMPLATE = app
 TARGET = boats
 
+unix:BIN_DIR = /usr/bin
+
+target.path = $$BIN_DIR
+INSTALLS += target
+
 CONFIG += qt warn_on
 
 INCLUDEPATH += graphicsview
