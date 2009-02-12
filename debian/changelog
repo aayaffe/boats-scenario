@@ -1,3 +1,9 @@
+boats (200902) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Thibaut GRIDEL <tgridel@free.fr>  Thu, 12 Feb 2009 23:30:57 +0100
+
 boats (200811) unstable; urgency=low
 
   * Initial Release.
