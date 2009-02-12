@@ -50,8 +50,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
             this, SLOT(setOrder(int)));
     connect(boat->track(), SIGNAL(colorChanged(QColor)),
             this, SLOT(setColor(QColor)));
-    connect(boat->track(), SIGNAL(seriesChanged(Series)),
-            this, SLOT(setSeries(Series)));
+    connect(boat->track(), SIGNAL(seriesChanged(Boats::Series)),
+            this, SLOT(setSeries(Boats::Series)));
     connect(boat->track()->situation(), SIGNAL(boatRemoved(BoatModel*)),
             this, SLOT(deleteItem(BoatModel*)));
 }
@@ -75,7 +75,7 @@ void BoatGraphicsItem::setSailAngle() {
         return;
     }
     switch (m_series) {
-    case TORNADO:
+    case Boats::tornado:
         if (m_angle<180) {
             m_sailAngle = -20;
         } else {
@@ -114,10 +114,11 @@ void BoatGraphicsItem::setColor(QColor value) {
     }
 }
 
-void BoatGraphicsItem::setSeries(Series value) {
+void BoatGraphicsItem::setSeries(Boats::Series value) {
     if (m_series != value) {
         prepareGeometryChange();
         m_series = value;
+        setSailAngle();
         update();
     }
 }
@@ -149,7 +150,20 @@ void BoatGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 QRectF BoatGraphicsItem::boundingRect() const {
-    return QRectF(-80, -65, 160, 130);
+    switch (m_series) {
+    case Boats::keelboat:
+        return QRectF(-67, -54, 133, 108);
+    case Boats::laser:
+        return QRectF(-27, -22, 54, 44);
+    case Boats::optimist:
+        return QRectF(-15, -12, 31, 25);
+    case Boats::tornado:
+        return QRectF(-40, -33, 81, 66);
+    case Boats::startboat:
+        return QRectF(-55, -55, 110, 110);
+    default:
+        return QRectF(-50, -50, 100, 100);
+    }
 }
 
 QPainterPath BoatGraphicsItem::shape() const {
@@ -163,103 +177,142 @@ void BoatGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
                              QWidget *widget) {
     Q_UNUSED(option);
     Q_UNUSED(widget);
+
+    QPainterPath path;
+    int numberSize = 0;
+    qreal posY = 0;
+
+    painter->rotate(m_angle);
+
     if (isSelected())
         painter->setPen(Qt::red);
     else
         painter->setPen(Qt::black);
-
     painter->setBrush(m_color);
-    painter->rotate(m_angle);
-
-    //painter->setBrush(Qt::NoBrush);
-    QPainterPath path(QPointF(0, -60));
 
     switch (m_series) {
-    case KEELBOAT:
-        path.cubicTo(24, 0, 21, 15, 12, 58);
-        path.lineTo(-12, 58);
-        path.cubicTo(-21, 15, -24, 0, 0, -60);
+    case Boats::keelboat:
+        path.moveTo(0,-50);
+        path.cubicTo(20, 0, 18, 13, 10, 48);
+        path.lineTo(-10, 48);
+        path.cubicTo(-18, 13, -20, 0, 0, -50);
+        numberSize = 12;
+        posY = 25;
         break;
-    case LASER:
-        path.cubicTo(1, -59, 1, -60, 2, -59);
-        path.cubicTo(10, -43, 20, -10, 20, 14);
-        path.cubicTo(20, 33, 20, 43, 15, 60);
-        path.lineTo(-15, 60);
-        path.cubicTo(-20, 43, -20, 33, -20, 14);
-        path.cubicTo(-20, -10, -10, -43, -2, -59);
-        path.cubicTo(-1, -60, -1, -59, 0, -60);
+    case Boats::laser:
+        path.moveTo(0,-20);
+        path.cubicTo(0.3, -19.7, 0.3, -20.0, 0.7, -19.7);
+        path.cubicTo(3.3, -14.3, 6.7, -3.3, 6.7, 4.7);
+        path.cubicTo(6.7, 11.0, 6.7, 14.3, 5.0, 20.0);
+        path.lineTo(-5.0, 20.0);
+        path.cubicTo(-6.7, 14.3, -6.7, 11.0, -6.7, 4.7);
+        path.cubicTo(-6.7, -3.3, -3.3, -14.3, -0.7, -19.7);
+        path.cubicTo(-0.3, -20.0, -0.3, -19.7, 0, -20);
+        numberSize = 7;
+        posY = 10;
         break;
-    case OPTIMIST:
-        path.cubicTo(8, -60, 9, -59, 15, -58);
-        path.cubicTo(19, -49, 29, -21, 29, 8);
-        path.cubicTo(29, 28, 26, 47, 24, 55);
-        path.lineTo(-24, 55);
-        path.cubicTo(-26, 47, -29, 28, -29, 8);
-        path.cubicTo(-29, -21, -19, -49, -15, -58);
-        path.cubicTo(-9, -59, -8, -60, 0, -60);
+    case Boats::optimist:
+        path.moveTo(0,-11.5);
+        path.cubicTo(1.5, -11.5, 1.7, -11.3, 2.9, -11.1);
+        path.cubicTo(3.6, -9.4, 5.6, -4.0, 5.6, 1.5);
+        path.cubicTo(5.6, 5.4, 5.0, 9.0, 4.6, 11.5);
+        path.lineTo(-4.6, 11.5);
+        path.cubicTo(-5.0, 9.0, -5.6, 5.4, -5.6, 1.5);
+        path.cubicTo(-5.6, -4.0, -3.6, -9.4, -2.9, -11.1);
+        path.cubicTo(-1.7, -11.3, -1.5, -11.5, 0, -11.5);
+        numberSize = 6;
+        posY = 5;
         break;
-    case TORNADO:
+    case Boats::tornado:
         path.moveTo(0,0);
-        path.lineTo(21, 0);
-        path.cubicTo(22, -23, 24, -39, 26, -60);
-        path.cubicTo(29, -40, 30, -12, 30, 12);
-        path.cubicTo(30, 27, 29, 41, 29, 59);
-        path.cubicTo(27, 60, 27, 60, 25, 60);
-        path.cubicTo(24, 60, 24, 60, 21, 59);
-        path.lineTo(21, 47);
+        path.lineTo(10.7, 0);
+        path.cubicTo(11.2, -11.7, 12.2, -19.8, 13.2, -30.5);
+        path.cubicTo(14.7, -20.3, 15.3, -6.1, 15.3, 6.1);
+        path.cubicTo(15.3, 13.7, 14.7, 20.8, 14.7, 30.0);
+        path.cubicTo(13.7, 30.5, 13.7, 30.5, 12.7, 30.5);
+        path.cubicTo(12.2, 30.5, 12.2, 30.5, 10.7, 30.0);
+        path.lineTo(10.7, 23.9);
 
-        path.lineTo(-21, 47);
-        path.lineTo(-21, 59);
-        path.cubicTo(-24, 60, -24, 60, -25, 60);
-        path.cubicTo(-27, 60, -27, 60, -29, 59);
-        path.cubicTo(-29, 41, -30, 27, -30, 12);
-        path.cubicTo(-30, -12, -29, -40, -26, -60);
-        path.cubicTo(-24, -39, -22, -23, -21, 0);
+        path.lineTo(-10.7, 23.9);
+        path.lineTo(-10.7, 30.0);
+        path.cubicTo(-12.2, 30.5, -12.2, 30.5, -12.7, 30.5);
+        path.cubicTo(-13.7, 30.5, -13.7, 30.5, -14.7, 30);
+        path.cubicTo(-14.7, 20.8, -15.3, 13.7, -15.3, 6.1);
+        path.cubicTo(-15.3, -6.1, -14.7, -20.3, -13.2, -30.5);
+        path.cubicTo(-12.2, -19.8, -11.2, -11.7, -10.7, 0);
         path.lineTo(0, 0);
+        numberSize = 10;
+        posY = 17;
+        break;
+    case Boats::startboat:
+        path.moveTo(0,-50);
+        path.cubicTo(30, -20, 20, 30, 17, 50);
+        path.lineTo(-17, 50);
+        path.cubicTo(-20, 30, -30, -20, 0, -50);
+        path.addEllipse(-1, -10, 2, 2);
         break;
     default:
         break;
     }
-    if (m_order) {
-        path.addText(-5,25,painter->font(),QString::number(m_order));
-    }
+
     painter->drawPath(path);
 
-    qreal sailScale;
+    if (numberSize && m_order) {
+        paintNumber(painter, numberSize, posY);
+    }
+
     switch (m_series) {
-    case KEELBOAT:
-        painter->translate(0,-10);
-        sailScale = 1;
+    case Boats::keelboat:
+        paintSail(painter, 41.5, QPointF(0,-8));
         break;
-    case LASER:
-        painter->translate(0, -26);
-        sailScale = 1.7;
+    case Boats::laser:
+        paintSail(painter, 28.5, QPointF(0, -8.7));
         break;
-    case OPTIMIST:
-        painter->translate(0,-36);
-        sailScale = 1.7;
+    case Boats::optimist:
+        paintSail(painter, 16.5, QPointF(0,-6.9));
         break;
-    case TORNADO:
-        sailScale = 1;
+    case Boats::tornado:
+        paintSail(painter, 25.5, QPointF(0,0));
         break;
     default:
         break;
     }
-    QPainterPath sailPath(QPointF(0,0));
+
+}
+
+void BoatGraphicsItem::paintNumber(QPainter *painter, int numberSize, qreal posY) {
+    QPainterPath fpath;
+    QFont f(painter->font());
+    QString number = QString::number(m_order);
+    f.setPointSize(numberSize);
+    QFontMetrics fm(f);
+    fpath.addText(-fm.width(number)/2.0, posY ,f,number);
+    painter->fillPath(fpath, QBrush(Qt::black));
+}
+
+void BoatGraphicsItem::paintSail(QPainter *painter, qreal sailSize, QPointF attach) {
+    painter->save();
+    painter->translate(attach);
+    QPainterPath sailPath;
     qreal layline = m_boat->track()->situation()->laylineAngle() -10;
     if (m_angle< layline || m_angle>360-layline) {
-        sailPath.lineTo(2 * sailScale, 10 * sailScale);
-        sailPath.lineTo(-2 * sailScale, 20 * sailScale);
-        sailPath.lineTo(2 * sailScale, 30 * sailScale);
-        sailPath.lineTo(-2 * sailScale, 40 * sailScale);
-        sailPath.lineTo(0 * sailScale, 50 * sailScale);
+        sailPath.cubicTo(.1 * sailSize, .2 * sailSize, .1 * sailSize, .2 * sailSize, 0, .3 * sailSize);
+        sailPath.cubicTo(-.1 * sailSize, .4 * sailSize, -.1 * sailSize, .4 * sailSize, 0, .5 * sailSize);
+        sailPath.cubicTo(.1 * sailSize, .6 * sailSize, .1 * sailSize, .6 * sailSize, 0, .7 * sailSize);
+        sailPath.cubicTo(-.1 * sailSize, .8 * sailSize, -.1 * sailSize, .8 * sailSize, 0, sailSize);
+        sailPath.lineTo(0, 0);
     } else if (m_angle<180) {
-        sailPath.cubicTo(5 * sailScale, 10 * sailScale, 5 * sailScale, 40 * sailScale, 0 * sailScale, 50 * sailScale);
+        sailPath.cubicTo(.1 * sailSize, .4 * sailSize, .1 * sailSize, .6 * sailSize, 0, sailSize);
+        sailPath.lineTo(0, 0);
     } else {
-        sailPath.cubicTo(-5 * sailScale, 10 * sailScale, -5 * sailScale, 40 * sailScale, 0 * sailScale, 50 * sailScale);
+        sailPath.cubicTo(-.1 * sailSize, .4 * sailSize, -.1 * sailSize, .6 * sailSize, 0, sailSize);
+        sailPath.lineTo(0, 0);
     }
-    painter->rotate(m_sailAngle);
-    painter->strokePath(sailPath,painter->pen());
+    painter->rotate(m_sailAngle);    
+    painter->fillPath(sailPath, QBrush(Qt::white));
+    painter->strokePath(sailPath, painter->pen());
+
+    painter->restore();
 }
 
 int BoatGraphicsItem::type() const {

@@ -14,11 +14,30 @@
 
 #include <QtGui>
 
-#include "commontypes.h"
+#include "boats.h"
 
 class TrackModel;
 class BoatModel;
 class MarkModel;
+
+/**
+    \class SituationModel
+
+    \brief The main Model for a scenario
+
+    This Class represents the Model for a Scenario, according to an
+    Observer Pattern.
+
+    It holds the actual data for the scenario and signals whoever is
+    interested in changes to the model.
+
+    There are mainly:
+    - description attributes and technical data which define the scenario
+    - a List of TrackModel, which in turn contains a List of BoatModel
+    - a List of MarkModel
+
+    \sa SituationModel, TrackModel, BoatModel, MarkModel
+*/
 
 class SituationModel : public QObject {
         Q_OBJECT
@@ -26,11 +45,14 @@ class SituationModel : public QObject {
         SituationModel(QObject *parent = 0);
         ~SituationModel();
 
-        QUndoStack * undoStack() const { return m_undoStack;};
-        QList<QString> seriesNames() {return m_seriesNames; };
+        int sizeForSeries(const Boats::Series series);
 
-        Series situationSeries() const { return m_situationSeries; };
+        // Setters and Getters for Model Data
+        Boats::Series situationSeries() const { return m_situationSeries; };
         void setSituationSeries(const int theValue, bool update = false);
+
+        int situationLength() const { return m_situationLength; };
+        void setSituationLength(const int theValue, bool update = false);
 
         QString title() const { return m_title; };
         void setTitle(const QString theValue, bool update = false);
@@ -50,8 +72,11 @@ class SituationModel : public QObject {
         int markSize() const { return m_marks.size();};
         const QList<MarkModel*> marks() const { return m_marks; };
 
-        qreal laylineAngle() const { return m_laylineAngle; };
+        int laylineAngle() const { return m_laylineAngle; };
         void setLaylineAngle(const int theValue, bool update = false);
+
+        // Setters and Getters for Non model Data
+        QUndoStack * undoStack() const { return m_undoStack;};
 
         QStringList discardedXml() const { return m_discardedXml; };
         void appendDiscardedXml(const QString& theValue);
@@ -59,43 +84,81 @@ class SituationModel : public QObject {
         QString fileName() const { return m_fileName; };
         void setFileName(const QString theValue) {m_fileName = theValue; };
 
+        // Helper to remotely trigger boat signals from elsewhere
         void addingBoat(BoatModel *boat) {emit boatAdded(boat);};
         void removingBoat(BoatModel *boat) {emit boatRemoved(boat);};
 
     signals:
+        // Signals for Track
         void trackAdded(TrackModel *track);
         void trackRemoved(TrackModel *track);
+
+        // Signals for Boat
         void boatAdded(BoatModel *boat);
         void boatRemoved(BoatModel *boat);
+
+        // Signals for Scenario Parameters
         void titleChanged(const QString title);
         void rulesChanged(const QString rules);
         void laylineChanged(const int angle);
         void seriesChanged(const int series);
+        void lengthChanged(const int length);
         void abstractChanged(const QString abstract);
         void descriptionChanged(const QString description);
+
+        // Signals for Marks
         void markAdded(MarkModel *mark);
         void markRemoved(MarkModel *mark);
 
     public slots:
-        void addTrack(TrackModel *track);
+        // Slots for Tracks
+        void addTrack(TrackModel *track, int order = 0);
         void deleteTrack(TrackModel *track);
+
+        // Slots for Marks
         void addMark(MarkModel *mark, int order = 0);
         int deleteMark(MarkModel *mark);
 
     private:
-        QUndoStack *m_undoStack;
-        QList<QString> m_seriesNames;
-        QString m_fileName;
+        // Model Data
+        /// \a m_title holds the Title of the Scenario
         QString m_title;
+
+        /// \a m_rules holds the Rules of the Scenario
         QString m_rules;
+
+        /// \a m_abstract holds the Abstract of the Scenario
         QString m_abstract;
+
+        /// \a m_description holds the Description of the Scenario
         QString m_description;
+
+        /// \a m_laylineAngle holds the Layline Angle of the Scenario
         int m_laylineAngle;
-        Series m_situationSeries;
+
+        /// \a m_situationSeries holds the Main Series of the Scenario
+        Boats::Series m_situationSeries;
+
+        /// \a m_situationLength holds the size of the Zone at Marks of
+        /// the Scenario
+        int m_situationLength;
+
+        /// \a m_tracks holds the List of Tracks of the Scenario
         QList<TrackModel*> m_tracks;
+
+        /// \a m_marks holds the List of Marks of the Scenario
         QList<MarkModel*> m_marks;
+
+
+        // Non model Data
+        /// \a m_undoStack maintains the Undo Stack for the Scenario
+        QUndoStack *m_undoStack;
+
+        /// \a m_discardedXml keeps all unparsed xml tags
         QStringList m_discardedXml;
 
+        /// \a m_fileName holds the name of the file on disk
+        QString m_fileName;
 };
 
 #endif

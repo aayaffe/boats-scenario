@@ -86,7 +86,7 @@ void SituationScene::addBoatItem(BoatModel *boat) {
 }
 
 void SituationScene::deleteBoatItem() {
-    foreach(BoatModel *boat, m_selectedBoatModels) {
+    foreach (BoatModel *boat, m_selectedBoatModels) {
         boat->track()->deleteBoat(boat);
     }
 }
@@ -98,15 +98,23 @@ void SituationScene::addMarkItem(MarkModel *mark) {
 }
 
 void SituationScene::deleteMarkItem() {
-    foreach(MarkModel *mark, m_selectedMarkModels) {
+    foreach (MarkModel *mark, m_selectedMarkModels) {
         mark->situation()->deleteMark(mark);
     }
 }
 
+/**
+    Prepares the Scene for animation mode.
+    This method finds the maximum size of track, and sets the timer length
+    accordingly.
+    It then creates a BoatGraphicsItem for animation purpose, and associates
+    an BoatAnimation to move it along the \a timer values
+*/
+
 void SituationScene::setAnimation(QTimeLine *timer) {
     if (debugLevel & 1 << VIEW) std::cout << "preparing for Animation" << std::endl;
     int maxSize = 0;
-    foreach (TrackModel *track, m_situation->tracks()) {
+    foreach (const TrackModel *track, m_situation->tracks()) {
         if (track->boats().size() > maxSize)
             maxSize = track->boats().size() - 1;
     }
@@ -122,15 +130,29 @@ void SituationScene::setAnimation(QTimeLine *timer) {
     }
 }
 
+/**
+    Restores the Scene out of animation mode.
+    This method brings the scene back to the normal drawing mode.
+    For this it removes all BoatAnimation objects created in setAnimation().
+*/
+
 void SituationScene::unSetAnimation() {
     if (debugLevel & 1 << VIEW) std::cout << "ending Animation" << std::endl;
-    foreach(BoatAnimation *animation, m_animationItems) {
+    foreach (BoatAnimation *animation, m_animationItems) {
         removeItem(animation->boat());
         m_animationItems.removeOne(animation);
         delete animation->boat();
         delete animation;
     }
 }
+
+/**
+    Reacts to user keyboard actions in the Scene
+    This method modifies the associated SituationModel through the
+    concerned Undo Framework class. Handled keys are for
+    - heading of selected boats (+,-)
+    - position of selected objects (H (left), L (right), J (down), K (up))
+*/
 
 void SituationScene::keyPressEvent(QKeyEvent *event) {
     // propagate key event first for focus items
@@ -162,12 +184,14 @@ void SituationScene::keyPressEvent(QKeyEvent *event) {
     } else if (event->key() == Qt::Key_J) { // Down
         QPointF pos(0,5);
         m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels, pos));
-
-    } else if (event->key() == Qt::Key_Z) { // toggle mark zone
-        m_situation->undoStack()->push(new ZoneMarkUndoCommand(m_situation, m_selectedMarkModels));
     }
-
 }
+
+/**
+    Sets selection depending on modal status.
+    Selection happens with left button in NO_STATE, and right button in CREATE_BOAT
+    and CREATE_MARK modes.
+*/
 
 void SituationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     switch (m_state) {
@@ -187,6 +211,13 @@ void SituationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
             break;
     }
 }
+
+/**
+    Handles a timer to limit user interaction
+    This method limits the move processing to one event handled per 40ms.
+    This is very noticeable on Windows platform, and the
+    culprit is the drawing, not the model setting.
+*/
 
 void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     // limit update rate to 40ms
@@ -217,6 +248,14 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     // trigger next update rate calculation
     m_time.start();
 }
+
+/**
+    Performs action depending of button and mode
+    This method will trigger performing of actions like:
+    - setting position of selected objects
+    - setting heading of selected BoatGraphicsItem
+    - creating new TrackModel, BoatModel or MarkModel according to mode.
+*/
 
 void SituationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mouseReleaseEvent(event);
@@ -312,8 +351,9 @@ void SituationScene::mouseCreateBoatEvent(QGraphicsSceneMouseEvent *event) {
         const BoatModel* lastBoat = m_trackCreated->boats().last();
         // calculate new heading:
         // from position of head of last boat to new position
+        qreal length = m_trackCreated->length() / 2.0;
         qreal theta0 = lastBoat->heading() * M_PI /180;
-        QPointF point2 = point - (lastBoat->position() + QPointF(60*sin(theta0),-60*cos(theta0)));
+        QPointF point2 = point - (lastBoat->position() + QPointF(length*sin(theta0),-length*cos(theta0)));
         qreal heading = fmod(atan2 (point2.x(), -point2.y()) * 180 / M_PI + 360.0, 360.0);
         AddBoatUndoCommand *command = new AddBoatUndoCommand(m_trackCreated, point, heading);
         m_situation->undoStack()->push(command);
@@ -330,7 +370,7 @@ void SituationScene::setSelectedModels() {
     m_selectedModels.clear();
     m_selectedBoatModels.clear();
     m_selectedMarkModels.clear();
-    foreach(QGraphicsItem *item, selectedItems()) {
+    foreach (QGraphicsItem *item, selectedItems()) {
         switch(item->type()) {
             case BOAT_TYPE: {
                 BoatModel *boat = (qgraphicsitem_cast<BoatGraphicsItem*>(item))->boat();
@@ -353,17 +393,28 @@ void SituationScene::setSelectedModels() {
 void SituationScene::setLaylines(const int angle) {
     if (debugLevel & 1 << VIEW) std::cout << "creating layline Background for " << angle << std::endl;
     qreal theta = angle * M_PI /180;
-    int x = lround(240*sin(theta));
-    int y = lround(240*cos(theta));
+    int length = m_situation->sizeForSeries(m_situation->situationSeries());
+
+    // draw 4 times as big, then use transform to scale back the brush
+    // gives better precision grid
+    qreal x = 2*length*sin(theta) * 4;
+    qreal y = 2*length*cos(theta) * 4;
 
     QPixmap pixmap(x,y);
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
-    painter.setPen(Qt::DashLine);
-    painter.drawLine(0,0,x,y);
-    painter.drawLine(0,y,x,0);
+    QPen pen;
+    pen.setWidth(2);
+    pen.setStyle(Qt::DashLine);
+    painter.setPen(pen);
+    painter.setRenderHints(QPainter::Antialiasing);
+    painter.drawLine(QLineF(0,0,x,y));
+    painter.drawLine(QLineF(0,y,x,0));
 
     QBrush brush;
+    QTransform transform;
+    transform.scale(0.25, 0.25);
+    brush.setTransform(transform);
     brush.setTexture(pixmap);
     setBackgroundBrush(brush);
 }

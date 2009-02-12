@@ -12,21 +12,19 @@
 #ifndef COMMONTYPES_H
 #define COMMONTYPES_H
 
-#define VERSION "200811"
+#define VERSION "200902"
 
-typedef enum {
-    KEELBOAT,
-    LASER,
-    OPTIMIST,
-    TORNADO,
-    UNKNOWN
-} Series;
-
-typedef enum {
+enum DebugTraces {
     MODEL,
     VIEW,
     COMMAND,
-    ANIMATION
-} DebugTraces;
+    ANIMATION,
+    DELEGATE
+};
+
+typedef enum {
+    TRACK_COLOR,
+    TRACK_SERIES
+} TrackTableItem;
 
 #endif

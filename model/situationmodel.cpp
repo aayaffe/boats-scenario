@@ -23,15 +23,37 @@ extern int debugLevel;
 
 SituationModel::SituationModel(QObject *parent)
         : QObject(parent),
-        m_undoStack(new QUndoStack(this)),
         m_laylineAngle(40),
-        m_situationSeries(KEELBOAT) {
+        m_situationSeries(Boats::keelboat),
+        m_situationLength(3),
+        m_undoStack(new QUndoStack(this)) {
     if (debugLevel & 1 << MODEL) std::cout << "new situation " << this << std::endl;
-    m_seriesNames << "keelboat" << "laser" << "optimist" << "tornado";
 }
 
 SituationModel::~SituationModel() {
     if (debugLevel & 1 << MODEL) std::cout << "end situation " << this << std::endl;
+}
+
+int SituationModel::sizeForSeries(const Boats::Series series) {
+    int size;
+    switch (series) {
+        case Boats::keelboat:
+            size = 100;
+            break;
+        case Boats::laser:
+            size = 40;
+            break;
+        case Boats::optimist:
+            size = 23;
+            break;
+        case Boats::tornado:
+            size = 61;
+            break;
+        default:
+            size = 100;
+            break;
+    }
+    return size;
 }
 
 void SituationModel::setTitle(const QString theValue, bool update) {
@@ -65,13 +87,25 @@ void SituationModel::setLaylineAngle(const int theValue, bool update) {
 void SituationModel::setSituationSeries(const int theValue, bool update) {
     if (theValue != m_situationSeries) {
         if (debugLevel & 1 << MODEL) std::cout << "Situation " << this
-        << " Series " << m_seriesNames[theValue].toStdString() << std::endl;
-        m_situationSeries = (Series) theValue;
-        foreach(TrackModel *track, m_tracks) {
-            track->setSeries(m_situationSeries, true);
+        << " Series " << ENUM_NAME(Boats, Series, theValue) << std::endl;
+        m_situationSeries = (Boats::Series) theValue;
+        if (update) {
+            emit seriesChanged(m_situationSeries);
+            emit laylineChanged(m_laylineAngle);
+        }
+    }
+}
+
+void SituationModel::setSituationLength(const int theValue, bool update) {
+    if (theValue != m_situationLength) {
+        if (debugLevel & 1 << MODEL) std::cout << "Situation " << this
+        << " Length " << theValue << std::endl;
+        m_situationLength = theValue;
+        foreach (MarkModel *mark, m_marks) {
+            mark->setLength(m_situationLength, true);
         }
         if (update)
-            emit seriesChanged(m_situationSeries);
+            emit lengthChanged(m_situationLength);
     }
 }
 
@@ -99,19 +133,28 @@ void SituationModel::appendDiscardedXml(const QString& theValue) {
     }
 }
 
-void SituationModel::addTrack(TrackModel *track) {
-    m_tracks.push_back(track);
-    if (debugLevel & 1 << MODEL) std::cout << "Adding Track " << m_tracks.size() << std::endl;
+void SituationModel::addTrack(TrackModel *track, int order) {
+    if (order == 0) {
+        order = m_tracks.size();
+    }
+    m_tracks.insert(order,track);
+    if (debugLevel & 1 << MODEL) std::cout << "Adding Track " << order+1 <<  std::endl;
+    for (int i=order+1; i<m_tracks.size(); i++) {
+        m_tracks[i]->setOrder(i+1, true);
+    }
     track->displayBoats();
     emit trackAdded(track);
 }
 
 void SituationModel::deleteTrack(TrackModel *track) {
     int index = m_tracks.indexOf(track);
-    if (debugLevel & 1 << MODEL) std::cout << "Removing Track " << index
+    if (debugLevel & 1 << MODEL) std::cout << "Removing Track " << index+1
     << " with " << track->size() << std::endl;
     track->hideBoats();
     m_tracks.removeOne(track);
+    for (int i=index; i<m_tracks.size(); i++) {
+        m_tracks[i]->setOrder(i+1, true);
+    }
     emit trackRemoved(track);
 }
 

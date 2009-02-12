@@ -132,6 +132,11 @@ void MainWindow::createActions() {
     connect(addMarkAction, SIGNAL(triggered()),
             this, SLOT(addMark()));
 
+    toggleMarkZoneAction = new QAction(QIcon(":/images/zone.png"), tr("Toggle Mark &Zone"), this);
+    toggleMarkZoneAction->setShortcut(tr("Z"));
+    connect(toggleMarkZoneAction, SIGNAL(triggered()),
+            this, SLOT(toggleMarkZone()));
+
     deleteTrackAction = new QAction(tr("Delete Track"), this);
     deleteTrackAction->setShortcut(tr("Ctrl+Del"));
     connect(deleteTrackAction, SIGNAL(triggered()),
@@ -283,15 +288,16 @@ void MainWindow::createMenus() {
     trackMenu->addSeparator();
     trackMenu->addAction(addBoatAction);
     trackMenu->addAction(addMarkAction);
+    trackMenu->addAction(toggleMarkZoneAction);
     trackMenu->addAction(deleteAction);
-    trackMenu->addSeparator();
-    trackMenu->addAction(animateAction);
 
     historyMenu = menubar->addMenu(tr("&History"));
     historyMenu->addAction(undoAction);
     historyMenu->addAction(redoAction);
 
     animationMenu = menubar->addMenu(tr("&Animation"));
+    animationMenu->addAction(animateAction);
+    animationMenu->addSeparator();
     animationMenu->addAction(startAction);
     animationMenu->addAction(pauseAction);
     animationMenu->addAction(stopAction);
@@ -362,8 +368,14 @@ void MainWindow::readSettings() {
     QSettings settings("Boats");
 
     settings.beginGroup("MainWindow");
-    resize(settings.value("size", QSize(400, 400)).toSize());
-    move(settings.value("pos", QPoint(200, 200)).toPoint());
+    QSize size = settings.value("size").toSize();
+    QPoint pos = settings.value("pos").toPoint();
+    if ( (size.isValid()) && (!pos.isNull()) ) {
+        resize(size);
+        move(pos);
+    } else {
+        showMaximized();
+    }
     settings.endGroup();
 }
 
@@ -414,6 +426,10 @@ void MainWindow::openFile() {
     if (fileName.isEmpty())
         return;
 
+    openFile(fileName);
+}
+
+void MainWindow::openFile(const QString &fileName) {
     // delete situation;
     newFile();
 
@@ -451,9 +467,16 @@ bool MainWindow::saveFile(QString &fileName) {
                             .arg(file.errorString()));
         return false;
     }
+    bool animated = (scene->state() == ANIMATE);
+    if (animated) {
+        scene->setState(NO_STATE);
+    }
     XmlSituationWriter writer(situation);
     writer.writeFile(&file);
     setCurrentFile(fileName);
+    if (animated) {
+        animate(true);
+    }
     statusbar->showMessage(tr("File saved"), 2000);
     return true;
 }
@@ -548,11 +571,15 @@ void MainWindow::addBoat() {
 }
 
 void MainWindow::deleteModels() {
-    foreach(BoatModel *boat, scene->selectedBoatModels()) {
+    foreach (BoatModel *boat, scene->selectedBoatModels()) {
         TrackModel* track = boat->track();
-        situation->undoStack()->push(new DeleteBoatUndoCommand(track, boat));
+        if (track->size() > 1) {
+            situation->undoStack()->push(new DeleteBoatUndoCommand(track, boat));
+        } else {
+            situation->undoStack()->push(new DeleteTrackUndoCommand(situation, track));
+        }
     }
-    foreach(MarkModel *mark, scene->selectedMarkModels()) {
+    foreach (MarkModel *mark, scene->selectedMarkModels()) {
         situation->undoStack()->push(new DeleteMarkUndoCommand(situation, mark));
     }
 }
@@ -562,6 +589,13 @@ void MainWindow::addMark() {
         scene->setState(NO_STATE);
     } else {
         scene->setState(CREATE_MARK);
+    }
+}
+
+void MainWindow::toggleMarkZone() {
+    QList<MarkModel *> boatList = scene->selectedMarkModels();
+    if (! boatList.isEmpty()) {
+        situation->undoStack()->push(new ZoneMarkUndoCommand(situation, boatList));
     }
 }
 
