@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     QString locale = QLocale::system().name();
 
     QTranslator translator;
-    translator.load(QString(":/locale/boats_") + locale);
+    translator.load(QString("boats_") + locale, TRANSLATEDIR);
     app.installTranslator(&translator);
 
     // MainWindow

@@ -57,7 +57,11 @@ SOURCES = \
 	xmlsituationreader.cpp \
 	xmlsituationwriter.cpp
 
-RESOURCES = boats.qrc
+unix {
+	RESOURCES = boats_unix.qrc
+} else {
+	RESOURCES = boats.qrc
+}
 
 contains(GIF_EXPORT,1) {
 	DEFINES += GIF_EXPORT
@@ -67,6 +71,23 @@ contains(GIF_EXPORT,1) {
 }
 
 TRANSLATIONS = locale/boats_fr.ts
+unix{
+	isEmpty(PREFIX){
+		PREFIX = /usr/local
+	}
+
+	target.path = $${PREFIX}/bin
+	INSTALLS += target
+
+	TRANSLATEDIR = $${PREFIX}/share/boats
+	translations.path = $${TRANSLATEDIR}
+	translations.files = locale/boats_fr.qm
+	INSTALLS += translations
+} else {
+	TRANSLATEDIR = ":/locale"
+}
+
+DEFINES += TRANSLATEDIR=\\\"$${TRANSLATEDIR}\\\"
 
 isEmpty(QMAKE_LRELEASE) {
     win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\lrelease.exe
