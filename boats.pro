@@ -70,7 +70,8 @@ contains(GIF_EXPORT,1) {
 	LIBS += -lgif
 }
 
-TRANSLATIONS = locale/boats_fr.ts
+TRANSLATIONS = locale/boats.ts \
+	locale/boats_fr.ts
 unix{
 	isEmpty(PREFIX){
 		PREFIX = /usr/local

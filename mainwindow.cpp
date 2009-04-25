@@ -1226,7 +1226,7 @@ void MainWindow::changeAnimationState(QTimeLine::State newState) {
 
 void MainWindow::about() {
     QMessageBox::about(this, tr("About Boat Scenario"),
-        tr("<center><img src=\":/images/about.png\">"
+	QString("<center><img src=\":/images/about.png\">"
             "<p><b>Boat Scenario</b> - a Race Scenario drawing tool.</p>"
             "<p>Version %1</p></center>"
             "<p>Copyright (C) 2008-2009 Thibaut GRIDEL </p>"
