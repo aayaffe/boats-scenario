@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-boats">
+    <comment>Boat Scenario file</comment>
+    <glob priority="80" pattern="*.xbs"/>
+    <magic priority="80">
+      <match type="string" value="&lt;xmlscenario" offset="0:256"/>
+    </magic>
+  </mime-type>
+</mime-info>

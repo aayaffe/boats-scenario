@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Boat Scenario
+Comment=Race scenario drawing tool
+Exec=boats %F
+Icon=boats.png
+Categories=Education;Qt;
+MimeType=application/x-boats
