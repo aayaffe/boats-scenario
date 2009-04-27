@@ -4,9 +4,22 @@
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>, (C) 2008
+// Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright: See COPYING file that comes with this distribution
+// Copyright (c) 2008-2009 Thibaut GRIDEL
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
 #include <iostream>
@@ -15,8 +28,8 @@
 
 #include "commontypes.h"
 #include "boats.h"
-#include "model/situationmodel.h"
-#include "model/trackmodel.h"
+#include "situationmodel.h"
+#include "trackmodel.h"
 #include "undocommands.h"
 
 extern int debugLevel;
@@ -29,6 +42,13 @@ TrackTableModel::TrackTableModel(SituationModel *situation, QObject *parent)
 
 TrackTableModel::~TrackTableModel() {
     if (debugLevel & 1 << MODEL) std::cout << "end tracktable " << this << std::endl;
+}
+
+void TrackTableModel::setSituation(SituationModel *situation)  {
+    if (m_situation != situation) {
+        m_situation = situation;
+        reset();
+    }
 }
 
 QVariant TrackTableModel::data(const QModelIndex &index, int role) const {
@@ -94,7 +114,6 @@ bool TrackTableModel::setData(const QModelIndex &index, const QVariant &value, i
                 if (newValue != track->color()) {
                     m_situation->undoStack()->push(new SetColorUndoCommand(track, newValue));
                 }
-                emit dataChanged(index,index);
                 return true;
             }
             break;
@@ -107,7 +126,6 @@ bool TrackTableModel::setData(const QModelIndex &index, const QVariant &value, i
                     if (seriesValue != track->series()) {
                         m_situation->undoStack()->push(new SetSeriesUndoCommand(track, seriesValue));
                     }
-                    emit dataChanged(index,index);
                     return true;
                 }
             }

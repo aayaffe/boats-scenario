@@ -4,9 +4,22 @@
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>, (C) 2008
+// Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright: See COPYING file that comes with this distribution
+// Copyright (c) 2008-2009 Thibaut GRIDEL
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
 #ifndef SITUATIONSCENE_H
@@ -103,10 +116,12 @@ class SituationScene : public QGraphicsScene {
         SceneState state() const { return m_state; }
         QList< BoatModel * > selectedBoatModels() const { return m_selectedBoatModels; }
         QList< MarkModel * > selectedMarkModels() const { return m_selectedMarkModels; }
+        void setActionMenu(QMenu *theValue) { m_actionMenu = theValue; }
 
     signals:
         void itemMoved(QList<BoatModel*> movedItems, const QPointF &movedFromPosition);
         void stateChanged(SceneState newState);
+        void selectedModelsChanged();
 
     public slots:
         // Slot for selection mechanism
@@ -171,6 +186,11 @@ class SituationScene : public QGraphicsScene {
 
         /// \a m_time holds the timer used for movement filtering
         QTime m_time;
+
+        /// \a m_clickTime holds the timer used for click/press detection
+        QTime m_clickTime;
+
+        QMenu *m_actionMenu;
 };
 
 #endif

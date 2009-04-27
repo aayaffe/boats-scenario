@@ -4,9 +4,22 @@
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>, (C) 2008
+// Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright: See COPYING file that comes with this distribution
+// Copyright (c) 2008-2009 Thibaut GRIDEL
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
 #include <iostream>
@@ -16,73 +29,89 @@
 #include "situationwidget.h"
 #include "trackdelegate.h"
 
-#include "model/situationmodel.h"
+#include "situationmodel.h"
 
 #include "undocommands.h"
 
 extern int debugLevel;
 
 SituationWidget::SituationWidget(QWidget *parent)
-    : QWidget(parent),
+    : QTabWidget(parent),
     m_situation(0) {
 
     // Scenario layout
-    scenarioGroup = new QGroupBox(tr("Scenario"),this);
-    scenarioGroup->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Maximum);
+    scenarioFrame = new QFrame();
+    scenarioLayout = new QVBoxLayout(scenarioFrame);
 
-    scenarioGrid = new QGridLayout(scenarioGroup);
-    scenarioForm = new QFormLayout();
-    scenarioGrid->addLayout(scenarioForm,0,0);
+    // Options layout
+    optionsGroup = new QGroupBox(tr("Options"),scenarioFrame);
+    optionsGroup->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Maximum);
 
-    titleEdit = new QLineEdit(scenarioGroup);
-    scenarioForm->addRow(new QLabel(tr("Title"),scenarioGroup),titleEdit);
+    optionsForm = new QFormLayout(optionsGroup);
 
-    rulesEdit = new QLineEdit(scenarioGroup);
-    scenarioForm->addRow(new QLabel(tr("Rules"),scenarioGroup),rulesEdit);
+    seriesCombo = new QComboBox(optionsGroup);
+    optionsForm->addRow(new QLabel(tr("Series"),optionsGroup),seriesCombo);
 
-    seriesCombo = new QComboBox(scenarioGroup);
-    scenarioForm->addRow(new QLabel(tr("Series"),scenarioGroup),seriesCombo);
+    laylineCheck = new QCheckBox(optionsGroup);
+    optionsForm->addRow(new QLabel(tr("Show Laylines"),optionsGroup),laylineCheck);
 
-    laylineSpin = new QSpinBox(scenarioGroup);
-    scenarioForm->addRow(new QLabel(tr("Laylines"),scenarioGroup),laylineSpin);
+    laylineSpin = new QSpinBox(optionsGroup);
+    optionsForm->addRow(new QLabel(tr("Laylines"),optionsGroup),laylineSpin);
 
-    lengthSpin = new QSpinBox(scenarioGroup);
-    scenarioForm->addRow(new QLabel(tr("Zone Length"),scenarioGroup),lengthSpin);
-
-    QLabel *abstractLabel = new QLabel(tr("Abstract"),scenarioGroup);
-    scenarioGrid->addWidget(abstractLabel,1,0);
-
-    abstractEdit = new QPlainTextEdit(scenarioGroup);
-    abstractEdit->setUndoRedoEnabled(false);
-    abstractEdit->setContextMenuPolicy(Qt::NoContextMenu);
-    scenarioGrid->addWidget(abstractEdit,2,0);
-
-    QLabel *descriptionLabel = new QLabel(tr("Description"),scenarioGroup);
-    scenarioGrid->addWidget(descriptionLabel,3,0);
-
-    descriptionEdit = new QPlainTextEdit(scenarioGroup);
-    descriptionEdit->setUndoRedoEnabled(false);
-    descriptionEdit->setContextMenuPolicy(Qt::NoContextMenu);
-    scenarioGrid->addWidget(descriptionEdit,4,0);
+    lengthSpin = new QSpinBox(optionsGroup);
+    optionsForm->addRow(new QLabel(tr("Zone Length"),optionsGroup),lengthSpin);
 
     // Track layout
-    trackGroup = new QGroupBox(tr("Tracks"),this);
+    trackGroup = new QGroupBox(tr("Tracks"),scenarioFrame);
     trackLayout = new QGridLayout(trackGroup);
     trackTableModel = new TrackTableModel(m_situation);
     trackTableView = new QTableView(trackGroup);
     trackTableView->setItemDelegate(new TrackDelegate);
     trackTableView->verticalHeader()->hide();
-    trackTableView->horizontalHeader()->setResizeMode(0, QHeaderView::Fixed);
+    trackTableView->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
     trackTableView->horizontalHeader()->setDefaultSectionSize(60);
     trackTableView->horizontalHeader()->setStretchLastSection(true);
     trackTableView->horizontalHeader()->setClickable(false);
     trackLayout->addWidget(trackTableView);
 
     // last bricks
-    situationLayout = new QVBoxLayout(this);
-    situationLayout->addWidget(scenarioGroup);
-    situationLayout->addWidget(trackGroup);
-    this->setLayout(situationLayout);
+    scenarioLayout->addWidget(optionsGroup);
+    scenarioLayout->addWidget(trackGroup);
+
+    addTab(scenarioFrame,tr("Scenario"));
+
+
+    // description group
+    descriptionFrame = new QFrame();
+
+    descriptionGrid = new QGridLayout(descriptionFrame);
+    descriptionForm = new QFormLayout();
+    descriptionGrid->addLayout(descriptionForm, 0, 0);
+
+    titleEdit = new QLineEdit(descriptionFrame);
+    descriptionForm->addRow(new QLabel(tr("Title"),descriptionFrame),titleEdit);
+
+    rulesEdit = new QLineEdit(descriptionFrame);
+    descriptionForm->addRow(new QLabel(tr("Rules"),descriptionFrame),rulesEdit);
+
+    QLabel *abstractLabel = new QLabel(tr("Abstract"),descriptionFrame);
+    descriptionGrid->addWidget(abstractLabel,1,0);
+
+    abstractEdit = new QPlainTextEdit(descriptionFrame);
+    abstractEdit->setUndoRedoEnabled(false);
+    abstractEdit->setContextMenuPolicy(Qt::NoContextMenu);
+    descriptionGrid->addWidget(abstractEdit,2,0);
+
+    QLabel *descriptionLabel = new QLabel(tr("Description"),descriptionFrame);
+    descriptionGrid->addWidget(descriptionLabel,3,0);
+
+    descriptionEdit = new QPlainTextEdit(descriptionFrame);
+    descriptionEdit->setUndoRedoEnabled(false);
+    descriptionEdit->setContextMenuPolicy(Qt::NoContextMenu);
+    descriptionGrid->addWidget(descriptionEdit,4,0);
+
+    addTab(descriptionFrame,tr("Description"));
+
 }
 
 void SituationWidget::update() {
@@ -90,6 +119,7 @@ void SituationWidget::update() {
         titleEdit->setText(m_situation->title());
         rulesEdit->setText(m_situation->rules());
         seriesCombo->setCurrentIndex(m_situation->situationSeries());
+        laylineCheck->setChecked(m_situation->showLayline());
         laylineSpin->setValue(m_situation->laylineAngle());
         lengthSpin->setValue(m_situation->situationLength());
         abstractEdit->setPlainText(m_situation->abstract());
@@ -119,6 +149,11 @@ void SituationWidget::setSituation(SituationModel *situation) {
                 this, SLOT(setSeries(int)));
         connect (situation, SIGNAL(seriesChanged(int)),
                 seriesCombo, SLOT(setCurrentIndex(int)));
+
+        connect(laylineCheck, SIGNAL(toggled(bool)),
+                this, SLOT(setShowLayline(bool)));
+        connect(situation, SIGNAL(showLaylineChanged(bool)),
+                laylineCheck, SLOT(setChecked(bool)));
 
         laylineSpin->setRange(0, 359);
         laylineSpin->setWrapping(true);
@@ -168,6 +203,10 @@ void SituationWidget::unSetSituation() {
     seriesCombo->clear();
     seriesCombo->setCurrentIndex(0);
 
+    disconnect(laylineCheck, 0, 0, 0);
+    disconnect(m_situation, 0, laylineCheck, 0);
+    laylineCheck->setChecked(true);
+
     disconnect(laylineSpin,  0, 0, 0);
     disconnect(m_situation, 0, laylineSpin, 0);
     laylineSpin->setValue(40);
@@ -201,6 +240,13 @@ void SituationWidget::setRules(QString rules) {
         if (rules != m_situation->rules()) {
             m_situation->undoStack()->push(new SetRulesUndoCommand(m_situation, rules));
         }
+    }
+}
+
+void SituationWidget::setShowLayline(bool show) {
+    if (m_situation) {
+        if (show != m_situation->showLayline())
+            m_situation->undoStack()->push(new SetShowLaylineUndoCommand(m_situation));
     }
 }
 

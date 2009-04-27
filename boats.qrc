@@ -9,14 +9,20 @@
      <file>images/export.png</file>
      <file>images/filenew.png</file>
      <file>images/fileopen.png</file>
+     <file>images/fileprint.png</file>
+     <file>images/filequickprint.png</file>
      <file>images/filesave.png</file>
      <file>images/filesaveas.png</file>
+     <file>images/pdf.png</file>
      <file>images/player_loop.png</file>
      <file>images/player_play.png</file>
      <file>images/player_pause.png</file>
      <file>images/player_stop.png</file>
      <file>images/redo.png</file>
      <file>images/undo.png</file>
+     <file>images/tab_new.png</file>
+     <file>images/tab_remove.png</file>
+     <file>images/video.png</file>
      <file>images/zone.png</file>
      <file>images/zoomfit.png</file>
      <file>images/zoomin.png</file>

@@ -4,9 +4,22 @@
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>, (C) 2008
+// Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright: See COPYING file that comes with this distribution
+// Copyright (c) 2008-2009 Thibaut GRIDEL
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
 #include "undocommands.h"
@@ -17,10 +30,10 @@
 #include "commontypes.h"
 #include "boats.h"
 
-#include "model/situationmodel.h"
-#include "model/trackmodel.h"
-#include "model/boatmodel.h"
-#include "model/markmodel.h"
+#include "situationmodel.h"
+#include "trackmodel.h"
+#include "boatmodel.h"
+#include "markmodel.h"
 
 extern int debugLevel;
 
@@ -39,12 +52,12 @@ SetTitleUndoCommand::~SetTitleUndoCommand() {
 
 void SetTitleUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo settitleundocommand"<< std::endl;
-    m_situation->setTitle(m_oldTitle, true);
+    m_situation->setTitle(m_oldTitle);
 }
 
 void SetTitleUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo settitleundocommand" << std::endl;
-    m_situation->setTitle(m_newTitle, true);
+    m_situation->setTitle(m_newTitle);
 }
 
 bool SetTitleUndoCommand::mergeWith(const QUndoCommand *command) {
@@ -71,12 +84,12 @@ SetRulesUndoCommand::~SetRulesUndoCommand() {
 
 void SetRulesUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo setrulesundocommand"<< std::endl;
-    m_situation->setRules(m_oldRules, true);
+    m_situation->setRules(m_oldRules);
 }
 
 void SetRulesUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo setrulesundocommand" << std::endl;
-    m_situation->setRules(m_newRules, true);
+    m_situation->setRules(m_newRules);
 }
 
 bool SetRulesUndoCommand::mergeWith(const QUndoCommand *command) {
@@ -85,6 +98,36 @@ bool SetRulesUndoCommand::mergeWith(const QUndoCommand *command) {
         return false;
 
     m_newRules = setrulesCommand->m_newRules;
+    return true;
+}
+
+// Show Layline
+SetShowLaylineUndoCommand::SetShowLaylineUndoCommand(SituationModel *situation, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new showlaylineundocommand" << std::endl;
+}
+
+SetShowLaylineUndoCommand::~SetShowLaylineUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end showlaylineundocommand" << std::endl;
+}
+
+void SetShowLaylineUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo showlaylineundocommand" << std::endl;
+    m_situation->setShowLayline(!m_situation->showLayline());
+}
+
+void SetShowLaylineUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo showlaylineundocommand" << std::endl;
+    m_situation->setShowLayline(!m_situation->showLayline());
+}
+
+bool SetShowLaylineUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetShowLaylineUndoCommand *zoneCommand = static_cast<const SetShowLaylineUndoCommand*>(command);
+    if (m_situation != zoneCommand->m_situation)
+        return false;
+    undo();
+    m_situation->undoStack()->setIndex(m_situation->undoStack()->index()-1);
     return true;
 }
 
@@ -103,12 +146,12 @@ SetLaylineUndoCommand::~SetLaylineUndoCommand() {
 
 void SetLaylineUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo setlaylineundocommand" << std::endl;
-    m_situation->setLaylineAngle(m_oldAngle, true);
+    m_situation->setLaylineAngle(m_oldAngle);
 }
 
 void SetLaylineUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo setlaylineundocommand" << std::endl;
-    m_situation->setLaylineAngle(m_newAngle, true);
+    m_situation->setLaylineAngle(m_newAngle);
 }
 
 bool SetLaylineUndoCommand::mergeWith(const QUndoCommand *command) {
@@ -135,12 +178,12 @@ SetSituationSeriesUndoCommand::~SetSituationSeriesUndoCommand() {
 
 void SetSituationSeriesUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo SetSituationSeriesUndoCommand" << std::endl;
-    m_situation->setSituationSeries(m_oldSeries, true);
+    m_situation->setSituationSeries(m_oldSeries);
 }
 
 void SetSituationSeriesUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo SetSituationSeriesUndoCommand" << std::endl;
-    m_situation->setSituationSeries(m_newSeries, true);
+    m_situation->setSituationSeries(m_newSeries);
 }
 
 bool SetSituationSeriesUndoCommand::mergeWith(const QUndoCommand *command) {
@@ -167,12 +210,12 @@ SetAbstractUndoCommand::~SetAbstractUndoCommand() {
 
 void SetAbstractUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo setabstractundocommand"<< std::endl;
-    m_situation->setAbstract(m_oldAbstract, true);
+    m_situation->setAbstract(m_oldAbstract);
 }
 
 void SetAbstractUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo setabstractundocommand" << std::endl;
-    m_situation->setAbstract(m_newAbstract, true);
+    m_situation->setAbstract(m_newAbstract);
 }
 
 bool SetAbstractUndoCommand::mergeWith(const QUndoCommand *command) {
@@ -199,12 +242,12 @@ SetDescriptionUndoCommand::~SetDescriptionUndoCommand() {
 
 void SetDescriptionUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo setdescriptionundocommand"<< std::endl;
-    m_situation->setDescription(m_oldDescription, true);
+    m_situation->setDescription(m_oldDescription);
 }
 
 void SetDescriptionUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo setdescriptionundocommand" << std::endl;
-    m_situation->setDescription(m_newDescription, true);
+    m_situation->setDescription(m_newDescription);
 }
 
 bool SetDescriptionUndoCommand::mergeWith(const QUndoCommand *command) {
@@ -276,12 +319,12 @@ SetSeriesUndoCommand::~SetSeriesUndoCommand() {
 
 void SetSeriesUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo setseriesundocommand" << std::endl;
-    m_track->setSeries(m_oldSeries, true);
+    m_track->setSeries(m_oldSeries);
 }
 
 void SetSeriesUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo setseriesundocommand" << std::endl;
-    m_track->setSeries(m_newSeries, true);
+    m_track->setSeries(m_newSeries);
 }
 
 bool SetSeriesUndoCommand::mergeWith(const QUndoCommand *command) {
@@ -308,12 +351,12 @@ SetColorUndoCommand::~SetColorUndoCommand() {
 
 void SetColorUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo setcolorundocommand" << std::endl;
-    m_track->setColor(m_oldColor, true);
+    m_track->setColor(m_oldColor);
 }
 
 void SetColorUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo setcolorundocommand" << std::endl;
-    m_track->setColor(m_newColor, true);
+    m_track->setColor(m_newColor);
 }
 
 bool SetColorUndoCommand::mergeWith(const QUndoCommand *command) {
@@ -341,7 +384,7 @@ void MoveModelUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo movemodelundocommand" << std::endl;
     for(int i=0; i< m_modelList.size(); i++) {
         PositionModel *model = m_modelList[i];
-        model->setPosition(model->position() - m_deltaPosition, true);
+        model->setPosition(model->position() - m_deltaPosition);
     }
 }
 
@@ -349,7 +392,7 @@ void MoveModelUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo movemodelundocommand" << std::endl;
     for(int i=0; i< m_modelList.size(); i++) {
         PositionModel *model = m_modelList[i];
-        model->setPosition(model->position() + m_deltaPosition, true);
+        model->setPosition(model->position() + m_deltaPosition);
     }
 }
 
@@ -406,7 +449,7 @@ void HeadingBoatUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo headingboatundocommand" << std::endl;
     for(int i=0; i< m_boatList.size(); i++) {
         BoatModel *boat = m_boatList[i];
-        boat->setHeading(m_headingList[i], true);
+        boat->setHeading(m_headingList[i]);
     }
 }
 
@@ -414,7 +457,7 @@ void HeadingBoatUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo headingboatundocommand" << std::endl;
     for(int i=0; i< m_boatList.size(); i++) {
         BoatModel *boat = m_boatList[i];
-        boat->setHeading(m_heading, true);
+        boat->setHeading(m_heading);
     }
 }
 
@@ -424,6 +467,89 @@ bool HeadingBoatUndoCommand::mergeWith(const QUndoCommand *command) {
         return false;
 
     m_heading = headingCommand->m_heading;
+    return true;
+}
+
+// Overlap Boat
+OverlapBoatUndoCommand::OverlapBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, Boats::Overlaps overlaps, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_boatList(boatList),
+        m_overlaps(overlaps) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new overlapboatundocommand" << std::endl;
+}
+
+OverlapBoatUndoCommand::~OverlapBoatUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end overlapboatundocommand" << std::endl;
+}
+
+void OverlapBoatUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo overlapboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setOverlap(boat->overlap() ^ m_overlaps);
+    }
+}
+
+void OverlapBoatUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo overlapboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setOverlap(boat->overlap() ^ m_overlaps);
+    }
+}
+
+bool OverlapBoatUndoCommand::mergeWith(const QUndoCommand *command) {
+    const OverlapBoatUndoCommand *overlapCommand = static_cast<const OverlapBoatUndoCommand*>(command);
+    if (m_boatList != overlapCommand->m_boatList)
+        return false;
+
+    if ((m_overlaps ^ overlapCommand->m_overlaps) == Boats::none) {
+        undo();
+        m_situation->undoStack()->setIndex(m_situation->undoStack()->index()-1);
+    } else {
+        m_overlaps = m_overlaps ^ overlapCommand->m_overlaps;
+    }
+    return true;
+}
+
+// Trim Boat
+TrimBoatUndoCommand::TrimBoatUndoCommand(QList<BoatModel*> &boatList, const qreal &trim, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_boatList(boatList),
+        m_trim(trim) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new trimboatundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_trimList << boat->trim();
+    }
+}
+
+TrimBoatUndoCommand::~TrimBoatUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end trimboatundocommand" << std::endl;
+}
+
+void TrimBoatUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo trimboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *model = m_boatList[i];
+        model->setTrim(m_trimList[i]);
+    }
+}
+
+void TrimBoatUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo trimboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *model = m_boatList[i];
+        model->setTrim(m_trim);
+    }
+}
+
+bool TrimBoatUndoCommand::mergeWith(const QUndoCommand *command) {
+    const TrimBoatUndoCommand *moveCommand = static_cast<const TrimBoatUndoCommand*>(command);
+    if (m_boatList != moveCommand->m_boatList)
+        return false;
+
+    m_trim = moveCommand->m_trim;
     return true;
 }
 
@@ -474,7 +600,7 @@ void AddMarkUndoCommand::undo() {
 }
 
 // Zone Mark
-ZoneMarkUndoCommand::ZoneMarkUndoCommand(SituationModel *situation, QList<MarkModel*> &markList, QUndoCommand *parent)
+ZoneMarkUndoCommand::ZoneMarkUndoCommand(SituationModel *situation, const QList<MarkModel*> &markList, QUndoCommand *parent)
         : QUndoCommand(parent),
         m_situation(situation),
         m_markList(markList) {
@@ -489,7 +615,7 @@ void ZoneMarkUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo zonemarkundocommand" << std::endl;
     for(int i=0; i< m_markList.size(); i++) {
         MarkModel *mark = m_markList[i];
-        mark->setZone(!mark->zone(), true);
+        mark->setZone(!mark->zone());
     }
 }
 
@@ -497,7 +623,7 @@ void ZoneMarkUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo zonemarkundocommand" << std::endl;
     for(int i=0; i< m_markList.size(); i++) {
         MarkModel *mark = m_markList[i];
-        mark->setZone(!mark->zone(), true);
+        mark->setZone(!mark->zone());
     }
 }
 
@@ -525,12 +651,12 @@ LengthMarkUndoCommand::~LengthMarkUndoCommand() {
 
 void LengthMarkUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo lengthmarkundocommand" << std::endl;
-    m_situation->setSituationLength(m_oldLength, true);
+    m_situation->setSituationLength(m_oldLength);
 }
 
 void LengthMarkUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo lengthmarkundocommand" << std::endl;
-    m_situation->setSituationLength(m_newLength, true);
+    m_situation->setSituationLength(m_newLength);
 }
 
 bool LengthMarkUndoCommand::mergeWith(const QUndoCommand *command) {

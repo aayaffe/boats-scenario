@@ -4,9 +4,22 @@
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>, (C) 2008
+// Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright: See COPYING file that comes with this distribution
+// Copyright (c) 2008-2009 Thibaut GRIDEL
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
 #ifndef TRACKMODEL_H
@@ -52,25 +65,25 @@ class TrackModel : public QObject {
 
         // Setters and Getters for Model Data
         int order() const { return m_order; }
-        void setOrder(const int theValue, bool update = false);
+        void setOrder(const int theValue);
 
-        QColor color() const { return m_color;};
-        void setColor(const QColor& theValue, bool update = false);
+        QColor color() const { return m_color;}
+        void setColor(const QColor& theValue);
 
-        Boats::Series series() const { return m_series;};
-        void setSeries(const Boats::Series theValue, bool update = false);
+        Boats::Series series() const { return m_series;}
+        void setSeries(const Boats::Series theValue);
 
-        int size() const { return m_boats.size();};
-        const QList<BoatModel*> boats() const { return m_boats; };
+        int size() const { return m_boats.size();}
+        const QList<BoatModel*> boats() const { return m_boats; }
 
-        const QPainterPath path() const { return m_path; };
+        const QPainterPath path() const { return m_path; }
 
         // Setters and Getters for Non model Data
         SituationModel* situation() const { return m_situation; }
 
-        int length() const { return m_length; };
+        int length() const { return m_length; }
 
-        QStringList discardedXml() const { return m_discardedXml; };
+        QStringList discardedXml() const { return m_discardedXml; }
         void appendDiscardedXml(const QString& theValue);
 
         void changingTrack(TrackModel *track);

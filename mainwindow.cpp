@@ -4,9 +4,22 @@
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>, (C) 2008
+// Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright: See COPYING file that comes with this distribution
+// Copyright (c) 2008-2009 Thibaut GRIDEL
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
 #include <iostream>
@@ -16,9 +29,9 @@
 #include "mainwindow.h"
 
 #include "commontypes.h"
-#include "model/situationmodel.h"
-#include "model/trackmodel.h"
-#include "model/boatmodel.h"
+#include "situationmodel.h"
+#include "trackmodel.h"
+#include "boatmodel.h"
 
 #include "undocommands.h"
 #include "xmlsituationreader.h"
@@ -28,15 +41,19 @@
 #include "situationscene.h"
 #include "situationview.h"
 
+#ifdef GIF_EXPORT
+#include "gifwriter.h"
+#endif
+
 extern int debugLevel;
+
+const int MainWindow::maxRecent(5);
 
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent),
-        situation(new SituationModel(this)),
-        scene(new SituationScene(situation)),
-        view(new SituationView(scene)),
         menubar(new QMenuBar(this)),
         toolbar(new QToolBar(this)),
+        tabWidget(new QTabWidget(this)),
         animationBar(new QToolBar(this)),
         situationDock(new QDockWidget(this)),
         situationWidget(new SituationWidget(situationDock)),
@@ -45,10 +62,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Actions
     createActions();
-
-    // Scene
-    connect(scene, SIGNAL(stateChanged(SceneState)),
-            this, SLOT(changeState(SceneState)));
 
     // Timeline
     timeline->setCurveShape(QTimeLine::LinearCurve);
@@ -68,14 +81,21 @@ MainWindow::MainWindow(QWidget *parent)
     addDockWidget(Qt::LeftDockWidgetArea, situationDock);
 
     // View
-    view->setRenderHints( QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-    view->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
-    view->setResizeAnchor(QGraphicsView::AnchorViewCenter);
-    setCentralWidget(view);
-    view->setFocus();
+    newTabButton = new QPushButton(QIcon(":/images/tab_new.png"),QString(""), this);
+    connect(newTabButton, SIGNAL(clicked()),
+            newTabAction, SLOT(trigger()));
+    tabWidget->setCornerWidget(newTabButton, Qt::TopLeftCorner);
+    removeTabButton = new QPushButton(QIcon(":/images/tab_remove.png"),QString(""), this);
+    removeTabButton->setEnabled(removeTabAction->isEnabled());
+    connect(removeTabButton, SIGNAL(clicked()),
+            removeTabAction, SLOT(trigger()));
+    tabWidget->setCornerWidget(removeTabButton, Qt::TopRightCorner);
+    connect(tabWidget, SIGNAL(currentChanged(int)),
+            this, SLOT(setTab(int)));
+    newTab();
+    setCentralWidget(tabWidget);
 
     readSettings();
-    setCurrentFile("");
 }
 
 MainWindow::~MainWindow() {}
@@ -103,10 +123,47 @@ void MainWindow::createActions() {
     connect(saveAsAction, SIGNAL(triggered()),
             this, SLOT(saveAs()));
 
+    newTabAction = new QAction(QIcon(":/images/tab_new.png"), tr("New &Tab"), this);
+    newTabAction->setShortcut(tr("Ctrl+T"));
+    connect(newTabAction, SIGNAL(triggered()),
+            this, SLOT(newTab()));
+
+    removeTabAction = new QAction(QIcon(":/images/tab_remove.png"), tr("&Close Tab"), this);
+    removeTabAction->setShortcut(tr("Ctrl+W"));
+    removeTabAction->setEnabled(false);
+    connect(removeTabAction, SIGNAL(triggered()),
+            this, SLOT(removeTab()));
+
+    restoreFilesAction = new QAction(tr("&Restore Last Session..."), this);
+    connect(restoreFilesAction, SIGNAL(triggered()),
+            this, SLOT(restoreFiles()));
+
+    printAction = new QAction(QIcon(":images/fileprint.png"), tr("&Print..."), this);
+    printAction->setShortcut(tr("Ctrl+p"));
+    connect(printAction, SIGNAL(triggered()),
+            this, SLOT(print()));
+
+    printPreviewAction = new QAction(QIcon(":images/filequickprint.png"), tr("Print P&review..."), this);
+    printPreviewAction->setShortcut(tr("Ctrl+r"));
+    connect(printPreviewAction, SIGNAL(triggered()),
+            this, SLOT(printPreview()));
+
+    exportPdfAction = new QAction(QIcon(":/images/pdf.png"), tr("&Export Pdf..."), this);
+    exportPdfAction->setShortcut(tr("Ctrl+E"));
+    connect(exportPdfAction, SIGNAL(triggered()),
+            this, SLOT(exportPdf()));
+
     exportImageAction = new QAction(QIcon(":/images/export.png"), tr("Export &Image..."), this);
-    exportImageAction->setShortcut(tr("Ctrl+E"));
+    exportImageAction->setShortcut(tr("Ctrl+I"));
     connect(exportImageAction, SIGNAL(triggered()),
             this, SLOT(exportImage()));
+
+#ifdef GIF_EXPORT
+    exportAnimationAction = new QAction(QIcon(":/images/video.png"), tr("Export Ani&mation..."), this);
+    exportAnimationAction->setShortcut(tr("Ctrl+V"));
+    connect(exportAnimationAction, SIGNAL(triggered()),
+            this, SLOT(exportAnimation()));
+#endif
 
     exitAction = new QAction(tr("E&xit"), this);
     exitAction->setShortcut(tr("Ctrl+Q"));
@@ -131,6 +188,18 @@ void MainWindow::createActions() {
     addMarkAction->setCheckable(true);
     connect(addMarkAction, SIGNAL(triggered()),
             this, SLOT(addMark()));
+
+    togglePortOverlapAction = new QAction(tr("&Port Overlap"), this);
+    togglePortOverlapAction->setShortcut(tr("Alt+<"));
+    togglePortOverlapAction->setCheckable(true);
+    connect(togglePortOverlapAction, SIGNAL(triggered()),
+            this, SLOT(togglePortOverlap()));
+
+    toggleStarboardOverlapAction = new QAction(tr("&Starboard Overlap"), this);
+    toggleStarboardOverlapAction->setShortcut(tr("Alt+>"));
+    toggleStarboardOverlapAction->setCheckable(true);
+    connect(toggleStarboardOverlapAction, SIGNAL(triggered()),
+            this, SLOT(toggleStarboardOverlap()));
 
     toggleMarkZoneAction = new QAction(QIcon(":/images/zone.png"), tr("Toggle Mark &Zone"), this);
     toggleMarkZoneAction->setShortcut(tr("Z"));
@@ -182,44 +251,70 @@ void MainWindow::createActions() {
     undoAction = new QAction(QIcon(":/images/undo.png"), tr("&Undo"), this);
     undoAction->setShortcut(tr("Ctrl+Z"));
     undoAction->setEnabled(false);
-    connect(undoAction, SIGNAL(triggered()),
-            situation->undoStack(), SLOT(undo()));
-    connect(situation->undoStack(), SIGNAL(canUndoChanged(bool)),
-            undoAction, SLOT(setEnabled(bool)));
 
     redoAction = new QAction(QIcon(":/images/redo.png"), tr("&Redo"), this);
     QList<QKeySequence> redoShortcuts;
     redoShortcuts << tr("Ctrl+Y") << tr("Shift+Ctrl+Z");
     redoAction->setShortcuts(redoShortcuts);
     redoAction->setEnabled(false);
-    connect(redoAction, SIGNAL(triggered()),
-            situation->undoStack(), SLOT(redo()));
-    connect(situation->undoStack(), SIGNAL(canRedoChanged(bool)),
-            redoAction, SLOT(setEnabled(bool)));
-    connect(situation->undoStack(), SIGNAL(cleanChanged(bool)),
-            this, SLOT(cleanState(bool)));
 
     zoomInAction = new QAction(QIcon(":/images/zoomin.png"), tr("Zoom &In"), this);
     zoomInAction->setShortcut(tr("Ctrl++"));
-    connect(zoomInAction, SIGNAL(triggered()),
-            view, SLOT(zoomIn()));
 
     zoomOutAction = new QAction(QIcon(":/images/zoomout.png"), tr("Zoom &Out"), this);
     zoomOutAction->setShortcut(tr("Ctrl+-"));
-    connect(zoomOutAction, SIGNAL(triggered()),
-            view, SLOT(zoomOut()));
 
     zoomFitAction = new QAction(QIcon(":/images/zoomfit.png"), tr("Zoom &Fit"), this);
     zoomFitAction->setShortcut(tr("Ctrl+F"));
-    connect(zoomFitAction, SIGNAL(triggered()),
-            view, SLOT(zoomFit()));
+
+    toggleMainToolbarAction = new QAction(tr("Main Toolbar"), this);
+    toggleMainToolbarAction->setCheckable(true);
+    toggleMainToolbarAction->setChecked(true);
+    connect(toggleMainToolbarAction, SIGNAL(toggled(bool)),
+            toolbar, SLOT(setVisible(bool)));
+
+    toggleAnimationToolbarAction = new QAction(tr("Animation Toolbar"), this);
+    toggleAnimationToolbarAction->setCheckable(true);
+    toggleAnimationToolbarAction->setChecked(true);
+    connect(toggleAnimationToolbarAction, SIGNAL(toggled(bool)),
+            animationBar, SLOT(setVisible(bool)));
+
+    toggleScenarioDockAction = new QAction(tr("Scenario Dock"), this);
+    toggleScenarioDockAction->setCheckable(true);
+    toggleScenarioDockAction->setChecked(true);
+    connect(toggleScenarioDockAction, SIGNAL(toggled(bool)),
+            situationDock, SLOT(setVisible(bool)));
 
     aboutAction = new QAction(tr("&About"), this);
     connect(aboutAction, SIGNAL(triggered()),
             this, SLOT(about()));
 }
 
+void MainWindow::updateActions() {
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    bool selectedItems = !scene->selectedItems().isEmpty();
+    bool selectedBoats = !scene->selectedBoatModels().isEmpty();
+
+    addBoatAction->setEnabled(selectedBoats || scene->state() == CREATE_BOAT);
+    togglePortOverlapAction->setEnabled(selectedBoats);
+    toggleStarboardOverlapAction->setEnabled(selectedBoats);
+    deleteTrackAction->setEnabled(selectedBoats);
+    deleteAction->setEnabled(selectedItems);
+
+    bool allPortSet = 1;
+    bool allStarboardSet = 1;
+    foreach(BoatModel *boat, scene->selectedBoatModels()) {
+        allPortSet = allPortSet && (boat->overlap() & Boats::port);
+        allStarboardSet = allStarboardSet && (boat->overlap() & Boats::starboard);
+    }
+    togglePortOverlapAction->setChecked(selectedBoats && allPortSet);
+    toggleStarboardOverlapAction->setChecked(selectedBoats && allStarboardSet);
+}
+
 void MainWindow::changeState(SceneState newState) {
+    SituationView *view = viewList.at(tabWidget->currentIndex());
+
     switch(newState) {
         case CREATE_TRACK:
             view->setCursor(Qt::CrossCursor);
@@ -260,35 +355,66 @@ void MainWindow::changeState(SceneState newState) {
             addMarkAction->setChecked(false);
             animateAction->setChecked(false);
     }
+    updateActions();
 }
 
 void MainWindow::cleanState(bool state) {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
     if (situation->fileName().isEmpty())
         saveFileAction->setEnabled(false);
     else
         saveFileAction->setEnabled(!state);
     saveAsAction->setEnabled(!state);
+    QString shownName = QFileInfo(situation->fileName()).fileName();
+    setWindowTitle(tr("%1 - %2 [*]").arg(tr("Boat Scenario")).arg(shownName));
+    if (!state) {
+        tabWidget->setTabText(tabWidget->currentIndex(),shownName.append(" *"));
+    } else {
+        tabWidget->setTabText(tabWidget->currentIndex(),shownName);
+    }
     setWindowModified(!state);
 }
 
 void MainWindow::createMenus() {
+    recentMenu = new QMenu(tr("&Recent"));
+    for (int i = 0; i < maxRecent; ++i) {
+        QAction * recentAction = new QAction(this);
+        recentMenu->addAction(recentAction);
+        connect(recentAction, SIGNAL(triggered()),
+                this, SLOT(openRecent()));
+    }
+
     fileMenu = menubar->addMenu(tr("&File"));
     fileMenu->addAction(newFileAction);
     fileMenu->addAction(openFileAction);
+    fileMenu->addMenu(recentMenu);
     fileMenu->addAction(saveFileAction);
     fileMenu->addAction(saveAsAction);
     fileMenu->addSeparator();
+    fileMenu->addAction(printAction);
+    fileMenu->addAction(printPreviewAction);
+    fileMenu->addAction(exportPdfAction);
     fileMenu->addAction(exportImageAction);
+#ifdef GIF_EXPORT
+    fileMenu->addAction(exportAnimationAction);
+#endif
+    fileMenu->addSeparator();
+    fileMenu->addAction(newTabAction);
+    fileMenu->addAction(removeTabAction);
+    fileMenu->addAction(restoreFilesAction);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAction);
 
     trackMenu = menubar->addMenu(tr("&Edit"));
     trackMenu->addAction(addTrackAction);
-    trackMenu->addAction(deleteTrackAction);
-    trackMenu->addSeparator();
     trackMenu->addAction(addBoatAction);
     trackMenu->addAction(addMarkAction);
+    trackMenu->addSeparator();
+    trackMenu->addAction(togglePortOverlapAction);
+    trackMenu->addAction(toggleStarboardOverlapAction);
     trackMenu->addAction(toggleMarkZoneAction);
+    trackMenu->addSeparator();
+    trackMenu->addAction(deleteTrackAction);
     trackMenu->addAction(deleteAction);
 
     historyMenu = menubar->addMenu(tr("&History"));
@@ -308,6 +434,11 @@ void MainWindow::createMenus() {
     zoomMenu->addAction(zoomFitAction);
     zoomMenu->addAction(zoomOutAction);
 
+    viewMenu = menubar->addMenu(tr("&View"));
+    viewMenu->addAction(toggleMainToolbarAction);
+    viewMenu->addAction(toggleAnimationToolbarAction);
+    viewMenu->addAction(toggleScenarioDockAction);
+
     menubar->addAction(aboutAction);
 
     toolbar->addAction(newFileAction);
@@ -315,6 +446,9 @@ void MainWindow::createMenus() {
     toolbar->addAction(saveFileAction);
     toolbar->addAction(saveAsAction);
     toolbar->addAction(exportImageAction);
+#ifdef GIF_EXPORT
+    toolbar->addAction(exportAnimationAction);
+#endif
     toolbar->addSeparator();
     toolbar->addAction(undoAction);
     toolbar->addAction(redoAction);
@@ -350,9 +484,124 @@ void MainWindow::createMenus() {
 }
 
 void MainWindow::createDocks() {
-    situationWidget->setSituation(situation);
-    situationDock->setWidget(situationWidget);
+    QScrollArea *area = new QScrollArea(this);
+    area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    area->setWidgetResizable(true);
+    area->setWidget(situationWidget);
+    situationDock->setWidget(area);
     situationDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
+}
+
+void MainWindow::newTab() {
+    SituationModel *situation = new SituationModel(this);
+    SituationScene *scene = new SituationScene(situation);
+    SituationView *view =new SituationView(scene);
+
+    situationList.append(situation);
+    sceneList.append(scene);
+    scene->setActionMenu(trackMenu);
+    viewList.append(view);
+    tabWidget->addTab(view, "");
+
+    tabWidget->setCurrentIndex(situationList.size()-1);
+    view->setFocus();
+    if (situationList.size() > 1) {
+        removeTabAction->setEnabled(true);
+        removeTabButton->setEnabled(true);
+    }
+}
+
+void MainWindow::unsetTab() {
+    if (situationList.size() == 1) {
+        return;
+    }
+
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
+    if (scene->state() == ANIMATE) {
+        scene->setState(NO_STATE);
+    }
+
+    disconnect(situation->undoStack(), 0, 0, 0);
+    disconnect(scene, 0, this, 0);
+
+    disconnect(undoAction, 0, 0, 0);
+    disconnect(redoAction, 0, 0, 0);
+
+    disconnect(zoomInAction, 0, 0, 0);
+    disconnect(zoomOutAction, 0, 0, 0);
+    disconnect(zoomFitAction, 0, 0, 0);
+
+    situationWidget->unSetSituation();
+}
+
+void MainWindow::setTab(int index) {
+    unsetTab();
+    currentSituation = index;
+    SituationModel *situation = situationList.at(index);
+    SituationScene *scene = sceneList.at(index);
+    SituationView *view = viewList.at(index);
+
+    connect(undoAction, SIGNAL(triggered()),
+            situation->undoStack(), SLOT(undo()));
+    connect(situation->undoStack(), SIGNAL(canUndoChanged(bool)),
+            undoAction, SLOT(setEnabled(bool)));
+    undoAction->setEnabled(situation->undoStack()->canUndo()),
+
+    connect(redoAction, SIGNAL(triggered()),
+            situation->undoStack(), SLOT(redo()));
+    connect(situation->undoStack(), SIGNAL(canRedoChanged(bool)),
+            redoAction, SLOT(setEnabled(bool)));
+    redoAction->setEnabled(situation->undoStack()->canRedo());
+
+    connect(situation->undoStack(), SIGNAL(cleanChanged(bool)),
+            this, SLOT(cleanState(bool)));
+    cleanState(situation->undoStack()->isClean());
+
+    connect(zoomInAction, SIGNAL(triggered()),
+            view, SLOT(zoomIn()));
+    connect(zoomOutAction, SIGNAL(triggered()),
+            view, SLOT(zoomOut()));
+    connect(zoomFitAction, SIGNAL(triggered()),
+            view, SLOT(zoomFit()));
+
+    situationWidget->setSituation(situation);
+    connect(scene, SIGNAL(stateChanged(SceneState)),
+            this, SLOT(changeState(SceneState)));
+    changeState(scene->state());
+
+    connect(scene, SIGNAL(selectedModelsChanged()),
+            this, SLOT(updateActions()));
+    updateActions();
+}
+
+void MainWindow::removeTab() {
+    int index = tabWidget->currentIndex();
+    SituationModel *situation = situationList.at(index);
+    SituationScene *scene = sceneList.at(index);
+    SituationView *view = viewList.at(index);
+
+    if (!maybeSave(situation)) {
+        return;
+    }
+
+    if (index == situationList.size() - 1) {
+        tabWidget->setCurrentIndex(index - 1);
+    } else if (index != situationList.size() - 2) {
+        tabWidget->setCurrentIndex(index + 1);
+    }
+    situationList.removeAt(index);
+    sceneList.removeAt(index);
+    viewList.removeAt(index);
+
+    tabWidget->removeTab(index);
+    view->deleteLater();
+    scene->deleteLater();
+    situation->deleteLater();
+    if (situationList.size() == 1) {
+        removeTabAction->setEnabled(false);
+        removeTabButton->setEnabled(false);
+    }
 }
 
 void MainWindow::writeSettings() {
@@ -361,6 +610,19 @@ void MainWindow::writeSettings() {
     settings.beginGroup("MainWindow");
     settings.setValue("size", size());
     settings.setValue("pos", pos());
+    settings.setValue("AnimationBar", animationBar->isVisible());
+    settings.setValue("AnimationBarArea", toolBarArea(animationBar));
+    settings.setValue("ToolBar", toolbar->isVisible());
+    settings.setValue("ToolBarArea", toolBarArea(toolbar));
+    settings.setValue("ScenarioDock", situationDock->isVisible());
+    QStringList fileList;
+    foreach(SituationModel *situation, situationList) {
+        if (!situation->fileName().isEmpty()) {
+            fileList.append(situation->fileName());
+        }
+    }
+    settings.setValue("recentList", recentList);
+    settings.setValue("fileList",fileList);
     settings.endGroup();
 }
 
@@ -376,18 +638,44 @@ void MainWindow::readSettings() {
     } else {
         showMaximized();
     }
+    toggleAnimationToolbarAction->setChecked(settings.value("AnimationBar", true).toBool());
+    addToolBar((Qt::ToolBarArea)(settings.value("AnimationBarArea").toInt()), animationBar);
+    toggleMainToolbarAction->setChecked(settings.value("ToolBar", true).toBool());
+    addToolBar((Qt::ToolBarArea)(settings.value("ToolBarArea").toInt()), toolbar);
+    toggleScenarioDockAction->setChecked(settings.value("ScenarioDock", true).toBool());
+
+    recentList = settings.value("recentList").toStringList();
+    updateRecentList();
+
+    fileList = settings.value("fileList").toStringList();
     settings.endGroup();
 }
 
-bool MainWindow::maybeSave() {
+void MainWindow::updateRecentList() {
+    int numRecentFiles = qMin(recentList.size(), maxRecent);
+    for (int i = 0; i < numRecentFiles; ++i) {
+        QString text = tr("&%1 %2").arg(i + 1).arg(QFileInfo(recentList[i]).fileName());
+        QAction * recentAction = recentMenu->actions()[i];
+        recentAction->setText(text);
+        recentAction->setData(i);
+        recentAction->setVisible(true);
+    }
+    for (int j = numRecentFiles; j < maxRecent; ++j) {
+        QAction * recentAction = recentMenu->actions()[j];
+        recentAction->setVisible(false);
+    }
+}
+
+bool MainWindow::maybeSave(SituationModel *situation) {
     if (!situation->undoStack()->isClean()) {
+        QString shownName = QFileInfo(situation->fileName()).fileName();
         QMessageBox::StandardButton ret;
-        ret = QMessageBox::warning(this, tr("Application"),
-                    tr("The document has been modified.\n"
-                        "Do you want to save your changes?"),
+        ret = QMessageBox::warning(this, shownName,
+                    tr("The document %1 has been modified.\n"
+                        "Do you want to save your changes?").arg(shownName),
                     QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         if (ret == QMessageBox::Save) {
-            return saveAs();
+            return saveSituation(situation, "");
         } else if (ret == QMessageBox::Cancel) {
             return false;
         }
@@ -396,23 +684,34 @@ bool MainWindow::maybeSave() {
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
-    if (maybeSave()) {
-        writeSettings();
-        event->accept();
-    } else
-        event->ignore();
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    bool animated = (scene->state() == ANIMATE);
+    if (animated) {
+        scene->setState(NO_STATE);
+    }
+    foreach(SituationModel *situation, situationList) {
+        if (!maybeSave(situation)) {
+            event->ignore();
+            return;
+        }
+    }
+    writeSettings();
+    event->accept();
 }
 
 void MainWindow::newFile() {
-    if (maybeSave()) {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationView *view = viewList.at(tabWidget->currentIndex());
+
+    if (maybeSave(situation)) {
         scene->setState(NO_STATE);
         situation->undoStack()->setIndex(0);
+        setCurrentFile(situation, "");
         situation->undoStack()->clear();
-        situation->setTitle("");
-        situation->setRules("");
         situationWidget->unSetSituation();
         situationWidget->setSituation(situation);
-        setCurrentFile("");
         view->centerOn(0,0);
         view->resetMatrix();
     }
@@ -429,9 +728,43 @@ void MainWindow::openFile() {
     openFile(fileName);
 }
 
-void MainWindow::openFile(const QString &fileName) {
-    // delete situation;
-    newFile();
+void MainWindow::openRecent() {
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (action) {
+        int item = action->data().toInt();
+        if (recentList.size() > item) {
+            openFile(recentList[item]);
+        }
+    }
+}
+
+void MainWindow::restoreFiles() {
+    openFiles(fileList);
+}
+
+void MainWindow::openFiles(QStringList fileList) {
+    foreach (const QString fileName, fileList) {
+        std::cout << "opening " << fileName.toStdString() << std::endl;
+        QFile file(fileName);
+        if (file.open(QFile::ReadOnly | QFile::Text)) {
+            openFile(fileName, fileList.first() != fileName);
+        }
+    }
+}
+
+void MainWindow::openFile(const QString &fileName, bool inNewTab) {
+    if (inNewTab) {
+        // create new tab
+        newTab();
+        tabWidget->setCurrentIndex(situationList.size() - 1);
+    } else {
+        // delete situation;
+        newFile();
+    }
+
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationView *view = viewList.at(tabWidget->currentIndex());
 
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
@@ -450,16 +783,45 @@ void MainWindow::openFile(const QString &fileName) {
                              .arg(reader.lineNumber())
                              .arg(reader.columnNumber())
                              .arg(reader.errorString()));
-    } else {
-        situationWidget->update();
-        setCurrentFile(fileName);
-        view->centerOn(scene->itemsBoundingRect().center());
-        statusbar->showMessage(tr("File loaded"), 2000);
+        return;
     }
+    situationWidget->update();
+    setCurrentFile(situation, fileName);
+    view->centerOn(scene->itemsBoundingRect().center());
+    statusbar->showMessage(tr("File loaded"), 2000);
 }
 
-bool MainWindow::saveFile(QString &fileName) {
-    QFile file(fileName);
+bool MainWindow::saveSituation(SituationModel *situation, QString fileName) {
+    QString name = fileName;
+    if (name.isEmpty()) {
+        QString defaultFile;
+        if (situation->fileName().isEmpty()) {
+            defaultFile = QDateTime::currentDateTime().toString("yyMMdd") + ".xbs";
+        } else {
+            defaultFile = situation->fileName();
+        }
+        name = QFileDialog::getSaveFileName(this, tr("Save Scenario"),
+                                            defaultFile,
+                                            tr("xmlscenario Files (*.xbs)"),
+                                            NULL,
+                                            QFileDialog::DontConfirmOverwrite);
+        if (name.isEmpty()) {
+            return false;
+        }
+        if (QFileInfo(name).suffix().isEmpty())
+            name.append(".xbs");
+        if (QFile::exists(name)) {
+            if (QMessageBox::warning(this, tr("Save Scenario"),
+                                     tr("%1 already exists.\nDo you want to replace it?")
+                                     .arg(QFileInfo(name).baseName()),
+                                     QMessageBox::Yes | QMessageBox::No, QMessageBox::No)
+                    == QMessageBox::No) {
+                return false;
+            }
+        }
+    }
+
+    QFile file(name);
     if (!file.open(QFile::WriteOnly | QFile::Text)) {
         QMessageBox::warning(this, tr("Save Scenario"),
                             tr("Cannot write file %1:\n%2.")
@@ -467,47 +829,107 @@ bool MainWindow::saveFile(QString &fileName) {
                             .arg(file.errorString()));
         return false;
     }
-    bool animated = (scene->state() == ANIMATE);
-    if (animated) {
-        scene->setState(NO_STATE);
-    }
     XmlSituationWriter writer(situation);
     writer.writeFile(&file);
-    setCurrentFile(fileName);
-    if (animated) {
-        animate(true);
-    }
+    setCurrentFile(situation, name);
     statusbar->showMessage(tr("File saved"), 2000);
     return true;
 }
 
 bool MainWindow::saveFile() {
-    QString fileName = situation->fileName();
-    if (fileName.isEmpty()) {
-        return saveAs();
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    bool animated = (scene->state() == ANIMATE);
+    if (animated) {
+        scene->setState(NO_STATE);
     }
-    return saveFile(fileName);
+    bool saved = saveSituation(situation, situation->fileName());
+    if (animated) {
+        animate(true);
+    }
+    return saved;
 }
 
 bool MainWindow::saveAs() {
-    QString defaultFile = QDateTime::currentDateTime().toString("yyMMdd") + ".xbs";
-    QString fileName =
-            QFileDialog::getSaveFileName(this, tr("Save Scenario"),
-                                         defaultFile,
-                                         tr("xmlscenario Files (*.xbs)"));
-    if (fileName.isEmpty()) {
-        return false;
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    bool animated = (scene->state() == ANIMATE);
+    if (animated) {
+        scene->setState(NO_STATE);
     }
-    return saveFile(fileName);
+    bool saved = saveSituation(situation, "");
+    if (animated) {
+        animate(true);
+    }
+    return saved;
+}
+
+void MainWindow::print() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationView *view = viewList.at(tabWidget->currentIndex());
+    QPrinter printer(QPrinter::HighResolution);
+
+    QPrintDialog *dialog = new QPrintDialog(&printer, this);
+    dialog->setWindowTitle(tr("Print Document"));
+    if (dialog->exec() != QDialog::Accepted) {
+        return;
+    }
+
+    SituationPrint printSituation(situation, view);
+    printSituation.render(printer.paperRect(QPrinter::Millimeter).adjusted(20, 20, -20, -20));
+    printSituation.print(&printer);
+}
+
+void MainWindow::printPreview() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationView *view = viewList.at(tabWidget->currentIndex());
+    SituationPrint printSituation(situation, view);
+    QPrinter printer(QPrinter::HighResolution);
+    QPrintPreviewDialog dialog(&printer);
+    printSituation.render(printer.paperRect(QPrinter::Millimeter).adjusted(20, 20, -20, -20));
+
+    connect(&dialog, SIGNAL(paintRequested(QPrinter*)),
+            &printSituation, SLOT(print(QPrinter*)));
+    dialog.exec();
+}
+
+void MainWindow::exportPdf() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationView *view = viewList.at(tabWidget->currentIndex());
+
+    QString defaultName(situation->fileName());
+    defaultName.chop(4);
+    QString fileName = QFileDialog::getSaveFileName(this, "Export to PDF",
+                                                    defaultName, "PDF Files (*.pdf)");
+    if (fileName.isEmpty()) {
+        return;
+    }
+    if (QFileInfo(fileName).suffix().isEmpty())
+        fileName.append(".pdf");
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+    SituationPrint printSituation(situation, view);
+    printSituation.render(printer.paperRect(QPrinter::Millimeter).adjusted(20, 20, -20, -20));
+    printSituation.print(&printer);
 }
 
 void MainWindow::exportImage() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationView *view = viewList.at(tabWidget->currentIndex());
+
     QString defaultName(situation->fileName());
     defaultName.chop(4);
     QList<QByteArray> formatsList = QImageWriter::supportedImageFormats();
+#if defined(Q_WS_MAC)
+    QString formats("PNG Image Files (*.png)");
+#else
     QString formats;
     for (int i=0; i<formatsList.size(); i++)
-        formats.append(formatsList[i].toUpper()).append(" Files (*.").append(formatsList[i]).append(");;");
+	formats.append(formatsList[i].toUpper()).append(" Files (*.").append(formatsList[i]).append(");;");
+#endif
     QString ext;
     QString fileName =
             QFileDialog::getSaveFileName(this, tr("Save Scenario"),
@@ -519,10 +941,12 @@ void MainWindow::exportImage() {
     }
 
     // if no provided extension or incorrect extension, use selected filter
-    int dotIndex = fileName.lastIndexOf(".");
-    QString newExt = fileName.right(fileName.size()-dotIndex-1);
-    if (!formatsList.contains(newExt.toAscii())) {
-        fileName.append(".").append(ext.left(ext.indexOf(' ')).toLower());
+    if (!formatsList.contains(QFileInfo(fileName).suffix().toAscii())) {
+#if defined(Q_WS_MAC)
+	fileName.append(".png");
+#else
+	fileName.append(".").append(ext.left(ext.indexOf(' ')).toLower());
+#endif
     }
 
     QPixmap pixmap = view->screenShot();
@@ -537,15 +961,87 @@ void MainWindow::exportImage() {
     pixmap.save(fileName);
 }
 
-void MainWindow::setCurrentFile(const QString &fileName) {
+#ifdef GIF_EXPORT
+void MainWindow::exportAnimation() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationView *view = viewList.at(tabWidget->currentIndex());
+
+    QString defaultName(situation->fileName());
+    defaultName.chop(4);
+    QString format("GIF Files (*.gif)");
+    QString ext;
+    QString fileName =
+            QFileDialog::getSaveFileName(this, tr("Export Animation"),
+                                         defaultName,
+                                         format,
+                                         &ext);
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    // if no provided extension or incorrect extension, use selected filter
+    int dotIndex = fileName.lastIndexOf(".");
+    QString baseName = fileName.left(dotIndex);
+    QString newExt = fileName.right(fileName.size()-dotIndex-1);
+    if (!newExt.toAscii().contains("gif")) {
+        fileName.append(".gif");
+    }
+
+    GifWriter *writer = new GifWriter();
+
+    animate(true, false);
+    QProgressDialog progress(tr("Exporting Animation..."), tr("Abort"), 0, timeline->duration(), this);
+    progress.setWindowModality(Qt::WindowModal);
+    statusbar->showMessage("Exporting animation");
+    timeline->setCurrentTime(timeline->duration()/2);
+    QPixmap pixmap = view->screenShot();
+    QImage shot = pixmap.toImage().convertToFormat(QImage::Format_Indexed8);
+    writer->setColorMap(shot);
+
+    QList<QImage*> imageList;
+    for (int i=0; i<=timeline->duration(); i+=80) {
+        timeline->setCurrentTime(i);
+        pixmap = view->screenShot();
+        QImage *image = new QImage(pixmap.toImage()
+                                   .convertToFormat(QImage::Format_Indexed8, writer->colormap()));
+        imageList.append(image);
+        progress.setValue(i);
+        if (progress.wasCanceled()) {
+            break;
+        }
+    }
+    if (!progress.wasCanceled()) {
+        QFile file(fileName);
+        if (!file.open(QFile::WriteOnly)) {
+            QMessageBox::warning(this, tr("Export Animation"),
+                                 tr("Cannot write file %1:\n%2.")
+                                 .arg(fileName)
+                                 .arg(file.errorString()));
+            return;
+        }
+        writer->setDevice(&file);
+        writer->write(imageList);
+    }
+    animate(false);
+}
+#endif
+
+void MainWindow::setCurrentFile(SituationModel *situation, const QString &fileName) {
     situation->setFileName(fileName);
     situation->undoStack()->setClean();
 
-    QString shownName = QFileInfo(fileName).fileName();
-    setWindowTitle(tr("%1 - %2 [*]").arg(tr("Boat Scenario")).arg(shownName));
+    if (!fileName.isEmpty()) {
+        recentList.removeAll(fileName);
+        recentList.prepend(fileName);
+        while (recentList.size() > maxRecent)
+            recentList.removeLast();
+        updateRecentList();
+    }
 }
 
 void MainWindow::addTrack() {
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
     if(scene->state() == CREATE_TRACK) {
         scene->setState(NO_STATE);
     } else {
@@ -554,6 +1050,9 @@ void MainWindow::addTrack() {
 }
 
 void MainWindow::deleteTrack() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
     // TODO trick to delete first selected track
     if (!scene->selectedBoatModels().isEmpty()) {
         BoatModel *boat = scene->selectedBoatModels()[0];
@@ -563,6 +1062,8 @@ void MainWindow::deleteTrack() {
 }
 
 void MainWindow::addBoat() {
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
     if (scene->state() == CREATE_BOAT) {
         scene->setState(NO_STATE);
     } else {
@@ -571,6 +1072,9 @@ void MainWindow::addBoat() {
 }
 
 void MainWindow::deleteModels() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
     foreach (BoatModel *boat, scene->selectedBoatModels()) {
         TrackModel* track = boat->track();
         if (track->size() > 1) {
@@ -585,6 +1089,8 @@ void MainWindow::deleteModels() {
 }
 
 void MainWindow::addMark() {
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
     if (scene->state() == CREATE_MARK) {
         scene->setState(NO_STATE);
     } else {
@@ -592,26 +1098,58 @@ void MainWindow::addMark() {
     }
 }
 
-void MainWindow::toggleMarkZone() {
-    QList<MarkModel *> boatList = scene->selectedMarkModels();
+void MainWindow::togglePortOverlap() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QList<BoatModel *> boatList = scene->selectedBoatModels();
     if (! boatList.isEmpty()) {
-        situation->undoStack()->push(new ZoneMarkUndoCommand(situation, boatList));
+        situation->undoStack()->push(new OverlapBoatUndoCommand(situation, boatList, Boats::port));
     }
 }
 
-void MainWindow::animate(bool state) {
+void MainWindow::toggleStarboardOverlap() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    if (! boatList.isEmpty()) {
+        situation->undoStack()->push(new OverlapBoatUndoCommand(situation, boatList, Boats::starboard));
+    }
+}
+
+void MainWindow::toggleMarkZone() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QList<MarkModel *> markList = scene->selectedMarkModels();
+    if (! markList.isEmpty()) {
+        situation->undoStack()->push(new ZoneMarkUndoCommand(situation, markList));
+    } else {
+        situation->undoStack()->push(new ZoneMarkUndoCommand(situation, situation->marks()));
+    }
+}
+
+void MainWindow::animate(bool state, bool interactive) {
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
     if (state) {
         if (scene->state() != ANIMATE) {
             scene->setState(ANIMATE);
             scene->setAnimation(timeline);
-            animationSlider->setRange(0,timeline->duration());
-            animationSlider->setEnabled(true);
             timeline->setFrameRange(0,timeline->duration());
             timeline->setCurrentTime(timeline->duration());
             timeline->setCurrentTime(0);
-            startAction->setEnabled(true);
-            loopAction->setEnabled(true);
-        }
+            if (interactive) {
+                if (!toggleAnimationToolbarAction->isChecked()) {
+                    toggleAnimationToolbarAction->setChecked(true);
+                }
+                animationSlider->setRange(0,timeline->duration());
+                animationSlider->setEnabled(true);
+                startAction->setEnabled(true);
+                loopAction->setEnabled(true);
+                }
+            }
     } else {
         if (scene->state() == ANIMATE) {
             scene->setState(NO_STATE);
@@ -688,15 +1226,15 @@ void MainWindow::changeAnimationState(QTimeLine::State newState) {
 
 void MainWindow::about() {
     QMessageBox::about(this, tr("About Boat Scenario"),
-        tr("<center><img src=\":/images/about.png\">"
+	QString("<center><img src=\":/images/about.png\">"
             "<p><b>Boat Scenario</b> - a Race Scenario drawing tool.</p>"
             "<p>Version %1</p></center>"
-            "<p>Copyright (C) 2008 Thibaut GRIDEL </p>"
+            "<p>Copyright (C) 2008-2009 Thibaut GRIDEL </p>"
             "<p></p>"
             "<p>visit <a href=\"http://boats.berlios.de\">http://boats.berlios.de</a></p>"
             "<p>This program is free software; you can redistribute it and/or modify "
             "it under the terms of the GNU General Public License as published by "
-            "the Free Software Foundation; either version 2 of the License, or "
+            "the Free Software Foundation; either version 3 of the License, or "
             "(at your option) any later version.</p>"
             "<p></p>"
             "<p>This program is distributed in the hope that it will be useful, "

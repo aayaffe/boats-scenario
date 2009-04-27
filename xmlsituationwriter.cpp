@@ -4,28 +4,48 @@
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>, (C) 2008
+// Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright: See COPYING file that comes with this distribution
+// Copyright (c) 2008-2009 Thibaut GRIDEL
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
 
 #include "xmlsituationwriter.h"
 
-#include "model/situationmodel.h"
-#include "model/trackmodel.h"
-#include "model/boatmodel.h"
-#include "model/markmodel.h"
+#include <iostream>
+
+#include "commontypes.h"
+#include "situationmodel.h"
+#include "trackmodel.h"
+#include "boatmodel.h"
+#include "markmodel.h"
+
+extern int debugLevel;
 
 XmlSituationWriter::XmlSituationWriter(SituationModel *situation)
         : m_situation(situation) {
     setAutoFormatting(true);
+    if (debugLevel & 1 << XML) std::cout << "new XmlSituationWriter" << std::endl;
 }
 
 XmlSituationWriter::~XmlSituationWriter() {}
 
 bool XmlSituationWriter::writeFile(QIODevice *device) {
     setDevice(device);
+    if (debugLevel & 1 << XML) std::cout << "WriteFile" << std::endl;
 
     writeStartDocument();
     writeDTD("<!DOCTYPE xmlscenario>");
@@ -44,7 +64,9 @@ bool XmlSituationWriter::writeFile(QIODevice *device) {
         writeTextElement("description", m_situation->description());
     }
     writeTextElement("series",ENUM_NAME(Boats, Series, m_situation->situationSeries()));
+    writeTextElement("showlayline",QString::number(m_situation->showLayline()));
     writeTextElement("layline",QString::number(m_situation->laylineAngle()));
+    writeTextElement("length",QString::number(m_situation->situationLength()));
     foreach (const QString discarded, m_situation->discardedXml())
         writeUnknownElement(discarded);
     foreach (const MarkModel *mark, m_situation->marks())
@@ -53,10 +75,16 @@ bool XmlSituationWriter::writeFile(QIODevice *device) {
         writeTrack(track);
 
     writeEndDocument();
+    if (debugLevel & 1 << XML) std::cout << "done WriteFile" << std::endl;
     return true;
 }
 
 void XmlSituationWriter::writeTrack(const TrackModel *track) {
+    if (debugLevel & 1 << XML) {
+        std::cout << "WriteTrack" << std::endl;
+        std::cout << " color=" << track->color().name().toStdString() << std::endl;
+        std::cout << " series=" << ENUM_NAME(Boats, Series, track->series()) << std::endl;
+    }
     writeStartElement("track");
     writeTextElement("color",track->color().name());
     writeTextElement("series",ENUM_NAME(Boats, Series, track->series()));
@@ -68,28 +96,53 @@ void XmlSituationWriter::writeTrack(const TrackModel *track) {
 }
 
 void XmlSituationWriter::writeBoat(const BoatModel *boat) {
+    if (debugLevel & 1 << XML) {
+        std::cout << "WriteBoat" << std::endl;
+        std::cout << " x=" << boat->position().x() << std::endl;
+        std::cout << " y=" << boat->position().y() << std::endl;
+        std::cout << " heading=" << boat->heading() << std::endl;
+    }
     writeStartElement("boat");
     writeTextElement("x",QString::number(boat->position().x()));
     writeTextElement("y",QString::number(boat->position().y()));
     writeTextElement("heading",QString::number(boat->heading()));
+    if (boat->trim() != 0) {
+        writeTextElement("trim",QString::number(boat->trim()));
+    }
+    if (boat->overlap() != Boats::none) {
+        writeTextElement("overlap", FLAG_NAME(Boats, Overlap, boat->overlap()));
+    }
     foreach (const QString discarded, boat->discardedXml())
         writeUnknownElement(discarded);
     writeEndElement();
 }
 
 void XmlSituationWriter::writeMark(const MarkModel *mark) {
+    if (debugLevel & 1 << XML) {
+        std::cout << "WriteMark" << std::endl;
+        std::cout << " x=" << mark->position().x() << std::endl;
+        std::cout << " y=" << mark->position().y() << std::endl;
+        std::cout << " color=" << mark->color().name().toStdString() << std::endl;
+        std::cout << " zone=" << mark->zone() << std::endl;
+        std::cout << " length=" << mark->length() << std::endl;
+    }
     writeStartElement("mark");
     writeTextElement("x",QString::number(mark->position().x()));
     writeTextElement("y",QString::number(mark->position().y()));
     writeTextElement("color",mark->color().name());
-    writeTextElement("zone",QString::number(mark->zone()));
-    writeTextElement("length",QString::number(mark->length()));
+    if (mark->zone()) {
+        writeTextElement("zone",QString::number(mark->zone()));
+    }
+    if (mark->length() != mark->situation()->situationLength()) {
+        writeTextElement("length",QString::number(mark->length()));
+    }
     foreach (const QString discarded, mark->discardedXml())
         writeUnknownElement(discarded);
     writeEndElement();
 }
 
 void XmlSituationWriter::writeUnknownElement(const QString &discarded) {
+    if (debugLevel & 1 << XML) std::cout << "WriteUnknownElement" << std::endl;
     if (!discarded.isEmpty()) {
         QXmlStreamReader reader(discarded);
         while (!reader.atEnd()) {

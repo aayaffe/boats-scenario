@@ -4,9 +4,22 @@
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>, (C) 2008
+// Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright: See COPYING file that comes with this distribution
+// Copyright (c) 2008-2009 Thibaut GRIDEL
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
 #include <iostream>
@@ -19,10 +32,10 @@
 #include "commontypes.h"
 #include "undocommands.h"
 
-#include "model/situationmodel.h"
-#include "model/trackmodel.h"
-#include "model/boatmodel.h"
-#include "model/markmodel.h"
+#include "situationmodel.h"
+#include "trackmodel.h"
+#include "boatmodel.h"
+#include "markmodel.h"
 
 #include "boat.h"
 #include "track.h"
@@ -36,13 +49,16 @@ SituationScene::SituationScene(SituationModel *situation)
         m_situation(situation),
         m_trackCreated(0),
         m_state(NO_STATE),
-        m_time(QTime::currentTime()) {
+        m_time(QTime::currentTime()),
+        m_clickTime(QTime::currentTime()),
+        m_actionMenu(0) {
 
     // try to set a minimum scene rect
-    QGraphicsItem *e = addEllipse(QRectF());
-    e->setPos(-500,-500);
-    e->setPos(500,500);
-    delete e;
+    QGraphicsItem *e1 = addEllipse(QRectF(-1000,-1000, 1, 1));
+    QGraphicsItem *e2 = addEllipse(QRectF(1000, 1000, 1, 1));
+    sceneRect();
+    delete e1;
+    delete e2;
 
     // react to self change of selection
     connect(this, SIGNAL(selectionChanged()),
@@ -155,35 +171,48 @@ void SituationScene::unSetAnimation() {
 */
 
 void SituationScene::keyPressEvent(QKeyEvent *event) {
-    // propagate key event first for focus items
-    QGraphicsScene::keyPressEvent(event);
 
-    if (m_selectedModels.isEmpty()) {
-        return;
+    if (!m_selectedBoatModels.isEmpty()) {
+        if (event->key() == Qt::Key_Plus) {
+            qreal theta = fmod(m_selectedBoatModels[0]->heading() + 5 + 360.0, 360.0);
+            m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
+
+        } else if (event->key() == Qt::Key_Minus) {
+            qreal theta = fmod(m_selectedBoatModels[0]->heading() - 5 + 360.0, 360.0);
+            m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
+
+        } else if (event->key() == Qt::Key_Less) {
+            m_situation->undoStack()->push(new TrimBoatUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->trim() - 5));
+
+        } else if (event->key() == Qt::Key_Greater) {
+            m_situation->undoStack()->push(new TrimBoatUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->trim() + 5));
+
+        } else if (event->key() == Qt::Key_Equal) {
+            m_situation->undoStack()->push(new TrimBoatUndoCommand(m_selectedBoatModels, 0));
+        }
     }
-    if (event->key() == Qt::Key_Plus) {
-        qreal theta = fmod(m_selectedBoatModels[0]->heading() + 5 + 360.0, 360.0);
-        m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
 
-    } else if (event->key() == Qt::Key_Minus) {
-        qreal theta = fmod(m_selectedBoatModels[0]->heading() - 5 + 360.0, 360.0);
-        m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
+    if (!m_selectedModels.isEmpty()) {
+        if (event->key() == Qt::Key_Left) {
+            QPointF pos(-5,0);
+            m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels, pos));
 
-    } else if (event->key() == Qt::Key_H) { // Left
-        QPointF pos(-5,0);
-        m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels, pos));
+        } else if (event->key() == Qt::Key_Right) {
+            QPointF pos(5,0);
+            m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels, pos));
 
-    } else if (event->key() == Qt::Key_L) { // Right
-        QPointF pos(5,0);
-        m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels, pos));
+        } else if (event->key() == Qt::Key_Up) {
+            QPointF pos(0,-5);
+            m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels, pos));
 
-    } else if (event->key() == Qt::Key_K) { // Up
-        QPointF pos(0,-5);
-        m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels, pos));
-
-    } else if (event->key() == Qt::Key_J) { // Down
-        QPointF pos(0,5);
-        m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels, pos));
+        } else if (event->key() == Qt::Key_Down) {
+            QPointF pos(0,5);
+            m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels, pos));
+        } else {
+            QGraphicsScene::keyPressEvent(event);
+        }
+    } else {
+        QGraphicsScene::keyPressEvent(event);
     }
 }
 
@@ -203,13 +232,17 @@ void SituationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
             break;
         case CREATE_BOAT:
         case CREATE_MARK:
-            if (event->buttons() == Qt::RightButton) {
+            if (event->buttons() == Qt::RightButton
+                || (event->buttons() == Qt::LeftButton
+                    && ((event->modifiers() & Qt::MetaModifier) != 0))) {
                 mouseSelectEvent(event);
             }
             break;
         default:
             break;
     }
+
+    m_clickTime.start();
 }
 
 /**
@@ -229,15 +262,20 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
     switch (m_state) {
         case NO_STATE:
-            if (event->buttons() == Qt::LeftButton) {
+            if (event->buttons() == Qt::LeftButton
+                && (event->modifiers() & Qt::MetaModifier) == 0) {
                 mouseMoveModelEvent(event);
             }
-            if (event->buttons() == Qt::RightButton) {
+            if (event->buttons() == Qt::RightButton
+                || (event->buttons() == Qt::LeftButton
+                    && ((event->modifiers() & Qt::MetaModifier) != 0))) {
                 mouseHeadingEvent(event);
             }
         break;
         case CREATE_BOAT:
-            if (event->buttons() == Qt::RightButton) {
+            if (event->buttons() == Qt::RightButton
+                || (event->buttons() == Qt::LeftButton
+                    && ((event->modifiers() & Qt::MetaModifier) != 0))) {
                 mouseHeadingEvent(event);
             }
         break;
@@ -259,12 +297,24 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
 void SituationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mouseReleaseEvent(event);
+
+    bool click = (m_clickTime.elapsed() < 250);
+    if (click && (event->button() == Qt::RightButton
+                || (event->button() == Qt::LeftButton
+                    && ((event->modifiers() & Qt::MetaModifier) != 0)))) {
+        m_actionMenu->popup(event->screenPos());
+        return;
+    }
+
     switch (m_state) {
         case NO_STATE:
-            if (event->button() == Qt::LeftButton) {
+            if (event->button() == Qt::LeftButton
+                && (event->modifiers() & Qt::MetaModifier) == 0) {
                 mouseMoveModelEvent(event);
             }
-            if (event->button() == Qt::RightButton) {
+            if (event->button() == Qt::RightButton
+                || (event->button() == Qt::LeftButton
+                    && ((event->modifiers() & Qt::MetaModifier) != 0))) {
                 mouseHeadingEvent(event);
             }
             break;
@@ -277,11 +327,13 @@ void SituationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
             if (event->button() == Qt::LeftButton) {
                 if ((event->modifiers() & Qt::ControlModifier) != 0) {
                     mouseCreateTrackEvent(event);
-                } else {
+                } else if ((event->modifiers() & Qt::MetaModifier) == 0) {
                     mouseCreateBoatEvent(event);
                 }
             }
-            if (event->button() == Qt::RightButton) {
+            if (event->button() == Qt::RightButton
+                || (event->button() == Qt::LeftButton
+                    && ((event->modifiers() & Qt::MetaModifier) != 0))) {
                 mouseHeadingEvent(event);
             }
             break;
@@ -387,10 +439,16 @@ void SituationScene::setSelectedModels() {
         }
     }
     if (debugLevel & 1 << VIEW) std::cout << "SelectedModels update " << m_selectedModels.size() << std::endl;
+    emit selectedModelsChanged();
 }
 
 
 void SituationScene::setLaylines(const int angle) {
+    if (!m_situation->showLayline()) {
+        if (debugLevel & 1 << VIEW) std::cout << "reseting empty Background" << std::endl;
+        setBackgroundBrush(Qt::NoBrush);
+        return;
+    }
     if (debugLevel & 1 << VIEW) std::cout << "creating layline Background for " << angle << std::endl;
     qreal theta = angle * M_PI /180;
     int length = m_situation->sizeForSeries(m_situation->situationSeries());
@@ -405,7 +463,10 @@ void SituationScene::setLaylines(const int angle) {
     QPainter painter(&pixmap);
     QPen pen;
     pen.setWidth(2);
-    pen.setStyle(Qt::DashLine);
+    QVector<qreal> dashes;
+    dashes << length/10.0 << length/5.0;
+    pen.setStyle(Qt::CustomDashLine);
+    pen.setDashPattern(dashes);
     painter.setPen(pen);
     painter.setRenderHints(QPainter::Antialiasing);
     painter.drawLine(QLineF(0,0,x,y));

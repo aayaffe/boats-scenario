@@ -4,9 +4,22 @@
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>, (C) 2008
+// Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright: See COPYING file that comes with this distribution
+// Copyright (c) 2009 Thibaut GRIDEL
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
 #include <iostream>
@@ -19,15 +32,13 @@ extern int debugLevel;
 
 ColorPickerWidget::ColorPickerWidget(QWidget *parent)
     : QWidget(parent) {
-    connect(this, SIGNAL(pickColor()),
-            this, SLOT(pick()), Qt::QueuedConnection);
 }
 
 void ColorPickerWidget::setColor(QColor color) {
     if (color != m_color) {
         m_color = color;
         QColorDialog::setCustomColor(0, color.rgb());
-        emit pickColor();
+        pick();
     }
 }
 

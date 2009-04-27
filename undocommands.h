@@ -4,9 +4,22 @@
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>, (C) 2008
+// Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright: See COPYING file that comes with this distribution
+// Copyright (c) 2008-2009 Thibaut GRIDEL
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
 #ifndef UNDOCOMMANDS_H
@@ -26,6 +39,7 @@ class MarkModel;
 enum {
     SET_TITLE,
     SET_RULES,
+    SET_SHOWLAYLINE,
     SET_LAYLINE,
     SET_SITUATIONSERIES,
     SET_ABSTRACT,
@@ -34,6 +48,8 @@ enum {
     SET_COLOR,
     MOVE_MODEL,
     HEADING_BOAT,
+    OVERLAP_BOAT,
+    TRIM_BOAT,
     ZONE_MARK,
     LENGTH_MARK
 };
@@ -68,6 +84,20 @@ class SetRulesUndoCommand : public QUndoCommand {
         SituationModel *m_situation;
         QString m_oldRules;
         QString m_newRules;
+};
+
+class SetShowLaylineUndoCommand : public QUndoCommand {
+
+    public:
+        SetShowLaylineUndoCommand(SituationModel* situation, QUndoCommand *parent = 0);
+        ~SetShowLaylineUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_SHOWLAYLINE; }
+
+    private:
+        SituationModel *m_situation;
 };
 
 class SetLaylineUndoCommand : public QUndoCommand {
@@ -237,6 +267,36 @@ class HeadingBoatUndoCommand : public QUndoCommand {
         qreal m_heading;
 };
 
+class OverlapBoatUndoCommand : public QUndoCommand {
+
+    public:
+        OverlapBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, Boats::Overlaps overlaps, QUndoCommand *parent = 0);
+        ~OverlapBoatUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return OVERLAP_BOAT; }
+    private:
+        SituationModel *m_situation;
+        QList<BoatModel*> m_boatList;
+        Boats::Overlaps m_overlaps;
+};
+
+class TrimBoatUndoCommand : public QUndoCommand {
+
+    public:
+        TrimBoatUndoCommand(QList<BoatModel*> &boatList, const qreal &trim, QUndoCommand *parent = 0);
+        ~TrimBoatUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return TRIM_BOAT; }
+    private:
+        QList<BoatModel*> m_boatList;
+        QList<qreal> m_trimList;
+        qreal m_trim;
+};
+
 class DeleteBoatUndoCommand : public QUndoCommand {
 
     public:
@@ -268,7 +328,7 @@ class AddMarkUndoCommand : public QUndoCommand {
 class ZoneMarkUndoCommand : public QUndoCommand {
 
     public:
-        ZoneMarkUndoCommand(SituationModel* situation, QList<MarkModel*> &markList, QUndoCommand *parent = 0);
+        ZoneMarkUndoCommand(SituationModel* situation, const QList<MarkModel*> &markList, QUndoCommand *parent = 0);
         ~ZoneMarkUndoCommand();
         void undo();
         void redo();

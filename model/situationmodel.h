@@ -4,9 +4,22 @@
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>, (C) 2008
+// Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright: See COPYING file that comes with this distribution
+// Copyright (c) 2008-2009 Thibaut GRIDEL
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
 #ifndef SITUATIONMODEL_H
@@ -48,45 +61,48 @@ class SituationModel : public QObject {
         int sizeForSeries(const Boats::Series series);
 
         // Setters and Getters for Model Data
-        Boats::Series situationSeries() const { return m_situationSeries; };
-        void setSituationSeries(const int theValue, bool update = false);
+        QString title() const { return m_title; }
+        void setTitle(const QString theValue);
 
-        int situationLength() const { return m_situationLength; };
-        void setSituationLength(const int theValue, bool update = false);
+        QString rules() const { return m_rules; }
+        void setRules(const QString theValue);
 
-        QString title() const { return m_title; };
-        void setTitle(const QString theValue, bool update = false);
+        bool showLayline() const { return m_showLayline; }
+        void setShowLayline(const bool theValue);
 
-        QString rules() const { return m_rules; };
-        void setRules(const QString theValue, bool update = false);
+        int laylineAngle() const { return m_laylineAngle; }
+        void setLaylineAngle(const int theValue);
 
-        QString abstract() const { return m_abstract; };
-        void setAbstract(const QString theValue, bool update = false);
+        Boats::Series situationSeries() const { return m_situationSeries; }
+        void setSituationSeries(const int theValue);
 
-        QString description() const { return m_description; };
-        void setDescription(const QString theValue, bool update = false);
+        int situationLength() const { return m_situationLength; }
+        void setSituationLength(const int theValue);
 
-        int size() const { return m_tracks.size();};
-        const QList<TrackModel*> tracks() const { return m_tracks; };
+        QString abstract() const { return m_abstract; }
+        void setAbstract(const QString theValue);
 
-        int markSize() const { return m_marks.size();};
-        const QList<MarkModel*> marks() const { return m_marks; };
+        QString description() const { return m_description; }
+        void setDescription(const QString theValue);
 
-        int laylineAngle() const { return m_laylineAngle; };
-        void setLaylineAngle(const int theValue, bool update = false);
+        int size() const { return m_tracks.size();}
+        const QList<TrackModel*> tracks() const { return m_tracks; }
+
+        int markSize() const { return m_marks.size();}
+        const QList<MarkModel*> marks() const { return m_marks; }
 
         // Setters and Getters for Non model Data
-        QUndoStack * undoStack() const { return m_undoStack;};
+        QUndoStack * undoStack() const { return m_undoStack;}
 
-        QStringList discardedXml() const { return m_discardedXml; };
+        QStringList discardedXml() const { return m_discardedXml; }
         void appendDiscardedXml(const QString& theValue);
 
-        QString fileName() const { return m_fileName; };
-        void setFileName(const QString theValue) {m_fileName = theValue; };
+        QString fileName() const { return m_fileName; }
+        void setFileName(const QString theValue) {m_fileName = theValue; }
 
         // Helper to remotely trigger boat signals from elsewhere
-        void addingBoat(BoatModel *boat) {emit boatAdded(boat);};
-        void removingBoat(BoatModel *boat) {emit boatRemoved(boat);};
+        void addingBoat(BoatModel *boat) {emit boatAdded(boat);}
+        void removingBoat(BoatModel *boat) {emit boatRemoved(boat);}
 
     signals:
         // Signals for Track
@@ -100,6 +116,7 @@ class SituationModel : public QObject {
         // Signals for Scenario Parameters
         void titleChanged(const QString title);
         void rulesChanged(const QString rules);
+        void showLaylineChanged(const bool show);
         void laylineChanged(const int angle);
         void seriesChanged(const int series);
         void lengthChanged(const int length);
@@ -132,6 +149,9 @@ class SituationModel : public QObject {
 
         /// \a m_description holds the Description of the Scenario
         QString m_description;
+
+        /// \a m_showLayline holds whether the Laylines will be displayed
+        bool m_showLayline;
 
         /// \a m_laylineAngle holds the Layline Angle of the Scenario
         int m_laylineAngle;

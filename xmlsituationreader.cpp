@@ -4,9 +4,22 @@
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>, (C) 2008
+// Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright: See COPYING file that comes with this distribution
+// Copyright (c) 2008-2009 Thibaut GRIDEL
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
 #include <iostream>
@@ -14,10 +27,10 @@
 #include "xmlsituationreader.h"
 
 #include "commontypes.h"
-#include "model/situationmodel.h"
-#include "model/trackmodel.h"
-#include "model/boatmodel.h"
-#include "model/markmodel.h"
+#include "situationmodel.h"
+#include "trackmodel.h"
+#include "boatmodel.h"
+#include "markmodel.h"
 
 #include "undocommands.h"
 
@@ -68,24 +81,54 @@ void XmlSituationReader::readSituation() {
         if (isEndElement())
             break;
         if (isStartElement()) {
-            if (name() == "title")
-                m_situation->setTitle(readElementText());
-            else if (name() == "rules")
-                m_situation->setRules(readElementText());
-            else if (name() == "abstract")
-                m_situation->setAbstract(readElementText());
-            else if (name() == "description")
-                m_situation->setDescription(readElementText());
-            else if (name() == "series")
-                m_situation->setSituationSeries(series(readElementText()), true);
-            else if (name() == "layline")
-                m_situation->setLaylineAngle(readElementText().toInt(), true);
-            else if (name() == "mark")
+            if (name() == "title") {
+                m_situation->undoStack()->push(
+                        new SetTitleUndoCommand(m_situation,
+                                                readElementText()));
+
+            } else if (name() == "rules") {
+                m_situation->undoStack()->push(
+                        new SetRulesUndoCommand(m_situation,
+                                                readElementText()));
+
+            } else if (name() == "abstract") {
+                m_situation->undoStack()->push(
+                        new SetAbstractUndoCommand(m_situation,
+                                                   readElementText()));
+
+            } else if (name() == "description") {
+                m_situation->undoStack()->push(
+                        new SetDescriptionUndoCommand(m_situation,
+                                                      readElementText()));
+
+            } else if (name() == "series") {
+                m_situation->undoStack()->push(
+                        new SetSituationSeriesUndoCommand(m_situation,
+                                                          series(readElementText())));
+
+            } else if (name() == "showlayline") {
+                if (readElementText() == "0") {
+                    m_situation->undoStack()->push(
+                            new SetShowLaylineUndoCommand(m_situation));
+                }
+
+            } else if (name() == "layline") {
+                m_situation->undoStack()->push(
+                        new SetLaylineUndoCommand(m_situation,
+                                                  readElementText().toInt()));
+
+            } else if (name() == "length") {
+                m_situation->setSituationLength(readElementText().toInt());
+
+            } else if (name() == "mark") {
                 readMark(m_situation);
-            else if (name() == "track")
+
+            } else if (name() == "track") {
                 readTrack(m_situation);
-            else
+
+            } else {
                 m_situation->appendDiscardedXml(readUnknownElement());
+            }
         }
     }
 }
@@ -102,7 +145,7 @@ void XmlSituationReader::readTrack(SituationModel *situation) {
             if (name() == "color")
                 track->setColor(QColor(readElementText()));
             else if (name() == "series")
-                track->setSeries(series(readElementText()), true);
+                track->setSeries(series(readElementText()));
             else if (name() == "boat")
                 readBoat(situation, track);
             else
@@ -114,6 +157,8 @@ void XmlSituationReader::readTrack(SituationModel *situation) {
 void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) {
     QPointF pos;
     qreal heading = 0;
+    qreal trim = 0;
+    Boats::Overlaps overlap = Boats::none;
     QStringList discarded;
     while (!atEnd()) {
         readNext();
@@ -126,6 +171,11 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
                 pos.setY(readElementText().toFloat());
             else if (name() == "heading")
                 heading = readElementText().toFloat();
+            else if (name() == "trim")
+                trim = readElementText().toFloat();
+            else if (name() == "overlap") {
+                overlap = (Boats::Overlaps)FLAG_VALUE(Boats, Overlap, readElementText().toStdString().c_str());
+            }
             else
                 discarded.append(readUnknownElement());
         }
@@ -141,6 +191,8 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
         situation->undoStack()->push(command);
         boat = command->boat();
     }
+    boat->setTrim(trim);
+    boat->setOverlap(overlap);
     foreach (const QString elem, discarded) {
         boat->appendDiscardedXml(elem);
     }
@@ -174,10 +226,10 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     AddMarkUndoCommand *command = new AddMarkUndoCommand(situation, pos);
     situation->undoStack()->push(command);
     MarkModel *mark = command->mark();
-    mark->setColor(color,true);
-    mark->setZone(zone,true);
+    mark->setColor(color);
+    mark->setZone(zone);
     if (length != 0) {
-        mark->setLength(length, true);
+        mark->setLength(length);
     }
 }
 

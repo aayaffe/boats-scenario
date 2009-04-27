@@ -8,7 +8,7 @@ INSTALLS += target
 
 CONFIG += qt warn_on
 
-INCLUDEPATH += graphicsview; itemviews
+INCLUDEPATH += model graphicsview itemviews
 
 HEADERS = \
 	model/boatmodel.h \
@@ -25,9 +25,11 @@ HEADERS = \
 	itemviews/colorpickerwidget.h \
 	itemviews/trackdelegate.h \
 	itemviews/tracktablemodel.h \
+	boatapplication.h \
 	boats.h \
 	commontypes.h \
 	mainwindow.h \
+	situationprint.h \
 	situationwidget.h \
 	trace.h \
 	undocommands.h \
@@ -49,18 +51,62 @@ SOURCES = \
 	itemviews/colorpickerwidget.cpp \
 	itemviews/trackdelegate.cpp \
 	itemviews/tracktablemodel.cpp \
+	boatapplication.cpp \
 	boats.cpp \
 	main.cpp \
 	mainwindow.cpp \
+	situationprint.cpp \
 	situationwidget.cpp \
 	trace.cpp \
 	undocommands.cpp \
 	xmlsituationreader.cpp \
 	xmlsituationwriter.cpp
 
-RESOURCES = boats.qrc
+unix {
+	RESOURCES = boats_unix.qrc
+} else {
+	RESOURCES = boats.qrc
+}
 
-TRANSLATIONS = locale/boats_fr.ts
+contains(GIF_EXPORT,1) {
+	DEFINES += GIF_EXPORT
+	HEADERS += gifwriter.h
+	SOURCES += gifwriter.cpp
+	LIBS += -lgif
+}
+
+TRANSLATIONS = locale/boats.ts \
+	locale/boats_fr.ts
+unix{
+	isEmpty(PREFIX){
+		PREFIX = /usr/local
+	}
+
+	target.path = $${PREFIX}/bin
+	INSTALLS += target
+
+	TRANSLATEDIR = $${PREFIX}/share/boats
+	translations.path = $${TRANSLATEDIR}
+	translations.files = locale/boats_fr.qm
+	INSTALLS += translations
+} else {
+	TRANSLATEDIR = ":/locale"
+}
+
+DEFINES += TRANSLATEDIR=\\\"$${TRANSLATEDIR}\\\"
+
+isEmpty(QMAKE_LRELEASE) {
+    win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\lrelease.exe
+    else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
+}
+
+updateqm.input = TRANSLATIONS
+updateqm.output = locale/${QMAKE_FILE_BASE}.qm
+updateqm.commands = $$QMAKE_LRELEASE ${QMAKE_FILE_IN}
+updateqm.CONFIG += no_link
+QMAKE_EXTRA_COMPILERS += updateqm
+
+PRE_TARGETDEPS += compiler_updateqm_make_all
 
 MOC_DIR = .moc/
 
