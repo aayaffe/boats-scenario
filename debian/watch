@@ -1,0 +1,6 @@
+version=3
+
+opts="downloadurlmangle=s/shortlog/snapshot&sf=tgz/,\
+filenamemangle=s/.*tags\/(.*)/boats-$1\.tar\.gz/" \
+http://git.berlios.de/cgi-bin/gitweb.cgi?p=boats;a=tags \
+(?:.*/)?gitweb.cgi\?p=boats;a=shortlog;h=refs/tags/(.*)

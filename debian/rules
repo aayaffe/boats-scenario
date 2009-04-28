@@ -9,7 +9,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-
+export QMAKE_OPT=boats.pro GIF_EXPORT=1 PREFIX=/usr
 
 
 
@@ -19,7 +19,7 @@ configure-stamp:
 	# Add here commands to configure the package.
 	lupdate boats.pro
 	lrelease boats.pro
-	qmake boats.pro
+	qmake $(QMAKE_OPT)
 	touch configure-stamp
 
 
@@ -30,7 +30,6 @@ build-stamp: configure-stamp
 
 	# Add here commands to compile the package.
 	$(MAKE)
-	#docbook-to-man debian/boats.sgml > boats.1
 
 	touch $@
 
@@ -40,19 +39,37 @@ clean:
 	rm -f build-stamp configure-stamp
 
 	# Add here commands to clean up after the build process.
-	qmake
-	$(MAKE) clean
+	qmake $(QMAKE_OPT)
+	$(MAKE) distclean
 
 	dh_clean
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 	dh_installdirs
 
 	# Add here commands to install the package into debian/boats.
 	$(MAKE) INSTALL_ROOT=$(CURDIR)/debian/boats install
+	install -m644 $(CURDIR)/boats.xml \
+		$(CURDIR)/debian/boats.sharedmimeinfo
+	install -D -m644 $(CURDIR)/boats.desktop \
+		$(CURDIR)/debian/boats/usr/share/applications/boats.desktop
+	install -D -m644 $(CURDIR)/images/boats_16.png \
+		$(CURDIR)/debian/boats/usr/share/icons/hicolor/16x16/apps/boats.png
+	install -D -m644 $(CURDIR)/images/application-x-boats_16.png \
+		$(CURDIR)/debian/boats/usr/share/icons/hicolor/16x16/mimetypes/application-x-boats.png
+	install -D -m644 $(CURDIR)/images/boats_32.png \
+		$(CURDIR)/debian/boats/usr/share/icons/hicolor/32x32/apps/boats.png
+	install -D -m644 $(CURDIR)/images/application-x-boats_32.png \
+		$(CURDIR)/debian/boats/usr/share/icons/hicolor/32x32/mimetypes/application-x-boats.png
+	install -D -m644 $(CURDIR)/images/boats_48.png \
+		$(CURDIR)/debian/boats/usr/share/icons/hicolor/48x48/apps/boats.png
+	install -D -m644 $(CURDIR)/images/application-x-boats_48.png \
+		$(CURDIR)/debian/boats/usr/share/icons/hicolor/48x48/mimetypes/application-x-boats.png
+	install -D -m644 $(CURDIR)/images/boats_128.png \
+		$(CURDIR)/debian/boats/usr/share/icons/hicolor/128x128/apps/boats.png
 
 
 # Build architecture-independent files here.
@@ -72,12 +89,13 @@ binary-arch: build install
 #	dh_installlogrotate
 #	dh_installemacsen
 #	dh_installpam
-#	dh_installmime
+	dh_installmime
+	dh_desktop
 #	dh_python
 #	dh_installinit
 #	dh_installcron
 #	dh_installinfo
-	dh_installman
+	dh_installman doc/boats.1
 	dh_link
 	dh_strip
 	dh_compress

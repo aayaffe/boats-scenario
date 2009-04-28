@@ -1,10 +1,16 @@
-boats (200902) unstable; urgency=low
+boats (200904-1) unstable; urgency=low
+
+  * New upstream release. Closes: #525611.
+
+ -- Thibaut GRIDEL <tgridel@free.fr>  Wed, 22 Apr 2009 19:31:28 +0200
+
+boats (200902-1) unstable; urgency=low
 
   * New upstream release.
 
  -- Thibaut GRIDEL <tgridel@free.fr>  Thu, 12 Feb 2009 23:30:57 +0100
 
-boats (200811) unstable; urgency=low
+boats (200811-1) unstable; urgency=low
 
   * Initial Release.
 

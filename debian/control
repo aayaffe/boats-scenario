@@ -2,10 +2,9 @@ Source: boats
 Section: x11
 Priority: extra
 Maintainer: Thibaut GRIDEL <tgridel@free.fr>
-Build-Depends: debhelper (>= 7), libqt4-dev, qt4-qmake
-Standards-Version: 3.7.3
-Vcs-Git: git://git.berlios.de/boats
-Vcs-Browser: http://git.berlios.de/cgi-bin/gitweb.cgi?p=boats
+Build-Depends: debhelper (>= 7), libqt4-dev, qt4-qmake, libgif-dev
+Standards-Version: 3.8.1
+Vcs-Browser: http://git.berlios.de/cgi-bin/gitweb.cgi?p=boats;h=refs/heads/debian
 Homepage: http://boats.berlios.de
 
 Package: boats
