@@ -146,6 +146,8 @@ void XmlSituationReader::readTrack(SituationModel *situation) {
                 track->setColor(QColor(readElementText()));
             else if (name() == "series")
                 track->setSeries(series(readElementText()));
+            else if (name() == "path")
+                track->setShowPath(readElementText() == "1");
             else if (name() == "boat")
                 readBoat(situation, track);
             else

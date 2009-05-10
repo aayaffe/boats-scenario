@@ -53,11 +53,11 @@ class TrackDelegate : public QItemDelegate
 
     private slots:
         void commitAndCloseColor();
-        void commitAndCloseSeries();
+        void commitAndCloseCombo();
 
     private:
         ColorPickerWidget * getColorEditor(QObject *editor) const;
-        QComboBox * getSeriesEditor(QObject *editor) const;
+        QComboBox * getComboEditor(QObject *editor) const;
 };
 
 #endif

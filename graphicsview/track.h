@@ -56,6 +56,7 @@ class TrackGraphicsItem : public QObject, public QGraphicsPathItem {
 
     public slots:
         void setTrack();
+        void setShowPath(bool showPath) {setVisible(showPath);}
         void deleteItem(TrackModel *track);
 
     private:

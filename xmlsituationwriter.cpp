@@ -88,6 +88,9 @@ void XmlSituationWriter::writeTrack(const TrackModel *track) {
     writeStartElement("track");
     writeTextElement("color",track->color().name());
     writeTextElement("series",ENUM_NAME(Boats, Series, track->series()));
+    if (!track->showPath()) {
+        writeTextElement("path",QString::number(track->showPath()));
+    }
     foreach (const QString discarded, track->discardedXml())
         writeUnknownElement(discarded);
     foreach (const BoatModel *boat, track->boats())

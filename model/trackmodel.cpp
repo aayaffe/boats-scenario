@@ -37,6 +37,7 @@ TrackModel::TrackModel(SituationModel *situation, QObject *parent)
         : QObject(parent),
         m_color(),
         m_series(Boats::unknown),
+        m_showPath(true),
         m_situation(situation),
         m_length(0) {
     m_order = situation->size();
@@ -67,6 +68,13 @@ void TrackModel::setColor(const QColor& theValue) {
     if (theValue != m_color) {
         m_color = theValue;
         emit colorChanged(m_color);
+    }
+}
+
+void TrackModel::setShowPath(const bool theValue) {
+    if (theValue != m_showPath) {
+        m_showPath = theValue;
+        emit showPathChanged(m_showPath);
     }
 }
 

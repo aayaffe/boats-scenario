@@ -368,6 +368,36 @@ bool SetColorUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Show Path
+SetShowPathUndoCommand::SetShowPathUndoCommand(TrackModel *track, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_track(track) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new showlaylineundocommand" << std::endl;
+}
+
+SetShowPathUndoCommand::~SetShowPathUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end showlaylineundocommand" << std::endl;
+}
+
+void SetShowPathUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo showlaylineundocommand" << std::endl;
+    m_track->setShowPath(!m_track->showPath());
+}
+
+void SetShowPathUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo showlaylineundocommand" << std::endl;
+    m_track->setShowPath(!m_track->showPath());
+}
+
+bool SetShowPathUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetShowPathUndoCommand *showPathCommand = static_cast<const SetShowPathUndoCommand*>(command);
+    if (m_track != showPathCommand->m_track)
+        return false;
+    undo();
+    m_track->situation()->undoStack()->setIndex(m_track->situation()->undoStack()->index()-1);
+    return true;
+}
+
 // Move Model
 MoveModelUndoCommand::MoveModelUndoCommand(QList<PositionModel*> &modelList, const QPointF &deltaPosition, QUndoCommand *parent)
         : QUndoCommand(parent),

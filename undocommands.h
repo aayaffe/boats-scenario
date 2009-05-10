@@ -46,6 +46,7 @@ enum {
     SET_DESCRIPTION,
     SET_SERIES,
     SET_COLOR,
+    SET_SHOWPATH,
     MOVE_MODEL,
     HEADING_BOAT,
     OVERLAP_BOAT,
@@ -221,6 +222,20 @@ class SetColorUndoCommand : public QUndoCommand {
         TrackModel *m_track;
         QColor m_oldColor;
         QColor m_newColor;
+};
+
+class SetShowPathUndoCommand : public QUndoCommand {
+
+    public:
+        SetShowPathUndoCommand(TrackModel* track, QUndoCommand *parent = 0);
+        ~SetShowPathUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_SHOWPATH; }
+
+    private:
+        TrackModel *m_track;
 };
 
 class MoveModelUndoCommand : public QUndoCommand {
