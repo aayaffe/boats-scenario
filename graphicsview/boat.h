@@ -52,7 +52,7 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         Q_OBJECT
     public:
         BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent = 0);
-        ~BoatGraphicsItem();
+        virtual ~BoatGraphicsItem();
 
         BoatModel* boat() const { return m_boat; }
 
@@ -60,7 +60,7 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         QPainterPath shape() const;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                    QWidget *widget);
-        int type() const;
+        virtual int type() const;
 
     public slots:
         void setHeading(qreal value);
@@ -73,9 +73,9 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void deleteItem(BoatModel *boat);
 
     protected:
-        void mousePressEvent(QGraphicsSceneMouseEvent *event);
-        void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
     private:
         void setSailAngle();
