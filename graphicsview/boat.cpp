@@ -92,10 +92,9 @@ void BoatGraphicsItem::setHeading(qreal value) {
         m_angle = value;
         setSailAngle();
         update();
-        double a = m_angle * M_PI / 180;
-        double sina = sin(a);
-        double cosa = cos(a);
-        setTransform(QTransform(cosa, sina, -sina, cosa, 0, 0), false);
+        QTransform rotation;
+        rotation.rotate(m_angle),
+        setTransform(rotation, false);
     }
 }
 
