@@ -42,6 +42,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         : QGraphicsItem(parent),
         m_boat(boat),
         m_angle(0),
+        m_sail(new QGraphicsPathItem(this)),
         m_trim(boat->trim()),
         m_overlap(Boats::none),
         m_overlapLine(new QGraphicsLineItem(this)),
@@ -55,7 +56,11 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
 
     setBoundingRegionGranularity(1);
     m_numberPath->setZValue(1);
+    m_sail->setZValue(3);
+
     m_numberPath->setBrush(QBrush(Qt::black));
+    m_sail->setBrush(QBrush(Qt::white));
+
     QPen dashPen(Qt::CustomDashLine);
     QVector<qreal> dashes;
     dashes << 5 << 5;
@@ -105,6 +110,20 @@ void BoatGraphicsItem::setHeading(qreal value) {
 /// calculate a sail incidence angle, corrected with user trimming
 void BoatGraphicsItem::setSailAngle() {
     m_sailAngle = m_boat->getSailAngle(m_boat->track()->situation()->laylineAngle(), m_angle, m_series, m_trim);
+    qreal angle = fmod(m_angle - m_sailAngle +360, 360);
+
+    if ((angle < 10 || angle > 350 || (angle > 170 && angle < 190)) && m_sail->path() != m_sailPathStalled) {
+        m_sail->setPath(m_sailPathStalled);
+    } else if (angle >= 10 && angle <= 170 && m_sail->path() != m_sailPathStarboard) {
+        m_sail->setPath(m_sailPathStarboard);
+    } else if (angle >= 190 && angle <= 350 && m_sail->path() != m_sailPathPort) {
+        m_sail->setPath(m_sailPathPort);
+    }
+
+    QTransform transform;
+    transform.translate(m_mast.x(), m_mast.y());
+    transform.rotate(- m_sailAngle);
+    m_sail->setTransform(transform, false);
 }
 
 void BoatGraphicsItem::setPosition(QPointF position) {
@@ -199,22 +218,32 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         m_series = value;
 
         int posY = 0;
+        qreal sailSize = 0;
+
         switch (m_series) {
         case Boats::keelboat:
             m_numberSize = 12;
             posY = 25;
+            m_mast = QPointF(0, -8.7);
+            sailSize = 41.5;
             break;
         case Boats::laser:
             m_numberSize = 7;
             posY = 10;
+            m_mast = QPointF(0, -8.7);
+            sailSize = 28.5;
             break;
         case Boats::optimist:
             m_numberSize = 6;
             posY = 3;
+            m_mast = QPointF(0,-6.9);
+            sailSize = 16.5;
             break;
         case Boats::tornado:
             m_numberSize = 10;
             posY = 17;
+            m_mast = QPointF(0,0);
+            sailSize = 25.5;
             break;
         case Boats::startboat:
             m_numberSize = 0;
@@ -227,6 +256,26 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         }
 
         m_numberPath->setPos(0, posY);
+
+        QPainterPath sailPathStalled;
+        sailPathStalled.cubicTo(.1 * sailSize, .2 * sailSize, .1 * sailSize, .2 * sailSize, 0, .3 * sailSize);
+        sailPathStalled.cubicTo(-.1 * sailSize, .4 * sailSize, -.1 * sailSize, .4 * sailSize, 0, .5 * sailSize);
+        sailPathStalled.cubicTo(.1 * sailSize, .6 * sailSize, .1 * sailSize, .6 * sailSize, 0, .7 * sailSize);
+        sailPathStalled.cubicTo(-.1 * sailSize, .8 * sailSize, -.1 * sailSize, .8 * sailSize, 0, sailSize);
+        sailPathStalled.lineTo(0, 0);
+        m_sailPathStalled = sailPathStalled;
+
+
+        QPainterPath sailPathStarboard;
+        sailPathStarboard.cubicTo(.1 * sailSize, .4 * sailSize, .1 * sailSize, .6 * sailSize, 0, sailSize);
+        sailPathStarboard.lineTo(0, 0);
+        m_sailPathStarboard = sailPathStarboard;
+
+        QPainterPath sailPathPort;
+        sailPathPort.cubicTo(-.1 * sailSize, .4 * sailSize, -.1 * sailSize, .6 * sailSize, 0, sailSize);
+        sailPathPort.lineTo(0, 0);
+        m_sailPathPort = sailPathPort;
+
         setSailAngle();
         setOverlapLine();
         setOrder(m_order);
@@ -369,49 +418,6 @@ void BoatGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     }
 
     painter->drawPath(path);
-
-    switch (m_series) {
-    case Boats::keelboat:
-        paintSail(painter, 41.5, QPointF(0,-8));
-        break;
-    case Boats::laser:
-        paintSail(painter, 28.5, QPointF(0, -8.7));
-        break;
-    case Boats::optimist:
-        paintSail(painter, 16.5, QPointF(0,-6.9));
-        break;
-    case Boats::tornado:
-        paintSail(painter, 25.5, QPointF(0,0));
-        break;
-    default:
-        break;
-    }
-
-}
-
-void BoatGraphicsItem::paintSail(QPainter *painter, qreal sailSize, QPointF attach) {
-    painter->save();
-    painter->translate(attach);
-    QPainterPath sailPath;
-    qreal angle = fmod(m_angle - m_sailAngle +360, 360);
-    if (angle < 10 || angle > 350 || (angle > 170 && angle < 190)) {
-        sailPath.cubicTo(.1 * sailSize, .2 * sailSize, .1 * sailSize, .2 * sailSize, 0, .3 * sailSize);
-        sailPath.cubicTo(-.1 * sailSize, .4 * sailSize, -.1 * sailSize, .4 * sailSize, 0, .5 * sailSize);
-        sailPath.cubicTo(.1 * sailSize, .6 * sailSize, .1 * sailSize, .6 * sailSize, 0, .7 * sailSize);
-        sailPath.cubicTo(-.1 * sailSize, .8 * sailSize, -.1 * sailSize, .8 * sailSize, 0, sailSize);
-        sailPath.lineTo(0, 0);
-    } else if (angle<180) {
-        sailPath.cubicTo(.1 * sailSize, .4 * sailSize, .1 * sailSize, .6 * sailSize, 0, sailSize);
-        sailPath.lineTo(0, 0);
-    } else {
-        sailPath.cubicTo(-.1 * sailSize, .4 * sailSize, -.1 * sailSize, .6 * sailSize, 0, sailSize);
-        sailPath.lineTo(0, 0);
-    }
-    painter->rotate(- m_sailAngle);
-    painter->fillPath(sailPath, QBrush(Qt::white));
-    painter->strokePath(sailPath, painter->pen());
-
-    painter->restore();
 }
 
 int BoatGraphicsItem::type() const {

@@ -81,9 +81,6 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void setSailAngle();
         void setOverlapLine();
 
-        /// draw a sail with size sailScale from point attach
-        void paintSail(QPainter *painter, qreal sailSize, QPointF attach);
-
         /// \a m_boat holds the BoatModel being represented
         BoatModel *m_boat;
 
@@ -92,6 +89,21 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_sailAngle holds the ideal sail trimming angle
         qreal m_sailAngle;
+
+        /// \a m_mast holds the position of the mast
+        QPointF m_mast;
+
+        /// \a m_sail holds the sail that will be drawn
+        QGraphicsPathItem *m_sail;
+
+        /// \a m_sailPathPort holds the sail path when on port tack
+        QPainterPath m_sailPathPort;
+
+        /// \a m_sailPathStarboard holds the sail path when on starboard tack
+        QPainterPath m_sailPathStarboard;
+
+        /// \a m_sailPathStalled holds the sail path when head to wind
+        QPainterPath m_sailPathStalled;
 
         /// \a m_trim holds the manual trimming angle override
         qreal m_trim;
