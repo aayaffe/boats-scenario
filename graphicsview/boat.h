@@ -84,6 +84,9 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_boat holds the BoatModel being represented
         BoatModel *m_boat;
 
+        /// \a m_hullPath holds the path for the hull
+        QPainterPath m_hullPath;
+
         /// \a m_angle holds the heading of the boat
         qreal m_angle;
 

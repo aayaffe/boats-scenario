@@ -219,6 +219,7 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
 
         int posY = 0;
         qreal sailSize = 0;
+        QPainterPath path;
 
         switch (m_series) {
         case Boats::keelboat:
@@ -226,35 +227,88 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             posY = 25;
             m_mast = QPointF(0, -8.7);
             sailSize = 41.5;
+            path.moveTo(0,-50);
+            path.cubicTo(20, 0, 18, 13, 10, 50);
+            path.lineTo(-10, 50);
+            path.cubicTo(-18, 13, -20, 0, 0, -50);
             break;
         case Boats::laser:
             m_numberSize = 7;
             posY = 10;
             m_mast = QPointF(0, -8.7);
             sailSize = 28.5;
+            path.moveTo(0,-20);
+            path.cubicTo(0.3, -19.7, 0.3, -20.0, 0.7, -19.7);
+            path.cubicTo(3.3, -14.3, 6.7, -3.3, 6.7, 4.7);
+            path.cubicTo(6.7, 11.0, 6.7, 14.3, 5.0, 20.0);
+            path.lineTo(-5.0, 20.0);
+            path.cubicTo(-6.7, 14.3, -6.7, 11.0, -6.7, 4.7);
+            path.cubicTo(-6.7, -3.3, -3.3, -14.3, -0.7, -19.7);
+            path.cubicTo(-0.3, -20.0, -0.3, -19.7, 0, -20);
             break;
         case Boats::optimist:
             m_numberSize = 6;
             posY = 3;
             m_mast = QPointF(0,-6.9);
             sailSize = 16.5;
+            path.moveTo(0,-11.5);
+            path.cubicTo(1.5, -11.5, 1.7, -11.3, 2.9, -11.1);
+            path.cubicTo(3.6, -9.4, 5.6, -4.0, 5.6, 1.5);
+            path.cubicTo(5.6, 5.4, 5.0, 9.0, 4.6, 11.5);
+            path.lineTo(-4.6, 11.5);
+            path.cubicTo(-5.0, 9.0, -5.6, 5.4, -5.6, 1.5);
+            path.cubicTo(-5.6, -4.0, -3.6, -9.4, -2.9, -11.1);
+            path.cubicTo(-1.7, -11.3, -1.5, -11.5, 0, -11.5);
             break;
         case Boats::tornado:
             m_numberSize = 10;
             posY = 17;
             m_mast = QPointF(0,0);
             sailSize = 25.5;
+            path.moveTo(0,0);
+            path.lineTo(10.7, 0);
+            path.cubicTo(11.2, -11.7, 12.2, -19.8, 13.2, -30.5);
+            path.cubicTo(14.7, -20.3, 15.3, -6.1, 15.3, 6.1);
+            path.cubicTo(15.3, 13.7, 14.7, 20.8, 14.7, 30.0);
+            path.cubicTo(13.7, 30.5, 13.7, 30.5, 12.7, 30.5);
+            path.cubicTo(12.2, 30.5, 12.2, 30.5, 10.7, 30.0);
+            path.lineTo(10.7, 23.9);
+
+            path.lineTo(-10.7, 23.9);
+            path.lineTo(-10.7, 30.0);
+            path.cubicTo(-12.2, 30.5, -12.2, 30.5, -12.7, 30.5);
+            path.cubicTo(-13.7, 30.5, -13.7, 30.5, -14.7, 30);
+            path.cubicTo(-14.7, 20.8, -15.3, 13.7, -15.3, 6.1);
+            path.cubicTo(-15.3, -6.1, -14.7, -20.3, -13.2, -30.5);
+            path.cubicTo(-12.2, -19.8, -11.2, -11.7, -10.7, 0);
+            path.lineTo(0, 0);
             break;
         case Boats::startboat:
             m_numberSize = 0;
+            path.moveTo(0,-50);
+            path.cubicTo(30, -20, 20, 30, 17, 50);
+            path.lineTo(-17, 50);
+            path.cubicTo(-20, 30, -30, -20, 0, -50);
+            path.addEllipse(-1, -10, 2, 2);
             break;
         case Boats::rib:
             m_numberSize = 10;
             posY = 10;
+            path.moveTo(0,-30);
+            path.cubicTo(6, -26, 12.1, -22.9, 12.4, -10.3);
+            path.lineTo(12.4, 23.5);
+            path.lineTo(8.9, 30);
+            path.lineTo(5.5, 23.5);
+            path.lineTo(-5.5, 23.5);
+            path.lineTo(-8.9, 30);
+            path.lineTo(-12.4, 23.5);
+            path.lineTo(-12.4, -10.3);
+            path.cubicTo(-12.1, -22.9, -6, -26, 0, -30);
         default:
             break;
         }
 
+        m_hullPath = path;
         m_numberPath->setPos(0, posY);
 
         QPainterPath sailPathStalled;
@@ -312,17 +366,17 @@ void BoatGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 QRectF BoatGraphicsItem::boundingRect() const {
     switch (m_series) {
     case Boats::keelboat:
-        return QRectF(-67, -54, 133, 108);
+        return QRectF(-20, -50, 40, 100);
     case Boats::laser:
-        return QRectF(-27, -22, 54, 44);
+        return QRectF(-6.7, -20, 13.4, 40);
     case Boats::optimist:
-        return QRectF(-15, -12, 31, 25);
+        return QRectF(-5.6, -11.5, 11.2, 23);
     case Boats::tornado:
-        return QRectF(-40, -33, 81, 66);
+        return QRectF(-15.3, -30.5, 30.6, 61);
     case Boats::startboat:
-        return QRectF(-55, -55, 110, 110);
+        return QRectF(-30, -50, 60, 100);
     case Boats::rib:
-        return QRectF(-35, -35, 70, 70);
+        return QRectF(-12.4, -30, 24.8, 60);
     default:
         return QRectF(-50, -50, 100, 100);
     }
@@ -340,84 +394,13 @@ void BoatGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    QPainterPath path;
-
     if (isSelected())
         painter->setPen(Qt::red);
     else
         painter->setPen(Qt::black);
     painter->setBrush(m_color);
+    painter->drawPath(m_hullPath);
 
-    switch (m_series) {
-    case Boats::keelboat:
-        path.moveTo(0,-50);
-        path.cubicTo(20, 0, 18, 13, 10, 50);
-        path.lineTo(-10, 50);
-        path.cubicTo(-18, 13, -20, 0, 0, -50);
-        break;
-    case Boats::laser:
-        path.moveTo(0,-20);
-        path.cubicTo(0.3, -19.7, 0.3, -20.0, 0.7, -19.7);
-        path.cubicTo(3.3, -14.3, 6.7, -3.3, 6.7, 4.7);
-        path.cubicTo(6.7, 11.0, 6.7, 14.3, 5.0, 20.0);
-        path.lineTo(-5.0, 20.0);
-        path.cubicTo(-6.7, 14.3, -6.7, 11.0, -6.7, 4.7);
-        path.cubicTo(-6.7, -3.3, -3.3, -14.3, -0.7, -19.7);
-        path.cubicTo(-0.3, -20.0, -0.3, -19.7, 0, -20);
-        break;
-    case Boats::optimist:
-        path.moveTo(0,-11.5);
-        path.cubicTo(1.5, -11.5, 1.7, -11.3, 2.9, -11.1);
-        path.cubicTo(3.6, -9.4, 5.6, -4.0, 5.6, 1.5);
-        path.cubicTo(5.6, 5.4, 5.0, 9.0, 4.6, 11.5);
-        path.lineTo(-4.6, 11.5);
-        path.cubicTo(-5.0, 9.0, -5.6, 5.4, -5.6, 1.5);
-        path.cubicTo(-5.6, -4.0, -3.6, -9.4, -2.9, -11.1);
-        path.cubicTo(-1.7, -11.3, -1.5, -11.5, 0, -11.5);
-        break;
-    case Boats::tornado:
-        path.moveTo(0,0);
-        path.lineTo(10.7, 0);
-        path.cubicTo(11.2, -11.7, 12.2, -19.8, 13.2, -30.5);
-        path.cubicTo(14.7, -20.3, 15.3, -6.1, 15.3, 6.1);
-        path.cubicTo(15.3, 13.7, 14.7, 20.8, 14.7, 30.0);
-        path.cubicTo(13.7, 30.5, 13.7, 30.5, 12.7, 30.5);
-        path.cubicTo(12.2, 30.5, 12.2, 30.5, 10.7, 30.0);
-        path.lineTo(10.7, 23.9);
-
-        path.lineTo(-10.7, 23.9);
-        path.lineTo(-10.7, 30.0);
-        path.cubicTo(-12.2, 30.5, -12.2, 30.5, -12.7, 30.5);
-        path.cubicTo(-13.7, 30.5, -13.7, 30.5, -14.7, 30);
-        path.cubicTo(-14.7, 20.8, -15.3, 13.7, -15.3, 6.1);
-        path.cubicTo(-15.3, -6.1, -14.7, -20.3, -13.2, -30.5);
-        path.cubicTo(-12.2, -19.8, -11.2, -11.7, -10.7, 0);
-        path.lineTo(0, 0);
-        break;
-    case Boats::startboat:
-        path.moveTo(0,-50);
-        path.cubicTo(30, -20, 20, 30, 17, 50);
-        path.lineTo(-17, 50);
-        path.cubicTo(-20, 30, -30, -20, 0, -50);
-        path.addEllipse(-1, -10, 2, 2);
-        break;
-    case Boats::rib:
-        path.moveTo(0,-30);
-        path.cubicTo(6, -26, 12.1, -22.9, 12.4, -10.3);
-        path.lineTo(12.4, 23.5);
-        path.lineTo(8.9, 30);
-        path.lineTo(5.5, 23.5);
-        path.lineTo(-5.5, 23.5);
-        path.lineTo(-8.9, 30);
-        path.lineTo(-12.4, 23.5);
-        path.lineTo(-12.4, -10.3);
-        path.cubicTo(-12.1, -22.9, -6, -26, 0, -30);
-        break;
-    default:
-        break;
-    }
-
-    painter->drawPath(path);
 }
 
 int BoatGraphicsItem::type() const {
