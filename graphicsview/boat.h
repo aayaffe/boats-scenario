@@ -30,6 +30,7 @@
 #include <QColor>
 
 #include "boats.h"
+#include "flag.h"
 
 class BoatModel;
 
@@ -68,6 +69,7 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void setOrder(int value);
         void setTrim(qreal value);
         void setOverlap(Boats::Overlaps value);
+        void setDisplayFlag(Boats::Flag value);
         void setColor(QColor value);
         void setSeries(Boats::Series value);
         void deleteItem(BoatModel *boat);
@@ -117,6 +119,10 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_color holds the color of the TrackModel
         QColor m_color;
+
+        /// \a m_flag holds the flag to display
+        Boats::Flag m_flag;
+        FlagGraphicsItem *m_flagRect;
 
         /// \a m_series holds the series of the TrackModel
         Boats::Series m_series;

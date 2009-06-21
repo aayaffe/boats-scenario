@@ -543,6 +543,47 @@ bool OverlapBoatUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Flag Boat
+FlagBoatUndoCommand::FlagBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, Boats::Flag flag, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_boatList(boatList),
+        m_flag(flag) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new flagboatundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_flagList << boat->flag();
+    }
+}
+
+FlagBoatUndoCommand::~FlagBoatUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end flagboatundocommand" << std::endl;
+}
+
+void FlagBoatUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo flagboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setFlag(m_flagList[i]);
+    }
+}
+
+void FlagBoatUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo flagboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setFlag(m_flag);
+    }
+}
+
+bool FlagBoatUndoCommand::mergeWith(const QUndoCommand *command) {
+    const FlagBoatUndoCommand *flagCommand = static_cast<const FlagBoatUndoCommand*>(command);
+    if (m_boatList != flagCommand->m_boatList)
+        return false;
+
+    m_flag = flagCommand->m_flag;
+    return true;
+}
+
 // Trim Boat
 TrimBoatUndoCommand::TrimBoatUndoCommand(QList<BoatModel*> &boatList, const qreal &trim, QUndoCommand *parent)
         : QUndoCommand(parent),

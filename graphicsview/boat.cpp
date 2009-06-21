@@ -47,6 +47,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         m_overlap(Boats::none),
         m_overlapLine(new QGraphicsLineItem(this)),
         m_color(boat->track()->color()),
+        m_flag(Boats::noFlag),
+        m_flagRect(new FlagGraphicsItem(this)),
         m_series(Boats::unknown),
         m_selected(false),
         m_order(0),
@@ -55,7 +57,9 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     setFlag(QGraphicsItem::ItemIsSelectable);
 
     setBoundingRegionGranularity(1);
+
     m_numberPath->setZValue(1);
+    m_flagRect->setZValue(2);
     m_sail->setZValue(3);
 
     m_numberPath->setBrush(QBrush(Qt::black));
@@ -73,6 +77,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     setPos(boat->position());
     setOrder(boat->order());
     setOverlap(boat->overlap());
+    setDisplayFlag(boat->flag());
 
     connect(boat, SIGNAL(headingChanged(qreal)),
             this, SLOT(setHeading(qreal)));
@@ -84,6 +89,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
             this, SLOT(setTrim(qreal)));
     connect(boat, SIGNAL(overlapChanged(Boats::Overlaps)),
             this, SLOT(setOverlap(Boats::Overlaps)));
+    connect(boat, SIGNAL(flagChanged(Boats::Flag)),
+            this, SLOT(setDisplayFlag(Boats::Flag)));
     connect(boat->track(), SIGNAL(colorChanged(QColor)),
             this, SLOT(setColor(QColor)));
     connect(boat->track(), SIGNAL(seriesChanged(Boats::Series)),
@@ -205,6 +212,17 @@ void BoatGraphicsItem::setOverlapLine() {
     }
 }
 
+void BoatGraphicsItem::setDisplayFlag(Boats::Flag value) {
+    m_flag = value;
+    m_flagRect->setDisplayFlag(m_flag);
+
+    if (m_flag == Boats::noFlag) {
+        m_flagRect->setVisible(false);
+    } else {
+        m_flagRect->setVisible(true);
+    }
+}
+
 void BoatGraphicsItem::setColor(QColor value) {
     if (m_color != value) {
         m_color = value;
@@ -218,6 +236,7 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         m_series = value;
 
         int posY = 0;
+        QRectF flagRect;
         qreal sailSize = 0;
         QPainterPath path;
 
@@ -225,6 +244,7 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         case Boats::keelboat:
             m_numberSize = 12;
             posY = 25;
+            flagRect = QRectF(-7.5, 30 , 15, 10);
             m_mast = QPointF(0, -8.7);
             sailSize = 41.5;
             path.moveTo(0,-50);
@@ -235,6 +255,7 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         case Boats::laser:
             m_numberSize = 7;
             posY = 10;
+            flagRect = QRectF(-3, 12 , 6, 4);
             m_mast = QPointF(0, -8.7);
             sailSize = 28.5;
             path.moveTo(0,-20);
@@ -249,6 +270,7 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         case Boats::optimist:
             m_numberSize = 6;
             posY = 3;
+            flagRect = QRectF(-2.25, 5 , 4.5, 3);
             m_mast = QPointF(0,-6.9);
             sailSize = 16.5;
             path.moveTo(0,-11.5);
@@ -263,6 +285,7 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         case Boats::tornado:
             m_numberSize = 10;
             posY = 17;
+            flagRect = QRectF(-4.5, 17.5 , 9, 6);
             m_mast = QPointF(0,0);
             sailSize = 25.5;
             path.moveTo(0,0);
@@ -285,6 +308,7 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             break;
         case Boats::startboat:
             m_numberSize = 0;
+            flagRect = QRectF(-7.5, 30 , 15, 10);
             path.moveTo(0,-50);
             path.cubicTo(30, -20, 20, 30, 17, 50);
             path.lineTo(-17, 50);
@@ -294,6 +318,7 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         case Boats::rib:
             m_numberSize = 10;
             posY = 10;
+            flagRect = QRectF(-5, 15 , 10, 6.7);
             path.moveTo(0,-30);
             path.cubicTo(6, -26, 12.1, -22.9, 12.4, -10.3);
             path.lineTo(12.4, 23.5);
@@ -310,6 +335,8 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
 
         m_hullPath = path;
         m_numberPath->setPos(0, posY);
+
+        m_flagRect->setRect(flagRect);
 
         QPainterPath sailPathStalled;
         sailPathStalled.cubicTo(.1 * sailSize, .2 * sailSize, .1 * sailSize, .2 * sailSize, 0, .3 * sailSize);

@@ -50,6 +50,7 @@ enum {
     MOVE_MODEL,
     HEADING_BOAT,
     OVERLAP_BOAT,
+    FLAG_BOAT,
     TRIM_BOAT,
     ZONE_MARK,
     LENGTH_MARK
@@ -295,6 +296,22 @@ class OverlapBoatUndoCommand : public QUndoCommand {
         SituationModel *m_situation;
         QList<BoatModel*> m_boatList;
         Boats::Overlaps m_overlaps;
+};
+
+class FlagBoatUndoCommand : public QUndoCommand {
+
+    public:
+        FlagBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, Boats::Flag flag, QUndoCommand *parent = 0);
+        ~FlagBoatUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return FLAG_BOAT; }
+    private:
+        SituationModel *m_situation;
+        QList<BoatModel*> m_boatList;
+        QList<Boats::Flag> m_flagList;
+        Boats::Flag m_flag;
 };
 
 class TrimBoatUndoCommand : public QUndoCommand {

@@ -37,6 +37,7 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         : PositionModel(parent),
         m_heading(0),
         m_trim(0),
+        m_flag(Boats::noFlag),
         m_track(track) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
     setOrder(track->size()+1);
@@ -77,6 +78,15 @@ void BoatModel::setOverlap(const  Boats::Overlaps theValue) {
                 << "overlap = " << theValue  << std::endl;
         m_overlap = theValue;
         emit overlapChanged(m_overlap);
+    }
+}
+
+void BoatModel::setFlag(const  Boats::Flag theValue) {
+    if (theValue != m_flag) {
+        if (debugLevel & 1 << MODEL) std::cout
+                << "flag = " << theValue  << std::endl;
+        m_flag = theValue;
+        emit flagChanged(m_flag);
     }
 }
 

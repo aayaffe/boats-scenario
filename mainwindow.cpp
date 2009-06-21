@@ -29,6 +29,8 @@
 #include "mainwindow.h"
 
 #include "commontypes.h"
+#include "boats.h"
+
 #include "situationmodel.h"
 #include "trackmodel.h"
 #include "boatmodel.h"
@@ -299,17 +301,30 @@ void MainWindow::updateActions() {
     addBoatAction->setEnabled(selectedBoats || scene->state() == CREATE_BOAT);
     togglePortOverlapAction->setEnabled(selectedBoats);
     toggleStarboardOverlapAction->setEnabled(selectedBoats);
+    flagMenu->setEnabled(selectedBoats);
     deleteTrackAction->setEnabled(selectedBoats);
     deleteAction->setEnabled(selectedItems);
 
     bool allPortSet = 1;
     bool allStarboardSet = 1;
+    int flagSize = ENUM_SIZE(Boats,Flag);
+    bool allFlagSet[flagSize];
+    for(int i=0; i < flagSize; i++) {
+        allFlagSet[i] = 1;
+    }
     foreach(BoatModel *boat, scene->selectedBoatModels()) {
         allPortSet = allPortSet && (boat->overlap() & Boats::port);
         allStarboardSet = allStarboardSet && (boat->overlap() & Boats::starboard);
+        for (int i = 0; i < flagSize; i++) {
+            allFlagSet[i] = allFlagSet[i] && (boat->flag() == i);
+        }
     }
     togglePortOverlapAction->setChecked(selectedBoats && allPortSet);
     toggleStarboardOverlapAction->setChecked(selectedBoats && allStarboardSet);
+    for (int i = 0; i < flagSize; i++) {
+        QAction *flagAction = flagMenu->actions()[i];
+        flagAction->setChecked(allFlagSet[i]);
+    }
 }
 
 void MainWindow::changeState(SceneState newState) {
@@ -412,6 +427,19 @@ void MainWindow::createMenus() {
     trackMenu->addSeparator();
     trackMenu->addAction(togglePortOverlapAction);
     trackMenu->addAction(toggleStarboardOverlapAction);
+    int flagSize = ENUM_SIZE(Boats, Flag);
+    flagMenu = new QMenu(tr("&Flag"));
+    QActionGroup *flagGroup = new QActionGroup(flagMenu);
+    for (int i = 0; i < flagSize; i++) {
+        QAction * flagAction = new QAction(ENUM_NAME(Boats, Flag, i), this);
+        flagAction->setCheckable(true);
+        flagAction->setData(i);
+        flagGroup->addAction(flagAction);
+        flagMenu->addAction(flagAction);
+        connect(flagAction, SIGNAL(triggered()),
+                this, SLOT(toggleFlag()));
+    }
+    trackMenu->addMenu(flagMenu);
     trackMenu->addAction(toggleMarkZoneAction);
     trackMenu->addSeparator();
     trackMenu->addAction(deleteTrackAction);
@@ -1115,6 +1143,21 @@ void MainWindow::toggleStarboardOverlap() {
     QList<BoatModel *> boatList = scene->selectedBoatModels();
     if (! boatList.isEmpty()) {
         situation->undoStack()->push(new OverlapBoatUndoCommand(situation, boatList, Boats::starboard));
+    }
+}
+
+void MainWindow::toggleFlag() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (action) {
+        Boats::Flag flag = (Boats::Flag)action->data().toInt();
+
+        QList<BoatModel *> boatList = scene->selectedBoatModels();
+        if (! boatList.isEmpty()) {
+            situation->undoStack()->push(new FlagBoatUndoCommand(situation, boatList, flag));
+        }
     }
 }
 

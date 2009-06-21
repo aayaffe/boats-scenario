@@ -115,6 +115,9 @@ void XmlSituationWriter::writeBoat(const BoatModel *boat) {
     if (boat->overlap() != Boats::none) {
         writeTextElement("overlap", FLAG_NAME(Boats, Overlap, boat->overlap()));
     }
+    if (boat->flag() != Boats::noFlag) {
+        writeTextElement("flag", ENUM_NAME(Boats, Flag, boat->flag()));
+    }
     foreach (const QString discarded, boat->discardedXml())
         writeUnknownElement(discarded);
     writeEndElement();

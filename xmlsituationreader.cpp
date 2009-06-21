@@ -161,6 +161,7 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     qreal heading = 0;
     qreal trim = 0;
     Boats::Overlaps overlap = Boats::none;
+    Boats::Flag flag = Boats::noFlag;
     QStringList discarded;
     while (!atEnd()) {
         readNext();
@@ -177,6 +178,9 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
                 trim = readElementText().toFloat();
             else if (name() == "overlap") {
                 overlap = (Boats::Overlaps)FLAG_VALUE(Boats, Overlap, readElementText().toStdString().c_str());
+            }
+            else if (name() == "flag") {
+                flag = (Boats::Flag)ENUM_VALUE(Boats, Flag, readElementText().toStdString().c_str());
             }
             else
                 discarded.append(readUnknownElement());
@@ -195,6 +199,7 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     }
     boat->setTrim(trim);
     boat->setOverlap(overlap);
+    boat->setFlag(flag);
     foreach (const QString elem, discarded) {
         boat->appendDiscardedXml(elem);
     }

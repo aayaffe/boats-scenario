@@ -87,6 +87,7 @@ class MainWindow : public QMainWindow {
         void addMark();
         void togglePortOverlap();
         void toggleStarboardOverlap();
+        void toggleFlag();
         void toggleMarkZone();
         void deleteTrack();
         void deleteModels();
@@ -191,6 +192,7 @@ class MainWindow : public QMainWindow {
         QMenu *fileMenu;
         QMenu *recentMenu;
         QMenu *trackMenu;
+        QMenu *flagMenu;
         QMenu *historyMenu;
         QMenu *zoomMenu;
         QMenu *animationMenu;

@@ -62,6 +62,16 @@ public:
     Q_ENUMS (Overlap);
     Q_DECLARE_FLAGS(Overlaps, Overlap)
 
+    enum Flag {
+        noFlag,
+        Y,
+        Red,
+        Green,
+        Yellow,
+        Blue
+    };
+    Q_ENUMS (Flag);
+
 private:
     static QList<QString> m_seriesList;
 
