@@ -37,6 +37,7 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         : PositionModel(parent),
         m_heading(0),
         m_trim(0),
+        m_overlap(Boats::none),
         m_flag(Boats::noFlag),
         m_track(track) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
