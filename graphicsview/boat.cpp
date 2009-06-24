@@ -46,23 +46,27 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         m_overlap(Boats::none),
         m_overlapLine(new QGraphicsLineItem(this)),
         m_color(boat->track()->color()),
-        m_series(boat->track()->series()),
+        m_series(Boats::unknown),
         m_selected(false),
-        m_order(boat->order()) {
+        m_order(0),
+        m_numberPath(new QGraphicsPathItem(this)) {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
     setBoundingRegionGranularity(1);
+    m_numberPath->setZValue(1);
+    m_numberPath->setBrush(QBrush(Qt::black));
     QPen dashPen(Qt::CustomDashLine);
     QVector<qreal> dashes;
     dashes << 5 << 5;
     dashPen.setDashPattern(dashes);
     m_overlapLine->setPen(dashPen);
 
+    setSeries(boat->track()->series());
     setHeading(boat->heading());
     setSailAngle();
     setPos(boat->position());
-    setZValue(m_order);
+    setOrder(boat->order());
     setOverlap(boat->overlap());
 
     connect(boat, SIGNAL(headingChanged(qreal)),
@@ -111,11 +115,20 @@ void BoatGraphicsItem::setPosition(QPointF position) {
 }
 
 void BoatGraphicsItem::setOrder(int value) {
-    if (m_order != value) {
-        m_order = value;
-        setZValue(m_order);
-        update();
+    m_order = value;
+    if (m_order && m_numberSize) {
+        QString number = QString::number(m_order);
+        QFont numberFont;
+        numberFont.setPointSize(m_numberSize);
+        QFontMetrics fm(numberFont);
+        QPainterPath fpath;
+        fpath.addText(-fm.width(number)/2.0, 0, numberFont, number);
+        m_numberPath->setPath(fpath);
+    } else {
+        m_numberPath->setPath(QPainterPath());
     }
+    setZValue(m_order);
+    update();
 }
 
 void BoatGraphicsItem::setTrim(qreal value) {
@@ -184,8 +197,39 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
     if (m_series != value) {
         prepareGeometryChange();
         m_series = value;
+
+        int posY = 0;
+        switch (m_series) {
+        case Boats::keelboat:
+            m_numberSize = 12;
+            posY = 25;
+            break;
+        case Boats::laser:
+            m_numberSize = 7;
+            posY = 10;
+            break;
+        case Boats::optimist:
+            m_numberSize = 6;
+            posY = 3;
+            break;
+        case Boats::tornado:
+            m_numberSize = 10;
+            posY = 17;
+            break;
+        case Boats::startboat:
+            m_numberSize = 0;
+            break;
+        case Boats::rib:
+            m_numberSize = 10;
+            posY = 10;
+        default:
+            break;
+        }
+
+        m_numberPath->setPos(0, posY);
         setSailAngle();
         setOverlapLine();
+        setOrder(m_order);
         update();
     }
 }
@@ -248,8 +292,6 @@ void BoatGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     Q_UNUSED(widget);
 
     QPainterPath path;
-    int numberSize = 0;
-    qreal posY = 0;
 
     if (isSelected())
         painter->setPen(Qt::red);
@@ -263,8 +305,6 @@ void BoatGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         path.cubicTo(20, 0, 18, 13, 10, 50);
         path.lineTo(-10, 50);
         path.cubicTo(-18, 13, -20, 0, 0, -50);
-        numberSize = 12;
-        posY = 25;
         break;
     case Boats::laser:
         path.moveTo(0,-20);
@@ -275,8 +315,6 @@ void BoatGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         path.cubicTo(-6.7, 14.3, -6.7, 11.0, -6.7, 4.7);
         path.cubicTo(-6.7, -3.3, -3.3, -14.3, -0.7, -19.7);
         path.cubicTo(-0.3, -20.0, -0.3, -19.7, 0, -20);
-        numberSize = 7;
-        posY = 10;
         break;
     case Boats::optimist:
         path.moveTo(0,-11.5);
@@ -287,8 +325,6 @@ void BoatGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         path.cubicTo(-5.0, 9.0, -5.6, 5.4, -5.6, 1.5);
         path.cubicTo(-5.6, -4.0, -3.6, -9.4, -2.9, -11.1);
         path.cubicTo(-1.7, -11.3, -1.5, -11.5, 0, -11.5);
-        numberSize = 6;
-        posY = 5;
         break;
     case Boats::tornado:
         path.moveTo(0,0);
@@ -308,8 +344,6 @@ void BoatGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         path.cubicTo(-15.3, -6.1, -14.7, -20.3, -13.2, -30.5);
         path.cubicTo(-12.2, -19.8, -11.2, -11.7, -10.7, 0);
         path.lineTo(0, 0);
-        numberSize = 10;
-        posY = 17;
         break;
     case Boats::startboat:
         path.moveTo(0,-50);
@@ -329,18 +363,12 @@ void BoatGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         path.lineTo(-12.4, 23.5);
         path.lineTo(-12.4, -10.3);
         path.cubicTo(-12.1, -22.9, -6, -26, 0, -30);
-        numberSize = 10;
-        posY = 17;
         break;
     default:
         break;
     }
 
     painter->drawPath(path);
-
-    if (numberSize && m_order) {
-        paintNumber(painter, numberSize, posY);
-    }
 
     switch (m_series) {
     case Boats::keelboat:
@@ -359,16 +387,6 @@ void BoatGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         break;
     }
 
-}
-
-void BoatGraphicsItem::paintNumber(QPainter *painter, int numberSize, qreal posY) {
-    QPainterPath fpath;
-    QFont f(painter->font());
-    QString number = QString::number(m_order);
-    f.setPointSize(numberSize);
-    QFontMetrics fm(f);
-    fpath.addText(-fm.width(number)/2.0, posY ,f,number);
-    painter->fillPath(fpath, QBrush(Qt::black));
 }
 
 void BoatGraphicsItem::paintSail(QPainter *painter, qreal sailSize, QPointF attach) {

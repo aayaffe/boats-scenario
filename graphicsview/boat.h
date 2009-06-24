@@ -81,9 +81,6 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void setSailAngle();
         void setOverlapLine();
 
-        /// draw a number with font size numberSize at posY alongside boat
-        void paintNumber(QPainter *painter, int numberSize, qreal posY);
-
         /// draw a sail with size sailScale from point attach
         void paintSail(QPainter *painter, qreal sailSize, QPointF attach);
 
@@ -114,6 +111,12 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_order holds the stacking order in the TrackModel
         int m_order;
+
+        /// \a m_numberPath holds the number path that will be drawn on the hull
+        QGraphicsPathItem *m_numberPath;
+
+        /// \a m_numberSize holds the font size of the number
+        int m_numberSize;
 };
 
 #endif
