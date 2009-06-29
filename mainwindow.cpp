@@ -60,7 +60,9 @@ MainWindow::MainWindow(QWidget *parent)
         situationDock(new QDockWidget(this)),
         situationWidget(new SituationWidget(situationDock)),
         statusbar(new QStatusBar(this)),
-        timeline(new QTimeLine(1000,this)) {
+        timeline(new QTimeLine(1000,this)),
+        qtTranslator(new QTranslator(this)),
+        translator(new QTranslator(this)) {
 
     // Actions
     createActions();
@@ -98,196 +100,201 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(tabWidget);
 
     readSettings();
+
+    // Locale and translation setup
+    createTranslations(QLocale::system().name());
 }
 
 MainWindow::~MainWindow() {}
 
+void MainWindow::createTranslations(QString locale) {
+
+    qtTranslator->load("qt_" + locale,
+                       QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    qApp->installTranslator(qtTranslator);
+
+    translator->load(QString("boats_").append(locale).append(".qm"), TRANSLATEDIR);
+    qApp->installTranslator(translator);
+}
+
 void MainWindow::createActions() {
-    newFileAction = new QAction(QIcon(":/images/filenew.png"), tr("&New File"), this);
-    newFileAction->setShortcut(tr("Ctrl+N"));
+    newFileAction = new QAction(this);
+    newFileAction->setIcon(QIcon(":/images/filenew.png"));
     connect(newFileAction, SIGNAL(triggered()),
             this, SLOT(newFile()));
 
-    openFileAction = new QAction(QIcon(":/images/fileopen.png"), tr("&Open File..."), this);
-    openFileAction->setShortcut(tr("Ctrl+O"));
+    openFileAction = new QAction(this);
+    openFileAction->setIcon(QIcon(":/images/fileopen.png"));
     connect(openFileAction, SIGNAL(triggered()),
             this, SLOT(openFile()));
 
-    saveFileAction = new QAction(QIcon(":/images/filesave.png"), tr("&Save File"), this);
-    saveFileAction->setShortcut(tr("Ctrl+S"));
+    saveFileAction = new QAction(this);
+    saveFileAction->setIcon(QIcon(":/images/filesave.png"));
     saveFileAction->setEnabled(false);
     connect(saveFileAction, SIGNAL(triggered()),
             this, SLOT(saveFile()));
 
-    saveAsAction = new QAction(QIcon(":/images/filesaveas.png"), tr("Save &As..."), this);
-    saveAsAction->setShortcut(tr("Ctrl+Shift+S"));
+    saveAsAction = new QAction(this);
+    saveAsAction->setIcon(QIcon(":/images/filesaveas.png"));
     saveAsAction->setEnabled(false);
     connect(saveAsAction, SIGNAL(triggered()),
             this, SLOT(saveAs()));
 
-    newTabAction = new QAction(QIcon(":/images/tab_new.png"), tr("New &Tab"), this);
-    newTabAction->setShortcut(tr("Ctrl+T"));
+    newTabAction = new QAction(this);
+    newTabAction->setIcon(QIcon(":/images/tab_new.png"));
     connect(newTabAction, SIGNAL(triggered()),
             this, SLOT(newTab()));
 
-    removeTabAction = new QAction(QIcon(":/images/tab_remove.png"), tr("&Close Tab"), this);
-    removeTabAction->setShortcut(tr("Ctrl+W"));
+    removeTabAction = new QAction(this);
+    removeTabAction->setIcon(QIcon(":/images/tab_remove.png"));
     removeTabAction->setEnabled(false);
     connect(removeTabAction, SIGNAL(triggered()),
             this, SLOT(removeTab()));
 
-    restoreFilesAction = new QAction(tr("&Restore Last Session..."), this);
+    restoreFilesAction = new QAction(this);
     connect(restoreFilesAction, SIGNAL(triggered()),
             this, SLOT(restoreFiles()));
 
-    printAction = new QAction(QIcon(":images/fileprint.png"), tr("&Print..."), this);
-    printAction->setShortcut(tr("Ctrl+p"));
+    printAction = new QAction(this);
+    printAction->setIcon(QIcon(":images/fileprint.png"));
     connect(printAction, SIGNAL(triggered()),
             this, SLOT(print()));
 
-    printPreviewAction = new QAction(QIcon(":images/filequickprint.png"), tr("Print P&review..."), this);
-    printPreviewAction->setShortcut(tr("Ctrl+r"));
+    printPreviewAction = new QAction(this);
+    printPreviewAction->setIcon(QIcon(":images/filequickprint.png"));
     connect(printPreviewAction, SIGNAL(triggered()),
             this, SLOT(printPreview()));
 
-    exportPdfAction = new QAction(QIcon(":/images/pdf.png"), tr("&Export Pdf..."), this);
-    exportPdfAction->setShortcut(tr("Ctrl+E"));
+    exportPdfAction = new QAction(this);
+    exportPdfAction->setIcon(QIcon(":/images/pdf.png"));
     connect(exportPdfAction, SIGNAL(triggered()),
             this, SLOT(exportPdf()));
 
-    exportImageAction = new QAction(QIcon(":/images/export.png"), tr("Export &Image..."), this);
-    exportImageAction->setShortcut(tr("Ctrl+I"));
+    exportImageAction = new QAction(this);
+    exportImageAction->setIcon(QIcon(":/images/export.png"));
     connect(exportImageAction, SIGNAL(triggered()),
             this, SLOT(exportImage()));
 
 #ifdef GIF_EXPORT
-    exportAnimationAction = new QAction(QIcon(":/images/video.png"), tr("Export Ani&mation..."), this);
-    exportAnimationAction->setShortcut(tr("Ctrl+V"));
+    exportAnimationAction = new QAction(this);
+    exportAnimationAction->setIcon(QIcon(":/images/video.png"));
     connect(exportAnimationAction, SIGNAL(triggered()),
             this, SLOT(exportAnimation()));
 #endif
 
-    exitAction = new QAction(tr("E&xit"), this);
-    exitAction->setShortcut(tr("Ctrl+Q"));
-    exitAction->setStatusTip(tr("Exit the application"));
+    exitAction = new QAction(this);
     connect(exitAction, SIGNAL(triggered()),
         this, SLOT(close()));
 
-    addTrackAction = new QAction(QIcon(":/images/addtrack.png"), tr("Create &Track"), this);
-    addTrackAction->setShortcut(tr("Ctrl+Ins"));
+    addTrackAction = new QAction(this);
+    addTrackAction->setIcon(QIcon(":/images/addtrack.png"));
     addTrackAction->setCheckable(true);
     connect(addTrackAction, SIGNAL(triggered()),
             this, SLOT(addTrack()));
 
-    addBoatAction = new QAction(QIcon(":/images/addboat.png"), tr("Create &Boat"), this);
-    addBoatAction->setShortcut(tr("Ins"));
+    addBoatAction = new QAction(this);
+    addBoatAction->setIcon(QIcon(":/images/addboat.png"));
     addBoatAction->setCheckable(true);
     connect(addBoatAction, SIGNAL(triggered()),
             this, SLOT(addBoat()));
 
-    addMarkAction = new QAction(QIcon(":/images/addmark.png"), tr("Create &Mark"), this);
-    addMarkAction->setShortcut(tr("Alt+Ins"));
+    addMarkAction = new QAction(this);
+    addMarkAction->setIcon(QIcon(":/images/addmark.png"));
     addMarkAction->setCheckable(true);
     connect(addMarkAction, SIGNAL(triggered()),
             this, SLOT(addMark()));
 
-    togglePortOverlapAction = new QAction(tr("&Port Overlap"), this);
-    togglePortOverlapAction->setShortcut(tr("Alt+<"));
+    togglePortOverlapAction = new QAction(this);
     togglePortOverlapAction->setCheckable(true);
     connect(togglePortOverlapAction, SIGNAL(triggered()),
             this, SLOT(togglePortOverlap()));
 
-    toggleStarboardOverlapAction = new QAction(tr("&Starboard Overlap"), this);
-    toggleStarboardOverlapAction->setShortcut(tr("Alt+>"));
+    toggleStarboardOverlapAction = new QAction(this);
     toggleStarboardOverlapAction->setCheckable(true);
     connect(toggleStarboardOverlapAction, SIGNAL(triggered()),
             this, SLOT(toggleStarboardOverlap()));
 
-    toggleMarkZoneAction = new QAction(QIcon(":/images/zone.png"), tr("Toggle Mark &Zone"), this);
-    toggleMarkZoneAction->setShortcut(tr("Z"));
+    toggleMarkZoneAction = new QAction(this);
+    toggleMarkZoneAction->setIcon(QIcon(":/images/zone.png"));
     connect(toggleMarkZoneAction, SIGNAL(triggered()),
             this, SLOT(toggleMarkZone()));
 
-    deleteTrackAction = new QAction(tr("Delete Track"), this);
-    deleteTrackAction->setShortcut(tr("Ctrl+Del"));
+    deleteTrackAction = new QAction(this);
     connect(deleteTrackAction, SIGNAL(triggered()),
             this, SLOT(deleteTrack()));
 
-    deleteAction = new QAction(tr("&Delete Selection"), this);
-    deleteAction->setShortcut(tr("Del"));
+    deleteAction = new QAction(this);
     connect(deleteAction, SIGNAL(triggered()),
             this, SLOT(deleteModels()));
 
-    animateAction = new QAction(QIcon(":/images/animate.png"), tr("&Animate"), this);
-    animateAction->setShortcut(tr("Ctrl+A"));
+    animateAction = new QAction(this);
+    animateAction->setIcon(QIcon(":/images/animate.png"));
     animateAction->setCheckable(true);
     connect(animateAction, SIGNAL(toggled(bool)),
             this, SLOT(animate(bool)));
 
-    startAction  = new QAction(QIcon(":/images/player_play.png"), tr("&Play"), this);
-    startAction->setShortcut(tr("P"));
+    startAction  = new QAction(this);
+    startAction->setIcon(QIcon(":/images/player_play.png"));
     startAction->setEnabled(false);
     connect(startAction, SIGNAL(triggered()),
             this, SLOT(play()));
 
-    pauseAction  = new QAction(QIcon(":/images/player_pause.png"), tr("&Pause"), this);
-    pauseAction->setShortcut(tr("M"));
+    pauseAction  = new QAction(this);
+    pauseAction->setIcon(QIcon(":/images/player_pause.png"));
     pauseAction->setEnabled(false);
     pauseAction->setCheckable(true);
     connect(pauseAction, SIGNAL(toggled(bool)),
             this, SLOT(pause(bool)));
 
-    stopAction = new QAction(QIcon(":/images/player_stop.png"), tr("&Stop"), this);
-    stopAction->setShortcut(tr("Space"));
+    stopAction = new QAction(this);
+    stopAction->setIcon(QIcon(":/images/player_stop.png"));
     stopAction->setEnabled(false);
     connect(stopAction, SIGNAL(triggered()),
             this, SLOT(stop()));
 
-    loopAction = new QAction(QIcon(":/images/player_loop.png"), tr("&Loop"), this);
-    loopAction->setShortcut(tr("L"));
+    loopAction = new QAction(this);
+    loopAction->setIcon(QIcon(":/images/player_loop.png"));
     loopAction->setEnabled(false);
     loopAction->setCheckable(true);
     connect(loopAction, SIGNAL(toggled(bool)),
             this, SLOT(loop(bool)));
 
-    undoAction = new QAction(QIcon(":/images/undo.png"), tr("&Undo"), this);
-    undoAction->setShortcut(tr("Ctrl+Z"));
+    undoAction = new QAction(this);
+    undoAction->setIcon(QIcon(":/images/undo.png"));
     undoAction->setEnabled(false);
 
-    redoAction = new QAction(QIcon(":/images/redo.png"), tr("&Redo"), this);
-    QList<QKeySequence> redoShortcuts;
-    redoShortcuts << tr("Ctrl+Y") << tr("Shift+Ctrl+Z");
-    redoAction->setShortcuts(redoShortcuts);
+    redoAction = new QAction(this);
+    redoAction->setIcon(QIcon(":/images/redo.png"));
     redoAction->setEnabled(false);
 
-    zoomInAction = new QAction(QIcon(":/images/zoomin.png"), tr("Zoom &In"), this);
-    zoomInAction->setShortcut(tr("Ctrl++"));
+    zoomInAction = new QAction(this);
+    zoomInAction->setIcon(QIcon(":/images/zoomin.png"));
 
-    zoomOutAction = new QAction(QIcon(":/images/zoomout.png"), tr("Zoom &Out"), this);
-    zoomOutAction->setShortcut(tr("Ctrl+-"));
+    zoomOutAction = new QAction(this);
+    zoomOutAction->setIcon(QIcon(":/images/zoomout.png"));
 
-    zoomFitAction = new QAction(QIcon(":/images/zoomfit.png"), tr("Zoom &Fit"), this);
-    zoomFitAction->setShortcut(tr("Ctrl+F"));
+    zoomFitAction = new QAction(this);
+    zoomFitAction->setIcon(QIcon(":/images/zoomfit.png"));
 
-    toggleMainToolbarAction = new QAction(tr("Main Toolbar"), this);
+    toggleMainToolbarAction = new QAction(this);
     toggleMainToolbarAction->setCheckable(true);
     toggleMainToolbarAction->setChecked(true);
     connect(toggleMainToolbarAction, SIGNAL(toggled(bool)),
             toolbar, SLOT(setVisible(bool)));
 
-    toggleAnimationToolbarAction = new QAction(tr("Animation Toolbar"), this);
+    toggleAnimationToolbarAction = new QAction(this);
     toggleAnimationToolbarAction->setCheckable(true);
     toggleAnimationToolbarAction->setChecked(true);
     connect(toggleAnimationToolbarAction, SIGNAL(toggled(bool)),
             animationBar, SLOT(setVisible(bool)));
 
-    toggleScenarioDockAction = new QAction(tr("Scenario Dock"), this);
+    toggleScenarioDockAction = new QAction(this);
     toggleScenarioDockAction->setCheckable(true);
     toggleScenarioDockAction->setChecked(true);
     connect(toggleScenarioDockAction, SIGNAL(toggled(bool)),
             situationDock, SLOT(setVisible(bool)));
 
-    aboutAction = new QAction(tr("&About"), this);
+    aboutAction = new QAction(this);
     connect(aboutAction, SIGNAL(triggered()),
             this, SLOT(about()));
 }
@@ -391,7 +398,7 @@ void MainWindow::cleanState(bool state) {
 }
 
 void MainWindow::createMenus() {
-    recentMenu = new QMenu(tr("&Recent"));
+    recentMenu = new QMenu(this);
     for (int i = 0; i < maxRecent; ++i) {
         QAction * recentAction = new QAction(this);
         recentMenu->addAction(recentAction);
@@ -399,7 +406,8 @@ void MainWindow::createMenus() {
                 this, SLOT(openRecent()));
     }
 
-    fileMenu = menubar->addMenu(tr("&File"));
+    fileMenu = new QMenu(this);
+    menubar->addMenu(fileMenu);
     fileMenu->addAction(newFileAction);
     fileMenu->addAction(openFileAction);
     fileMenu->addMenu(recentMenu);
@@ -420,7 +428,8 @@ void MainWindow::createMenus() {
     fileMenu->addSeparator();
     fileMenu->addAction(exitAction);
 
-    trackMenu = menubar->addMenu(tr("&Edit"));
+    trackMenu = new QMenu(this);
+    menubar->addMenu(trackMenu);
     trackMenu->addAction(addTrackAction);
     trackMenu->addAction(addBoatAction);
     trackMenu->addAction(addMarkAction);
@@ -428,7 +437,7 @@ void MainWindow::createMenus() {
     trackMenu->addAction(togglePortOverlapAction);
     trackMenu->addAction(toggleStarboardOverlapAction);
     int flagSize = ENUM_SIZE(Boats, Flag);
-    flagMenu = new QMenu(tr("&Flag"));
+    flagMenu = new QMenu(this);
     QActionGroup *flagGroup = new QActionGroup(flagMenu);
     for (int i = 0; i < flagSize; i++) {
         QAction * flagAction = new QAction(ENUM_NAME(Boats, Flag, i), this);
@@ -445,11 +454,13 @@ void MainWindow::createMenus() {
     trackMenu->addAction(deleteTrackAction);
     trackMenu->addAction(deleteAction);
 
-    historyMenu = menubar->addMenu(tr("&History"));
+    historyMenu = new QMenu(this);
+    menubar->addMenu(historyMenu);
     historyMenu->addAction(undoAction);
     historyMenu->addAction(redoAction);
 
-    animationMenu = menubar->addMenu(tr("&Animation"));
+    animationMenu = new QMenu(this);
+    menubar->addMenu(animationMenu);
     animationMenu->addAction(animateAction);
     animationMenu->addSeparator();
     animationMenu->addAction(startAction);
@@ -457,17 +468,43 @@ void MainWindow::createMenus() {
     animationMenu->addAction(stopAction);
     animationMenu->addAction(loopAction);
 
-    zoomMenu = menubar->addMenu(tr("&Zoom"));
+    zoomMenu = new QMenu(this);
+    menubar->addMenu(zoomMenu);
     zoomMenu->addAction(zoomInAction);
     zoomMenu->addAction(zoomFitAction);
     zoomMenu->addAction(zoomOutAction);
 
-    viewMenu = menubar->addMenu(tr("&View"));
+    viewMenu = new QMenu(this);
+    menubar->addMenu(viewMenu);
     viewMenu->addAction(toggleMainToolbarAction);
     viewMenu->addAction(toggleAnimationToolbarAction);
     viewMenu->addAction(toggleScenarioDockAction);
 
-    menubar->addAction(aboutAction);
+    aboutMenu = new QMenu(this);
+    menubar->addMenu(aboutMenu);
+    langMenu = new QMenu(this);
+    QActionGroup *langGroup = new QActionGroup(langMenu);
+    QDir dir(TRANSLATEDIR);
+    QStringList fileNames = dir.entryList(QStringList("*.qm"), QDir::Files,
+                                          QDir::Name);
+    fileNames.prepend("boats_en.qm");
+    QMutableStringListIterator i(fileNames);
+    while (i.hasNext()) {
+        i.next();
+        QRegExp rx("boats_(.+)\\.qm");
+        rx.indexIn(i.value());
+        QLocale locale(rx.cap(1));
+        QAction *langAction = new QAction(
+                QLocale::languageToString(locale.language()), this);
+        langAction->setCheckable(true);
+        langAction->setData(locale.name());
+        langGroup->addAction(langAction);
+        langMenu->addAction(langAction);
+        connect(langAction, SIGNAL(triggered()),
+                this, SLOT(toggleLang()));
+    }
+    aboutMenu->addMenu(langMenu);
+    aboutMenu->addAction(aboutAction);
 
     toolbar->addAction(newFileAction);
     toolbar->addAction(openFileAction);
@@ -726,6 +763,126 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     }
     writeSettings();
     event->accept();
+}
+
+void MainWindow::changeEvent(QEvent *event) {
+    if(event->type() == QEvent::LanguageChange) {
+        newFileAction->setText(tr("&New File"));
+        newFileAction->setShortcut(tr("Ctrl+N"));
+
+        openFileAction->setText(tr("&Open File..."));
+        openFileAction->setShortcut(tr("Ctrl+O"));
+
+        saveFileAction->setText(tr("&Save File"));
+        saveFileAction->setShortcut(tr("Ctrl+S"));
+
+        saveAsAction->setText(tr("Save &As..."));
+        saveAsAction->setShortcut(tr("Ctrl+Shift+S"));
+
+        newTabAction->setText(tr("New &Tab"));
+        newTabAction->setShortcut(tr("Ctrl+T"));
+
+        removeTabAction->setText(tr("&Close Tab"));
+        removeTabAction->setShortcut(tr("Ctrl+W"));
+
+        restoreFilesAction->setText(tr("&Restore Last Session..."));
+
+        printAction->setText(tr("&Print..."));
+        printAction->setShortcut(tr("Ctrl+P"));
+
+        printPreviewAction->setText(tr("Print P&review..."));
+        printPreviewAction->setShortcut(tr("Ctrl+R"));
+
+        exportPdfAction->setText(tr("&Export Pdf..."));
+        exportPdfAction->setShortcut(tr("Ctrl+E"));
+
+        exportImageAction->setText(tr("Export &Image..."));
+        exportImageAction->setShortcut(tr("Ctrl+I"));
+
+#ifdef GIF_EXPORT
+        exportAnimationAction->setText(tr("Export Ani&mation..."));
+        exportAnimationAction->setShortcut(tr("Ctrl+V"));
+#endif
+
+        exitAction->setText(tr("E&xit"));
+        exitAction->setShortcut(tr("Ctrl+Q"));
+        exitAction->setStatusTip(tr("Exit the application"));
+
+        addTrackAction->setText(tr("Create &Track"));
+        addTrackAction->setShortcut(tr("Ctrl+Ins"));
+
+        addBoatAction->setText(tr("Create &Boat"));
+        addBoatAction->setShortcut(tr("Ins"));
+
+        addMarkAction->setText(tr("Create &Mark"));
+        addMarkAction->setShortcut(tr("Alt+Ins"));
+
+        togglePortOverlapAction->setText(tr("&Port Overlap"));
+        togglePortOverlapAction->setShortcut(tr("Alt+<"));
+
+        toggleStarboardOverlapAction->setText(tr("&Starboard Overlap"));
+        toggleStarboardOverlapAction->setShortcut(tr("Alt+>"));
+
+        toggleMarkZoneAction->setText(tr("Toggle Mark &Zone"));
+        toggleMarkZoneAction->setShortcut(tr("Z"));
+
+        deleteTrackAction->setText(tr("Delete Track"));
+        deleteTrackAction->setShortcut(tr("Ctrl+Del"));
+
+        deleteAction->setText(tr("&Delete Selection"));
+        deleteAction->setShortcut(tr("Del"));
+
+        animateAction->setText(tr("&Animate"));
+        animateAction->setShortcut(tr("Ctrl+A"));
+
+        startAction->setText(tr("&Play"));
+        startAction->setShortcut(tr("P"));
+
+        pauseAction->setText(tr("&Pause"));
+        pauseAction->setShortcut(tr("M"));
+
+        stopAction->setText(tr("&Stop"));
+        stopAction->setShortcut(tr("Space"));
+
+        loopAction->setText(tr("&Loop"));
+        loopAction->setShortcut(tr("L"));
+
+        undoAction->setText(tr("&Undo"));
+        undoAction->setShortcut(tr("Ctrl+Z"));
+
+        redoAction->setText(tr("&Redo"));
+        QList<QKeySequence> redoShortcuts;
+        redoShortcuts << tr("Ctrl+Y") << tr("Shift+Ctrl+Z");
+        redoAction->setShortcuts(redoShortcuts);
+
+        zoomInAction->setText(tr("Zoom &In"));
+        zoomInAction->setShortcut(tr("Ctrl++"));
+
+        zoomOutAction->setText(tr("Zoom &Out"));
+        zoomOutAction->setShortcut(tr("Ctrl+-"));
+
+        zoomFitAction->setText(tr("Zoom &Fit"));
+        zoomFitAction->setShortcut(tr("Ctrl+F"));
+
+        toggleMainToolbarAction->setText(tr("Main Toolbar"));
+        toggleAnimationToolbarAction->setText(tr("Animation Toolbar"));
+        toggleScenarioDockAction->setText(tr("Scenario Dock"));
+
+        aboutAction->setText(tr("&About"));
+
+        recentMenu->setTitle(tr("&Recent"));
+        fileMenu->setTitle(tr("&File"));
+        trackMenu->setTitle(tr("&Edit"));
+        flagMenu->setTitle(tr("&Flag"));
+        historyMenu->setTitle(tr("&History"));
+        animationMenu->setTitle(tr("&Animation"));
+        zoomMenu->setTitle(tr("&Zoom"));
+        viewMenu->setTitle(tr("&View"));
+        aboutMenu->setTitle(tr("&Help"));
+        langMenu->setTitle(tr("Choose &Language"));
+    } else {
+        QMainWindow::changeEvent(event);
+    }
 }
 
 void MainWindow::newFile() {
@@ -1170,6 +1327,18 @@ void MainWindow::toggleMarkZone() {
         situation->undoStack()->push(new ZoneMarkUndoCommand(situation, markList));
     } else {
         situation->undoStack()->push(new ZoneMarkUndoCommand(situation, situation->marks()));
+    }
+}
+
+void MainWindow::toggleLang() {
+
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (action) {
+
+        qApp->removeTranslator(qtTranslator);
+        qApp->removeTranslator(translator);
+
+        createTranslations(action->data().toString());
     }
 }
 
