@@ -13,6 +13,7 @@ HEADERS = \
 	model/trackmodel.h \
 	graphicsview/boat.h \
 	graphicsview/boatanimation.h \
+	graphicsview/bubble.h \
 	graphicsview/flag.h \
 	graphicsview/mark.h \
 	graphicsview/situationscene.h \
@@ -40,6 +41,7 @@ SOURCES = \
 	model/trackmodel.cpp \
 	graphicsview/boat.cpp \
 	graphicsview/boatanimation.cpp \
+	graphicsview/bubble.cpp \
 	graphicsview/flag.cpp \
 	graphicsview/mark.cpp \
 	graphicsview/situationscene.cpp \

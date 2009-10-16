@@ -624,6 +624,69 @@ bool TrimBoatUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Set Text
+SetTextUndoCommand::SetTextUndoCommand(BoatModel* boat, QString text, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_boat(boat),
+        m_oldText(boat->text()),
+        m_newText(text) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new settextundocommand" << std::endl;
+}
+
+SetTextUndoCommand::~SetTextUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end settextundocommand" << std::endl;
+}
+
+void SetTextUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo settextundocommand"<< std::endl;
+    m_boat->setText(m_oldText);
+}
+
+void SetTextUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo settextundocommand" << std::endl;
+    m_boat->setText(m_newText);
+}
+
+bool SetTextUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetTextUndoCommand *setTextCommand = static_cast<const SetTextUndoCommand*>(command);
+    if (m_boat != setTextCommand->m_boat)
+        return false;
+
+    m_newText = setTextCommand->m_newText;
+    return true;
+}
+
+// Move Text
+MoveTextUndoCommand::MoveTextUndoCommand(BoatModel *boat, const QPointF &deltaPosition, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_boat(boat),
+        m_deltaPosition(deltaPosition) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new movetextundocommand" << std::endl;
+}
+
+MoveTextUndoCommand::~MoveTextUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end movetextundocommand" << std::endl;
+}
+
+void MoveTextUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo movetextundocommand" << std::endl;
+    m_boat->setTextPosition(m_boat->textPosition() - m_deltaPosition);
+}
+
+void MoveTextUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo movetextundocommand" << std::endl;
+    m_boat->setTextPosition(m_boat->textPosition() + m_deltaPosition);
+}
+
+bool MoveTextUndoCommand::mergeWith(const QUndoCommand *command) {
+    const MoveTextUndoCommand *moveCommand = static_cast<const MoveTextUndoCommand*>(command);
+    if (m_boat != moveCommand->m_boat)
+        return false;
+
+    m_deltaPosition += moveCommand->m_deltaPosition;
+    return true;
+}
+
 // Delete Boat
 DeleteBoatUndoCommand::DeleteBoatUndoCommand(TrackModel* track, BoatModel* boat, QUndoCommand *parent)
         : QUndoCommand(parent),

@@ -39,6 +39,7 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         m_trim(0),
         m_overlap(Boats::none),
         m_flag(Boats::noFlag),
+        m_textPosition(10,10),
         m_track(track) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
     setOrder(track->size()+1);
@@ -88,6 +89,22 @@ void BoatModel::setFlag(const  Boats::Flag theValue) {
                 << "flag = " << theValue  << std::endl;
         m_flag = theValue;
         emit flagChanged(m_flag);
+    }
+}
+
+void BoatModel::setText(const QString theValue) {
+    if (theValue != m_text) {
+        if (debugLevel & 1 << MODEL) std::cout
+                << "text = " << theValue.toStdString()  << std::endl;
+        m_text = theValue;
+        emit textChanged(m_text);
+    }
+}
+
+void BoatModel::setTextPosition(const QPointF& theValue) {
+    if (theValue != m_textPosition) {
+        m_textPosition = theValue;
+        emit textPositionChanged(m_textPosition);
     }
 }
 

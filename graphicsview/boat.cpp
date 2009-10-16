@@ -49,6 +49,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         m_color(boat->track()->color()),
         m_flag(Boats::noFlag),
         m_flagRect(new FlagGraphicsItem(this)),
+        m_bubble(new BubbleGraphicsItem(m_boat, this)),
         m_series(Boats::unknown),
         m_selected(false),
         m_order(0),
@@ -61,6 +62,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     m_numberPath->setZValue(1);
     m_flagRect->setZValue(2);
     m_sail->setZValue(3);
+    m_bubble->setZValue(4);
 
     m_numberPath->setBrush(QBrush(Qt::black));
     m_sail->setBrush(QBrush(Qt::white));

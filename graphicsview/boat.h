@@ -31,6 +31,7 @@
 
 #include "boats.h"
 #include "flag.h"
+#include "bubble.h"
 
 class BoatModel;
 
@@ -56,6 +57,7 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         virtual ~BoatGraphicsItem();
 
         BoatModel* boat() const { return m_boat; }
+        BubbleGraphicsItem* bubble() const { return m_bubble; }
 
         QRectF boundingRect() const;
         QPainterPath shape() const;
@@ -123,6 +125,9 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_flag holds the flag to display
         Boats::Flag m_flag;
         FlagGraphicsItem *m_flagRect;
+
+        /// \a m_bubble holds the bubble to display
+        BubbleGraphicsItem *m_bubble;
 
         /// \a m_series holds the series of the TrackModel
         Boats::Series m_series;

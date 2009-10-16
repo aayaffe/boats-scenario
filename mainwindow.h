@@ -88,6 +88,7 @@ class MainWindow : public QMainWindow {
         void togglePortOverlap();
         void toggleStarboardOverlap();
         void toggleFlag();
+        void toggleText();
         void toggleMarkZone();
         void deleteTrack();
         void deleteModels();
@@ -173,6 +174,7 @@ class MainWindow : public QMainWindow {
         QAction *addMarkAction;
         QAction *togglePortOverlapAction;
         QAction *toggleStarboardOverlapAction;
+        QAction *toggleTextAction;
         QAction *toggleMarkZoneAction;
         QAction *deleteTrackAction;
         QAction *deleteAction;
