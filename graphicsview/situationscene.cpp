@@ -137,7 +137,7 @@ void SituationScene::setAnimation(QTimeLine *timer) {
     timer->setDuration(2000 * maxSize);
 
     foreach (TrackModel *track, m_situation->tracks()) {
-        BoatGraphicsItem *boatItem = new BoatGraphicsItem(track->boats()[0]);
+        BoatGraphicsItem *boatItem = new BoatGraphicsItem(new BoatModel(track));
         addItem(boatItem);
 
         BoatAnimation *animation = new BoatAnimation(track, boatItem, maxSize);
@@ -157,6 +157,7 @@ void SituationScene::unSetAnimation() {
     foreach (BoatAnimation *animation, m_animationItems) {
         removeItem(animation->boat());
         m_animationItems.removeOne(animation);
+        delete animation->boat()->boat();
         delete animation->boat();
         delete animation;
     }
