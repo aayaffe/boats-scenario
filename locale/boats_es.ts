@@ -1,501 +1,547 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="es_ES">
-<defaultcodec></defaultcodec>
+<!DOCTYPE TS>
+<TS version="2.0" language="es_ES">
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../mainwindow.cpp" line="104"/>
+        <location filename="../mainwindow.cpp" line="780"/>
         <source>&amp;New File</source>
         <translation>&amp;Nuevo archivo</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="105"/>
+        <location filename="../mainwindow.cpp" line="781"/>
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="109"/>
+        <location filename="../mainwindow.cpp" line="783"/>
         <source>&amp;Open File...</source>
         <translation>A&amp;brir archivo...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="110"/>
+        <location filename="../mainwindow.cpp" line="784"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+B</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="114"/>
+        <location filename="../mainwindow.cpp" line="786"/>
         <source>&amp;Save File</source>
         <translation>&amp;Guardar archivo</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="115"/>
+        <location filename="../mainwindow.cpp" line="787"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+G</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="120"/>
+        <location filename="../mainwindow.cpp" line="789"/>
         <source>Save &amp;As...</source>
         <translation>Guardar &amp;como...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="121"/>
+        <location filename="../mainwindow.cpp" line="790"/>
         <source>Ctrl+Shift+S</source>
         <translation>Ctrl+Shift+C</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="126"/>
+        <location filename="../mainwindow.cpp" line="792"/>
         <source>New &amp;Tab</source>
         <translation>Nueva &amp;Solapa</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="127"/>
+        <location filename="../mainwindow.cpp" line="793"/>
         <source>Ctrl+T</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="131"/>
+        <location filename="../mainwindow.cpp" line="795"/>
         <source>&amp;Close Tab</source>
         <translation>C&amp;errar Solapa</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="132"/>
+        <location filename="../mainwindow.cpp" line="796"/>
         <source>Ctrl+W</source>
         <translation>Ctrl+E</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="137"/>
+        <location filename="../mainwindow.cpp" line="798"/>
         <source>&amp;Restore Last Session...</source>
         <translation>&amp;Restaurar la última sesión...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="141"/>
+        <location filename="../mainwindow.cpp" line="800"/>
         <source>&amp;Print...</source>
         <translation>&amp;Imprimir...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="142"/>
         <source>Ctrl+p</source>
-        <translation>Ctrl+I</translation>
+        <translation type="obsolete">Ctrl+I</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="146"/>
+        <location filename="../mainwindow.cpp" line="803"/>
         <source>Print P&amp;review...</source>
         <translation>Vista P&amp;revia...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="147"/>
         <source>Ctrl+r</source>
-        <translation>Ctrl+R</translation>
+        <translation type="obsolete">Ctrl+R</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="151"/>
+        <location filename="../mainwindow.cpp" line="806"/>
         <source>&amp;Export Pdf...</source>
         <translation>&amp;Exportar a Pdf...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="152"/>
+        <location filename="../mainwindow.cpp" line="807"/>
         <source>Ctrl+E</source>
         <translation>Ctrl+E</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="156"/>
+        <location filename="../mainwindow.cpp" line="809"/>
         <source>Export &amp;Image...</source>
         <translation>Exportar Ima&amp;gen...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="157"/>
+        <location filename="../mainwindow.cpp" line="810"/>
         <source>Ctrl+I</source>
         <translation>Ctrl+G</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="162"/>
+        <location filename="../mainwindow.cpp" line="813"/>
         <source>Export Ani&amp;mation...</source>
         <translation>Exportar Ani&amp;mación...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="163"/>
+        <location filename="../mainwindow.cpp" line="814"/>
         <source>Ctrl+V</source>
         <translation>Ctrl+V</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="168"/>
+        <location filename="../mainwindow.cpp" line="817"/>
         <source>E&amp;xit</source>
         <translation>Sa&amp;lir</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="169"/>
+        <location filename="../mainwindow.cpp" line="818"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="170"/>
+        <location filename="../mainwindow.cpp" line="819"/>
         <source>Exit the application</source>
         <translation>Salir de la aplicación</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="174"/>
+        <location filename="../mainwindow.cpp" line="821"/>
         <source>Create &amp;Track</source>
         <translation>Crear &amp;Trayectoria</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="175"/>
+        <location filename="../mainwindow.cpp" line="822"/>
         <source>Ctrl+Ins</source>
         <translation>Ctrl+Ins</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="180"/>
+        <location filename="../mainwindow.cpp" line="824"/>
         <source>Create &amp;Boat</source>
         <translation>Crear &amp;Barco</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="181"/>
+        <location filename="../mainwindow.cpp" line="825"/>
         <source>Ins</source>
         <translation>Ins</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="186"/>
+        <location filename="../mainwindow.cpp" line="827"/>
         <source>Create &amp;Mark</source>
         <translation>Crear &amp;Baliza</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="187"/>
+        <location filename="../mainwindow.cpp" line="828"/>
         <source>Alt+Ins</source>
         <translation>Alt+Ins</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="192"/>
+        <location filename="../mainwindow.cpp" line="830"/>
         <source>&amp;Port Overlap</source>
         <translation>Comprometido por &amp;Babor</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="193"/>
+        <location filename="../mainwindow.cpp" line="831"/>
         <source>Alt+&lt;</source>
         <translation>Alt+&lt;</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="198"/>
+        <location filename="../mainwindow.cpp" line="833"/>
         <source>&amp;Starboard Overlap</source>
         <translation>Comprometido por &amp;Estribor</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="199"/>
+        <location filename="../mainwindow.cpp" line="834"/>
         <source>Alt+&gt;</source>
         <translation>Alt+&gt;</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="204"/>
+        <location filename="../mainwindow.cpp" line="836"/>
+        <source>&amp;Text</source>
+        <translation>&amp;Texto</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="837"/>
+        <source>Alt+T</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="839"/>
         <source>Toggle Mark &amp;Zone</source>
         <translation>&amp;Zona Alrededor de la Baliza</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="205"/>
+        <location filename="../mainwindow.cpp" line="840"/>
         <source>Z</source>
         <translation>Z</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="209"/>
+        <location filename="../mainwindow.cpp" line="842"/>
         <source>Delete Track</source>
         <translation>Eliminar Trayectoria</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="210"/>
+        <location filename="../mainwindow.cpp" line="843"/>
         <source>Ctrl+Del</source>
         <translation>Ctrl+Del</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="214"/>
+        <location filename="../mainwindow.cpp" line="845"/>
         <source>&amp;Delete Selection</source>
         <translation>Elimina&amp;r Selección</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="215"/>
+        <location filename="../mainwindow.cpp" line="846"/>
         <source>Del</source>
         <translation>Del</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="219"/>
+        <location filename="../mainwindow.cpp" line="848"/>
         <source>&amp;Animate</source>
         <translation>&amp;Animar</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="220"/>
+        <location filename="../mainwindow.cpp" line="849"/>
         <source>Ctrl+A</source>
         <translation>Ctrl+A</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="225"/>
+        <location filename="../mainwindow.cpp" line="851"/>
         <source>&amp;Play</source>
         <translation>&amp;Iniciar</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="226"/>
+        <location filename="../mainwindow.cpp" line="852"/>
         <source>P</source>
         <translation>I</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="231"/>
+        <location filename="../mainwindow.cpp" line="854"/>
         <source>&amp;Pause</source>
         <translation>&amp;Pausa</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="232"/>
+        <location filename="../mainwindow.cpp" line="855"/>
         <source>M</source>
         <translation>P</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="238"/>
+        <location filename="../mainwindow.cpp" line="857"/>
         <source>&amp;Stop</source>
         <translation>P&amp;arar</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="239"/>
+        <location filename="../mainwindow.cpp" line="858"/>
         <source>Space</source>
         <translation>Space</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="244"/>
+        <location filename="../mainwindow.cpp" line="860"/>
         <source>&amp;Loop</source>
         <translation>&amp;Bucle</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="245"/>
+        <location filename="../mainwindow.cpp" line="861"/>
         <source>L</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="251"/>
+        <location filename="../mainwindow.cpp" line="863"/>
         <source>&amp;Undo</source>
         <translation>D&amp;eshacer</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="252"/>
+        <location filename="../mainwindow.cpp" line="864"/>
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="255"/>
+        <location filename="../mainwindow.cpp" line="866"/>
         <source>&amp;Redo</source>
         <translation>&amp;Rehacer</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="257"/>
+        <location filename="../mainwindow.cpp" line="868"/>
         <source>Ctrl+Y</source>
         <translation>Ctrl+Y</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="257"/>
+        <location filename="../mainwindow.cpp" line="868"/>
         <source>Shift+Ctrl+Z</source>
         <translation>Shift+Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="261"/>
+        <location filename="../mainwindow.cpp" line="871"/>
         <source>Zoom &amp;In</source>
         <translation>A&amp;cercar</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="262"/>
+        <location filename="../mainwindow.cpp" line="872"/>
         <source>Ctrl++</source>
         <translation>Ctrl++</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="264"/>
+        <location filename="../mainwindow.cpp" line="874"/>
         <source>Zoom &amp;Out</source>
         <translation>Ale&amp;jar</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="265"/>
+        <location filename="../mainwindow.cpp" line="875"/>
         <source>Ctrl+-</source>
         <translation>Ctrl+-</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="267"/>
+        <location filename="../mainwindow.cpp" line="877"/>
         <source>Zoom &amp;Fit</source>
         <translation>Aj&amp;ustar</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="268"/>
+        <location filename="../mainwindow.cpp" line="878"/>
         <source>Ctrl+F</source>
         <translation>Ctrl+U</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="270"/>
+        <location filename="../mainwindow.cpp" line="880"/>
         <source>Main Toolbar</source>
         <translation>Barra Principal</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="276"/>
+        <location filename="../mainwindow.cpp" line="881"/>
         <source>Animation Toolbar</source>
         <translation>Barra de Animación</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="282"/>
+        <location filename="../mainwindow.cpp" line="882"/>
         <source>Scenario Dock</source>
         <translation>Control de Escenario</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="288"/>
+        <location filename="../mainwindow.cpp" line="884"/>
         <source>&amp;About</source>
         <translation>&amp;Acerca de</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="321"/>
+        <location filename="../mainwindow.cpp" line="352"/>
         <source>Create Track</source>
         <translation>Crear Trayectoria</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="329"/>
+        <location filename="../mainwindow.cpp" line="360"/>
         <source>Create Boat</source>
         <translation>Crear Barco</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="337"/>
+        <location filename="../mainwindow.cpp" line="368"/>
         <source>Create Mark</source>
         <translation>Crear Baliza</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="344"/>
+        <location filename="../mainwindow.cpp" line="375"/>
         <source>Animate</source>
         <translation>Animar</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="369"/>
+        <location filename="../mainwindow.cpp" line="400"/>
         <source>%1 - %2 [*]</source>
         <translation>%1 - %2 [*]</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="369"/>
+        <location filename="../mainwindow.cpp" line="400"/>
         <source>Boat Scenario</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="379"/>
+        <location filename="../mainwindow.cpp" line="886"/>
         <source>&amp;Recent</source>
         <translation>&amp;Reciente</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="387"/>
+        <location filename="../mainwindow.cpp" line="887"/>
         <source>&amp;File</source>
         <translation>&amp;Archivo</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="408"/>
+        <location filename="../mainwindow.cpp" line="888"/>
         <source>&amp;Edit</source>
         <translation>&amp;Editar</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="420"/>
+        <location filename="../mainwindow.cpp" line="890"/>
         <source>&amp;History</source>
         <translation>&amp;Historial</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="424"/>
+        <location filename="../mainwindow.cpp" line="891"/>
         <source>&amp;Animation</source>
         <translation>&amp;Animación</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="432"/>
+        <location filename="../mainwindow.cpp" line="892"/>
         <source>&amp;Zoom</source>
         <translation>&amp;Zoom</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="437"/>
+        <location filename="../mainwindow.cpp" line="893"/>
         <source>&amp;View</source>
         <translation>&amp;Ver</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="657"/>
+        <location filename="../mainwindow.cpp" line="732"/>
         <source>&amp;%1 %2</source>
         <translation>&amp;%1 %2</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="675"/>
+        <location filename="../mainwindow.cpp" line="749"/>
         <source>The document %1 has been modified.
 Do you want to save your changes?</source>
         <translation>El archivo %1 fué modificado. ¿Quiere guardar sus cambios?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="771"/>
+        <location filename="../mainwindow.cpp" line="801"/>
+        <source>Ctrl+P</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="804"/>
+        <source>Ctrl+R</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="889"/>
+        <source>&amp;Flag</source>
+        <translation>&amp;Bandera</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="894"/>
+        <source>&amp;Help</source>
+        <translation>&amp;Ayuda</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="895"/>
+        <source>Choose &amp;Language</source>
+        <translation>&amp;Escoge idioma</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="920"/>
+        <location filename="../mainwindow.cpp" line="969"/>
         <source>Open Scenario File</source>
         <translation>Abrir Archivo de Escenario</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="805"/>
+        <location filename="../mainwindow.cpp" line="922"/>
+        <location filename="../mainwindow.cpp" line="1003"/>
         <source>xmlscenario Files (*.xbs)</source>
         <translation>Archivos xmlscenario (*.xbs)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="773"/>
+        <location filename="../mainwindow.cpp" line="970"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation>No puedo leer el archivo %1: %2.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="780"/>
+        <location filename="../mainwindow.cpp" line="978"/>
         <source>Open Scenario file</source>
         <translation>Abrir Archivo de Escenario</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="782"/>
+        <location filename="../mainwindow.cpp" line="979"/>
         <source>Parse error in file %1 at line %2, column %3:
 %4</source>
         <translation>Parsear error en el archivo %1 en la linea %2, columna %3: %4</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="791"/>
+        <location filename="../mainwindow.cpp" line="989"/>
         <source>File loaded</source>
         <translation>Archivo cargado</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="935"/>
+        <location filename="../mainwindow.cpp" line="1001"/>
+        <location filename="../mainwindow.cpp" line="1012"/>
+        <location filename="../mainwindow.cpp" line="1024"/>
+        <location filename="../mainwindow.cpp" line="1133"/>
         <source>Save Scenario</source>
         <translation>Guardar Escenario</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="816"/>
+        <location filename="../mainwindow.cpp" line="1013"/>
         <source>%1 already exists.
 Do you want to replace it?</source>
         <translation>%1 ya existe. ¿Quiere reemplazarlo?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1018"/>
+        <location filename="../mainwindow.cpp" line="1025"/>
+        <location filename="../mainwindow.cpp" line="1154"/>
+        <location filename="../mainwindow.cpp" line="1215"/>
         <source>Cannot write file %1:
 %2.</source>
         <translation>No puedo escribir el archivo %1:
  %2.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="835"/>
+        <location filename="../mainwindow.cpp" line="1033"/>
         <source>File saved</source>
         <translation>Archivo guardado</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="875"/>
+        <location filename="../mainwindow.cpp" line="1073"/>
         <source>Print Document</source>
         <translation>Imprimir Archivo</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="955"/>
+        <location filename="../mainwindow.cpp" line="1153"/>
         <source>Export Image</source>
         <translation>Exportar Imagen</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1016"/>
+        <location filename="../mainwindow.cpp" line="1172"/>
+        <location filename="../mainwindow.cpp" line="1214"/>
         <source>Export Animation</source>
         <translation>Exportar Animación</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="993"/>
+        <location filename="../mainwindow.cpp" line="1191"/>
         <source>Exporting Animation...</source>
         <translation>Exportando animación...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="993"/>
+        <location filename="../mainwindow.cpp" line="1191"/>
         <source>Abort</source>
         <translation>Abortar</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1228"/>
+        <location filename="../mainwindow.cpp" line="1327"/>
+        <source>Protest!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="1467"/>
         <source>About Boat Scenario</source>
         <translation>Acerca de Boat Scenario</translation>
     </message>
@@ -519,59 +565,75 @@ Do you want to replace it?</source>
 <context>
     <name>SituationWidget</name>
     <message>
-        <location filename="../situationwidget.cpp" line="47"/>
+        <location filename="../situationwidget.cpp" line="125"/>
         <source>Options</source>
         <translation>Opciones</translation>
     </message>
     <message>
-        <location filename="../situationwidget.cpp" line="53"/>
+        <location filename="../situationwidget.cpp" line="126"/>
         <source>Series</source>
         <translation>Series</translation>
     </message>
     <message>
-        <location filename="../situationwidget.cpp" line="56"/>
+        <location filename="../situationwidget.cpp" line="127"/>
         <source>Show Laylines</source>
         <translation>Mostrar Laylines</translation>
     </message>
     <message>
-        <location filename="../situationwidget.cpp" line="59"/>
+        <location filename="../situationwidget.cpp" line="128"/>
         <source>Laylines</source>
         <translation>Laylines</translation>
     </message>
     <message>
-        <location filename="../situationwidget.cpp" line="62"/>
+        <location filename="../situationwidget.cpp" line="129"/>
         <source>Zone Length</source>
         <translation>Zona en Esloras</translation>
     </message>
     <message>
-        <location filename="../situationwidget.cpp" line="65"/>
+        <location filename="../situationwidget.cpp" line="130"/>
         <source>Tracks</source>
         <translation>Trayectorias</translation>
     </message>
     <message>
-        <location filename="../situationwidget.cpp" line="81"/>
+        <location filename="../situationwidget.cpp" line="85"/>
+        <location filename="../situationwidget.cpp" line="131"/>
         <source>Scenario</source>
         <translation>Escenario</translation>
     </message>
     <message>
-        <location filename="../situationwidget.cpp" line="92"/>
+        <location filename="../situationwidget.cpp" line="133"/>
         <source>Title</source>
         <translation>Título</translation>
     </message>
     <message>
-        <location filename="../situationwidget.cpp" line="95"/>
+        <location filename="../situationwidget.cpp" line="134"/>
         <source>Rules</source>
         <translation>Reglas</translation>
     </message>
     <message>
-        <location filename="../situationwidget.cpp" line="97"/>
+        <location filename="../situationwidget.cpp" line="135"/>
         <source>Abstract</source>
         <translation>Resumen</translation>
     </message>
     <message>
-        <location filename="../situationwidget.cpp" line="113"/>
+        <location filename="../situationwidget.cpp" line="119"/>
+        <location filename="../situationwidget.cpp" line="136"/>
+        <location filename="../situationwidget.cpp" line="137"/>
         <source>Description</source>
         <translation>Descripción</translation>
+    </message>
+</context>
+<context>
+    <name>TrackDelegate</name>
+    <message>
+        <location filename="../itemviews/trackdelegate.cpp" line="104"/>
+        <source>false</source>
+        <translation>falso</translation>
+    </message>
+    <message>
+        <location filename="../itemviews/trackdelegate.cpp" line="104"/>
+        <source>true</source>
+        <translation>verdadero</translation>
     </message>
 </context>
 <context>
@@ -580,6 +642,11 @@ Do you want to replace it?</source>
         <location filename="../itemviews/tracktablemodel.cpp" line="87"/>
         <source>Color</source>
         <translation>Color</translation>
+    </message>
+    <message>
+        <location filename="../itemviews/tracktablemodel.cpp" line="90"/>
+        <source>Path</source>
+        <translation>Ruta</translation>
     </message>
     <message>
         <location filename="../itemviews/tracktablemodel.cpp" line="93"/>
