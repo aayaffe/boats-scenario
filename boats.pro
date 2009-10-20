@@ -61,7 +61,7 @@ SOURCES = \
 	xmlsituationreader.cpp \
 	xmlsituationwriter.cpp
 
-unix {
+unix_deploy {
 	RESOURCES = boats_unix.qrc
 } else {
 	RESOURCES = boats.qrc
@@ -80,7 +80,7 @@ TRANSLATIONS = locale/boats.ts \
 	locale/boats_fr.ts \
 	locale/boats_sv.ts
 
-unix{
+unix_deploy {
 	isEmpty(PREFIX){
 		PREFIX = /usr/local
 	}
