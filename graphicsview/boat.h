@@ -30,6 +30,8 @@
 #include <QColor>
 
 #include "boats.h"
+#include "flag.h"
+#include "bubble.h"
 
 class BoatModel;
 
@@ -52,15 +54,16 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         Q_OBJECT
     public:
         BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent = 0);
-        ~BoatGraphicsItem();
+        virtual ~BoatGraphicsItem();
 
         BoatModel* boat() const { return m_boat; }
+        BubbleGraphicsItem* bubble() const { return m_bubble; }
 
         QRectF boundingRect() const;
         QPainterPath shape() const;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                    QWidget *widget);
-        int type() const;
+        virtual int type() const;
 
     public slots:
         void setHeading(qreal value);
@@ -68,33 +71,46 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void setOrder(int value);
         void setTrim(qreal value);
         void setOverlap(Boats::Overlaps value);
+        void setDisplayFlag(Boats::Flag value);
         void setColor(QColor value);
         void setSeries(Boats::Series value);
         void deleteItem(BoatModel *boat);
 
     protected:
-        void mousePressEvent(QGraphicsSceneMouseEvent *event);
-        void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
     private:
         void setSailAngle();
         void setOverlapLine();
 
-        /// draw a number with font size numberSize at posY alongside boat
-        void paintNumber(QPainter *painter, int numberSize, qreal posY);
-
-        /// draw a sail with size sailScale from point attach
-        void paintSail(QPainter *painter, qreal sailSize, QPointF attach);
-
         /// \a m_boat holds the BoatModel being represented
         BoatModel *m_boat;
+
+        /// \a m_hullPath holds the path for the hull
+        QPainterPath m_hullPath;
 
         /// \a m_angle holds the heading of the boat
         qreal m_angle;
 
         /// \a m_sailAngle holds the ideal sail trimming angle
         qreal m_sailAngle;
+
+        /// \a m_mast holds the position of the mast
+        QPointF m_mast;
+
+        /// \a m_sail holds the sail that will be drawn
+        QGraphicsPathItem *m_sail;
+
+        /// \a m_sailPathPort holds the sail path when on port tack
+        QPainterPath m_sailPathPort;
+
+        /// \a m_sailPathStarboard holds the sail path when on starboard tack
+        QPainterPath m_sailPathStarboard;
+
+        /// \a m_sailPathStalled holds the sail path when head to wind
+        QPainterPath m_sailPathStalled;
 
         /// \a m_trim holds the manual trimming angle override
         qreal m_trim;
@@ -106,6 +122,13 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_color holds the color of the TrackModel
         QColor m_color;
 
+        /// \a m_flag holds the flag to display
+        Boats::Flag m_flag;
+        FlagGraphicsItem *m_flagRect;
+
+        /// \a m_bubble holds the bubble to display
+        BubbleGraphicsItem *m_bubble;
+
         /// \a m_series holds the series of the TrackModel
         Boats::Series m_series;
 
@@ -114,6 +137,12 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_order holds the stacking order in the TrackModel
         int m_order;
+
+        /// \a m_numberPath holds the number path that will be drawn on the hull
+        QGraphicsPathItem *m_numberPath;
+
+        /// \a m_numberSize holds the font size of the number
+        int m_numberSize;
 };
 
 #endif

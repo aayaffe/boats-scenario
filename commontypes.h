@@ -25,7 +25,7 @@
 #ifndef COMMONTYPES_H
 #define COMMONTYPES_H
 
-#define VERSION "200904"
+#define VERSION "200910"
 
 enum DebugTraces {
     MODEL,
@@ -39,6 +39,7 @@ enum DebugTraces {
 
 typedef enum {
     TRACK_COLOR,
+    TRACK_PATH,
     TRACK_SERIES
 } TrackTableItem;
 

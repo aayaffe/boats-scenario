@@ -63,6 +63,9 @@ QVariant TrackTableModel::data(const QModelIndex &index, int role) const {
             case TRACK_COLOR:
                 return m_situation->tracks()[index.row()]->color();
                 break;
+            case TRACK_PATH:
+                return m_situation->tracks()[index.row()]->showPath();
+                break;
             case TRACK_SERIES:
                 return m_situation->tracks()[index.row()]->series();
                 break;
@@ -82,6 +85,9 @@ QVariant TrackTableModel::headerData(int section, Qt::Orientation orientation, i
         switch (section) {
             case TRACK_COLOR:
                 return tr("Color");
+
+            case TRACK_PATH:
+                return tr("Path");
 
             case TRACK_SERIES:
                 return tr("Series");
@@ -117,6 +123,16 @@ bool TrackTableModel::setData(const QModelIndex &index, const QVariant &value, i
                 return true;
             }
             break;
+        case TRACK_PATH:
+            if (qVariantCanConvert<bool>(value)) {
+                int newValue = qVariantValue<bool>(value);
+                TrackModel *track = m_situation->tracks()[index.row()];
+                if (newValue != track->showPath()) {
+                        m_situation->undoStack()->push(new SetShowPathUndoCommand(track));
+                    }
+                    return true;
+            }
+            break;
         case TRACK_SERIES:
             if (qVariantCanConvert<int>(value)) {
                 int newValue = qVariantValue<int>(value);
@@ -142,6 +158,8 @@ void TrackTableModel::addTrack(TrackModel *track) {
     connect(track, SIGNAL(colorChanged(QColor)),
             this, SLOT(updateTrack()));
     connect(track, SIGNAL(seriesChanged(Boats::Series)),
+            this, SLOT(updateTrack()));
+    connect(track, SIGNAL(showPathChanged(bool)),
             this, SLOT(updateTrack()));
     beginInsertRows(QModelIndex(), order, order);
     endInsertRows();

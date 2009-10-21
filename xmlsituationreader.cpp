@@ -146,6 +146,8 @@ void XmlSituationReader::readTrack(SituationModel *situation) {
                 track->setColor(QColor(readElementText()));
             else if (name() == "series")
                 track->setSeries(series(readElementText()));
+            else if (name() == "path")
+                track->setShowPath(readElementText() == "1");
             else if (name() == "boat")
                 readBoat(situation, track);
             else
@@ -159,6 +161,9 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     qreal heading = 0;
     qreal trim = 0;
     Boats::Overlaps overlap = Boats::none;
+    Boats::Flag flag = Boats::noFlag;
+    QPointF textPos(10,10);
+    QString text;
     QStringList discarded;
     while (!atEnd()) {
         readNext();
@@ -176,6 +181,15 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
             else if (name() == "overlap") {
                 overlap = (Boats::Overlaps)FLAG_VALUE(Boats, Overlap, readElementText().toStdString().c_str());
             }
+            else if (name() == "flag") {
+                flag = (Boats::Flag)ENUM_VALUE(Boats, Flag, readElementText().toStdString().c_str());
+            }
+            else if (name() == "bubble_x")
+                textPos.setX(readElementText().toFloat());
+            else if (name() == "bubble_y")
+                textPos.setY(readElementText().toFloat());
+            else if (name() == "bubble_text")
+                text = readElementText();
             else
                 discarded.append(readUnknownElement());
         }
@@ -193,6 +207,9 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     }
     boat->setTrim(trim);
     boat->setOverlap(overlap);
+    boat->setFlag(flag);
+    boat->setTextPosition(textPos);
+    boat->setText(text);
     foreach (const QString elem, discarded) {
         boat->appendDiscardedXml(elem);
     }

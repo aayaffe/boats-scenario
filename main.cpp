@@ -45,13 +45,6 @@ int main(int argc, char *argv[]) {
         arguments.removeAt(i);
     }
 
-    // Locale and translation setup
-    QString locale = QLocale::system().name();
-
-    QTranslator translator;
-    translator.load(QString("boats_") + locale, TRANSLATEDIR);
-    app.installTranslator(&translator);
-
     // MainWindow
     MainWindow window;
     app.setWindow(&window);

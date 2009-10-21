@@ -73,6 +73,9 @@ class TrackModel : public QObject {
         Boats::Series series() const { return m_series;}
         void setSeries(const Boats::Series theValue);
 
+        bool showPath() const { return m_showPath;}
+        void setShowPath(const bool theValue);
+
         int size() const { return m_boats.size();}
         const QList<BoatModel*> boats() const { return m_boats; }
 
@@ -93,6 +96,7 @@ class TrackModel : public QObject {
         void orderChanged(int order);
         void colorChanged(QColor color);
         void seriesChanged(Boats::Series series);
+        void showPathChanged(bool showPath);
         void trackChanged(TrackModel *track);
 
     private:
@@ -108,6 +112,9 @@ class TrackModel : public QObject {
 
         /// \a m_boats holds the List of Boat Positions of the Track
         QList<BoatModel*> m_boats;
+
+        /// \a m_showPath holds whether the track path will be displayed
+        bool m_showPath;
 
         // Non model Data
         /// \a m_situation keeps a pointer to the SituationModel to which

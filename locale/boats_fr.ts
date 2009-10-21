@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="fr">
-<defaultcodec></defaultcodec>
+<!DOCTYPE TS>
+<TS version="2.0" language="fr">
 <context>
     <name>MainWindow</name>
     <message>
@@ -315,16 +315,8 @@ Voulez-vous sauver vos modifications?</translation>
         <translation>&amp;Imprimer...</translation>
     </message>
     <message>
-        <source>Ctrl+p</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Print P&amp;review...</source>
         <translation>&amp;Apercu avant Impression...</translation>
-    </message>
-    <message>
-        <source>Ctrl+r</source>
-        <translation></translation>
     </message>
     <message>
         <source>&amp;Export Pdf...</source>
@@ -406,13 +398,45 @@ Voulez-vous sauver vos modifications?</translation>
     </message>
     <message>
         <source>&amp;Restore Last Session...</source>
-        <translation>&amp;Restaurer la Session précédente</translation>
+        <translation>&amp;Restaurer la Session précédente...</translation>
     </message>
     <message>
         <source>%1 already exists.
 Do you want to replace it?</source>
         <translation>%1 existe déja.
 Voulez-vous le remplacer?</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ctrl+R</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Text</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt+T</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Flag</source>
+        <translation>&amp;Pavillon</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation>&amp;Aide</translation>
+    </message>
+    <message>
+        <source>Choose &amp;Language</source>
+        <translation>Choisir &amp;Langue</translation>
+    </message>
+    <message>
+        <source>Protest!</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -477,6 +501,17 @@ Voulez-vous le remplacer?</translation>
     </message>
 </context>
 <context>
+    <name>TrackDelegate</name>
+    <message>
+        <source>false</source>
+        <translation>faux</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>vrai</translation>
+    </message>
+</context>
+<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>
@@ -485,6 +520,10 @@ Voulez-vous le remplacer?</translation>
     <message>
         <source>Series</source>
         <translation>Séries</translation>
+    </message>
+    <message>
+        <source>Path</source>
+        <translation>Chemin</translation>
     </message>
 </context>
 </TS>

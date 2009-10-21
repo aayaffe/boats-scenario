@@ -42,7 +42,10 @@ TrackGraphicsItem::TrackGraphicsItem(TrackModel *track, QGraphicsItem *parent)
         m_track(track) {
     setZValue(0);
     setTrack();
+    setShowPath(track->showPath());
 
+    connect(track, SIGNAL(showPathChanged(bool)),
+            this, SLOT(setShowPath(bool)));
     connect(track, SIGNAL(trackChanged(TrackModel*)),
             this, SLOT(setTrack()));
     connect(track->situation(), SIGNAL(trackRemoved(TrackModel*)),

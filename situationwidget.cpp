@@ -44,25 +44,29 @@ SituationWidget::SituationWidget(QWidget *parent)
     scenarioLayout = new QVBoxLayout(scenarioFrame);
 
     // Options layout
-    optionsGroup = new QGroupBox(tr("Options"),scenarioFrame);
+    optionsGroup = new QGroupBox(scenarioFrame);
     optionsGroup->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Maximum);
 
     optionsForm = new QFormLayout(optionsGroup);
 
     seriesCombo = new QComboBox(optionsGroup);
-    optionsForm->addRow(new QLabel(tr("Series"),optionsGroup),seriesCombo);
+    seriesLabel = new QLabel(optionsGroup);
+    optionsForm->addRow(seriesLabel, seriesCombo);
 
     laylineCheck = new QCheckBox(optionsGroup);
-    optionsForm->addRow(new QLabel(tr("Show Laylines"),optionsGroup),laylineCheck);
+    laylineCheckLabel = new QLabel(optionsGroup);
+    optionsForm->addRow(laylineCheckLabel, laylineCheck);
 
     laylineSpin = new QSpinBox(optionsGroup);
-    optionsForm->addRow(new QLabel(tr("Laylines"),optionsGroup),laylineSpin);
+    laylineSpinLabel = new QLabel(optionsGroup);
+    optionsForm->addRow(laylineSpinLabel, laylineSpin);
 
     lengthSpin = new QSpinBox(optionsGroup);
-    optionsForm->addRow(new QLabel(tr("Zone Length"),optionsGroup),lengthSpin);
+    lengthSpinLabel = new QLabel(optionsGroup);
+    optionsForm->addRow(lengthSpinLabel, lengthSpin);
 
     // Track layout
-    trackGroup = new QGroupBox(tr("Tracks"),scenarioFrame);
+    trackGroup = new QGroupBox(scenarioFrame);
     trackLayout = new QGridLayout(trackGroup);
     trackTableModel = new TrackTableModel(m_situation);
     trackTableView = new QTableView(trackGroup);
@@ -89,12 +93,14 @@ SituationWidget::SituationWidget(QWidget *parent)
     descriptionGrid->addLayout(descriptionForm, 0, 0);
 
     titleEdit = new QLineEdit(descriptionFrame);
-    descriptionForm->addRow(new QLabel(tr("Title"),descriptionFrame),titleEdit);
+    titleLabel = new QLabel(descriptionFrame);
+    descriptionForm->addRow(titleLabel, titleEdit);
 
     rulesEdit = new QLineEdit(descriptionFrame);
-    descriptionForm->addRow(new QLabel(tr("Rules"),descriptionFrame),rulesEdit);
+    rulesLabel = new QLabel(descriptionFrame);
+    descriptionForm->addRow(rulesLabel, rulesEdit);
 
-    QLabel *abstractLabel = new QLabel(tr("Abstract"),descriptionFrame);
+    abstractLabel = new QLabel(descriptionFrame);
     descriptionGrid->addWidget(abstractLabel,1,0);
 
     abstractEdit = new QPlainTextEdit(descriptionFrame);
@@ -102,7 +108,7 @@ SituationWidget::SituationWidget(QWidget *parent)
     abstractEdit->setContextMenuPolicy(Qt::NoContextMenu);
     descriptionGrid->addWidget(abstractEdit,2,0);
 
-    QLabel *descriptionLabel = new QLabel(tr("Description"),descriptionFrame);
+    descriptionLabel = new QLabel(descriptionFrame);
     descriptionGrid->addWidget(descriptionLabel,3,0);
 
     descriptionEdit = new QPlainTextEdit(descriptionFrame);
@@ -111,6 +117,27 @@ SituationWidget::SituationWidget(QWidget *parent)
     descriptionGrid->addWidget(descriptionEdit,4,0);
 
     addTab(descriptionFrame,tr("Description"));
+
+}
+
+void SituationWidget::changeEvent(QEvent *event) {
+    if(event->type() == QEvent::LanguageChange) {
+        optionsGroup->setTitle(tr("Options"));
+        seriesLabel->setText(tr("Series"));
+        laylineCheckLabel->setText(tr("Show Laylines"));
+        laylineSpinLabel->setText(tr("Laylines"));
+        lengthSpinLabel->setText(tr("Zone Length"));
+        trackGroup->setTitle(tr("Tracks"));
+        setTabText(0, tr("Scenario"));
+
+        titleLabel->setText(tr("Title"));
+        rulesLabel->setText(tr("Rules"));
+        abstractLabel->setText(tr("Abstract"));
+        descriptionLabel->setText(tr("Description"));
+        setTabText(1, tr("Description"));
+    } else {
+        QTabWidget::changeEvent(event);
+    }
 
 }
 

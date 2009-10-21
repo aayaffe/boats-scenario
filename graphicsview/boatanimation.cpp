@@ -189,11 +189,11 @@ void BoatAnimation::afterAnimationStep(qreal step) {
         return;
     }
 
-    m_boat->setPosition(posAt(step));
+    m_boat->boat()->setPosition(posAt(step));
     qreal heading = headingAt(step);
-    m_boat->setHeading(heading);
+    m_boat->boat()->setHeading(heading);
     qreal sailAngle = BoatModel::getSailAngle(m_track->situation()->laylineAngle(), heading, m_track->series(), 0);
-    m_boat->setTrim(sailAt(step)- sailAngle);
+    m_boat->boat()->setTrim(sailAt(step)- sailAngle);
 
     int index = floor(step * m_maxSize);
     BoatModel *boat;
@@ -214,7 +214,10 @@ void BoatAnimation::afterAnimationStep(qreal step) {
     }
 
     boat = m_track->boats()[index];
-    m_boat->setOverlap(boat->overlap());
+    m_boat->boat()->setOverlap(boat->overlap());
+    m_boat->boat()->setFlag(boat->flag());
+    m_boat->boat()->setText(boat->text());
+    m_boat->boat()->setTextPosition(boat->textPosition());
 
     // trigger next update rate calculation
     m_time.start();

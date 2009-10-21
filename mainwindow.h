@@ -87,6 +87,8 @@ class MainWindow : public QMainWindow {
         void addMark();
         void togglePortOverlap();
         void toggleStarboardOverlap();
+        void toggleFlag();
+        void toggleText();
         void toggleMarkZone();
         void deleteTrack();
         void deleteModels();
@@ -98,13 +100,19 @@ class MainWindow : public QMainWindow {
         void stop();
         void loop(bool loop);
         void changeAnimationState(QTimeLine::State newState);
+
+        // About actions
+        void toggleLang();
         void about();
 
     protected:
         void closeEvent(QCloseEvent *event);
+        void changeEvent(QEvent *event);
+
     private:
 
         // Initialisation methods
+        void createTranslations(QString locale);
         void createActions();
         void createMenus();
         void createDocks();
@@ -141,6 +149,8 @@ class MainWindow : public QMainWindow {
         QStatusBar *statusbar;
         QTimeLine *timeline;
         QSlider *animationSlider;
+        QTranslator *qtTranslator;
+        QTranslator *translator;
 
         // QActions
         QAction *newFileAction;
@@ -164,6 +174,7 @@ class MainWindow : public QMainWindow {
         QAction *addMarkAction;
         QAction *togglePortOverlapAction;
         QAction *toggleStarboardOverlapAction;
+        QAction *toggleTextAction;
         QAction *toggleMarkZoneAction;
         QAction *deleteTrackAction;
         QAction *deleteAction;
@@ -191,10 +202,13 @@ class MainWindow : public QMainWindow {
         QMenu *fileMenu;
         QMenu *recentMenu;
         QMenu *trackMenu;
+        QMenu *flagMenu;
         QMenu *historyMenu;
         QMenu *zoomMenu;
         QMenu *animationMenu;
         QMenu *viewMenu;
+        QMenu *aboutMenu;
+        QMenu *langMenu;
 };
 
 #endif

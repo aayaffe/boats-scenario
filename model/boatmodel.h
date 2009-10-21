@@ -69,6 +69,15 @@ class BoatModel : public PositionModel {
         Boats::Overlaps overlap() const {return m_overlap; }
         void setOverlap(const Boats::Overlaps theValue);
 
+        Boats::Flag flag() const {return m_flag; }
+        void setFlag(const Boats::Flag theValue);
+
+        QString text() const {return m_text; }
+        void setText(const QString theValue);
+
+        QPointF textPosition() const {return m_textPosition; }
+        void setTextPosition(const QPointF& theValue);
+
         // Setters and Getters for Non model Data
         TrackModel* track() const { return m_track; }
 
@@ -78,6 +87,9 @@ class BoatModel : public PositionModel {
         void headingChanged(qreal heading);
         void trimChanged(qreal trim);
         void overlapChanged(Boats::Overlaps overlap);
+        void flagChanged(Boats::Flag flag);
+        void textChanged(QString text);
+        void textPositionChanged(QPointF textPosition);
 
     private:
         // Model Data
@@ -89,6 +101,15 @@ class BoatModel : public PositionModel {
 
         /// \a m_overlap holds whether an overlap line should be displayed
         Boats::Overlaps m_overlap;
+
+        /// \a m_flag holds the flag to display
+        Boats::Flag m_flag;
+
+        /// \a m_text holds the text to display
+        QString m_text;
+
+        /// \a m_textPosition holds the position of the text to display
+        QPointF m_textPosition;
 
         // Non model Data
         /// \a m_track keeps a pointer to the TrackModel to which

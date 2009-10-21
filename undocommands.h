@@ -46,10 +46,14 @@ enum {
     SET_DESCRIPTION,
     SET_SERIES,
     SET_COLOR,
+    SET_SHOWPATH,
     MOVE_MODEL,
     HEADING_BOAT,
     OVERLAP_BOAT,
+    FLAG_BOAT,
     TRIM_BOAT,
+    SET_TEXT,
+    MOVE_TEXT,
     ZONE_MARK,
     LENGTH_MARK
 };
@@ -223,6 +227,20 @@ class SetColorUndoCommand : public QUndoCommand {
         QColor m_newColor;
 };
 
+class SetShowPathUndoCommand : public QUndoCommand {
+
+    public:
+        SetShowPathUndoCommand(TrackModel* track, QUndoCommand *parent = 0);
+        ~SetShowPathUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_SHOWPATH; }
+
+    private:
+        TrackModel *m_track;
+};
+
 class MoveModelUndoCommand : public QUndoCommand {
 
     public:
@@ -282,6 +300,22 @@ class OverlapBoatUndoCommand : public QUndoCommand {
         Boats::Overlaps m_overlaps;
 };
 
+class FlagBoatUndoCommand : public QUndoCommand {
+
+    public:
+        FlagBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, Boats::Flag flag, QUndoCommand *parent = 0);
+        ~FlagBoatUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return FLAG_BOAT; }
+    private:
+        SituationModel *m_situation;
+        QList<BoatModel*> m_boatList;
+        QList<Boats::Flag> m_flagList;
+        Boats::Flag m_flag;
+};
+
 class TrimBoatUndoCommand : public QUndoCommand {
 
     public:
@@ -295,6 +329,36 @@ class TrimBoatUndoCommand : public QUndoCommand {
         QList<BoatModel*> m_boatList;
         QList<qreal> m_trimList;
         qreal m_trim;
+};
+
+class SetTextUndoCommand : public QUndoCommand {
+
+    public:
+        SetTextUndoCommand(BoatModel *boat, QString text, QUndoCommand *parent = 0);
+        ~SetTextUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_TEXT; }
+
+    private:
+        BoatModel *m_boat;
+        QString m_oldText;
+        QString m_newText;
+};
+
+class MoveTextUndoCommand : public QUndoCommand {
+
+    public:
+        MoveTextUndoCommand(BoatModel *boat, const QPointF &deltaPosition, QUndoCommand *parent = 0);
+        ~MoveTextUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return MOVE_TEXT; }
+    private:
+        BoatModel *m_boat;
+        QPointF m_deltaPosition;
 };
 
 class DeleteBoatUndoCommand : public QUndoCommand {

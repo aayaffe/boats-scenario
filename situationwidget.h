@@ -57,6 +57,9 @@ class SituationWidget : public QTabWidget {
         void updateAbstract(const QString abstract);
         void updateDescription(const QString description);
 
+    protected:
+        void changeEvent(QEvent *event);
+
     private:
         SituationModel *m_situation;
 
@@ -65,9 +68,13 @@ class SituationWidget : public QTabWidget {
 
         QGroupBox *optionsGroup;
         QComboBox *seriesCombo;
+        QLabel *seriesLabel;
         QCheckBox *laylineCheck;
+        QLabel *laylineCheckLabel;
         QSpinBox *laylineSpin;
+        QLabel *laylineSpinLabel;
         QSpinBox *lengthSpin;
+        QLabel *lengthSpinLabel;
         QFormLayout *optionsForm;
 
         QGroupBox *trackGroup;
@@ -77,9 +84,13 @@ class SituationWidget : public QTabWidget {
 
         QFrame *descriptionFrame;
         QLineEdit *titleEdit;
+        QLabel *titleLabel;
         QLineEdit *rulesEdit;
+        QLabel *rulesLabel;
         QPlainTextEdit *abstractEdit;
+        QLabel *abstractLabel;
         QPlainTextEdit *descriptionEdit;
+        QLabel *descriptionLabel;
         QGridLayout *descriptionGrid;
         QFormLayout *descriptionForm;
 

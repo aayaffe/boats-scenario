@@ -13,6 +13,8 @@ HEADERS = \
 	model/trackmodel.h \
 	graphicsview/boat.h \
 	graphicsview/boatanimation.h \
+	graphicsview/bubble.h \
+	graphicsview/flag.h \
 	graphicsview/mark.h \
 	graphicsview/situationscene.h \
 	graphicsview/situationview.h \
@@ -39,6 +41,8 @@ SOURCES = \
 	model/trackmodel.cpp \
 	graphicsview/boat.cpp \
 	graphicsview/boatanimation.cpp \
+	graphicsview/bubble.cpp \
+	graphicsview/flag.cpp \
 	graphicsview/mark.cpp \
 	graphicsview/situationscene.cpp \
 	graphicsview/situationview.cpp \
@@ -57,7 +61,7 @@ SOURCES = \
 	xmlsituationreader.cpp \
 	xmlsituationwriter.cpp
 
-unix {
+unix_deploy {
 	RESOURCES = boats_unix.qrc
 } else {
 	RESOURCES = boats.qrc
@@ -71,8 +75,12 @@ contains(GIF_EXPORT,1) {
 }
 
 TRANSLATIONS = locale/boats.ts \
-	locale/boats_fr.ts
-unix{
+	locale/boats_de.ts \
+	locale/boats_es.ts \
+	locale/boats_fr.ts \
+	locale/boats_sv.ts
+
+unix_deploy {
 	isEmpty(PREFIX){
 		PREFIX = /usr/local
 	}

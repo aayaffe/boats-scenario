@@ -1,13 +1,16 @@
 Important:
 - flags
+- baloons
 - polygon/generic lines
 - jib
 - pole and bowsprit
 - spin
 
 Normal:
-- toggle track display
 - toggle number display
+- select colour for marks
+- clean selection before output
+- translate boat types in popup
 - more boat shapes
 - one line for config options and their toggle
 - open in new tab
@@ -17,4 +20,3 @@ Wishlist:
 - backtrack edit
 - track line to mouse position
 - insert between boats
-- contextual menus

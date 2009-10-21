@@ -368,6 +368,36 @@ bool SetColorUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Show Path
+SetShowPathUndoCommand::SetShowPathUndoCommand(TrackModel *track, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_track(track) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new showlaylineundocommand" << std::endl;
+}
+
+SetShowPathUndoCommand::~SetShowPathUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end showlaylineundocommand" << std::endl;
+}
+
+void SetShowPathUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo showlaylineundocommand" << std::endl;
+    m_track->setShowPath(!m_track->showPath());
+}
+
+void SetShowPathUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo showlaylineundocommand" << std::endl;
+    m_track->setShowPath(!m_track->showPath());
+}
+
+bool SetShowPathUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetShowPathUndoCommand *showPathCommand = static_cast<const SetShowPathUndoCommand*>(command);
+    if (m_track != showPathCommand->m_track)
+        return false;
+    undo();
+    m_track->situation()->undoStack()->setIndex(m_track->situation()->undoStack()->index()-1);
+    return true;
+}
+
 // Move Model
 MoveModelUndoCommand::MoveModelUndoCommand(QList<PositionModel*> &modelList, const QPointF &deltaPosition, QUndoCommand *parent)
         : QUndoCommand(parent),
@@ -513,6 +543,47 @@ bool OverlapBoatUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Flag Boat
+FlagBoatUndoCommand::FlagBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, Boats::Flag flag, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_boatList(boatList),
+        m_flag(flag) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new flagboatundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_flagList << boat->flag();
+    }
+}
+
+FlagBoatUndoCommand::~FlagBoatUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end flagboatundocommand" << std::endl;
+}
+
+void FlagBoatUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo flagboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setFlag(m_flagList[i]);
+    }
+}
+
+void FlagBoatUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo flagboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setFlag(m_flag);
+    }
+}
+
+bool FlagBoatUndoCommand::mergeWith(const QUndoCommand *command) {
+    const FlagBoatUndoCommand *flagCommand = static_cast<const FlagBoatUndoCommand*>(command);
+    if (m_boatList != flagCommand->m_boatList)
+        return false;
+
+    m_flag = flagCommand->m_flag;
+    return true;
+}
+
 // Trim Boat
 TrimBoatUndoCommand::TrimBoatUndoCommand(QList<BoatModel*> &boatList, const qreal &trim, QUndoCommand *parent)
         : QUndoCommand(parent),
@@ -550,6 +621,69 @@ bool TrimBoatUndoCommand::mergeWith(const QUndoCommand *command) {
         return false;
 
     m_trim = moveCommand->m_trim;
+    return true;
+}
+
+// Set Text
+SetTextUndoCommand::SetTextUndoCommand(BoatModel* boat, QString text, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_boat(boat),
+        m_oldText(boat->text()),
+        m_newText(text) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new settextundocommand" << std::endl;
+}
+
+SetTextUndoCommand::~SetTextUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end settextundocommand" << std::endl;
+}
+
+void SetTextUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo settextundocommand"<< std::endl;
+    m_boat->setText(m_oldText);
+}
+
+void SetTextUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo settextundocommand" << std::endl;
+    m_boat->setText(m_newText);
+}
+
+bool SetTextUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetTextUndoCommand *setTextCommand = static_cast<const SetTextUndoCommand*>(command);
+    if (m_boat != setTextCommand->m_boat)
+        return false;
+
+    m_newText = setTextCommand->m_newText;
+    return true;
+}
+
+// Move Text
+MoveTextUndoCommand::MoveTextUndoCommand(BoatModel *boat, const QPointF &deltaPosition, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_boat(boat),
+        m_deltaPosition(deltaPosition) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new movetextundocommand" << std::endl;
+}
+
+MoveTextUndoCommand::~MoveTextUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end movetextundocommand" << std::endl;
+}
+
+void MoveTextUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo movetextundocommand" << std::endl;
+    m_boat->setTextPosition(m_boat->textPosition() - m_deltaPosition);
+}
+
+void MoveTextUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo movetextundocommand" << std::endl;
+    m_boat->setTextPosition(m_boat->textPosition() + m_deltaPosition);
+}
+
+bool MoveTextUndoCommand::mergeWith(const QUndoCommand *command) {
+    const MoveTextUndoCommand *moveCommand = static_cast<const MoveTextUndoCommand*>(command);
+    if (m_boat != moveCommand->m_boat)
+        return false;
+
+    m_deltaPosition += moveCommand->m_deltaPosition;
     return true;
 }
 

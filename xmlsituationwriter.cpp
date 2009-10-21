@@ -88,6 +88,9 @@ void XmlSituationWriter::writeTrack(const TrackModel *track) {
     writeStartElement("track");
     writeTextElement("color",track->color().name());
     writeTextElement("series",ENUM_NAME(Boats, Series, track->series()));
+    if (!track->showPath()) {
+        writeTextElement("path",QString::number(track->showPath()));
+    }
     foreach (const QString discarded, track->discardedXml())
         writeUnknownElement(discarded);
     foreach (const BoatModel *boat, track->boats())
@@ -111,6 +114,14 @@ void XmlSituationWriter::writeBoat(const BoatModel *boat) {
     }
     if (boat->overlap() != Boats::none) {
         writeTextElement("overlap", FLAG_NAME(Boats, Overlap, boat->overlap()));
+    }
+    if (boat->flag() != Boats::noFlag) {
+        writeTextElement("flag", ENUM_NAME(Boats, Flag, boat->flag()));
+    }
+    if (!boat->text().isEmpty()) {
+        writeTextElement("bubble_x",QString::number(boat->textPosition().x()));
+        writeTextElement("bubble_y",QString::number(boat->textPosition().y()));
+        writeTextElement("bubble_text",boat->text());
     }
     foreach (const QString discarded, boat->discardedXml())
         writeUnknownElement(discarded);
