@@ -1,6 +1,4 @@
 Important:
-- flags
-- baloons
 - polygon/generic lines
 - jib
 - pole and bowsprit
@@ -8,7 +6,9 @@ Important:
 
 Normal:
 - toggle number display
+- baloons for mark
 - select colour for marks
+- arrows
 - clean selection before output
 - translate boat types in popup
 - more boat shapes
