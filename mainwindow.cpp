@@ -113,8 +113,12 @@ void MainWindow::createTranslations(QString locale) {
                        QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     qApp->installTranslator(qtTranslator);
 
-    translator->load(QString("boats_").append(locale).append(".qm"), TRANSLATEDIR);
-    qApp->installTranslator(translator);
+    if (translator->load(QString("boats_").append(locale).append(".qm"), TRANSLATEDIR)) {
+        qApp->installTranslator(translator);
+    } else {
+        QCoreApplication::postEvent(QCoreApplication::instance(),
+                                    new QEvent(QEvent::LanguageChange));
+    }
 }
 
 void MainWindow::createActions() {
