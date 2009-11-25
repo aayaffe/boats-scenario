@@ -584,6 +584,7 @@ void MainWindow::newTab() {
 
     tabWidget->setCurrentIndex(situationList.size()-1);
     view->setFocus();
+    view->setMouseTracking(true);
     if (situationList.size() > 1) {
         removeTabAction->setEnabled(true);
         removeTabButton->setEnabled(true);

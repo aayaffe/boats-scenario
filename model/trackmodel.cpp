@@ -133,6 +133,16 @@ void TrackModel::hideBoats() {
     }
 }
 
+// calculate new heading:
+// from position of head of index boat to new potential position
+qreal TrackModel::headingForNext(int index, QPointF point) {
+    const BoatModel* boat = m_boats.at(index);
+    qreal length = m_length / 2.0;
+    qreal theta0 = boat->heading() * M_PI /180;
+    QPointF point2 = point - (boat->position() + QPointF(length*sin(theta0),-length*cos(theta0)));
+    return fmod(atan2 (point2.x(), -point2.y()) * 180 / M_PI + 360.0, 360.0);
+}
+
 void TrackModel::changingTrack(TrackModel *track) {
     QPainterPath path;
 

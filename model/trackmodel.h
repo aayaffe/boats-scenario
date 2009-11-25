@@ -89,6 +89,8 @@ class TrackModel : public QObject {
         QStringList discardedXml() const { return m_discardedXml; }
         void appendDiscardedXml(const QString& theValue);
 
+        qreal headingForNext(int index, QPointF point);
+
         void changingTrack(TrackModel *track);
 
     signals:

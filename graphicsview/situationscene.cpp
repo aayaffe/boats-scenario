@@ -85,6 +85,61 @@ SituationScene::SituationScene(SituationModel *situation)
     setLaylines(situation->laylineAngle());
 }
 
+void SituationScene::setState(const SceneState& theValue, bool commit) {
+    // undo previous state's settings
+    switch(m_state) {
+    case CREATE_TRACK: {
+            QColor color = m_trackCreated->color();
+            color.setAlpha(255);
+            m_trackCreated->setColor(color);
+            m_situation->undoStack()->endMacro();
+            if (!commit) {
+                m_situation->undoStack()->undo();
+            }
+        }
+        break;
+    case CREATE_BOAT: {
+            m_situation->undoStack()->endMacro();
+            if (!commit) {
+                m_situation->undoStack()->undo();
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    switch(theValue) {
+    case CREATE_TRACK: {
+            AddTrackUndoCommand *command = new AddTrackUndoCommand(m_situation);
+            m_situation->undoStack()->beginMacro("");
+            m_situation->undoStack()->push(command);
+            TrackModel *track = command->track();
+            QColor color = track->color();
+            color.setAlpha(64);
+            track->setColor(color);
+            BoatModel *boat = new BoatModel(track, track);
+            boat->setPosition(m_curPosition);
+            track->addBoat(boat);
+            m_trackCreated = track;
+        }
+        break;
+    case CREATE_BOAT: {
+            if (m_trackCreated) {
+                qreal heading = m_trackCreated->boats().last()->heading();
+                AddBoatUndoCommand *command = new AddBoatUndoCommand(
+                        m_trackCreated, m_curPosition, heading);
+                m_situation->undoStack()->beginMacro("");
+                m_situation->undoStack()->push(command);
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    m_state = theValue;
+    emit stateChanged(m_state);
+}
+
 void SituationScene::addTrack(TrackModel *track) {
     if (debugLevel & 1 << VIEW) std::cout << "adding track graphics for model " << track << std::endl;
     TrackGraphicsItem *trackItem = new TrackGraphicsItem(track);
@@ -273,7 +328,18 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
                 mouseHeadingEvent(event);
             }
         break;
+        case CREATE_TRACK:
+            if (event->buttons() == Qt::NoButton) {
+                m_trackCreated->boats().last()->setPosition(event->scenePos());
+            }
+            break;
         case CREATE_BOAT:
+            if (event->buttons() == Qt::NoButton) {
+                qreal heading = m_trackCreated->headingForNext(
+                        m_trackCreated->boats().size()-2, event->scenePos());
+                m_trackCreated->boats().last()->setHeading(heading);
+                m_trackCreated->boats().last()->setPosition(event->scenePos());
+            }
             if (event->buttons() == Qt::RightButton
                 || (event->buttons() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
@@ -286,6 +352,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
     // trigger next update rate calculation
     m_time.start();
+    m_curPosition = event->scenePos();
 }
 
 /**
@@ -387,28 +454,17 @@ void SituationScene::mouseHeadingEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void SituationScene::mouseCreateTrackEvent(QGraphicsSceneMouseEvent *event) {
-    QPointF point = event->scenePos();
-    AddTrackUndoCommand *command = new AddTrackUndoCommand(m_situation);
-    TrackModel *track = command->track();
-    m_situation->undoStack()->push(command);
-    BoatModel *boat = new BoatModel(track, track);
-    boat->setPosition(point);
-    track->addBoat(boat);
-    m_trackCreated = track;
-    setState(CREATE_BOAT);
+    Q_UNUSED(event)
+    setState(CREATE_BOAT, true);
 }
 
 void SituationScene::mouseCreateBoatEvent(QGraphicsSceneMouseEvent *event) {
     QPointF point = event->scenePos();
     if (m_trackCreated) {
-        const BoatModel* lastBoat = m_trackCreated->boats().last();
-        // calculate new heading:
-        // from position of head of last boat to new position
-        qreal length = m_trackCreated->length() / 2.0;
-        qreal theta0 = lastBoat->heading() * M_PI /180;
-        QPointF point2 = point - (lastBoat->position() + QPointF(length*sin(theta0),-length*cos(theta0)));
-        qreal heading = fmod(atan2 (point2.x(), -point2.y()) * 180 / M_PI + 360.0, 360.0);
+        m_situation->undoStack()->endMacro();
+        qreal heading = m_trackCreated->boats().last()->heading();
         AddBoatUndoCommand *command = new AddBoatUndoCommand(m_trackCreated, point, heading);
+        m_situation->undoStack()->beginMacro("");
         m_situation->undoStack()->push(command);
     }
 }

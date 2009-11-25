@@ -111,7 +111,7 @@ class SituationScene : public QGraphicsScene {
         SituationScene(SituationModel* situation);
         ~SituationScene() {}
 
-        void setState(const SceneState& theValue) { m_state = theValue; emit stateChanged(m_state); }
+        void setState(const SceneState& theValue, bool commit = false);
         void setModelPressed(BoatModel *theValue) {m_modelPressed = theValue; }
         SceneState state() const { return m_state; }
         QList< BoatModel * > selectedBoatModels() const { return m_selectedBoatModels; }
@@ -180,6 +180,9 @@ class SituationScene : public QGraphicsScene {
 
         /// \a m_fromPosition holds the QPointF where mouse was pressed
         QPointF m_fromPosition;
+
+        /// \a m_curPosition holds the QPointF where mouse was last seen
+        QPointF m_curPosition;
 
         /// \a m_state holds the SceneState for the current scenario
         SceneState m_state;
