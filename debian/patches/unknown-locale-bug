@@ -1,0 +1,19 @@
+Description: Upstream changes introduced in version 200910-1
+Author: Thibaut GRIDEL <tgridel@free.fr>
+--- boats-200910.orig/mainwindow.cpp
++++ boats-200910/mainwindow.cpp
+@@ -113,8 +113,12 @@ void MainWindow::createTranslations(QStr
+                        QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+     qApp->installTranslator(qtTranslator);
+ 
+-    translator->load(QString("boats_").append(locale).append(".qm"), TRANSLATEDIR);
+-    qApp->installTranslator(translator);
++    if (translator->load(QString("boats_").append(locale).append(".qm"), TRANSLATEDIR)) {
++        qApp->installTranslator(translator);
++    } else {
++        QCoreApplication::postEvent(QCoreApplication::instance(),
++                                    new QEvent(QEvent::LanguageChange));
++    }
+ }
+ 
+ void MainWindow::createActions() {
