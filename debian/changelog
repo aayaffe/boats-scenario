@@ -1,3 +1,14 @@
+boats (200910-1) unstable; urgency=low
+
+  * New upstream release.
+  * Using unix_deploy qmake config and cleanup debian/rules
+  * Bumping Standards-Version to 3.8.3
+  * Dropping README
+  * Using source format 3.0 (quilt)
+  * Applying translation related fixes
+
+ -- Thibaut GRIDEL <tgridel@free.fr>  Fri, 11 Dec 2009 19:17:24 +0100
+
 boats (200904-1) unstable; urgency=low
 
   * New upstream release. Closes: #525611.
