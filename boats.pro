@@ -92,7 +92,7 @@ unix_deploy {
 
 	TRANSLATEDIR = $${PREFIX}/share/boats
 	translations.path = $${TRANSLATEDIR}
-	translations.files = locale/boats_fr.qm
+	translations.files = locale/boats_*.qm
 	INSTALLS += translations
 } else {
 	TRANSLATEDIR = ":/locale"
