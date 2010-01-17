@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,10 +36,14 @@
 #include "trackmodel.h"
 #include "boatmodel.h"
 #include "markmodel.h"
+#include "polylinemodel.h"
+#include "pointmodel.h"
 
 #include "boat.h"
 #include "track.h"
 #include "mark.h"
+#include "polyline.h"
+#include "point.h"
 #include "boatanimation.h"
 
 extern int debugLevel;
@@ -75,6 +79,14 @@ SituationScene::SituationScene(SituationModel *situation)
     // react to model mark add
     connect(situation, SIGNAL(markAdded(MarkModel*)),
             this, SLOT(addMarkItem(MarkModel*)));
+
+    // react to model line add
+    connect(situation, SIGNAL(polyLineAdded(PolyLineModel*)),
+            this, SLOT(addPolyLine(PolyLineModel*)));
+
+    // react to model point add
+    connect(situation, SIGNAL(pointAdded(PointModel*)),
+            this, SLOT(addPoint(PointModel*)));
 
     // react to layline angle
     connect(situation, SIGNAL(laylineChanged(const int)),
@@ -154,6 +166,18 @@ void SituationScene::addMarkItem(MarkModel *mark) {
     if (debugLevel & 1 << VIEW) std::cout << "adding mark graphics for model " << mark << std::endl;
     MarkGraphicsItem *markItem = new MarkGraphicsItem(mark);
     addItem(markItem);
+}
+
+void SituationScene::addPolyLine(PolyLineModel *polyline) {
+    if (debugLevel & 1 << VIEW) std::cout << "adding line graphics for model " << polyline << std::endl;
+    PolyLineGraphicsItem *polyLineItem = new PolyLineGraphicsItem(polyline);
+    addItem(polyLineItem);
+}
+
+void SituationScene::addPoint(PointModel *point) {
+    if (debugLevel & 1 << VIEW) std::cout << "adding point graphics for model " << point << std::endl;
+    PointGraphicsItem *pointItem = new PointGraphicsItem(point);
+    addItem(pointItem);
 }
 
 /**

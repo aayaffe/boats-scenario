@@ -19,6 +19,8 @@ HEADERS = model/boatmodel.h \
     graphicsview/bubble.h \
     graphicsview/flag.h \
     graphicsview/mark.h \
+    graphicsview/point.h \
+    graphicsview/polyline.h \
     graphicsview/situationscene.h \
     graphicsview/situationview.h \
     graphicsview/track.h \
@@ -48,6 +50,8 @@ SOURCES = model/boatmodel.cpp \
     graphicsview/bubble.cpp \
     graphicsview/flag.cpp \
     graphicsview/mark.cpp \
+    graphicsview/point.cpp \
+    graphicsview/polyline.cpp \
     graphicsview/situationscene.cpp \
     graphicsview/situationview.cpp \
     graphicsview/track.cpp \

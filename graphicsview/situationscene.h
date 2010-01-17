@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,6 +32,8 @@ class TrackModel;
 class PositionModel;
 class BoatModel;
 class MarkModel;
+class PolyLineModel;
+class PointModel;
 class BoatAnimation;
 
 /**
@@ -69,7 +71,8 @@ typedef enum {
 
 enum {
     BOAT_TYPE = QGraphicsItem::UserType + 1,
-    MARK_TYPE
+    MARK_TYPE,
+    POINT_TYPE
 };
 
 /**
@@ -131,6 +134,8 @@ class SituationScene : public QGraphicsScene {
         void addTrack(TrackModel *track);
         void addBoatItem(BoatModel *boat);
         void addMarkItem(MarkModel *mark);
+        void addPolyLine(PolyLineModel *polyline);
+        void addPoint(PointModel *point);
         void setLaylines(const int angle);
 
         // Slots for animation signals
