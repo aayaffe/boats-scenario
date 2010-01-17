@@ -151,7 +151,7 @@ class SituationModel : public QObject {
         int deleteMark(MarkModel *mark);
 
         // Slots for Lines
-        void addPolyLine(PolyLineModel *polyline, int order = 0);
+        void addPolyLine(PolyLineModel *polyline, int order = -1);
         void deletePolyLine(PolyLineModel *polyline);
 
     private:

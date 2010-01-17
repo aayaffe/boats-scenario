@@ -66,6 +66,8 @@ typedef enum {
     CREATE_TRACK,
     CREATE_BOAT,
     CREATE_MARK,
+    CREATE_LINE,
+    CREATE_POINT,
     ANIMATE
 } SceneState;
 
@@ -119,6 +121,7 @@ class SituationScene : public QGraphicsScene {
         SceneState state() const { return m_state; }
         QList< BoatModel * > selectedBoatModels() const { return m_selectedBoatModels; }
         QList< MarkModel * > selectedMarkModels() const { return m_selectedMarkModels; }
+        QList< PointModel * > selectedPointModels() const { return m_selectedPointModels; }
         void setActionMenu(QMenu *theValue) { m_actionMenu = theValue; }
 
     signals:
@@ -157,6 +160,7 @@ class SituationScene : public QGraphicsScene {
         void mouseCreateTrackEvent(QGraphicsSceneMouseEvent *event);
         void mouseCreateBoatEvent(QGraphicsSceneMouseEvent *event);
         void mouseCreateMarkEvent(QGraphicsSceneMouseEvent *event);
+        void mouseCreatePointEvent(QGraphicsSceneMouseEvent *event);
 
         SituationModel *m_situation;
 
@@ -170,6 +174,9 @@ class SituationScene : public QGraphicsScene {
         /// \a m_selectedMarkModels holds the list of selected MarkModel
         QList<MarkModel*> m_selectedMarkModels;
 
+        /// \a m_selectedPointModels holds the list of selected PointModel
+        QList<PointModel*> m_selectedPointModels;
+
         /// \a m_animationItems holds the list of BoatAnimation items
         /// created for animation mode
         QList<BoatAnimation*> m_animationItems;
@@ -179,6 +186,9 @@ class SituationScene : public QGraphicsScene {
 
         /// \a m_trackCreated holds the last selected TrackModel
         TrackModel *m_trackCreated;
+
+        /// \a m_polyLineCreated holds the last selected PolyLineModel
+        PolyLineModel *m_polyLineCreated;
 
         /// \a m_fromPosition holds the QPointF where mouse was pressed
         QPointF m_fromPosition;

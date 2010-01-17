@@ -65,7 +65,7 @@ void PolyLineModel::changingPolyLine(PolyLineModel *polyline) {
 }
 
 PointModel* PolyLineModel::addPoint(PointModel *point, int order) {
-    if (order == 0) {
+    if (order == -1) {
         order = m_points.size();
     }
     m_points.insert(order, point);
@@ -82,4 +82,18 @@ int PolyLineModel::deletePoint(PointModel *point) {
     m_situation->removingPoint(point);
     changingPolyLine(this);
     return order;
+}
+
+void PolyLineModel::displayPoints() {
+    if (debugLevel & 1 << MODEL) std::cout << "Displaying points" << std::endl;
+    foreach (PointModel* point, m_points) {
+        m_situation->addingPoint(point);
+    }
+}
+
+void PolyLineModel::hidePoints() {
+    if (debugLevel & 1 << MODEL) std::cout << "Hiding points" << std::endl;
+    foreach (PointModel* point, m_points) {
+        m_situation->removingPoint(point);
+    }
 }

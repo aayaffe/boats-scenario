@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,6 +35,8 @@ class TrackModel;
 class PositionModel;
 class BoatModel;
 class MarkModel;
+class PolyLineModel;
+class PointModel;
 
 enum {
     SET_TITLE,
@@ -430,6 +432,61 @@ class DeleteMarkUndoCommand : public QUndoCommand {
     private:
         SituationModel *m_situation;
         MarkModel *m_mark;
+        int m_order;
+};
+
+class AddPolyLineUndoCommand : public QUndoCommand {
+
+    public:
+        AddPolyLineUndoCommand(SituationModel* situation, QUndoCommand *parent = 0);
+        ~AddPolyLineUndoCommand();
+        void undo();
+        void redo();
+
+        PolyLineModel *polyLine() {return m_polyLine; }
+
+    private:
+        SituationModel *m_situation;
+        PolyLineModel *m_polyLine;
+};
+
+class DeletePolyLineUndoCommand : public QUndoCommand {
+
+    public:
+        DeletePolyLineUndoCommand(SituationModel* situation, PolyLineModel* polyLine, QUndoCommand *parent = 0);
+        ~DeletePolyLineUndoCommand();
+        void undo();
+        void redo();
+    private:
+        SituationModel *m_situation;
+        PolyLineModel *m_polyLine;
+};
+
+class AddPointUndoCommand : public QUndoCommand {
+
+    public:
+        AddPointUndoCommand(PolyLineModel* polyLine, QPointF& position, QUndoCommand *parent = 0);
+        ~AddPointUndoCommand();
+        void undo();
+        void redo();
+
+        PointModel *point() {return m_point; }
+
+    private:
+        PolyLineModel *m_polyLine;
+        PointModel *m_point;
+};
+
+class DeletePointUndoCommand : public QUndoCommand {
+
+    public:
+        DeletePointUndoCommand(PolyLineModel* polyLine, PointModel* point, QUndoCommand *parent = 0);
+        ~DeletePointUndoCommand();
+        void undo();
+        void redo();
+    private:
+        PolyLineModel *m_polyLine;
+        PointModel *m_point;
         int m_order;
 };
 

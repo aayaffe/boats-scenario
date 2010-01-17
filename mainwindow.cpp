@@ -34,6 +34,8 @@
 #include "situationmodel.h"
 #include "trackmodel.h"
 #include "boatmodel.h"
+#include "polylinemodel.h"
+#include "pointmodel.h"
 
 #include "undocommands.h"
 #include "xmlsituationreader.h"
@@ -208,6 +210,18 @@ void MainWindow::createActions() {
     connect(addMarkAction, SIGNAL(triggered()),
             this, SLOT(addMark()));
 
+    addPolyLineAction = new QAction(this);
+    addPolyLineAction->setIcon(QIcon(":/images/addpoly.png"));
+    addPolyLineAction->setCheckable(true);
+    connect(addPolyLineAction, SIGNAL(triggered()),
+            this, SLOT(addPolyLine()));
+
+    addPointAction = new QAction(this);
+    addPointAction->setIcon(QIcon(":/images/addpoint.png"));
+    addPointAction->setCheckable(true);
+    connect(addPointAction, SIGNAL(triggered()),
+            this, SLOT(addPoint()));
+
     togglePortOverlapAction = new QAction(this);
     togglePortOverlapAction->setCheckable(true);
     connect(togglePortOverlapAction, SIGNAL(triggered()),
@@ -313,8 +327,10 @@ void MainWindow::updateActions() {
 
     bool selectedItems = !scene->selectedItems().isEmpty();
     bool selectedBoats = !scene->selectedBoatModels().isEmpty();
+    bool selectedPoints = !scene->selectedPointModels().isEmpty();
 
     addBoatAction->setEnabled(selectedBoats || scene->state() == CREATE_BOAT);
+    addPointAction->setEnabled(selectedPoints || scene->state() == CREATE_POINT);
     togglePortOverlapAction->setEnabled(selectedBoats);
     toggleStarboardOverlapAction->setEnabled(selectedBoats);
     toggleTextAction->setEnabled(selectedBoats);
@@ -357,6 +373,8 @@ void MainWindow::changeState(SceneState newState) {
             addTrackAction->setChecked(true);
             addBoatAction->setChecked(false);
             addMarkAction->setChecked(false);
+            addPolyLineAction->setChecked(false);
+            addPointAction->setChecked(false);
             animateAction->setChecked(false);
             break;
         case CREATE_BOAT:
@@ -365,6 +383,8 @@ void MainWindow::changeState(SceneState newState) {
             addTrackAction->setChecked(false);
             addBoatAction->setChecked(true);
             addMarkAction->setChecked(false);
+            addPolyLineAction->setChecked(false);
+            addPointAction->setChecked(false);
             animateAction->setChecked(false);
             break;
         case CREATE_MARK:
@@ -373,6 +393,28 @@ void MainWindow::changeState(SceneState newState) {
             addTrackAction->setChecked(false);
             addBoatAction->setChecked(false);
             addMarkAction->setChecked(true);
+            addPolyLineAction->setChecked(false);
+            addPointAction->setChecked(false);
+            animateAction->setChecked(false);
+            break;
+        case CREATE_LINE:
+            view->setCursor(Qt::CrossCursor);
+            statusbar->showMessage(tr("Create Line"));
+            addTrackAction->setChecked(false);
+            addBoatAction->setChecked(false);
+            addMarkAction->setChecked(false);
+            addPolyLineAction->setChecked(true);
+            addPointAction->setChecked(false);
+            animateAction->setChecked(false);
+            break;
+        case CREATE_POINT:
+            view->setCursor(Qt::CrossCursor);
+            statusbar->showMessage(tr("Create Line"));
+            addTrackAction->setChecked(false);
+            addBoatAction->setChecked(false);
+            addMarkAction->setChecked(false);
+            addPolyLineAction->setChecked(false);
+            addPointAction->setChecked(true);
             animateAction->setChecked(false);
             break;
         case ANIMATE:
@@ -380,6 +422,8 @@ void MainWindow::changeState(SceneState newState) {
             addTrackAction->setChecked(false);
             addBoatAction->setChecked(false);
             addMarkAction->setChecked(false);
+            addPolyLineAction->setChecked(false);
+            addPointAction->setChecked(false);
             animateAction->setChecked(true);
             break;
         default:
@@ -388,6 +432,8 @@ void MainWindow::changeState(SceneState newState) {
             addTrackAction->setChecked(false);
             addBoatAction->setChecked(false);
             addMarkAction->setChecked(false);
+            addPolyLineAction->setChecked(false);
+            addPointAction->setChecked(false);
             animateAction->setChecked(false);
     }
     updateActions();
@@ -446,6 +492,8 @@ void MainWindow::createMenus() {
     trackMenu->addAction(addTrackAction);
     trackMenu->addAction(addBoatAction);
     trackMenu->addAction(addMarkAction);
+    trackMenu->addAction(addPolyLineAction);
+    trackMenu->addAction(addPointAction);
     trackMenu->addSeparator();
     trackMenu->addAction(togglePortOverlapAction);
     trackMenu->addAction(toggleStarboardOverlapAction);
@@ -535,6 +583,8 @@ void MainWindow::createMenus() {
     toolbar->addAction(addTrackAction);
     toolbar->addAction(addBoatAction);
     toolbar->addAction(addMarkAction);
+    toolbar->addAction(addPolyLineAction);
+    toolbar->addAction(addPointAction);
     toolbar->addSeparator();
     toolbar->addAction(animateAction);
     toolbar->addSeparator();
@@ -831,6 +881,12 @@ void MainWindow::changeEvent(QEvent *event) {
 
         addMarkAction->setText(tr("Create &Mark"));
         addMarkAction->setShortcut(tr("Alt+Ins"));
+
+        addPolyLineAction->setText(tr("Create &PolyLine"));
+        addPolyLineAction->setShortcut(tr("Ctrl+Alt+Ins"));
+
+        addPointAction->setText(tr("Create Poin&t"));
+        addPointAction->setShortcut(tr("Ctrl+T"));
 
         togglePortOverlapAction->setText(tr("&Port Overlap"));
         togglePortOverlapAction->setShortcut(tr("Alt+<"));
@@ -1289,6 +1345,15 @@ void MainWindow::deleteModels() {
     foreach (MarkModel *mark, scene->selectedMarkModels()) {
         situation->undoStack()->push(new DeleteMarkUndoCommand(situation, mark));
     }
+
+    foreach (PointModel *point, scene->selectedPointModels()) {
+        PolyLineModel *polyLine = point->polyLine();
+        if (polyLine->size() > 1) {
+            situation->undoStack()->push(new DeletePointUndoCommand(polyLine, point));
+        } else {
+            situation->undoStack()->push(new DeletePolyLineUndoCommand(situation, polyLine));
+        }
+    }
 }
 
 void MainWindow::addMark() {
@@ -1298,6 +1363,26 @@ void MainWindow::addMark() {
         scene->setState(NO_STATE);
     } else {
         scene->setState(CREATE_MARK);
+    }
+}
+
+void MainWindow::addPolyLine() {
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    if (scene->state() == CREATE_LINE) {
+        scene->setState(NO_STATE);
+    } else {
+        scene->setState(CREATE_LINE);
+    }
+}
+
+void MainWindow::addPoint() {
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    if (scene->state() == CREATE_POINT) {
+        scene->setState(NO_STATE);
+    } else {
+        scene->setState(CREATE_POINT);
     }
 }
 

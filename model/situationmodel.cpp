@@ -200,11 +200,12 @@ int SituationModel::deleteMark(MarkModel *mark) {
 }
 
 void SituationModel::addPolyLine(PolyLineModel *polyline, int order) {
-    if (order == 0) {
+    if (order == -1) {
         order = m_lines.size();
     }
     m_lines.insert(order,polyline);
     if (debugLevel & 1 << MODEL) std::cout << "Adding PolyLine " << order+1 <<  std::endl;
+    polyline->displayPoints();
     emit polyLineAdded(polyline);
 }
 
@@ -212,6 +213,7 @@ void SituationModel::deletePolyLine(PolyLineModel *polyline) {
     int index = m_lines.indexOf(polyline);
     if (debugLevel & 1 << MODEL) std::cout << "Removing Line " << index+1
     << " with " << polyline->size() << std::endl;
+    polyline->hidePoints();
     m_lines.removeOne(polyline);
     emit polyLineRemoved(polyline);
 }

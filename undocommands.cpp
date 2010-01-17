@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -34,6 +34,8 @@
 #include "trackmodel.h"
 #include "boatmodel.h"
 #include "markmodel.h"
+#include "polylinemodel.h"
+#include "pointmodel.h"
 
 extern int debugLevel;
 
@@ -822,4 +824,95 @@ void DeleteMarkUndoCommand::redo() {
 void DeleteMarkUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo deletebmarkundocommand" << std::endl;
     m_situation->addMark(m_mark, m_order);
+}
+
+// Add PolyLine
+AddPolyLineUndoCommand::AddPolyLineUndoCommand(SituationModel* situation, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new addpolylineundocommand" << std::endl;
+    m_polyLine = new PolyLineModel(situation);
+}
+
+AddPolyLineUndoCommand::~AddPolyLineUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end addpolylineundocommand" << std::endl;
+    delete m_polyLine;
+}
+
+void AddPolyLineUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo addpolylineundocommand" << std::endl;
+    m_situation->addPolyLine(m_polyLine);
+}
+
+void AddPolyLineUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo addpolylineundocommand" << std::endl;
+    m_situation->deletePolyLine(m_polyLine);
+}
+
+// Delete PolyLine
+DeletePolyLineUndoCommand::DeletePolyLineUndoCommand(SituationModel* situation, PolyLineModel* polyLine, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_polyLine(polyLine) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new removepolylineundocommand" << std::endl;
+}
+
+DeletePolyLineUndoCommand::~DeletePolyLineUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end removepolylineundocommand" << std::endl;
+}
+
+void DeletePolyLineUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo removepolylineundocommand" << std::endl;
+    m_situation->deletePolyLine(m_polyLine);
+}
+
+void DeletePolyLineUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo removepolylineundocommand" << std::endl;
+    m_situation->addPolyLine(m_polyLine);
+}
+
+// Add Point
+AddPointUndoCommand::AddPointUndoCommand(PolyLineModel* polyLine, QPointF& position, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_polyLine(polyLine) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new addpointundocommand" << std::endl;
+    m_point = new PointModel(polyLine);
+    m_point->setPosition(position);
+}
+
+AddPointUndoCommand::~AddPointUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end addpointundocommand" << std::endl;
+    delete m_point;
+}
+
+void AddPointUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo addpointundocommand" << std::endl;
+    m_polyLine->addPoint(m_point);
+}
+
+void AddPointUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo addpointundocommand" << std::endl;
+    m_polyLine->deletePoint(m_point);
+}
+
+// Delete Point
+DeletePointUndoCommand::DeletePointUndoCommand(PolyLineModel* polyLine, PointModel* point, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_polyLine(polyLine),
+        m_point(point) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new deletepointundocommand" << std::endl;
+}
+
+DeletePointUndoCommand::~DeletePointUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end deletepointundocommand" << std::endl;
+}
+
+void DeletePointUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo deletepointundocommand" << std::endl;
+    m_order = m_polyLine->deletePoint(m_point);
+}
+
+void DeletePointUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo deletepointundocommand" << std::endl;
+    m_polyLine->addPoint(m_point, m_order);
 }

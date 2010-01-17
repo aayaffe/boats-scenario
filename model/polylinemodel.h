@@ -53,10 +53,13 @@ class PolyLineModel : public QObject {
         PolyLineModel(SituationModel* situation = 0, QObject *parent = 0);
         ~PolyLineModel();
 
-        PointModel * addPoint(PointModel *point, int order = 0);
+        PointModel * addPoint(PointModel *point, int order = -1);
         int deletePoint(PointModel *point);
 
-        // Setters and Getters for Model Data
+        void displayPoints();
+        void hidePoints();
+
+    // Setters and Getters for Model Data
         int size() const { return m_points.size();}
         const QList<PointModel*> points() const { return m_points; }
 

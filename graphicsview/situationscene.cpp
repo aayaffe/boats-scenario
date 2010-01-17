@@ -108,7 +108,10 @@ void SituationScene::setState(const SceneState& theValue, bool commit) {
             }
         }
         break;
-    case CREATE_BOAT: {
+    case CREATE_BOAT:
+    case CREATE_LINE:
+    case CREATE_POINT:
+        {
             m_situation->undoStack()->endMacro();
             if (!commit) {
                 m_situation->undoStack()->undo();
@@ -138,6 +141,25 @@ void SituationScene::setState(const SceneState& theValue, bool commit) {
                 qreal heading = m_trackCreated->boats().last()->heading();
                 AddBoatUndoCommand *command = new AddBoatUndoCommand(
                         m_trackCreated, m_curPosition, heading);
+                m_situation->undoStack()->beginMacro("");
+                m_situation->undoStack()->push(command);
+            }
+        }
+        break;
+    case CREATE_LINE: {
+            AddPolyLineUndoCommand *command = new AddPolyLineUndoCommand(m_situation);
+            m_situation->undoStack()->beginMacro("");
+            m_situation->undoStack()->push(command);
+            m_polyLineCreated = command->polyLine();
+            PointModel *pos = new PointModel(m_polyLineCreated);
+            pos->setPosition(m_curPosition);
+            m_polyLineCreated->addPoint(pos);
+        }
+        break;
+    case CREATE_POINT: {
+            if (m_polyLineCreated) {
+                AddPointUndoCommand *command = new AddPointUndoCommand(
+                        m_polyLineCreated, m_curPosition);
                 m_situation->undoStack()->beginMacro("");
                 m_situation->undoStack()->push(command);
             }
@@ -291,6 +313,9 @@ void SituationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
             if (!m_selectedBoatModels.isEmpty()) {
                 m_trackCreated = m_selectedBoatModels[0]->track();
             }
+            if (!m_selectedPointModels.isEmpty()) {
+                m_polyLineCreated = m_selectedPointModels[0]->polyLine();
+            }
             break;
         case CREATE_BOAT:
         case CREATE_MARK:
@@ -351,7 +376,13 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
                 mouseHeadingEvent(event);
             }
-        break;
+            break;
+        case CREATE_LINE:
+        case CREATE_POINT:
+            if (event->buttons() == Qt::NoButton) {
+                m_polyLineCreated->points().last()->setPosition(event->scenePos());
+            }
+            break;
         default:
             break;
     }
@@ -416,6 +447,15 @@ void SituationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
                 mouseCreateMarkEvent(event);
             }
             break;
+        case CREATE_LINE:
+            if (event->button() == Qt::LeftButton) {
+                setState(CREATE_POINT, true);
+            }
+            break;
+        case CREATE_POINT:
+            if (event->button() == Qt::LeftButton) {
+                mouseCreatePointEvent(event);
+            }
         default:
             break;
     }
@@ -481,10 +521,22 @@ void SituationScene::mouseCreateMarkEvent(QGraphicsSceneMouseEvent *event) {
     m_situation->undoStack()->push(command);
 }
 
+void SituationScene::mouseCreatePointEvent(QGraphicsSceneMouseEvent *event) {
+    QPointF point = event->scenePos();
+    if (m_polyLineCreated) {
+        m_situation->undoStack()->endMacro();
+        AddPointUndoCommand *command = new AddPointUndoCommand(
+                m_polyLineCreated, m_curPosition);
+        m_situation->undoStack()->beginMacro("");
+        m_situation->undoStack()->push(command);
+    }
+}
+
 void SituationScene::setSelectedModels() {
     m_selectedModels.clear();
     m_selectedBoatModels.clear();
     m_selectedMarkModels.clear();
+    m_selectedPointModels.clear();
     foreach (QGraphicsItem *item, selectedItems()) {
         switch(item->type()) {
             case BOAT_TYPE: {
@@ -497,6 +549,12 @@ void SituationScene::setSelectedModels() {
                 MarkModel *mark = (qgraphicsitem_cast<MarkGraphicsItem*>(item))->mark();
                 m_selectedModels << mark;
                 m_selectedMarkModels << mark;
+                }
+                break;
+            case POINT_TYPE: {
+                PointModel *point = (qgraphicsitem_cast<PointGraphicsItem*>(item))->point();
+                m_selectedModels << point;
+                m_selectedPointModels << point;
                 }
                 break;
         }
