@@ -129,11 +129,11 @@ class SituationModel : public QObject {
 
     public slots:
         // Slots for Tracks
-        void addTrack(TrackModel *track, int order = 0);
+        void addTrack(TrackModel *track, int order = -1);
         void deleteTrack(TrackModel *track);
 
         // Slots for Marks
-        void addMark(MarkModel *mark, int order = 0);
+        void addMark(MarkModel *mark, int order = -1);
         int deleteMark(MarkModel *mark);
 
     private:

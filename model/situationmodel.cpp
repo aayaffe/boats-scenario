@@ -151,7 +151,7 @@ void SituationModel::appendDiscardedXml(const QString& theValue) {
 }
 
 void SituationModel::addTrack(TrackModel *track, int order) {
-    if (order == 0) {
+    if (order == -1) {
         order = m_tracks.size();
     }
     m_tracks.insert(order,track);
@@ -176,7 +176,7 @@ void SituationModel::deleteTrack(TrackModel *track) {
 }
 
 void SituationModel::addMark(MarkModel *mark, int order) {
-    if (order == 0) {
+    if (order == -1) {
         order = m_marks.size();
     }
     m_marks.insert(order, mark);

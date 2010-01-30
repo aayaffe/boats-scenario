@@ -94,7 +94,7 @@ void TrackModel::appendDiscardedXml(const QString& theValue) {
 
 
 BoatModel * TrackModel::addBoat(BoatModel *boat, int order) {
-    if (order == 0) {
+    if (order == -1) {
         order = m_boats.size();
     }
     m_boats.insert(order, boat);
