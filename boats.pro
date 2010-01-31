@@ -1,106 +1,101 @@
 TEMPLATE = app
 TARGET = boats
+CONFIG += qt \
+    warn_on
 
-CONFIG += qt warn_on
+INCLUDEPATH += model \
+    graphicsview \
+    itemviews
 
-INCLUDEPATH += model graphicsview itemviews
+HEADERS = model/boatmodel.h \
+    model/markmodel.h \
+    model/positionmodel.h \
+    model/situationmodel.h \
+    model/trackmodel.h \
+    graphicsview/boat.h \
+    graphicsview/boatanimation.h \
+    graphicsview/bubble.h \
+    graphicsview/flag.h \
+    graphicsview/mark.h \
+    graphicsview/situationscene.h \
+    graphicsview/situationview.h \
+    graphicsview/track.h \
+    itemviews/colorpickerwidget.h \
+    itemviews/trackdelegate.h \
+    itemviews/tracktablemodel.h \
+    boatapplication.h \
+    boats.h \
+    commontypes.h \
+    mainwindow.h \
+    situationprint.h \
+    situationwidget.h \
+    trace.h \
+    undocommands.h \
+    xmlsituationreader.h \
+    xmlsituationwriter.h
 
-HEADERS = \
-	model/boatmodel.h \
-	model/markmodel.h \
-	model/positionmodel.h \
-	model/situationmodel.h \
-	model/trackmodel.h \
-	graphicsview/boat.h \
-	graphicsview/boatanimation.h \
-	graphicsview/bubble.h \
-	graphicsview/flag.h \
-	graphicsview/mark.h \
-	graphicsview/situationscene.h \
-	graphicsview/situationview.h \
-	graphicsview/track.h \
-	itemviews/colorpickerwidget.h \
-	itemviews/trackdelegate.h \
-	itemviews/tracktablemodel.h \
-	boatapplication.h \
-	boats.h \
-	commontypes.h \
-	mainwindow.h \
-	situationprint.h \
-	situationwidget.h \
-	trace.h \
-	undocommands.h \
-	xmlsituationreader.h \
-	xmlsituationwriter.h
+SOURCES = model/boatmodel.cpp \
+    model/markmodel.cpp \
+    model/positionmodel.cpp \
+    model/situationmodel.cpp \
+    model/trackmodel.cpp \
+    graphicsview/boat.cpp \
+    graphicsview/boatanimation.cpp \
+    graphicsview/bubble.cpp \
+    graphicsview/flag.cpp \
+    graphicsview/mark.cpp \
+    graphicsview/situationscene.cpp \
+    graphicsview/situationview.cpp \
+    graphicsview/track.cpp \
+    itemviews/colorpickerwidget.cpp \
+    itemviews/trackdelegate.cpp \
+    itemviews/tracktablemodel.cpp \
+    boatapplication.cpp \
+    boats.cpp \
+    main.cpp \
+    mainwindow.cpp \
+    situationprint.cpp \
+    situationwidget.cpp \
+    trace.cpp \
+    undocommands.cpp \
+    xmlsituationreader.cpp \
+    xmlsituationwriter.cpp
 
-SOURCES = \
-	model/boatmodel.cpp \
-	model/markmodel.cpp \
-	model/positionmodel.cpp \
-	model/situationmodel.cpp \
-	model/trackmodel.cpp \
-	graphicsview/boat.cpp \
-	graphicsview/boatanimation.cpp \
-	graphicsview/bubble.cpp \
-	graphicsview/flag.cpp \
-	graphicsview/mark.cpp \
-	graphicsview/situationscene.cpp \
-	graphicsview/situationview.cpp \
-	graphicsview/track.cpp \
-	itemviews/colorpickerwidget.cpp \
-	itemviews/trackdelegate.cpp \
-	itemviews/tracktablemodel.cpp \
-	boatapplication.cpp \
-	boats.cpp \
-	main.cpp \
-	mainwindow.cpp \
-	situationprint.cpp \
-	situationwidget.cpp \
-	trace.cpp \
-	undocommands.cpp \
-	xmlsituationreader.cpp \
-	xmlsituationwriter.cpp
+unix_deploy:RESOURCES = boats_unix.qrc
 
-unix_deploy {
-	RESOURCES = boats_unix.qrc
-} else {
-	RESOURCES = boats.qrc
-}
+else:RESOURCES = boats.qrc
 
-contains(GIF_EXPORT,1) {
-	DEFINES += GIF_EXPORT
-	HEADERS += gifwriter.h
-	SOURCES += gifwriter.cpp
-	LIBS += -lgif
+contains(GIF_EXPORT,1) { 
+    DEFINES += GIF_EXPORT
+    HEADERS += gifwriter.h
+    SOURCES += gifwriter.cpp
+    LIBS += -lgif
 }
 
 TRANSLATIONS = locale/boats.ts \
-	locale/boats_de.ts \
-	locale/boats_es.ts \
-	locale/boats_fr.ts \
-	locale/boats_nl.ts \
-	locale/boats_sl.ts \
-	locale/boats_sv.ts
+    locale/boats_de.ts \
+    locale/boats_es.ts \
+    locale/boats_fr.ts \
+    locale/boats_nl.ts \
+    locale/boats_sl.ts \
+    locale/boats_sv.ts
 
-unix_deploy {
-	isEmpty(PREFIX){
-		PREFIX = /usr/local
-	}
+unix_deploy { 
+    isEmpty(PREFIX):PREFIX = /usr/local
 
-	target.path = $${PREFIX}/bin
-	INSTALLS += target
+    target.path = $${PREFIX}/bin
+    INSTALLS += target
 
-	TRANSLATEDIR = $${PREFIX}/share/boats
-	translations.path = $${TRANSLATEDIR}
-	translations.files = locale/boats_*.qm
-	INSTALLS += translations
-} else {
-	TRANSLATEDIR = ":/locale"
+    TRANSLATEDIR = $${PREFIX}/share/boats
+    translations.path = $${TRANSLATEDIR}
+    translations.files = locale/boats_*.qm
+    INSTALLS += translations
 }
+else:TRANSLATEDIR = ":/locale"
 
 DEFINES += TRANSLATEDIR=\\\"$${TRANSLATEDIR}\\\"
 
-isEmpty(QMAKE_LRELEASE) {
+isEmpty(QMAKE_LRELEASE) { 
     win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\lrelease.exe
     else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
 }
@@ -117,6 +112,4 @@ MOC_DIR = .moc/
 
 OBJECTS_DIR = .obj/
 
-win32 {
-	RC_FILE = boats.rc
-}
+win32:RC_FILE = boats.rc
