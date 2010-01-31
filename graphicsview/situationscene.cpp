@@ -317,6 +317,7 @@ void SituationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
                 m_polyLineCreated = m_selectedPointModels[0]->polyLine();
             }
             break;
+        case CREATE_TRACK:
         case CREATE_BOAT:
         case CREATE_MARK:
             if (event->buttons() == Qt::RightButton
@@ -362,6 +363,11 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         case CREATE_TRACK:
             if (event->buttons() == Qt::NoButton) {
                 m_trackCreated->boats().last()->setPosition(event->scenePos());
+            }
+            if (event->buttons() == Qt::RightButton
+                || (event->buttons() == Qt::LeftButton
+                    && ((event->modifiers() & Qt::MetaModifier) != 0))) {
+                mouseHeadingEvent(event);
             }
             break;
         case CREATE_BOAT:
