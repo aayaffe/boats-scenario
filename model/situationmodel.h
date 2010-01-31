@@ -93,6 +93,8 @@ class SituationModel : public QObject {
         int markSize() const { return m_marks.size();}
         const QList<MarkModel*> marks() const { return m_marks; }
 
+        const QList<PolyLineModel*> polyLines() const { return m_lines; }
+
         // Setters and Getters for Non model Data
         QUndoStack * undoStack() const { return m_undoStack;}
 

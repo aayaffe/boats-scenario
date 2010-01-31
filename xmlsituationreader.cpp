@@ -31,6 +31,8 @@
 #include "trackmodel.h"
 #include "boatmodel.h"
 #include "markmodel.h"
+#include "polylinemodel.h"
+#include "pointmodel.h"
 
 #include "undocommands.h"
 
@@ -125,6 +127,9 @@ void XmlSituationReader::readSituation() {
 
             } else if (name() == "track") {
                 readTrack(m_situation);
+
+            } else if (name() == "polyline") {
+                readPolyLine(m_situation);
 
             } else {
                 m_situation->appendDiscardedXml(readUnknownElement());
@@ -251,6 +256,48 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     foreach (const QString elem, discarded) {
         mark->appendDiscardedXml(elem);
     }
+}
+
+void XmlSituationReader::readPolyLine(SituationModel *situation) {
+    QStringList discarded;
+    AddPolyLineUndoCommand *command = new AddPolyLineUndoCommand(situation);
+    situation->undoStack()->push(command);
+    PolyLineModel *polyLine = command->polyLine();
+    while (!atEnd()) {
+        readNext();
+        if (isEndElement())
+            break;
+        if (isStartElement()) {
+            if (name() == "point")
+                readPoint(situation, polyLine);
+            else
+                polyLine->appendDiscardedXml(readUnknownElement());
+        }
+    }
+}
+
+void XmlSituationReader::readPoint(SituationModel *situation, PolyLineModel *polyLine) {
+    QPointF pos;
+    QStringList discarded;
+    while (!atEnd()) {
+        readNext();
+        if (isEndElement())
+            break;
+        if (isStartElement()) {
+            if (name() == "x")
+                pos.setX(readElementText().toFloat());
+            else if (name() == "y")
+                pos.setY(readElementText().toFloat());
+            else
+                discarded.append(readUnknownElement());
+        }
+    }
+    AddPointUndoCommand *command = new AddPointUndoCommand(polyLine, pos);
+    PointModel *point = command->point();
+    foreach (const QString elem, discarded) {
+        point->appendDiscardedXml(elem);
+    }
+    situation->undoStack()->push(command);
 }
 
 Boats::Series XmlSituationReader::series(const QString series) {

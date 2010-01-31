@@ -31,6 +31,8 @@ class SituationModel;
 class TrackModel;
 class BoatModel;
 class MarkModel;
+class PolyLineModel;
+class PointModel;
 
 class XmlSituationWriter : public QXmlStreamWriter {
     public:
@@ -43,6 +45,8 @@ class XmlSituationWriter : public QXmlStreamWriter {
         void writeTrack(const TrackModel *track);
         void writeBoat(const BoatModel *boat);
         void writeMark(const MarkModel *mark);
+        void writePolyLine(const PolyLineModel *polyLine);
+        void writePoint(const PointModel *point);
         void writeUnknownElement(const QString &discarded);
 
         SituationModel *m_situation;
