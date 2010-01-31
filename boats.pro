@@ -9,6 +9,8 @@ INCLUDEPATH += model \
 
 HEADERS = model/boatmodel.h \
     model/markmodel.h \
+    model/pointmodel.h \
+    model/polylinemodel.h \
     model/positionmodel.h \
     model/situationmodel.h \
     model/trackmodel.h \
@@ -36,6 +38,8 @@ HEADERS = model/boatmodel.h \
 
 SOURCES = model/boatmodel.cpp \
     model/markmodel.cpp \
+    model/pointmodel.cpp \
+    model/polylinemodel.cpp \
     model/positionmodel.cpp \
     model/situationmodel.cpp \
     model/trackmodel.cpp \
