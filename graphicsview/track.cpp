@@ -56,8 +56,6 @@ TrackGraphicsItem::TrackGraphicsItem(TrackModel *track, QGraphicsItem *parent)
 TrackGraphicsItem::~TrackGraphicsItem() {}
 
 void TrackGraphicsItem::setTrack() {
-        QPainterPath path;
-
         prepareGeometryChange();
         setPath(m_track->path());
         update();

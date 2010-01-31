@@ -64,17 +64,15 @@ SituationScene::SituationScene(SituationModel *situation)
     connect(this, SIGNAL(selectionChanged()),
             this, SLOT(setSelectedModels()));
 
-    // react to model track add/remove
+    // react to model track add
     connect(situation, SIGNAL(trackAdded(TrackModel*)),
             this, SLOT(addTrack(TrackModel*)));
-    connect(situation, SIGNAL(trackRemoved(TrackModel*)),
-            this, SLOT(deleteTrack(TrackModel*)));
 
-    // react to model boat add/remove
+    // react to model boat add
     connect(situation, SIGNAL(boatAdded(BoatModel*)),
             this, SLOT(addBoatItem(BoatModel*)));
 
-    // react to model mark add/remove
+    // react to model mark add
     connect(situation, SIGNAL(markAdded(MarkModel*)),
             this, SLOT(addMarkItem(MarkModel*)));
 
@@ -146,32 +144,16 @@ void SituationScene::addTrack(TrackModel *track) {
     addItem(trackItem);
 }
 
-void SituationScene::deleteTrack(TrackModel *track) {
-    if (debugLevel & 1 << VIEW) std::cout << "Treating deleteTrack " << track << std::endl;
-}
-
 void SituationScene::addBoatItem(BoatModel *boat) {
     if (debugLevel & 1 << VIEW) std::cout << "adding boat graphics for model " << boat << std::endl;
     BoatGraphicsItem *boatItem = new BoatGraphicsItem(boat);
     addItem(boatItem);
 }
 
-void SituationScene::deleteBoatItem() {
-    foreach (BoatModel *boat, m_selectedBoatModels) {
-        boat->track()->deleteBoat(boat);
-    }
-}
-
 void SituationScene::addMarkItem(MarkModel *mark) {
     if (debugLevel & 1 << VIEW) std::cout << "adding mark graphics for model " << mark << std::endl;
     MarkGraphicsItem *markItem = new MarkGraphicsItem(mark);
     addItem(markItem);
-}
-
-void SituationScene::deleteMarkItem() {
-    foreach (MarkModel *mark, m_selectedMarkModels) {
-        mark->situation()->deleteMark(mark);
-    }
 }
 
 /**

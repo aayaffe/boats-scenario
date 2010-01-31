@@ -129,11 +129,8 @@ class SituationScene : public QGraphicsScene {
 
         // Slots for SituationModel signals
         void addTrack(TrackModel *track);
-        void deleteTrack(TrackModel *track);
         void addBoatItem(BoatModel *boat);
-        void deleteBoatItem();
         void addMarkItem(MarkModel *mark);
-        void deleteMarkItem();
         void setLaylines(const int angle);
 
         // Slots for animation signals
