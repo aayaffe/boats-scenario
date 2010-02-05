@@ -21,6 +21,7 @@ HEADERS = model/boatmodel.h \
     graphicsview/mark.h \
     graphicsview/point.h \
     graphicsview/polyline.h \
+    graphicsview/sail.h \
     graphicsview/situationscene.h \
     graphicsview/situationview.h \
     graphicsview/track.h \
@@ -52,6 +53,7 @@ SOURCES = model/boatmodel.cpp \
     graphicsview/mark.cpp \
     graphicsview/point.cpp \
     graphicsview/polyline.cpp \
+    graphicsview/sail.cpp \
     graphicsview/situationscene.cpp \
     graphicsview/situationview.cpp \
     graphicsview/track.cpp \
