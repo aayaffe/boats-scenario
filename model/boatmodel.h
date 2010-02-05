@@ -81,7 +81,7 @@ class BoatModel : public PositionModel {
         // Setters and Getters for Non model Data
         TrackModel* track() const { return m_track; }
 
-        static qreal getSailAngle(qreal layline, qreal heading, Boats::Series series, qreal trim);
+        qreal getSailAngle(qreal heading, qreal trim);
 
     signals:
         void headingChanged(qreal heading);

@@ -101,7 +101,7 @@ void SailGraphicsItem::setTrim(qreal value) {
 
 /// calculate a sail incidence angle, corrected with user trimming
 void SailGraphicsItem::setSailAngle() {
-    m_sailAngle = m_boat->getSailAngle(m_boat->track()->situation()->laylineAngle(), m_angle, m_boat->track()->series(), m_trim);
+    m_sailAngle = m_boat->getSailAngle(m_angle, m_trim);
     qreal angle = fmod(m_angle - m_sailAngle +360, 360);
 
     if ((angle < 10 || angle > 350 || (angle > 170 && angle < 190)) && path() != m_sailPathStalled) {

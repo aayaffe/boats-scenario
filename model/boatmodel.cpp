@@ -63,8 +63,7 @@ void BoatModel::setPosition(const QPointF& theValue) {
 }
 
 void BoatModel::setTrim(const qreal& theValue) {
-    qreal layline = m_track->situation()->laylineAngle();
-    qreal sailAngle = getSailAngle(layline, m_heading, m_track->series(), 0);
+    qreal sailAngle = getSailAngle(m_heading, 0);
     qreal newAngle = sailAngle + theValue;
     if (theValue != m_trim
         && newAngle < 180
@@ -108,7 +107,8 @@ void BoatModel::setTextPosition(const QPointF& theValue) {
     }
 }
 
-qreal BoatModel::getSailAngle(qreal layline, qreal heading, Boats::Series series, qreal trim) {
+qreal BoatModel::getSailAngle(qreal heading, qreal trim) {
+    qreal layline = m_track->situation()->laylineAngle();
     qreal sailAngle;
 
     // within 10° inside layline angle, the sail is headed
@@ -118,7 +118,7 @@ qreal BoatModel::getSailAngle(qreal layline, qreal heading, Boats::Series series
         sailAngle =  heading - 360 + trim;
     } else {
 
-        switch (series) {
+        switch (m_track->series()) {
             // tornado has fixed 20° incidence
         case Boats::tornado:
             if (heading<180) {
