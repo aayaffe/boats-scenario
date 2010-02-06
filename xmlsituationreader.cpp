@@ -248,6 +248,9 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     if (length != 0) {
         mark->setLength(length);
     }
+    foreach (const QString elem, discarded) {
+        mark->appendDiscardedXml(elem);
+    }
 }
 
 Boats::Series XmlSituationReader::series(const QString series) {
