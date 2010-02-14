@@ -64,7 +64,6 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     m_bubble->setZValue(4);
 
     m_numberPath->setBrush(QBrush(Qt::black));
-    m_sail->setBrush(QBrush(Qt::white));
 
     QPen dashPen(Qt::CustomDashLine);
     QVector<qreal> dashes;
@@ -76,6 +75,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     setHeading(boat->heading());
     setPos(boat->position());
     setOrder(boat->order());
+    m_sail->setSailAngle(m_boat->sailAngle() + m_boat->trim());
     setOverlap(boat->overlap());
     setDisplayFlag(boat->flag());
 
@@ -83,6 +83,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
             this, SLOT(setHeading(qreal)));
     connect(boat, SIGNAL(positionChanged(QPointF)),
             this, SLOT(setPosition(QPointF)));
+    connect(boat, SIGNAL(trimmedSailAngleChanged(qreal)),
+            m_sail, SLOT(setSailAngle(qreal)));
     connect(boat, SIGNAL(orderChanged(int)),
             this, SLOT(setOrder(int)));
     connect(boat, SIGNAL(overlapChanged(Boats::Overlaps)),

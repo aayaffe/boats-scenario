@@ -40,15 +40,7 @@ SailGraphicsItem::SailGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         : QGraphicsPathItem(parent),
         m_boat(boat) {
     setZValue(0);
-
-    setHeading(boat->heading());
-    setTrim(boat->trim());
-    setSailAngle();
-
-    connect(boat, SIGNAL(headingChanged(qreal)),
-            this, SLOT(setHeading(qreal)));
-    connect(boat, SIGNAL(trimChanged(qreal)),
-            this, SLOT(setTrim(qreal)));
+    setBrush(QBrush(Qt::white));
 }
 
 
@@ -80,29 +72,13 @@ void SailGraphicsItem::setSailSize(qreal sailSize) {
         sailPathPort.lineTo(0, 0);
         m_sailPathPort = sailPathPort;
 
-        setSailAngle();
-}
-
-void SailGraphicsItem::setHeading(qreal value) {
-    if (m_angle != value) {
-        m_angle = value;
-        setSailAngle();
-        update();
-    }
-}
-
-void SailGraphicsItem::setTrim(qreal value) {
-    if (m_trim != value) {
-        m_trim = value;
-        setSailAngle();
-        update();
-    }
+        setSailAngle(m_boat->sailAngle() + m_boat->trim());
 }
 
 /// calculate a sail incidence angle, corrected with user trimming
-void SailGraphicsItem::setSailAngle() {
-    m_sailAngle = m_boat->getSailAngle(m_angle, m_trim);
-    qreal angle = fmod(m_angle - m_sailAngle +360, 360);
+void SailGraphicsItem::setSailAngle(qreal value) {
+    m_sailAngle = value;
+    qreal angle = fmod(m_boat->heading() - m_sailAngle +360, 360);
 
     if ((angle < 10 || angle > 350 || (angle > 170 && angle < 190)) && path() != m_sailPathStalled) {
         setPath(m_sailPathStalled);
@@ -113,7 +89,6 @@ void SailGraphicsItem::setSailAngle() {
     }
 
     QTransform transform;
-//    transform.translate(m_mast.x(), m_mast.y());
     transform.rotate(- m_sailAngle);
     setTransform(transform, false);
 }

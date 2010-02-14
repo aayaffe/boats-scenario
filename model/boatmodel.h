@@ -81,11 +81,12 @@ class BoatModel : public PositionModel {
         // Setters and Getters for Non model Data
         TrackModel* track() const { return m_track; }
 
-        qreal getSailAngle(qreal heading, qreal trim);
+        qreal sailAngle(qreal heading = -1) const;
 
     signals:
         void headingChanged(qreal heading);
         void trimChanged(qreal trim);
+        void trimmedSailAngleChanged(qreal sailAngle);
         void overlapChanged(Boats::Overlaps overlap);
         void flagChanged(Boats::Flag flag);
         void textChanged(QString text);
