@@ -333,7 +333,7 @@ void MainWindow::updateActions() {
     addPointAction->setEnabled(selectedPoints || scene->state() == CREATE_POINT);
     togglePortOverlapAction->setEnabled(selectedBoats);
     toggleStarboardOverlapAction->setEnabled(selectedBoats);
-    toggleTextAction->setEnabled(selectedBoats);
+    toggleTextAction->setEnabled(selectedItems);
     flagMenu->setEnabled(selectedBoats);
     deleteTrackAction->setEnabled(selectedBoats);
     deleteAction->setEnabled(selectedItems);
@@ -349,14 +349,18 @@ void MainWindow::updateActions() {
     foreach(BoatModel *boat, scene->selectedBoatModels()) {
         allPortSet = allPortSet && (boat->overlap() & Boats::port);
         allStarboardSet = allStarboardSet && (boat->overlap() & Boats::starboard);
-        allTextSet = allTextSet && (!boat->text().isEmpty());
         for (int i = 0; i < flagSize; i++) {
             allFlagSet[i] = allFlagSet[i] && (boat->flag() == i);
         }
     }
     togglePortOverlapAction->setChecked(selectedBoats && allPortSet);
     toggleStarboardOverlapAction->setChecked(selectedBoats && allStarboardSet);
-    toggleTextAction->setChecked(selectedBoats && allTextSet);
+
+    foreach(PositionModel *position, scene->selectedModels()) {
+        allTextSet = allTextSet && (!position->text().isEmpty());
+    }
+    toggleTextAction->setEnabled(scene->selectedModels().size()==1);
+    toggleTextAction->setChecked(selectedItems && allTextSet);
     for (int i = 0; i < flagSize; i++) {
         QAction *flagAction = flagMenu->actions()[i];
         flagAction->setChecked(allFlagSet[i]);
@@ -1410,13 +1414,13 @@ void MainWindow::toggleText() {
     SituationModel *situation = situationList.at(tabWidget->currentIndex());
     SituationScene *scene = sceneList.at(tabWidget->currentIndex());
 
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
-    if (! boatList.isEmpty()) {
+    QList<PositionModel *> modelList = scene->selectedModels();
+    if (! modelList.isEmpty()) {
         QString text;
-        if (boatList.first()->text().isEmpty()) {
+        if (modelList.first()->text().isEmpty()) {
             text = tr("Protest!");
         }
-        situation->undoStack()->push(new SetTextUndoCommand(boatList.first(), text));
+        situation->undoStack()->push(new SetTextUndoCommand(modelList.first(), text));
     }
 }
 

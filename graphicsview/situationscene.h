@@ -119,6 +119,7 @@ class SituationScene : public QGraphicsScene {
         void setState(const SceneState& theValue, bool commit = false);
         void setModelPressed(BoatModel *theValue) {m_modelPressed = theValue; }
         SceneState state() const { return m_state; }
+        QList< PositionModel * > selectedModels() const { return m_selectedModels; }
         QList< BoatModel * > selectedBoatModels() const { return m_selectedBoatModels; }
         QList< MarkModel * > selectedMarkModels() const { return m_selectedMarkModels; }
         QList< PointModel * > selectedPointModels() const { return m_selectedPointModels; }
