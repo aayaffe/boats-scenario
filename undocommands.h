@@ -336,7 +336,7 @@ class TrimBoatUndoCommand : public QUndoCommand {
 class SetTextUndoCommand : public QUndoCommand {
 
     public:
-        SetTextUndoCommand(BoatModel *boat, QString text, QUndoCommand *parent = 0);
+        SetTextUndoCommand(PositionModel *model, QString text, QUndoCommand *parent = 0);
         ~SetTextUndoCommand();
         void undo();
         void redo();
@@ -344,7 +344,7 @@ class SetTextUndoCommand : public QUndoCommand {
         int id() const { return SET_TEXT; }
 
     private:
-        BoatModel *m_boat;
+        PositionModel *m_model;
         QString m_oldText;
         QString m_newText;
 };
@@ -352,14 +352,14 @@ class SetTextUndoCommand : public QUndoCommand {
 class MoveTextUndoCommand : public QUndoCommand {
 
     public:
-        MoveTextUndoCommand(BoatModel *boat, const QPointF &deltaPosition, QUndoCommand *parent = 0);
+        MoveTextUndoCommand(PositionModel *model, const QPointF &deltaPosition, QUndoCommand *parent = 0);
         ~MoveTextUndoCommand();
         void undo();
         void redo();
         bool mergeWith(const QUndoCommand *command);
         int id() const { return MOVE_TEXT; }
     private:
-        BoatModel *m_boat;
+        PositionModel *m_model;
         QPointF m_deltaPosition;
 };
 
