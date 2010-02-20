@@ -39,9 +39,9 @@
 
 extern int debugLevel;
 
-BubbleGraphicsItem::BubbleGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
+BubbleGraphicsItem::BubbleGraphicsItem(PositionModel *model, QGraphicsItem *parent)
         : QGraphicsTextItem(parent),
-        m_boat(boat),
+        m_model(model),
         m_tail(new QGraphicsPolygonItem(parent)) {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -49,17 +49,19 @@ BubbleGraphicsItem::BubbleGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     m_tail->setZValue(0);
     m_tail->setBrush(Qt::white);
 
-    updateText(boat->text());
-    setPosition(boat->textPosition());
+    updateText(model->text());
+    setPosition(model->textPosition());
 
     connect(document(), SIGNAL(contentsChanged()),
             this, SLOT(setText()));
 
-    connect(boat, SIGNAL(headingChanged(qreal)),
-            this, SLOT(setTail()));
-    connect(boat, SIGNAL(textChanged(QString)),
+    if (BoatModel *boat = static_cast<BoatModel*> (m_model)) {
+        connect(boat, SIGNAL(headingChanged(qreal)),
+                this, SLOT(setTail()));
+    }
+    connect(model, SIGNAL(textChanged(QString)),
             this, SLOT(updateText(QString)));
-    connect(boat, SIGNAL(textPositionChanged(QPointF)),
+    connect(model, SIGNAL(textPositionChanged(QPointF)),
             this, SLOT(setPosition(QPointF)));
 }
 
@@ -77,9 +79,9 @@ void BubbleGraphicsItem::updateText(QString value) {
 
 /// set model from control changes
 void BubbleGraphicsItem::setText() {
-    if (m_boat->track()->situation()) {
-        if (document()->toPlainText() != m_boat->text()) {
-            m_boat->track()->situation()->undoStack()->push(new SetTextUndoCommand(m_boat, document()->toPlainText()));
+    if (m_model->situation()) {
+        if (document()->toPlainText() != m_model->text()) {
+            m_model->situation()->undoStack()->push(new SetTextUndoCommand(m_model, document()->toPlainText()));
             setVisible(!document()->toPlainText().isEmpty());
             m_tail->setVisible(!document()->toPlainText().isEmpty());
             setTail();
@@ -95,9 +97,12 @@ void BubbleGraphicsItem::setPosition(QPointF position) {
 }
 
 void BubbleGraphicsItem::setTail() {
-    double a = -boat()->heading() * M_PI / 180;
-    // set the transform to have horizontal text
-    setTransform(QTransform().rotateRadians(a));
+    double a = 0;
+    if (BoatModel *boat = static_cast<BoatModel*> (m_model)) {
+        a = -boat->heading() * M_PI / 180;
+        // set the transform to have horizontal text
+        setTransform(QTransform().rotateRadians(a));
+    }
 
     //centerx,y is half the size of the text
     double centerx = boundingRect().width()/2;
@@ -135,7 +140,7 @@ void BubbleGraphicsItem::paint(QPainter *painter,
 void BubbleGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     m_clickTime.start();
     QGraphicsTextItem::mousePressEvent(event);
-    m_fromPosition = m_boat->textPosition();
+    m_fromPosition = m_model->textPosition();
 }
 
 void BubbleGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
@@ -153,7 +158,7 @@ void BubbleGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     }
     QGraphicsTextItem::mouseReleaseEvent(event);
     if (pos() != m_fromPosition) {
-        m_boat->track()->situation()->undoStack()->push(new MoveTextUndoCommand(m_boat, pos() - m_fromPosition));
+        m_model->situation()->undoStack()->push(new MoveTextUndoCommand(m_model, pos() - m_fromPosition));
     }
 }
 

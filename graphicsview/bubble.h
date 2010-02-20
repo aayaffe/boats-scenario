@@ -29,9 +29,8 @@
 #include <QObject>
 
 #include "boats.h"
-#include "flag.h"
 
-class BoatModel;
+class PositionModel;
 
 /**
     \class BubbleGraphicsItem
@@ -41,7 +40,7 @@ class BoatModel;
     The class represents the Item according to the Graphics View Framework.
 
     It inherits QGraphicsItem for Item framework and QObject for slot and
-    signal framework. It displays the text representation of a BoatModel on a
+    signal framework. It displays the text representation of a PositionModel on a
     SituationView.
 
     \sa SituationView, SituationScene, SituationModel, BoatModel
@@ -51,10 +50,10 @@ class BoatModel;
 class BubbleGraphicsItem : public QGraphicsTextItem {
         Q_OBJECT
     public:
-        BubbleGraphicsItem(BoatModel *boat, QGraphicsItem *parent = 0);
+        BubbleGraphicsItem(PositionModel *model, QGraphicsItem *parent = 0);
         virtual ~BubbleGraphicsItem();
 
-        BoatModel* boat() const { return m_boat; }
+        PositionModel* model() const { return m_model; }
 
         QRectF boundingRect() const;
         void paint(QPainter *painter,
@@ -74,8 +73,8 @@ class BubbleGraphicsItem : public QGraphicsTextItem {
         virtual void focusOutEvent (QFocusEvent *event);
 
     private:
-        /// \a m_boat holds the BoatModel being represented
-        BoatModel *m_boat;
+        /// \a m_model holds the PositionModel being represented
+        PositionModel *m_model;
 
         /// \a m_fromPosition holds the position of the mousePress
         QPointF m_fromPosition;
