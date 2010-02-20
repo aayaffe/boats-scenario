@@ -60,8 +60,6 @@ class MarkModel : public PositionModel {
         void setZone(const bool theValue);
 
         // Setters and Getters for Non model Data
-        SituationModel* situation() const { return m_situation; }
-
         int length() const { return m_length; }
         void setLength(const int theValue);
 
@@ -79,10 +77,6 @@ class MarkModel : public PositionModel {
         bool m_zone;
 
         // Non model Data
-        /// \a m_situation keeps a pointer to the SituationModel to which
-        /// it belongs
-        SituationModel *m_situation;
-
         /// \a m_length keeps the length of Main Series of the Scenario
         int m_length;
 };

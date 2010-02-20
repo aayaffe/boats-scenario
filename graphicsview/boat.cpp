@@ -95,7 +95,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
             this, SLOT(setColor(QColor)));
     connect(boat->track(), SIGNAL(seriesChanged(Boats::Series)),
             this, SLOT(setSeries(Boats::Series)));
-    connect(boat->track()->situation(), SIGNAL(boatRemoved(BoatModel*)),
+    connect(boat->situation(), SIGNAL(boatRemoved(BoatModel*)),
             this, SLOT(deleteItem(BoatModel*)));
 }
 
@@ -145,7 +145,7 @@ void BoatGraphicsItem::setOverlap(Boats::Overlaps value) {
 }
 
 void BoatGraphicsItem::setOverlapLine() {
-    qreal size = m_boat->track()->situation()->sizeForSeries(m_series);
+    qreal size = m_boat->situation()->sizeForSeries(m_series);
     qreal border;
     switch(m_series) {
         case Boats::keelboat:

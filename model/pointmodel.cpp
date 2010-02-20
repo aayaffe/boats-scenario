@@ -34,7 +34,7 @@
 extern int debugLevel;
 
 PointModel::PointModel(PolyLineModel* polyline, QObject *parent)
-        : PositionModel(parent),
+        : PositionModel(polyline->situation(), parent),
         m_polyline(polyline) {
     if (debugLevel & 1 << MODEL) std::cout << "new Point " << this << std::endl;
     setOrder(polyline->size()+1);
