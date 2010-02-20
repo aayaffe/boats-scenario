@@ -42,12 +42,15 @@ const int size = 3;
 PointGraphicsItem::PointGraphicsItem(PointModel *point, QGraphicsItem *parent)
         : QGraphicsItem(parent),
         m_point(point),
+        m_bubble(new BubbleGraphicsItem(m_point, this)),
         m_selected(false) {
     setZValue(1);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
     setPos(point->position());
+
+    m_bubble->setZValue(1);
 
     m_points  << QPoint(0, -size)
             << QPoint(size, 0)

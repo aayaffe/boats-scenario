@@ -29,6 +29,7 @@
 #include <QObject>
 
 #include "commontypes.h"
+#include "bubble.h"
 
 class PointModel;
 
@@ -54,6 +55,7 @@ class PointGraphicsItem : public QObject, public QGraphicsItem {
         ~PointGraphicsItem();
 
         PointModel* point() const { return m_point; }
+        BubbleGraphicsItem* bubble() const { return m_bubble; }
 
         QRectF boundingRect() const;
         QPainterPath shape() const;
@@ -68,6 +70,9 @@ class PointGraphicsItem : public QObject, public QGraphicsItem {
     private:
         /// \a m_point holds the PointModel being represented
         PointModel *m_point;
+
+        /// \a m_bubble holds the bubble to display
+        BubbleGraphicsItem *m_bubble;
 
         /// \a m_selected holds selection information
         bool m_selected;
