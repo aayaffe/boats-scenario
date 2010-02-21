@@ -73,6 +73,7 @@ contains(GIF_EXPORT,1) {
 }
 
 TRANSLATIONS = locale/boats.ts \
+    locale/boats_da.ts \
     locale/boats_de.ts \
     locale/boats_es.ts \
     locale/boats_fr.ts \
