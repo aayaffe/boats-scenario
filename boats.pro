@@ -97,6 +97,14 @@ unix_deploy {
     target.path = $${PREFIX}/bin
     INSTALLS += target
 
+    desktop.path = $${PREFIX}/share/applications
+    desktop.files = boats.desktop
+    INSTALLS += desktop
+
+    icons.path = $${PREFIX}/share/icons
+    icons.files = images/icons/*
+    INSTALLS += icons
+
     TRANSLATEDIR = $${PREFIX}/share/boats
     translations.path = $${TRANSLATEDIR}
     translations.files = locale/boats_*.qm
