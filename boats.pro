@@ -105,6 +105,10 @@ unix_deploy {
     icons.files = images/icons/*
     INSTALLS += icons
 
+    mimetype.path = $${PREFIX}/share/mime
+    mimetype.files = boats.xml
+    INSTALLS += mimetype
+
     TRANSLATEDIR = $${PREFIX}/share/boats
     translations.path = $${TRANSLATEDIR}
     translations.files = locale/boats_*.qm
