@@ -237,6 +237,12 @@ void MainWindow::createActions() {
     connect(toggleTextAction, SIGNAL(triggered()),
             this, SLOT(toggleText()));
 
+    toggleSpinAction = new QAction(this);
+    toggleSpinAction->setCheckable(true);
+    toggleSpinAction->setEnabled(false);
+    connect(toggleSpinAction, SIGNAL(triggered()),
+            this, SLOT(toggleSpin()));
+
     toggleMarkZoneAction = new QAction(this);
     toggleMarkZoneAction->setIcon(QIcon(":/images/zone.png"));
     connect(toggleMarkZoneAction, SIGNAL(triggered()),
@@ -340,6 +346,8 @@ void MainWindow::updateActions() {
 
     bool allPortSet = 1;
     bool allStarboardSet = 1;
+    bool allKeelboat = 1;
+    bool allSpinSet = 1;
     bool allTextSet = 1;
     int flagSize = ENUM_SIZE(Boats,Flag);
     bool allFlagSet[flagSize];
@@ -349,12 +357,16 @@ void MainWindow::updateActions() {
     foreach(BoatModel *boat, scene->selectedBoatModels()) {
         allPortSet = allPortSet && (boat->overlap() & Boats::port);
         allStarboardSet = allStarboardSet && (boat->overlap() & Boats::starboard);
+        allKeelboat = allKeelboat && (boat->track()->series() == Boats::keelboat);
+        allSpinSet = allSpinSet && (boat->spin());
         for (int i = 0; i < flagSize; i++) {
             allFlagSet[i] = allFlagSet[i] && (boat->flag() == i);
         }
     }
     togglePortOverlapAction->setChecked(selectedBoats && allPortSet);
     toggleStarboardOverlapAction->setChecked(selectedBoats && allStarboardSet);
+    toggleSpinAction->setChecked(allSpinSet);
+    toggleSpinAction->setEnabled(allKeelboat);
 
     foreach(PositionModel *position, scene->selectedModels()) {
         allTextSet = allTextSet && (!position->text().isEmpty());
@@ -515,6 +527,7 @@ void MainWindow::createMenus() {
                 this, SLOT(toggleFlag()));
     }
     trackMenu->addMenu(flagMenu);
+    trackMenu->addAction(toggleSpinAction);
     trackMenu->addAction(toggleMarkZoneAction);
     trackMenu->addSeparator();
     trackMenu->addAction(deleteTrackAction);
@@ -900,6 +913,9 @@ void MainWindow::changeEvent(QEvent *event) {
 
         toggleTextAction->setText(tr("&Text"));
         toggleTextAction->setShortcut(tr("Alt+T"));
+
+        toggleSpinAction->setText(tr("Toggle &Spinnaker"));
+        toggleSpinAction->setShortcut(tr("S"));
 
         toggleMarkZoneAction->setText(tr("Toggle Mark &Zone"));
         toggleMarkZoneAction->setShortcut(tr("Z"));
@@ -1436,6 +1452,16 @@ void MainWindow::toggleFlag() {
         if (! boatList.isEmpty()) {
             situation->undoStack()->push(new FlagBoatUndoCommand(situation, boatList, flag));
         }
+    }
+}
+
+void MainWindow::toggleSpin() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    if (! boatList.isEmpty()) {
+        situation->undoStack()->push(new SpinBoatUndoCommand(situation, boatList, !boatList.first()->spin()));
     }
 }
 

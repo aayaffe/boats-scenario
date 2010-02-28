@@ -54,6 +54,7 @@ enum {
     OVERLAP_BOAT,
     FLAG_BOAT,
     TRIM_BOAT,
+    SPIN_BOAT,
     SET_TEXT,
     MOVE_TEXT,
     ZONE_MARK,
@@ -331,6 +332,22 @@ class TrimBoatUndoCommand : public QUndoCommand {
         QList<BoatModel*> m_boatList;
         QList<qreal> m_trimList;
         qreal m_trim;
+};
+
+class SpinBoatUndoCommand : public QUndoCommand {
+
+    public:
+        SpinBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, bool spin, QUndoCommand *parent = 0);
+        ~SpinBoatUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SPIN_BOAT; }
+    private:
+        SituationModel *m_situation;
+        QList<BoatModel*> m_boatList;
+        QList<bool> m_spinList;
+        bool m_spin;
 };
 
 class SetTextUndoCommand : public QUndoCommand {

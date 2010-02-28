@@ -626,6 +626,47 @@ bool TrimBoatUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Spin Boat
+SpinBoatUndoCommand::SpinBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, bool spin, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_boatList(boatList),
+        m_spin(spin) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new spinboatundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_spinList << boat->spin();
+    }
+}
+
+SpinBoatUndoCommand::~SpinBoatUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end spinboatundocommand" << std::endl;
+}
+
+void SpinBoatUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo spinboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setSpin(m_spinList[i]);
+    }
+}
+
+void SpinBoatUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo spinboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setSpin(m_spin);
+    }
+}
+
+bool SpinBoatUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SpinBoatUndoCommand *spinCommand = static_cast<const SpinBoatUndoCommand*>(command);
+    if (m_boatList != spinCommand->m_boatList)
+        return false;
+
+    m_spin = spinCommand->m_spin;
+    return true;
+}
+
 // Set Text
 SetTextUndoCommand::SetTextUndoCommand(PositionModel* model, QString text, QUndoCommand *parent)
         : QUndoCommand(parent),
