@@ -116,6 +116,9 @@ void XmlSituationWriter::writeBoat(const BoatModel *boat) {
     if (boat->trim() != 0) {
         writeTextElement("trim",QString::number(boat->trim()));
     }
+    if (boat->spin()) {
+        writeTextElement("spin",QString::number(boat->spin()));
+    }
     if (boat->overlap() != Boats::none) {
         writeTextElement("overlap", FLAG_NAME(Boats, Overlap, boat->overlap()));
     }
