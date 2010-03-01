@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 
 #include "boats.h"
 #include "sail.h"
+#include "spinnaker.h"
 #include "flag.h"
 #include "bubble.h"
 
@@ -70,6 +71,7 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void setHeading(qreal value);
         void setPosition(QPointF position);
         void setOrder(int value);
+        void setSpin(bool value);
         void setOverlap(Boats::Overlaps value);
         void setDisplayFlag(Boats::Flag value);
         void setColor(QColor value);
@@ -95,6 +97,12 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_sail holds the sail that will be drawn
         SailGraphicsItem *m_sail;
+
+        /// \a m_pole holds the spinnaker pole
+        QGraphicsLineItem *m_pole;
+
+        /// \a m_spin holds the spinnaker
+        SpinnakerGraphicsItem *m_spin;
 
         /// \a m_overlap holds whether an overlap line should be displayed
         Boats::Overlaps m_overlap;

@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -43,6 +43,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         m_boat(boat),
         m_angle(0),
         m_sail(new SailGraphicsItem(boat, this)),
+        m_pole(new QGraphicsLineItem(this)),
+        m_spin(new SpinnakerGraphicsItem(boat, this)),
         m_overlap(Boats::none),
         m_overlapLine(new QGraphicsLineItem(this)),
         m_color(boat->track()->color()),
@@ -60,8 +62,10 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
 
     m_numberPath->setZValue(1);
     m_flagRect->setZValue(2);
-    m_sail->setZValue(3);
-    m_bubble->setZValue(4);
+    m_pole->setZValue(3);
+    m_sail->setZValue(4);
+    m_spin->setZValue(5);
+    m_bubble->setZValue(6);
 
     m_numberPath->setBrush(QBrush(Qt::black));
 
@@ -76,15 +80,25 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     setPos(boat->position());
     setOrder(boat->order());
     m_sail->setSailAngle(m_boat->sailAngle() + m_boat->trim());
+    m_spin->setSailAngle(m_boat->spinAngle() + m_boat->spinTrim());
+    m_spin->setHeading(m_boat->heading());
+    m_pole->setVisible(boat->spin());
+    m_spin->setVisible(boat->spin());
     setOverlap(boat->overlap());
     setDisplayFlag(boat->flag());
 
     connect(boat, SIGNAL(headingChanged(qreal)),
             this, SLOT(setHeading(qreal)));
+    connect(boat, SIGNAL(headingChanged(qreal)),
+            m_spin, SLOT(setHeading(qreal)));
     connect(boat, SIGNAL(positionChanged(QPointF)),
             this, SLOT(setPosition(QPointF)));
     connect(boat, SIGNAL(trimmedSailAngleChanged(qreal)),
             m_sail, SLOT(setSailAngle(qreal)));
+    connect(boat, SIGNAL(spinChanged(bool)),
+            this, SLOT(setSpin(bool)));
+    connect(boat, SIGNAL(trimmedSpinAngleChanged(qreal)),
+            m_spin, SLOT(setSailAngle(qreal)));
     connect(boat, SIGNAL(orderChanged(int)),
             this, SLOT(setOrder(int)));
     connect(boat, SIGNAL(overlapChanged(Boats::Overlaps)),
@@ -110,6 +124,15 @@ void BoatGraphicsItem::setHeading(qreal value) {
         QTransform rotation;
         rotation.rotate(m_angle),
         setTransform(rotation, false);
+        QTransform poleRotation;
+        if (m_angle > 90 && m_angle < 180) {
+            poleRotation.rotate(90-m_angle);
+        } else if (m_angle >= 180 && m_angle < 270) {
+            poleRotation.rotate(-90-m_angle);
+        } else {
+            poleRotation.rotate(0);
+        }
+        m_pole->setTransform(poleRotation, false);
     }
 }
 
@@ -118,6 +141,11 @@ void BoatGraphicsItem::setPosition(QPointF position) {
         setPos(position);
         update();
     }
+}
+
+void BoatGraphicsItem::setSpin(bool value) {
+    m_pole->setVisible(value);
+    m_spin->setVisible(value);
 }
 
 void BoatGraphicsItem::setOrder(int value) {
@@ -314,6 +342,12 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         if (sailSize) {
             m_sail->setPosition(mast);
             m_sail->setSailSize(sailSize);
+            QLineF line;
+            line.setP2(QPointF(0, -1.1*sailSize));
+            m_pole->setPos(mast);
+            m_pole->setLine(line);
+            m_spin->setSailSize(1.1*sailSize);
+            m_spin->setPosition(mast);
         }
         setOverlapLine();
         setOrder(m_order);

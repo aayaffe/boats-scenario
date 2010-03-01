@@ -216,6 +216,7 @@ void BoatAnimation::afterAnimationStep(qreal step) {
     m_boat->boat()->setFlag(boat->flag());
     m_boat->boat()->setText(boat->text());
     m_boat->boat()->setTextPosition(boat->textPosition());
+    m_boat->boat()->setSpin(boat->spin());
 
     // trigger next update rate calculation
     m_time.start();

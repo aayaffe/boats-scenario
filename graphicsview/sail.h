@@ -61,12 +61,15 @@ class SailGraphicsItem : public QObject, public QGraphicsPathItem {
     public slots:
         void setSailAngle(qreal value);
 
-    private:
+    protected:
         /// \a m_boat holds the BoatModel being represented
         BoatModel *m_boat;
 
         /// \a m_sailAngle holds the ideal sail trimming angle
         qreal m_sailAngle;
+
+        /// \a m_sailSize holds the size of the foot
+        qreal m_sailSize;
 
         /// \a m_sailPathPort holds the sail path when on port tack
         QPainterPath m_sailPathPort;

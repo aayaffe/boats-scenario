@@ -1,12 +1,12 @@
 //
-// C++ Implementation: SailGraphicsItem
+// C++ Implementation: SpinnakerGraphicsItem
 //
 // Description:
 //
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2010 Thibaut GRIDEL
+// Copyright (c) 2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 #include <QPainter>
 #include <QGraphicsScene>
 
-#include "sail.h"
+#include "spinnaker.h"
 
 #include "commontypes.h"
 #include "situationmodel.h"
@@ -36,25 +36,14 @@
 
 extern int debugLevel;
 
-SailGraphicsItem::SailGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
-        : QGraphicsPathItem(parent),
-        m_boat(boat),
-        m_sailAngle(0) {
-    setZValue(0);
-    setBrush(QBrush(Qt::white));
+SpinnakerGraphicsItem::SpinnakerGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
+        : SailGraphicsItem(boat, parent) {
 }
 
 
-SailGraphicsItem::~SailGraphicsItem() {}
+SpinnakerGraphicsItem::~SpinnakerGraphicsItem() {}
 
-void SailGraphicsItem::setPosition(QPointF position) {
-    if (pos() != position) {
-        setPos(position);
-        update();
-    }
-}
-
-void SailGraphicsItem::setSailSize(qreal sailSize) {
+void SpinnakerGraphicsItem::setSailSize(qreal sailSize) {
     m_sailSize = sailSize;
         QPainterPath sailPathStalled;
         sailPathStalled.cubicTo(.1 * sailSize, .2 * sailSize, .1 * sailSize, .2 * sailSize, 0, .3 * sailSize);
@@ -66,20 +55,22 @@ void SailGraphicsItem::setSailSize(qreal sailSize) {
 
 
         QPainterPath sailPathStarboard;
-        sailPathStarboard.cubicTo(.1 * sailSize, .4 * sailSize, .1 * sailSize, .6 * sailSize, 0, sailSize);
-        sailPathStarboard.lineTo(0, 0);
+        sailPathStarboard.cubicTo(.4 * sailSize, .2 * sailSize, .6 * sailSize, .2 * sailSize, sailSize, 0);
+        sailPathStarboard.arcTo(-sailSize, -sailSize, 2 * sailSize, 2 * sailSize, 0, -120);
+        sailPathStarboard.cubicTo(-.12 * sailSize, .62 * sailSize, -.03 * sailSize, .44 * sailSize, 0, 0);
         m_sailPathStarboard = sailPathStarboard;
 
         QPainterPath sailPathPort;
-        sailPathPort.cubicTo(-.1 * sailSize, .4 * sailSize, -.1 * sailSize, .6 * sailSize, 0, sailSize);
-        sailPathPort.lineTo(0, 0);
+        sailPathPort.cubicTo(-.4 * sailSize, .2 * sailSize, -.6 * sailSize, .2 * sailSize, -sailSize, 0);
+        sailPathPort.arcTo(- sailSize, -sailSize, 2 * sailSize, 2 * sailSize, 180, 120);
+        sailPathPort.cubicTo(.12 * sailSize, .62 * sailSize, .03 * sailSize, .44 * sailSize, 0, 0);
         m_sailPathPort = sailPathPort;
 
-        setSailAngle(m_boat->sailAngle() + m_boat->trim());
+        setSailAngle(m_boat->spinAngle() + m_boat->spinTrim());
 }
 
 /// calculate a sail incidence angle, corrected with user trimming
-void SailGraphicsItem::setSailAngle(qreal value) {
+void SpinnakerGraphicsItem::setSailAngle(qreal value) {
     m_sailAngle = value;
     qreal angle = fmod(m_boat->heading() - m_sailAngle +360, 360);
 
@@ -90,8 +81,11 @@ void SailGraphicsItem::setSailAngle(qreal value) {
     } else if (angle >= 190 && angle <= 350 && path() != m_sailPathPort) {
         setPath(m_sailPathPort);
     }
+}
 
-    QTransform transform;
-    transform.rotate(- m_sailAngle);
-    setTransform(transform, false);
+void SpinnakerGraphicsItem::setHeading(qreal value) {
+    qreal angle = value;
+    QTransform rotation;
+    rotation.rotate(-angle);
+    setTransform(rotation, false);
 }

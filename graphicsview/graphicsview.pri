@@ -12,6 +12,7 @@ HEADERS += \
     $$PWD/sail.h \
     $$PWD/situationscene.h \
     $$PWD/situationview.h \
+    $$PWD/spinnaker.h \
     $$PWD/track.h
 
 SOURCES += \
@@ -25,4 +26,5 @@ SOURCES += \
     $$PWD/sail.cpp \
     $$PWD/situationscene.cpp \
     $$PWD/situationview.cpp \
+    $$PWD/spinnaker.cpp \
     $$PWD/track.cpp
