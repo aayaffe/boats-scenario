@@ -67,6 +67,12 @@ class BoatModel : public PositionModel {
         qreal trim() const { return m_trim; }
         void setTrim(const qreal& theValue);
 
+        bool spin() const { return m_spin; }
+        void setSpin(const bool theValue);
+
+        qreal spinTrim() const { return m_spinTrim; }
+        void setSpinTrim(const qreal& theValue);
+
         Boats::Overlaps overlap() const {return m_overlap; }
         void setOverlap(const Boats::Overlaps theValue);
 
@@ -78,10 +84,15 @@ class BoatModel : public PositionModel {
 
         qreal sailAngle(qreal heading = -1) const;
 
+        qreal spinAngle(qreal heading = -1) const;
+
     signals:
         void headingChanged(qreal heading);
         void trimChanged(qreal trim);
         void trimmedSailAngleChanged(qreal sailAngle);
+        void spinChanged(bool spin);
+        void spinTrimChanged(qreal spinTrim);
+        void trimmedSpinAngleChanged(qreal spinAngle);
         void overlapChanged(Boats::Overlaps overlap);
         void flagChanged(Boats::Flag flag);
 
@@ -92,6 +103,12 @@ class BoatModel : public PositionModel {
 
         /// \a m_trim holds the sailing trim of a Boat
         qreal m_trim;
+
+        /// \a m_spin holds whether a spinnaker is used
+        bool m_spin;
+
+        /// \a m_spinTrim holds the spinnaker trim
+        qreal m_spinTrim;
 
         /// \a m_overlap holds whether an overlap line should be displayed
         Boats::Overlaps m_overlap;

@@ -37,6 +37,8 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         : PositionModel(track->situation(), parent),
         m_heading(0),
         m_trim(0),
+        m_spin(false),
+        m_spinTrim(0),
         m_overlap(Boats::none),
         m_flag(Boats::noFlag),
         m_track(track) {
@@ -53,6 +55,7 @@ void BoatModel::setHeading(const qreal& theValue) {
         m_heading = fmod(theValue+360.0,360.0);
         emit headingChanged(m_heading);
         emit trimmedSailAngleChanged(sailAngle()+ m_trim);
+        emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
         m_track->changingTrack(m_track);
     }
 }
@@ -68,8 +71,31 @@ void BoatModel::setTrim(const qreal& theValue) {
         && newAngle < 180
         && newAngle > -180) {
         m_trim = theValue;
+        if (debugLevel & 1 << MODEL) std::cout
+                << "trim = " << theValue  << std::endl;
         emit trimChanged(m_trim);
         emit trimmedSailAngleChanged(sailAngle()+ m_trim);
+    }
+}
+
+void BoatModel::setSpin(const bool theValue) {
+    if (theValue != m_spin) {
+        m_spin = theValue;
+        emit spinChanged(m_spin);
+    }
+}
+
+void BoatModel::setSpinTrim(const qreal& theValue) {
+    qreal sailAngle = spinAngle();
+    qreal newAngle = sailAngle + theValue;
+    if (theValue != m_spinTrim
+        && newAngle < 180
+        && newAngle > -180) {
+        m_spinTrim = theValue;
+        if (debugLevel & 1 << MODEL) std::cout
+                << "spinTrim = " << theValue  << std::endl;
+        emit spinTrimChanged(m_spinTrim);
+        emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
     }
 }
 
@@ -135,3 +161,28 @@ qreal BoatModel::sailAngle(qreal heading) const {
     return sailAngle;
 }
 
+qreal BoatModel::spinAngle(qreal heading) const {
+    qreal sailAngle;
+
+    if (heading == -1) {
+        heading = m_heading;
+    }
+    // within 10° above downwind angle, the sail is headed
+    if (heading < 80) {
+        sailAngle =  heading;
+    } else if (heading > 280) {
+        sailAngle =  heading - 360;
+    } else {
+        if (heading<180) {
+            sailAngle = heading - 20;
+        } else {
+            sailAngle = heading + 20;
+        }
+    }
+
+    if (debugLevel & 1 << MODEL) std::cout
+            << "heading = " << heading
+            << " spin = " << sailAngle
+            << std::endl;
+    return sailAngle;
+}
