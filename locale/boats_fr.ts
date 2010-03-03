@@ -192,16 +192,6 @@
         <translation>&amp;Animation</translation>
     </message>
     <message>
-        <source>Application</source>
-        <translation type="obsolete">Application</translation>
-    </message>
-    <message>
-        <source>The document has been modified.
-Do you want to save your changes?</source>
-        <translation type="obsolete">Le document a été modifié.
-Voulez-vous sauver vos modifications?</translation>
-    </message>
-    <message>
         <source>Open Scenario File</source>
         <translation>Ouvrir un fichier Scénario</translation>
     </message>
@@ -437,6 +427,30 @@ Voulez-vous le remplacer?</translation>
     <message>
         <source>Protest!</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>Create Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create &amp;PolyLine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+Ins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create Poin&amp;t</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Spinnaker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

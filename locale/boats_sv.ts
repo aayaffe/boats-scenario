@@ -60,16 +60,8 @@
         <translation>Skri&amp;v ut...</translation>
     </message>
     <message>
-        <source>Ctrl+p</source>
-        <translation type="obsolete">Ctrl+p</translation>
-    </message>
-    <message>
         <source>Print P&amp;review...</source>
         <translation>Fö&amp;rhandsgranska utskrift...</translation>
-    </message>
-    <message>
-        <source>Ctrl+r</source>
-        <translation type="obsolete">Ctrl+r</translation>
     </message>
     <message>
         <source>&amp;Export Pdf...</source>
@@ -434,6 +426,30 @@ Vill du ersätta den?</translation>
     <message>
         <source>Protest!</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>Create Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create &amp;PolyLine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+Ins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create Poin&amp;t</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Spinnaker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

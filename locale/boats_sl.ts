@@ -60,10 +60,6 @@
         <translation>&amp;Natisni...</translation>
     </message>
     <message>
-        <source>Print &amp;Preview...</source>
-        <translation type="obsolete">Tiskanje &amp;Predogled...</translation>
-    </message>
-    <message>
         <source>&amp;Export Pdf...</source>
         <translation>&amp;Izvozi Pdf...</translation>
     </message>
@@ -86,10 +82,6 @@
     <message>
         <source>Ctrl+V</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>&amp;Exit</source>
-        <translation type="obsolete">&amp;Izhod</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
@@ -434,6 +426,30 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create &amp;PolyLine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+Ins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create Poin&amp;t</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Spinnaker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
