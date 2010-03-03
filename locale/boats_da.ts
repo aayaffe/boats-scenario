@@ -569,7 +569,7 @@ Vil du overskrive den?</translation>
     <message>
         <location filename="../situationwidget.cpp" line="126"/>
         <source>Series</source>
-        <translation>Serier</translation>
+        <translation>Bådtype</translation>
     </message>
     <message>
         <location filename="../situationwidget.cpp" line="127"/>
@@ -648,7 +648,7 @@ Vil du overskrive den?</translation>
     <message>
         <location filename="../itemviews/tracktablemodel.cpp" line="93"/>
         <source>Series</source>
-        <translation>Serier</translation>
+        <translation>Bådtype</translation>
     </message>
 </context>
 </TS>
