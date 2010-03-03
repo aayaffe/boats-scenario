@@ -1,9 +1,10 @@
-TRANSLATIONS = \
+TRANSLATIONS += \
     $$PWD/boats.ts \
     $$PWD/boats_da.ts \
     $$PWD/boats_de.ts \
     $$PWD/boats_es.ts \
     $$PWD/boats_fr.ts \
+    $$PWD/boats_ja.ts \
     $$PWD/boats_nl.ts \
     $$PWD/boats_sl.ts \
     $$PWD/boats_sv.ts
