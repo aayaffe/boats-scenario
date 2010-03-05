@@ -432,27 +432,27 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>Create Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Opret linje</translation>
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
-        <translation type="unfinished"></translation>
+        <translation>Opret &amp;polylinje</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Ins</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Alt+Ins</translation>
     </message>
     <message>
         <source>Create Poin&amp;t</source>
-        <translation type="unfinished"></translation>
+        <translation>Opret punk&amp;t</translation>
     </message>
     <message>
         <source>Toggle &amp;Spinnaker</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis/skjul &amp;spiler</translation>
     </message>
     <message>
         <source>S</source>
-        <translation type="unfinished"></translation>
+        <translation>S</translation>
     </message>
 </context>
 <context>

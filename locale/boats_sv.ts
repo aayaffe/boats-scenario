@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Ctrl+N</source>
-        <translation>Ctrl+N</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Open File...</source>
@@ -17,7 +17,7 @@
     </message>
     <message>
         <source>Ctrl+O</source>
-        <translation>Ctrl+O</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Save File</source>
@@ -25,7 +25,7 @@
     </message>
     <message>
         <source>Ctrl+S</source>
-        <translation>Ctrl+S</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Save &amp;As...</source>
@@ -33,7 +33,7 @@
     </message>
     <message>
         <source>Ctrl+Shift+S</source>
-        <translation>Ctrl+Shift+S</translation>
+        <translation></translation>
     </message>
     <message>
         <source>New &amp;Tab</source>
@@ -41,7 +41,7 @@
     </message>
     <message>
         <source>Ctrl+T</source>
-        <translation>Ctrl+T</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Close Tab</source>
@@ -49,7 +49,7 @@
     </message>
     <message>
         <source>Ctrl+W</source>
-        <translation>Ctrl+W</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Restore Last Session...</source>
@@ -69,7 +69,7 @@
     </message>
     <message>
         <source>Ctrl+E</source>
-        <translation>Ctrl+E</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Export &amp;Image...</source>
@@ -77,7 +77,7 @@
     </message>
     <message>
         <source>Ctrl+I</source>
-        <translation>Ctrl+I</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Export Ani&amp;mation...</source>
@@ -93,7 +93,7 @@
     </message>
     <message>
         <source>Ctrl+Q</source>
-        <translation>Ctrl+Q</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Exit the application</source>
@@ -105,7 +105,7 @@
     </message>
     <message>
         <source>Ctrl+Ins</source>
-        <translation>Ctrl+Ins</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Create &amp;Boat</source>
@@ -113,7 +113,7 @@
     </message>
     <message>
         <source>Ins</source>
-        <translation>Ins</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Create &amp;Mark</source>
@@ -121,7 +121,7 @@
     </message>
     <message>
         <source>Alt+Ins</source>
-        <translation>Alt+Ins</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Port Overlap</source>
@@ -129,7 +129,7 @@
     </message>
     <message>
         <source>Alt+&lt;</source>
-        <translation>Alt+&lt;</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Starboard Overlap</source>
@@ -137,7 +137,7 @@
     </message>
     <message>
         <source>Alt+&gt;</source>
-        <translation>Alt+&gt;</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle Mark &amp;Zone</source>
@@ -145,7 +145,7 @@
     </message>
     <message>
         <source>Z</source>
-        <translation>Z</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Delete Track</source>
@@ -153,7 +153,7 @@
     </message>
     <message>
         <source>Ctrl+Del</source>
-        <translation>Ctrl+Del</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Delete Selection</source>
@@ -161,7 +161,7 @@
     </message>
     <message>
         <source>Del</source>
-        <translation>Del</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Animate</source>
@@ -169,7 +169,7 @@
     </message>
     <message>
         <source>Ctrl+A</source>
-        <translation>Ctrl+A</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Play</source>
@@ -177,7 +177,7 @@
     </message>
     <message>
         <source>P</source>
-        <translation>P</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Pause</source>
@@ -185,7 +185,7 @@
     </message>
     <message>
         <source>M</source>
-        <translation>M</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Stop</source>
@@ -193,7 +193,7 @@
     </message>
     <message>
         <source>Space</source>
-        <translation>mellanslag</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Loop</source>
@@ -201,7 +201,7 @@
     </message>
     <message>
         <source>L</source>
-        <translation>L</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Undo</source>
@@ -209,7 +209,7 @@
     </message>
     <message>
         <source>Ctrl+Z</source>
-        <translation>Ctrl+Z</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Redo</source>
@@ -217,11 +217,11 @@
     </message>
     <message>
         <source>Ctrl+Y</source>
-        <translation>Ctrl+Y</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Shift+Ctrl+Z</source>
-        <translation>Shift+Ctrl+Z</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Zoom &amp;In</source>
@@ -229,7 +229,7 @@
     </message>
     <message>
         <source>Ctrl++</source>
-        <translation>Ctrl++</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Zoom &amp;Out</source>
@@ -237,7 +237,7 @@
     </message>
     <message>
         <source>Ctrl+-</source>
-        <translation>Ctrl+-</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Zoom &amp;Fit</source>
@@ -245,7 +245,7 @@
     </message>
     <message>
         <source>Ctrl+F</source>
-        <translation>Ctrl+F</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Main Toolbar</source>
@@ -281,11 +281,11 @@
     </message>
     <message>
         <source>%1 - %2 [*]</source>
-        <translation>%1 - %2 [*]</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Boat Scenario</source>
-        <translation>Boat Scenario</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Recent</source>
@@ -317,7 +317,7 @@
     </message>
     <message>
         <source>&amp;%1 %2</source>
-        <translation>&amp;%1 %2</translation>
+        <translation></translation>
     </message>
     <message>
         <source>The document %1 has been modified.
@@ -429,27 +429,27 @@ Vill du ersätta den?</translation>
     </message>
     <message>
         <source>Create Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Skapa linje</translation>
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
-        <translation type="unfinished"></translation>
+        <translation>Skapa &amp;polylinje</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Ins</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Create Poin&amp;t</source>
-        <translation type="unfinished"></translation>
+        <translation>Skapa punk&amp;t</translation>
     </message>
     <message>
         <source>Toggle &amp;Spinnaker</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Spinnaker på och av</translation>
     </message>
     <message>
         <source>S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>

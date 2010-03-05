@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Ctrl+N</source>
-        <translation>Ctrl+N</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Open File...</source>
@@ -69,7 +69,7 @@
     </message>
     <message>
         <source>Ctrl+E</source>
-        <translation>Ctrl+E</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Export &amp;Image...</source>
@@ -113,7 +113,7 @@
     </message>
     <message>
         <source>Ins</source>
-        <translation>Ins</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Create &amp;Mark</source>
@@ -121,19 +121,19 @@
     </message>
     <message>
         <source>Alt+Ins</source>
-        <translation>Alt+Ins</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
-        <translation type="unfinished"></translation>
+        <translation>Crear &amp;PoliLinea</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Ins</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Create Poin&amp;t</source>
-        <translation type="unfinished"></translation>
+        <translation>Crear Pun&amp;to</translation>
     </message>
     <message>
         <source>&amp;Port Overlap</source>
@@ -141,7 +141,7 @@
     </message>
     <message>
         <source>Alt+&lt;</source>
-        <translation>Alt+&lt;</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Starboard Overlap</source>
@@ -149,7 +149,7 @@
     </message>
     <message>
         <source>Alt+&gt;</source>
-        <translation>Alt+&gt;</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Text</source>
@@ -161,11 +161,11 @@
     </message>
     <message>
         <source>Toggle &amp;Spinnaker</source>
-        <translation type="unfinished"></translation>
+        <translation>Sacar &amp;Spi</translation>
     </message>
     <message>
         <source>S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle Mark &amp;Zone</source>
@@ -173,7 +173,7 @@
     </message>
     <message>
         <source>Z</source>
-        <translation>Z</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Delete Track</source>
@@ -181,7 +181,7 @@
     </message>
     <message>
         <source>Ctrl+Del</source>
-        <translation>Ctrl+Del</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Delete Selection</source>
@@ -189,7 +189,7 @@
     </message>
     <message>
         <source>Del</source>
-        <translation>Del</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Animate</source>
@@ -197,7 +197,7 @@
     </message>
     <message>
         <source>Ctrl+A</source>
-        <translation>Ctrl+A</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Play</source>
@@ -221,7 +221,7 @@
     </message>
     <message>
         <source>Space</source>
-        <translation>Space</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Loop</source>
@@ -237,7 +237,7 @@
     </message>
     <message>
         <source>Ctrl+Z</source>
-        <translation>Ctrl+Z</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Redo</source>
@@ -245,11 +245,11 @@
     </message>
     <message>
         <source>Ctrl+Y</source>
-        <translation>Ctrl+Y</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Shift+Ctrl+Z</source>
-        <translation>Shift+Ctrl+Z</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Zoom &amp;In</source>
@@ -257,7 +257,7 @@
     </message>
     <message>
         <source>Ctrl++</source>
-        <translation>Ctrl++</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Zoom &amp;Out</source>
@@ -265,7 +265,7 @@
     </message>
     <message>
         <source>Ctrl+-</source>
-        <translation>Ctrl+-</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Zoom &amp;Fit</source>
@@ -309,7 +309,7 @@
     </message>
     <message>
         <source>%1 - %2 [*]</source>
-        <translation>%1 - %2 [*]</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Boat Scenario</source>
@@ -345,11 +345,11 @@
     </message>
     <message>
         <source>&amp;%1 %2</source>
-        <translation>&amp;%1 %2</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Create Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Crear Linea</translation>
     </message>
     <message>
         <source>The document %1 has been modified.
@@ -396,7 +396,7 @@ Do you want to save your changes?</source>
     <message>
         <source>Parse error in file %1 at line %2, column %3:
 %4</source>
-        <translation>Parsear error en el archivo %1 en la linea %2, columna %3: %4</translation>
+        <translation>Analizar error en el archivo %1 en la linea %2, columna %3: %4</translation>
     </message>
     <message>
         <source>File loaded</source>
@@ -443,7 +443,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Protest!</source>
-        <translation></translation>
+        <translation>Protesto!</translation>
     </message>
     <message>
         <source>About Boat Scenario</source>

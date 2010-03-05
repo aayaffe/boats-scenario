@@ -5,7 +5,7 @@
     <name>MainWindow</name>
     <message>
         <source>&amp;New File</source>
-        <translation>&amp;新規</translation>
+        <translation>新規(&amp;N)</translation>
     </message>
     <message>
         <source>Ctrl+N</source>
@@ -13,7 +13,7 @@
     </message>
     <message>
         <source>&amp;Open File...</source>
-        <translation>&amp;開く</translation>
+        <translation>開く(&amp;O)</translation>
     </message>
     <message>
         <source>Ctrl+O</source>
@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>&amp;Save File</source>
-        <translation>&amp;保存</translation>
+        <translation>上書き保存(&amp;S)</translation>
     </message>
     <message>
         <source>Ctrl+S</source>
@@ -29,7 +29,7 @@
     </message>
     <message>
         <source>Save &amp;As...</source>
-        <translation>名前を付けて保存</translation>
+        <translation>名前を付けて保存(&amp;A)</translation>
     </message>
     <message>
         <source>Ctrl+Shift+S</source>
@@ -37,7 +37,7 @@
     </message>
     <message>
         <source>New &amp;Tab</source>
-        <translation>新しいタブ</translation>
+        <translation>新しいタブ(&amp;T)</translation>
     </message>
     <message>
         <source>Ctrl+T</source>
@@ -45,7 +45,7 @@
     </message>
     <message>
         <source>&amp;Close Tab</source>
-        <translation>&amp;タブを閉じる</translation>
+        <translation>タブを閉じる(&amp;C)</translation>
     </message>
     <message>
         <source>Ctrl+W</source>
@@ -53,19 +53,19 @@
     </message>
     <message>
         <source>&amp;Restore Last Session...</source>
-        <translation>&amp;最後のセッションを復元</translation>
+        <translation>最後のセッションを再開(&amp;R)</translation>
     </message>
     <message>
         <source>&amp;Print...</source>
-        <translation>&amp;印刷</translation>
+        <translation>印刷(&amp;P)</translation>
     </message>
     <message>
         <source>Print P&amp;review...</source>
-        <translation>印刷プレビュー</translation>
+        <translation>印刷プレビュー(&amp;R)</translation>
     </message>
     <message>
         <source>&amp;Export Pdf...</source>
-        <translation>&amp;Pdfで出力</translation>
+        <translation>Pdfを出力(&amp;E)</translation>
     </message>
     <message>
         <source>Ctrl+E</source>
@@ -73,7 +73,7 @@
     </message>
     <message>
         <source>Export &amp;Image...</source>
-        <translation>画像を出力</translation>
+        <translation>画像を出力(&amp;I)</translation>
     </message>
     <message>
         <source>Ctrl+I</source>
@@ -81,7 +81,7 @@
     </message>
     <message>
         <source>Export Ani&amp;mation...</source>
-        <translation>アニメを出力</translation>
+        <translation>アニメを出力(&amp;M)</translation>
     </message>
     <message>
         <source>Ctrl+V</source>
@@ -89,7 +89,7 @@
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation>閉じる</translation>
+        <translation>終了(&amp;X)</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
@@ -97,11 +97,11 @@
     </message>
     <message>
         <source>Exit the application</source>
-        <translation>アプリケーションを閉じる</translation>
+        <translation>アプリケーションを終了</translation>
     </message>
     <message>
         <source>Create &amp;Track</source>
-        <translation>航跡を作成</translation>
+        <translation>航跡を作成(&amp;T)</translation>
     </message>
     <message>
         <source>Ctrl+Ins</source>
@@ -109,7 +109,7 @@
     </message>
     <message>
         <source>Create &amp;Boat</source>
-        <translation>艇を付加</translation>
+        <translation>艇を付加(&amp;B)</translation>
     </message>
     <message>
         <source>Ins</source>
@@ -117,7 +117,7 @@
     </message>
     <message>
         <source>Create &amp;Mark</source>
-        <translation>マークを作成</translation>
+        <translation>マークを作成(&amp;M)</translation>
     </message>
     <message>
         <source>Alt+Ins</source>
@@ -125,19 +125,19 @@
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
-        <translation type="unfinished"></translation>
+        <translation>ポリラインを作成(&amp;P)</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Ins</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Create Poin&amp;t</source>
-        <translation type="unfinished"></translation>
+        <translation>ポイントを作成(&amp;T)</translation>
     </message>
     <message>
         <source>&amp;Port Overlap</source>
-        <translation>&amp;ポートオーバーラップ</translation>
+        <translation>ポートオーバーラップ(&amp;P)</translation>
     </message>
     <message>
         <source>Alt+&lt;</source>
@@ -145,7 +145,7 @@
     </message>
     <message>
         <source>&amp;Starboard Overlap</source>
-        <translation>&amp;スターボオーバーラップ</translation>
+        <translation>スターボオーバーラップ(&amp;S)</translation>
     </message>
     <message>
         <source>Alt+&gt;</source>
@@ -153,7 +153,7 @@
     </message>
     <message>
         <source>&amp;Text</source>
-        <translation>&amp;テキスト</translation>
+        <translation>テキスト(&amp;T)</translation>
     </message>
     <message>
         <source>Alt+T</source>
@@ -161,15 +161,15 @@
     </message>
     <message>
         <source>Toggle &amp;Spinnaker</source>
-        <translation type="unfinished"></translation>
+        <translation>スピネーカーを表示(&amp;S)</translation>
     </message>
     <message>
         <source>S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle Mark &amp;Zone</source>
-        <translation>マークゾーンを描く</translation>
+        <translation>マークゾーンを表示(&amp;Z)</translation>
     </message>
     <message>
         <source>Z</source>
@@ -185,7 +185,7 @@
     </message>
     <message>
         <source>&amp;Delete Selection</source>
-        <translation>&amp;選択したアイテムを消去</translation>
+        <translation>選択したアイテムを消去(&amp;D)</translation>
     </message>
     <message>
         <source>Del</source>
@@ -193,7 +193,7 @@
     </message>
     <message>
         <source>&amp;Animate</source>
-        <translation>&amp;アニメを作成</translation>
+        <translation>アニメを作成(&amp;A)</translation>
     </message>
     <message>
         <source>Ctrl+A</source>
@@ -201,7 +201,7 @@
     </message>
     <message>
         <source>&amp;Play</source>
-        <translation>&amp;再生</translation>
+        <translation>再生(&amp;P)</translation>
     </message>
     <message>
         <source>P</source>
@@ -209,7 +209,7 @@
     </message>
     <message>
         <source>&amp;Pause</source>
-        <translation>&amp;一時停止</translation>
+        <translation>一時停止(&amp;M)</translation>
     </message>
     <message>
         <source>M</source>
@@ -217,7 +217,7 @@
     </message>
     <message>
         <source>&amp;Stop</source>
-        <translation>&amp;停止</translation>
+        <translation>停止(&amp;S)</translation>
     </message>
     <message>
         <source>Space</source>
@@ -225,7 +225,7 @@
     </message>
     <message>
         <source>&amp;Loop</source>
-        <translation>&amp;繰り返し</translation>
+        <translation>繰り返し(&amp;L)</translation>
     </message>
     <message>
         <source>L</source>
@@ -233,7 +233,7 @@
     </message>
     <message>
         <source>&amp;Undo</source>
-        <translation>&amp;元に戻す</translation>
+        <translation>元に戻す(&amp;U)</translation>
     </message>
     <message>
         <source>Ctrl+Z</source>
@@ -241,7 +241,7 @@
     </message>
     <message>
         <source>&amp;Redo</source>
-        <translation>&amp;やり直す</translation>
+        <translation>やり直す(&amp;R)</translation>
     </message>
     <message>
         <source>Ctrl+Y</source>
@@ -253,7 +253,7 @@
     </message>
     <message>
         <source>Zoom &amp;In</source>
-        <translation>ズームイン</translation>
+        <translation>ズームイン(&amp;I)</translation>
     </message>
     <message>
         <source>Ctrl++</source>
@@ -261,7 +261,7 @@
     </message>
     <message>
         <source>Zoom &amp;Out</source>
-        <translation>ズームアウト</translation>
+        <translation>ズームアウト(&amp;O)</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
@@ -269,7 +269,7 @@
     </message>
     <message>
         <source>Zoom &amp;Fit</source>
-        <translation>ウィンドウに合わせる</translation>
+        <translation>ウィンドウに合わせる(&amp;F)</translation>
     </message>
     <message>
         <source>Ctrl+F</source>
@@ -317,31 +317,31 @@
     </message>
     <message>
         <source>&amp;Recent</source>
-        <translation>&amp;最近開いたファイル</translation>
+        <translation>最近開いたファイル(&amp;R)</translation>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation>&amp;ファイル</translation>
+        <translation>ファイル(&amp;F)</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>&amp;編集</translation>
+        <translation>編集(&amp;E)</translation>
     </message>
     <message>
         <source>&amp;History</source>
-        <translation>&amp;ヒストリー</translation>
+        <translation>履歴(&amp;H)</translation>
     </message>
     <message>
         <source>&amp;Animation</source>
-        <translation>&amp;アニメ</translation>
+        <translation>アニメ(&amp;A)</translation>
     </message>
     <message>
         <source>&amp;Zoom</source>
-        <translation>&amp;ズーム</translation>
+        <translation>ズーム(&amp;Z)</translation>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation>&amp;表示</translation>
+        <translation>表示(&amp;V)</translation>
     </message>
     <message>
         <source>&amp;%1 %2</source>
@@ -349,7 +349,7 @@
     </message>
     <message>
         <source>Create Line</source>
-        <translation type="unfinished"></translation>
+        <translation>ポリラインを作成</translation>
     </message>
     <message>
         <source>The document %1 has been modified.
@@ -366,11 +366,11 @@ Do you want to save your changes?</source>
     </message>
     <message>
         <source>&amp;Flag</source>
-        <translation>&amp;旗</translation>
+        <translation>旗(&amp;F)</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;ヘルプ</translation>
+        <translation>ヘルプ(&amp;H)</translation>
     </message>
     <message>
         <source>Choose &amp;Language</source>
@@ -418,7 +418,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>File saved</source>
-        <translation>ファイルが保存されました</translation>
+        <translation>保存されました</translation>
     </message>
     <message>
         <source>Print Document</source>
@@ -483,7 +483,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Zone Length</source>
-        <translation>ゾーンの大きさ</translation>
+        <translation>ゾーンの半径</translation>
     </message>
     <message>
         <source>Tracks</source>
@@ -495,7 +495,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Title</source>
-        <translation>タイトル</translation>
+        <translation>題名</translation>
     </message>
     <message>
         <source>Rules</source>
@@ -507,7 +507,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Description</source>
-        <translation>解説</translation>
+        <translation>説明</translation>
     </message>
 </context>
 <context>
