@@ -406,7 +406,7 @@ Voulez-vous le remplacer?</translation>
     </message>
     <message>
         <source>&amp;Text</source>
-        <translation></translation>
+        <translation>&amp;Texte</translation>
     </message>
     <message>
         <source>Alt+T</source>
@@ -430,27 +430,27 @@ Voulez-vous le remplacer?</translation>
     </message>
     <message>
         <source>Create Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Créer une Ligne</translation>
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
-        <translation type="unfinished"></translation>
+        <translation>Créer une &amp;Polyligne</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Ins</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Create Poin&amp;t</source>
-        <translation type="unfinished"></translation>
+        <translation>Créer un Poin&amp;t</translation>
     </message>
     <message>
         <source>Toggle &amp;Spinnaker</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Spinnaker</translation>
     </message>
     <message>
         <source>S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>

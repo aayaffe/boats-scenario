@@ -125,15 +125,15 @@
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Polylijn</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Ins</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Alt+Ins</translation>
     </message>
     <message>
         <source>Create Poin&amp;t</source>
-        <translation type="unfinished"></translation>
+        <translation>Pun&amp;t Polyline</translation>
     </message>
     <message>
         <source>&amp;Port Overlap</source>
@@ -161,11 +161,11 @@
     </message>
     <message>
         <source>Toggle &amp;Spinnaker</source>
-        <translation type="unfinished"></translation>
+        <translation>Toggle &amp;Spinnaker</translation>
     </message>
     <message>
         <source>S</source>
-        <translation type="unfinished"></translation>
+        <translation>S</translation>
     </message>
     <message>
         <source>Toggle Mark &amp;Zone</source>
@@ -349,7 +349,7 @@
     </message>
     <message>
         <source>Create Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Lijn</translation>
     </message>
     <message>
         <source>The document %1 has been modified.
