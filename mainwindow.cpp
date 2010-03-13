@@ -365,8 +365,8 @@ void MainWindow::updateActions() {
     }
     togglePortOverlapAction->setChecked(selectedBoats && allPortSet);
     toggleStarboardOverlapAction->setChecked(selectedBoats && allStarboardSet);
-    toggleSpinAction->setChecked(allSpinSet);
-    toggleSpinAction->setEnabled(allKeelboat);
+    toggleSpinAction->setChecked(selectedBoats && allSpinSet);
+    toggleSpinAction->setEnabled(selectedBoats && allKeelboat);
 
     foreach(PositionModel *position, scene->selectedModels()) {
         allTextSet = allTextSet && (!position->text().isEmpty());
