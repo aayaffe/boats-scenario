@@ -36,6 +36,14 @@ unix_deploy:RESOURCES = boats_unix.qrc
 
 else:RESOURCES = boats.qrc
 
+mac {
+    QMAKE_INFO_PLIST = Info.plist
+    ICON = boats.icns
+    mime.path = boats.app/Contents/Resources
+    mime.files = xbs.icns
+    INSTALLS += mime
+}
+
 contains(GIF_EXPORT,1) { 
     DEFINES += GIF_EXPORT
     HEADERS += gifwriter.h
