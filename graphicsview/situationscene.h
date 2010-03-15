@@ -191,6 +191,9 @@ class SituationScene : public QGraphicsScene {
         /// \a m_polyLineCreated holds the last selected PolyLineModel
         PolyLineModel *m_polyLineCreated;
 
+        /// \a m_markCreated holds the last selected MarkModel
+        MarkModel *m_markCreated;
+
         /// \a m_fromPosition holds the QPointF where mouse was pressed
         QPointF m_fromPosition;
 

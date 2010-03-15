@@ -109,6 +109,7 @@ void SituationScene::setState(const SceneState& theValue, bool commit) {
         }
         break;
     case CREATE_BOAT:
+    case CREATE_MARK:
     case CREATE_LINE:
     case CREATE_POINT:
         {
@@ -138,6 +139,11 @@ void SituationScene::setState(const SceneState& theValue, bool commit) {
         break;
     case CREATE_BOAT: {
             createBoat(m_curPosition);
+        }
+        break;
+    case CREATE_MARK: {
+            m_situation->undoStack()->beginMacro("");
+            createMark(m_curPosition);
         }
         break;
     case CREATE_LINE: {
@@ -377,6 +383,11 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
                 headingBoat(event->scenePos());
             }
             break;
+        case CREATE_MARK:
+            if (event->buttons() == Qt::NoButton) {
+                m_markCreated->setPosition(event->scenePos());
+            }
+            break;
         case CREATE_LINE:
         case CREATE_POINT:
             if (event->buttons() == Qt::NoButton) {
@@ -514,7 +525,10 @@ void SituationScene::createBoat(QPointF pos) {
 }
 
 void SituationScene::createMark(QPointF pos) {
+    m_situation->undoStack()->endMacro();
     AddMarkUndoCommand *command = new AddMarkUndoCommand(m_situation, pos);
+    m_markCreated = command->mark();
+    m_situation->undoStack()->beginMacro("");
     m_situation->undoStack()->push(command);
 }
 
