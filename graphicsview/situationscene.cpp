@@ -137,13 +137,7 @@ void SituationScene::setState(const SceneState& theValue, bool commit) {
         }
         break;
     case CREATE_BOAT: {
-            if (m_trackCreated) {
-                qreal heading = m_trackCreated->boats().last()->heading();
-                AddBoatUndoCommand *command = new AddBoatUndoCommand(
-                        m_trackCreated, m_curPosition, heading);
-                m_situation->undoStack()->beginMacro("");
-                m_situation->undoStack()->push(command);
-            }
+            createBoat(m_curPosition);
         }
         break;
     case CREATE_LINE: {
@@ -352,12 +346,12 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         case NO_STATE:
             if (event->buttons() == Qt::LeftButton
                 && (event->modifiers() & Qt::MetaModifier) == 0) {
-                mouseMoveModelEvent(event);
+                moveModel(event->scenePos());
             }
             if (event->buttons() == Qt::RightButton
                 || (event->buttons() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                mouseHeadingEvent(event);
+                headingBoat(event->scenePos());
             }
         break;
         case CREATE_TRACK:
@@ -367,7 +361,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
             if (event->buttons() == Qt::RightButton
                 || (event->buttons() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                mouseHeadingEvent(event);
+                headingBoat(event->scenePos());
             }
             break;
         case CREATE_BOAT:
@@ -380,7 +374,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
             if (event->buttons() == Qt::RightButton
                 || (event->buttons() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                mouseHeadingEvent(event);
+                headingBoat(event->scenePos());
             }
             break;
         case CREATE_LINE:
@@ -421,36 +415,36 @@ void SituationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         case NO_STATE:
             if (event->button() == Qt::LeftButton
                 && (event->modifiers() & Qt::MetaModifier) == 0) {
-                mouseMoveModelEvent(event);
+                moveModel(event->scenePos());
             }
             if (event->button() == Qt::RightButton
                 || (event->button() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                mouseHeadingEvent(event);
+                headingBoat(event->scenePos());
             }
             break;
         case CREATE_TRACK:
             if (event->button() == Qt::LeftButton) {
-                mouseCreateTrackEvent(event);
+                createTrack();
             }
             break;
         case CREATE_BOAT:
             if (event->button() == Qt::LeftButton) {
                 if ((event->modifiers() & Qt::ControlModifier) != 0) {
-                    mouseCreateTrackEvent(event);
+                    createTrack();
                 } else if ((event->modifiers() & Qt::MetaModifier) == 0) {
-                    mouseCreateBoatEvent(event);
+                    createBoat(event->scenePos());
                 }
             }
             if (event->button() == Qt::RightButton
                 || (event->button() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                mouseHeadingEvent(event);
+                headingBoat(event->scenePos());
             }
             break;
         case CREATE_MARK:
             if (event->button() == Qt::LeftButton) {
-                mouseCreateMarkEvent(event);
+                createMark(event->scenePos());
             }
             break;
         case CREATE_LINE:
@@ -460,7 +454,7 @@ void SituationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
             break;
         case CREATE_POINT:
             if (event->button() == Qt::LeftButton) {
-                mouseCreatePointEvent(event);
+                createPoint(event->scenePos());
             }
         default:
             break;
@@ -476,16 +470,16 @@ void SituationScene::mouseSelectEvent(QGraphicsSceneMouseEvent *event) {
     << " items selected" << std::endl;
 }
 
-void SituationScene::mouseMoveModelEvent(QGraphicsSceneMouseEvent *event) {
-    if (!m_selectedModels.isEmpty() && event->scenePos() != m_fromPosition) {
-        m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels,(event->scenePos()-m_fromPosition)));
-        m_fromPosition = event->scenePos();
+void SituationScene::moveModel(QPointF pos) {
+    if (!m_selectedModels.isEmpty() && pos != m_fromPosition) {
+        m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels,(pos-m_fromPosition)));
+        m_fromPosition = pos;
     }
 }
 
-void SituationScene::mouseHeadingEvent(QGraphicsSceneMouseEvent *event) {
-    if (!m_selectedBoatModels.isEmpty() && event->scenePos() != m_modelPressed->position()) {
-        QPointF point = event->scenePos() - m_modelPressed->position();
+void SituationScene::headingBoat(QPointF pos) {
+    if (!m_selectedBoatModels.isEmpty() && pos != m_modelPressed->position()) {
+        QPointF point = pos - m_modelPressed->position();
         qreal theta = fmod((atan2 (point.x(), -point.y()) * 180 / M_PI) + 360.0, 360.0);
         qreal snap = m_situation->laylineAngle();
         if (fabs(theta)<=5) {
@@ -505,34 +499,30 @@ void SituationScene::mouseHeadingEvent(QGraphicsSceneMouseEvent *event) {
     }
 }
 
-void SituationScene::mouseCreateTrackEvent(QGraphicsSceneMouseEvent *event) {
-    Q_UNUSED(event)
+void SituationScene::createTrack() {
     setState(CREATE_BOAT, true);
 }
 
-void SituationScene::mouseCreateBoatEvent(QGraphicsSceneMouseEvent *event) {
-    QPointF point = event->scenePos();
+void SituationScene::createBoat(QPointF pos) {
     if (m_trackCreated) {
         m_situation->undoStack()->endMacro();
         qreal heading = m_trackCreated->boats().last()->heading();
-        AddBoatUndoCommand *command = new AddBoatUndoCommand(m_trackCreated, point, heading);
+        AddBoatUndoCommand *command = new AddBoatUndoCommand(m_trackCreated, pos, heading);
         m_situation->undoStack()->beginMacro("");
         m_situation->undoStack()->push(command);
     }
 }
 
-void SituationScene::mouseCreateMarkEvent(QGraphicsSceneMouseEvent *event) {
-    QPointF point = event->scenePos();
-    AddMarkUndoCommand *command = new AddMarkUndoCommand(m_situation, point);
+void SituationScene::createMark(QPointF pos) {
+    AddMarkUndoCommand *command = new AddMarkUndoCommand(m_situation, pos);
     m_situation->undoStack()->push(command);
 }
 
-void SituationScene::mouseCreatePointEvent(QGraphicsSceneMouseEvent *event) {
-    QPointF point = event->scenePos();
+void SituationScene::createPoint(QPointF pos) {
     if (m_polyLineCreated) {
         m_situation->undoStack()->endMacro();
         AddPointUndoCommand *command = new AddPointUndoCommand(
-                m_polyLineCreated, m_curPosition);
+                m_polyLineCreated, pos);
         m_situation->undoStack()->beginMacro("");
         m_situation->undoStack()->push(command);
     }
