@@ -55,7 +55,9 @@ BubbleGraphicsItem::BubbleGraphicsItem(PositionModel *model, QGraphicsItem *pare
     connect(document(), SIGNAL(contentsChanged()),
             this, SLOT(setText()));
 
-    if (BoatModel *boat = static_cast<BoatModel*> (m_model)) {
+
+    if (m_model->inherits("BoatModel")) {
+        BoatModel *boat = static_cast<BoatModel*> (m_model);
         connect(boat, SIGNAL(headingChanged(qreal)),
                 this, SLOT(setTail()));
     }
