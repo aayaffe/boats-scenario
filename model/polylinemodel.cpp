@@ -50,7 +50,6 @@ void PolyLineModel::appendDiscardedXml(const QString& theValue) {
 
 void PolyLineModel::changingPolyLine(PolyLineModel *polyline) {
     QPainterPath path;
-    std::cout << "changingPolyLine" << std::endl;
     if (m_points.size() < 1) {
         m_path = path;
         return;

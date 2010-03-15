@@ -53,7 +53,6 @@ PolyLineGraphicsItem::PolyLineGraphicsItem(PolyLineModel *polyline, QGraphicsIte
 PolyLineGraphicsItem::~PolyLineGraphicsItem() {}
 
 void PolyLineGraphicsItem::setPolyLine() {
-    std::cout << "setPolyline with " << m_polyline->points().size() << std::endl;
         prepareGeometryChange();
         setPath(m_polyline->path());
         update();
