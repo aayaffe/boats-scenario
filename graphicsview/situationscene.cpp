@@ -102,17 +102,11 @@ void SituationScene::setState(const SceneState& theValue, bool commit) {
             QColor color = m_trackCreated->color();
             color.setAlpha(255);
             m_trackCreated->setColor(color);
-            m_situation->undoStack()->endMacro();
-            if (!commit) {
-                m_situation->undoStack()->undo();
-            }
         }
-        break;
     case CREATE_BOAT:
     case CREATE_MARK:
     case CREATE_LINE:
-    case CREATE_POINT:
-        {
+    case CREATE_POINT: {
             m_situation->undoStack()->endMacro();
             if (!commit) {
                 m_situation->undoStack()->undo();
@@ -124,17 +118,7 @@ void SituationScene::setState(const SceneState& theValue, bool commit) {
     }
     switch(theValue) {
     case CREATE_TRACK: {
-            AddTrackUndoCommand *command = new AddTrackUndoCommand(m_situation);
-            m_situation->undoStack()->beginMacro("");
-            m_situation->undoStack()->push(command);
-            TrackModel *track = command->track();
-            QColor color = track->color();
-            color.setAlpha(64);
-            track->setColor(color);
-            BoatModel *boat = new BoatModel(track, track);
-            boat->setPosition(m_curPosition);
-            track->addBoat(boat);
-            m_trackCreated = track;
+            createTrack(m_curPosition);
         }
         break;
     case CREATE_BOAT: {
@@ -142,27 +126,15 @@ void SituationScene::setState(const SceneState& theValue, bool commit) {
         }
         break;
     case CREATE_MARK: {
-            m_situation->undoStack()->beginMacro("");
             createMark(m_curPosition);
         }
         break;
     case CREATE_LINE: {
-            AddPolyLineUndoCommand *command = new AddPolyLineUndoCommand(m_situation);
-            m_situation->undoStack()->beginMacro("");
-            m_situation->undoStack()->push(command);
-            m_polyLineCreated = command->polyLine();
-            PointModel *pos = new PointModel(m_polyLineCreated);
-            pos->setPosition(m_curPosition);
-            m_polyLineCreated->addPoint(pos);
+            createLine(m_curPosition);
         }
         break;
     case CREATE_POINT: {
-            if (m_polyLineCreated) {
-                AddPointUndoCommand *command = new AddPointUndoCommand(
-                        m_polyLineCreated, m_curPosition);
-                m_situation->undoStack()->beginMacro("");
-                m_situation->undoStack()->push(command);
-            }
+            createPoint(m_curPosition);
         }
         break;
     default:
@@ -436,13 +408,13 @@ void SituationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
             break;
         case CREATE_TRACK:
             if (event->button() == Qt::LeftButton) {
-                createTrack();
+                setState(CREATE_BOAT, true);
             }
             break;
         case CREATE_BOAT:
             if (event->button() == Qt::LeftButton) {
                 if ((event->modifiers() & Qt::ControlModifier) != 0) {
-                    createTrack();
+                    setState(CREATE_BOAT, true);
                 } else if ((event->modifiers() & Qt::MetaModifier) == 0) {
                     createBoat(event->scenePos());
                 }
@@ -510,8 +482,17 @@ void SituationScene::headingBoat(QPointF pos) {
     }
 }
 
-void SituationScene::createTrack() {
-    setState(CREATE_BOAT, true);
+void SituationScene::createTrack(QPointF pos) {
+    AddTrackUndoCommand *command = new AddTrackUndoCommand(m_situation);
+    m_situation->undoStack()->push(command);
+    TrackModel *track = command->track();
+    QColor color = track->color();
+    color.setAlpha(64);
+    track->setColor(color);
+    BoatModel *boat = new BoatModel(track, track);
+    boat->setPosition(pos);
+    track->addBoat(boat);
+    m_trackCreated = track;
 }
 
 void SituationScene::createBoat(QPointF pos) {
@@ -530,6 +511,15 @@ void SituationScene::createMark(QPointF pos) {
     m_markCreated = command->mark();
     m_situation->undoStack()->beginMacro("");
     m_situation->undoStack()->push(command);
+}
+
+void SituationScene::createLine(QPointF pos) {
+    AddPolyLineUndoCommand *command = new AddPolyLineUndoCommand(m_situation);
+    m_situation->undoStack()->push(command);
+    m_polyLineCreated = command->polyLine();
+    PointModel *point = new PointModel(m_polyLineCreated);
+    point->setPosition(pos);
+    m_polyLineCreated->addPoint(point);
 }
 
 void SituationScene::createPoint(QPointF pos) {
