@@ -152,6 +152,8 @@ class SituationScene : public QGraphicsScene {
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
         void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+        void mouseClickEvent(QGraphicsSceneMouseEvent *event);
+        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
     private:
         // Specialised Event methods
@@ -209,6 +211,12 @@ class SituationScene : public QGraphicsScene {
 
         /// \a m_clickTime holds the timer used for click/press detection
         QTime m_clickTime;
+
+        enum {
+            SINGLE,
+            DOUBLE,
+            NONE
+        } m_clickState;
 
         QMenu *m_actionMenu;
 };

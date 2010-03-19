@@ -55,6 +55,7 @@ SituationScene::SituationScene(SituationModel *situation)
         m_state(NO_STATE),
         m_time(QTime::currentTime()),
         m_clickTime(QTime::currentTime()),
+        m_clickState(SINGLE),
         m_actionMenu(0) {
 
     // try to set a minimum scene rect
@@ -386,6 +387,14 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 void SituationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mouseReleaseEvent(event);
 
+    if (m_clickState != SINGLE) {
+        m_clickState = SINGLE;
+        return;
+    }
+    mouseClickEvent(event);
+}
+
+void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
     bool click = (m_clickTime.elapsed() < 250);
     if (click && (event->button() == Qt::RightButton
                 || (event->button() == Qt::LeftButton
@@ -442,6 +451,13 @@ void SituationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         default:
             break;
     }
+}
+
+void SituationScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
+    Q_UNUSED(event);
+    m_clickState = DOUBLE;
+    setState(NO_STATE);
+    m_situation->undoStack()->undo();
 }
 
 void SituationScene::mouseSelectEvent(QGraphicsSceneMouseEvent *event) {
