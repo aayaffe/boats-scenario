@@ -99,11 +99,7 @@ SituationScene::SituationScene(SituationModel *situation)
 void SituationScene::setState(const SceneState& theValue, bool commit) {
     // undo previous state's settings
     switch(m_state) {
-    case CREATE_TRACK: {
-            QColor color = m_trackCreated->color();
-            color.setAlpha(255);
-            m_trackCreated->setColor(color);
-        }
+    case CREATE_TRACK:
     case CREATE_BOAT:
     case CREATE_MARK:
     case CREATE_LINE:
@@ -502,10 +498,8 @@ void SituationScene::createTrack(QPointF pos) {
     AddTrackUndoCommand *command = new AddTrackUndoCommand(m_situation);
     m_situation->undoStack()->push(command);
     TrackModel *track = command->track();
-    QColor color = track->color();
-    color.setAlpha(64);
-    track->setColor(color);
     BoatModel *boat = new BoatModel(track, track);
+    boat->setDim(true);
     boat->setPosition(pos);
     track->addBoat(boat);
     m_trackCreated = track;
@@ -514,8 +508,10 @@ void SituationScene::createTrack(QPointF pos) {
 void SituationScene::createBoat(QPointF pos) {
     if (m_trackCreated) {
         m_situation->undoStack()->endMacro();
+        m_trackCreated->boats().last()->setDim(false);
         qreal heading = m_trackCreated->boats().last()->heading();
         AddBoatUndoCommand *command = new AddBoatUndoCommand(m_trackCreated, pos, heading);
+        command->boat()->setDim(true);
         m_situation->undoStack()->beginMacro("");
         m_situation->undoStack()->push(command);
     }

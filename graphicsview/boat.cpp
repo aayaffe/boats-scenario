@@ -79,6 +79,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     setHeading(boat->heading());
     setPos(boat->position());
     setOrder(boat->order());
+    setDim(boat->dim());
     m_sail->setSailAngle(m_boat->sailAngle() + m_boat->trim());
     m_spin->setSailAngle(m_boat->spinAngle() + m_boat->spinTrim());
     m_spin->setHeading(m_boat->heading());
@@ -105,6 +106,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
             this, SLOT(setOverlap(Boats::Overlaps)));
     connect(boat, SIGNAL(flagChanged(Boats::Flag)),
             this, SLOT(setDisplayFlag(Boats::Flag)));
+    connect(boat, SIGNAL(dimChanged(bool)),
+            this, SLOT(setDim(bool)));
     connect(boat->track(), SIGNAL(colorChanged(QColor)),
             this, SLOT(setColor(QColor)));
     connect(boat->track(), SIGNAL(seriesChanged(Boats::Series)),
@@ -225,11 +228,21 @@ void BoatGraphicsItem::setDisplayFlag(Boats::Flag value) {
 
 void BoatGraphicsItem::setColor(QColor value) {
     if (m_color != value) {
+        int alpha = m_color.alpha();
         m_color = value;
+        m_color.setAlpha(alpha);
         update();
     }
 }
 
+void BoatGraphicsItem::setDim(bool value) {
+    if (value) {
+        m_color.setAlpha(64);
+    } else {
+        m_color.setAlpha(255);
+    }
+    update();
+}
 void BoatGraphicsItem::setSeries(Boats::Series value) {
     if (m_series != value) {
         prepareGeometryChange();

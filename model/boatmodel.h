@@ -86,6 +86,9 @@ class BoatModel : public PositionModel {
 
         qreal spinAngle(qreal heading = -1) const;
 
+        void setDim(bool dim = true);
+        bool dim() const { return m_dim; }
+
     signals:
         void headingChanged(qreal heading);
         void trimChanged(qreal trim);
@@ -95,6 +98,7 @@ class BoatModel : public PositionModel {
         void trimmedSpinAngleChanged(qreal spinAngle);
         void overlapChanged(Boats::Overlaps overlap);
         void flagChanged(Boats::Flag flag);
+        void dimChanged(bool dim);
 
     private:
         // Model Data
@@ -120,6 +124,8 @@ class BoatModel : public PositionModel {
         /// \a m_track keeps a pointer to the TrackModel to which
         /// it belongs
         TrackModel *m_track;
+
+        bool m_dim;
 };
 
 #endif

@@ -75,6 +75,7 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void setOverlap(Boats::Overlaps value);
         void setDisplayFlag(Boats::Flag value);
         void setColor(QColor value);
+        void setDim(bool value);
         void setSeries(Boats::Series value);
         void deleteItem(BoatModel *boat);
 

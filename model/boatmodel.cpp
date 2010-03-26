@@ -41,7 +41,8 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         m_spinTrim(0),
         m_overlap(Boats::none),
         m_flag(Boats::noFlag),
-        m_track(track) {
+        m_track(track),
+        m_dim(false) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
     setOrder(track->size()+1);
 }
@@ -185,4 +186,9 @@ qreal BoatModel::spinAngle(qreal heading) const {
             << " spin = " << sailAngle
             << std::endl;
     return sailAngle;
+}
+
+void BoatModel::setDim(bool dim) {
+    m_dim = dim;
+    dimChanged(dim);
 }
