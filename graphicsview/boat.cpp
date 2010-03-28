@@ -43,7 +43,6 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         m_boat(boat),
         m_angle(0),
         m_sail(new SailGraphicsItem(boat, this)),
-        m_pole(new QGraphicsLineItem(this)),
         m_spin(new SpinnakerGraphicsItem(boat, this)),
         m_overlap(Boats::none),
         m_overlapLine(new QGraphicsLineItem(this)),
@@ -62,10 +61,9 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
 
     m_numberPath->setZValue(1);
     m_flagRect->setZValue(2);
-    m_pole->setZValue(3);
-    m_sail->setZValue(4);
-    m_spin->setZValue(5);
-    m_bubble->setZValue(6);
+    m_sail->setZValue(3);
+    m_spin->setZValue(4);
+    m_bubble->setZValue(5);
 
     m_numberPath->setBrush(QBrush(Qt::black));
 
@@ -83,7 +81,6 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     m_sail->setSailAngle(m_boat->sailAngle() + m_boat->trim());
     m_spin->setSailAngle(m_boat->spinAngle() + m_boat->spinTrim());
     m_spin->setHeading(m_boat->heading());
-    m_pole->setVisible(boat->spin());
     m_spin->setVisible(boat->spin());
     setOverlap(boat->overlap());
     setDisplayFlag(boat->flag());
@@ -127,15 +124,6 @@ void BoatGraphicsItem::setHeading(qreal value) {
         QTransform rotation;
         rotation.rotate(m_angle),
         setTransform(rotation, false);
-        QTransform poleRotation;
-        if (m_angle > 90 && m_angle < 180) {
-            poleRotation.rotate(90-m_angle);
-        } else if (m_angle >= 180 && m_angle < 270) {
-            poleRotation.rotate(-90-m_angle);
-        } else {
-            poleRotation.rotate(0);
-        }
-        m_pole->setTransform(poleRotation, false);
     }
 }
 
@@ -147,7 +135,6 @@ void BoatGraphicsItem::setPosition(QPointF position) {
 }
 
 void BoatGraphicsItem::setSpin(bool value) {
-    m_pole->setVisible(value);
     m_spin->setVisible(value);
 }
 
@@ -357,14 +344,9 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             m_sail->setSailSize(sailSize);
         }
         if (m_series == Boats::keelboat) {
-            QLineF line;
-            line.setP2(QPointF(0, -1.1*sailSize));
-            m_pole->setPos(mast);
-            m_pole->setLine(line);
             m_spin->setSailSize(1.1*sailSize);
             m_spin->setPosition(mast);
         } else {
-            m_pole->setLine(QLine());
             m_spin->setSailSize(0);
         }
         setOverlapLine();

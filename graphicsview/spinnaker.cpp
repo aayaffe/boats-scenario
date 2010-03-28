@@ -37,7 +37,8 @@
 extern int debugLevel;
 
 SpinnakerGraphicsItem::SpinnakerGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
-        : SailGraphicsItem(boat, parent) {
+        : SailGraphicsItem(boat, parent),
+        m_pole(new QGraphicsLineItem(this)) {
 }
 
 
@@ -66,6 +67,10 @@ void SpinnakerGraphicsItem::setSailSize(qreal sailSize) {
         sailPathPort.cubicTo(.12 * sailSize, .62 * sailSize, .03 * sailSize, .44 * sailSize, 0, 0);
         m_sailPathPort = sailPathPort;
 
+        QLineF line;
+        line.setP2(QPointF(0, -sailSize));
+        m_pole->setLine(line);
+
         setSailAngle(m_boat->spinAngle() + m_boat->spinTrim());
 }
 
@@ -88,4 +93,14 @@ void SpinnakerGraphicsItem::setHeading(qreal value) {
     QTransform rotation;
     rotation.rotate(-angle);
     setTransform(rotation, false);
+
+    QTransform poleRotation;
+    if (angle > 90 && angle < 180) {
+        poleRotation.rotate(90);
+    } else if (angle >= 180 && angle < 270) {
+        poleRotation.rotate(-90);
+    } else {
+        poleRotation.rotate(angle);
+    }
+    m_pole->setTransform(poleRotation, false);
 }

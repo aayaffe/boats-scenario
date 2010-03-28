@@ -99,9 +99,6 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_sail holds the sail that will be drawn
         SailGraphicsItem *m_sail;
 
-        /// \a m_pole holds the spinnaker pole
-        QGraphicsLineItem *m_pole;
-
         /// \a m_spin holds the spinnaker
         SpinnakerGraphicsItem *m_spin;
 

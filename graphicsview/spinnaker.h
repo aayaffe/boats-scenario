@@ -58,6 +58,10 @@ class SpinnakerGraphicsItem : public SailGraphicsItem {
     public slots:
         void setSailAngle(qreal value);
         void setHeading(qreal value);
+
+    private:
+        /// \a m_pole holds the spinnaker pole
+        QGraphicsLineItem *m_pole;
 };
 
 #endif // SPINNAKER_H
