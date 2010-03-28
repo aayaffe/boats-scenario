@@ -355,12 +355,17 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         if (sailSize) {
             m_sail->setPosition(mast);
             m_sail->setSailSize(sailSize);
+        }
+        if (m_series == Boats::keelboat) {
             QLineF line;
             line.setP2(QPointF(0, -1.1*sailSize));
             m_pole->setPos(mast);
             m_pole->setLine(line);
             m_spin->setSailSize(1.1*sailSize);
             m_spin->setPosition(mast);
+        } else {
+            m_pole->setLine(QLine());
+            m_spin->setSailSize(0);
         }
         setOverlapLine();
         setOrder(m_order);
