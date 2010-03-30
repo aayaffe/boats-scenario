@@ -39,6 +39,7 @@ extern int debugLevel;
 SpinnakerGraphicsItem::SpinnakerGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         : SailGraphicsItem(boat, parent),
         m_pole(new QGraphicsLineItem(this)) {
+    setHeading(boat->heading());
 }
 
 
@@ -46,14 +47,6 @@ SpinnakerGraphicsItem::~SpinnakerGraphicsItem() {}
 
 void SpinnakerGraphicsItem::setSailSize(qreal sailSize) {
     m_sailSize = sailSize;
-        QPainterPath sailPathStalled;
-        sailPathStalled.cubicTo(.1 * sailSize, .2 * sailSize, .1 * sailSize, .2 * sailSize, 0, .3 * sailSize);
-        sailPathStalled.cubicTo(-.1 * sailSize, .4 * sailSize, -.1 * sailSize, .4 * sailSize, 0, .5 * sailSize);
-        sailPathStalled.cubicTo(.1 * sailSize, .6 * sailSize, .1 * sailSize, .6 * sailSize, 0, .7 * sailSize);
-        sailPathStalled.cubicTo(-.1 * sailSize, .8 * sailSize, -.1 * sailSize, .8 * sailSize, 0, sailSize);
-        sailPathStalled.lineTo(0, 0);
-        m_sailPathStalled = sailPathStalled;
-
 
         QPainterPath sailPathStarboard;
         sailPathStarboard.cubicTo(.4 * sailSize, .2 * sailSize, .6 * sailSize, .2 * sailSize, sailSize, 0);
@@ -103,4 +96,42 @@ void SpinnakerGraphicsItem::setHeading(qreal value) {
         poleRotation.rotate(angle);
     }
     m_pole->setTransform(poleRotation, false);
+
+    QPainterPath sailPathStalled;
+    QPointF pole = m_pole->mapToParent(m_pole->line().p2());
+    double sinx = sin(angle* M_PI/180.0);
+    double cosx = cos(angle* M_PI/180.0);
+    double sign = .1;
+    if (angle>180) {
+        sign = -.1;
+    }
+    sailPathStalled.cubicTo(sign * m_sailSize * cosx + .4 * m_sailSize * sinx, sign * m_sailSize * sinx - .4 * m_sailSize * cosx,
+                            sign * m_sailSize * cosx + .6 * m_sailSize * sinx, sign * m_sailSize * sinx - .6 * m_sailSize * cosx,
+                            pole.x(), pole.y());
+    sailPathStalled.cubicTo(pole.x() + sign * m_sailSize, pole.y() + .2 * m_sailSize,
+                            pole.x() + sign * m_sailSize, pole.y() + .2 * m_sailSize,
+                            pole.x(), pole.y() + .3 * m_sailSize);
+    sailPathStalled.cubicTo(pole.x() - sign * m_sailSize, pole.y() + .4 * m_sailSize,
+                            pole.x() - sign * m_sailSize, pole.y() + .4 * m_sailSize,
+                            pole.x(), pole.y() + .5 * m_sailSize);
+    sailPathStalled.cubicTo(pole.x() + sign * m_sailSize, pole.y() + .6 * m_sailSize,
+                            pole.x() + sign * m_sailSize, pole.y() + .6 * m_sailSize,
+                            pole.x(), pole.y() + .7 * m_sailSize);
+    sailPathStalled.cubicTo(pole.x() - sign * m_sailSize, pole.y() + .8 * m_sailSize,
+                            pole.x() - sign * m_sailSize, pole.y() + .8 * m_sailSize,
+                            pole.x(), pole.y() + m_sailSize);
+    sailPathStalled.cubicTo(.8* pole.x(), pole.y() + m_sailSize,
+                            .8 * pole.x(), pole.y() + m_sailSize,
+                            .7 * pole.x(), .7 * (pole.y() + m_sailSize));
+    sailPathStalled.cubicTo(.6 * pole.x(), .4 * (pole.y() + m_sailSize),
+                            .6 * pole.x(), .4 * (pole.y() + m_sailSize),
+                            .5 * pole.x(), .5 * (pole.y() + m_sailSize));
+    sailPathStalled.cubicTo(.4 * pole.x(), .6 * (pole.y() + m_sailSize),
+                            .4 * pole.x(), .6 * (pole.y() + m_sailSize),
+                            .3 * pole.x(), .3 * (pole.y() + m_sailSize));
+    sailPathStalled.cubicTo(.2 * pole.x(), 0,
+                            .2 * pole.x(), 0,
+                            0, 0);
+    m_sailPathStalled = sailPathStalled;
+
 }
