@@ -1,12 +1,9 @@
 Important:
-- polygon/generic lines
 - jib
-- pole and bowsprit
-- spin
+- bowsprit
 
 Normal:
 - toggle number display
-- baloons for mark
 - select colour for marks
 - arrows
 - clean selection before output
@@ -18,5 +15,4 @@ Normal:
 Wishlist:
 - gpx import
 - backtrack edit
-- track line to mouse position
 - insert between boats
