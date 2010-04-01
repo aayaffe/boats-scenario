@@ -7,6 +7,7 @@ TRANSLATIONS += \
     $$PWD/boats_it.ts \
     $$PWD/boats_ja.ts \
     $$PWD/boats_nl.ts \
+    $$PWD/boats_pl.ts \
     $$PWD/boats_pt.ts \
     $$PWD/boats_sl.ts \
     $$PWD/boats_sv.ts
