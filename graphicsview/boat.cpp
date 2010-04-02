@@ -148,10 +148,12 @@ void BoatGraphicsItem::setOrder(int value) {
         QPainterPath fpath;
         fpath.addText(-fm.width(number)/2.0, 0, numberFont, number);
         m_numberPath->setPath(fpath);
+        setZValue(m_order);
     } else {
         m_numberPath->setPath(QPainterPath());
+        setZValue(boat()->track()->size()+1);
     }
-    setZValue(m_order);
+
     update();
 }
 
