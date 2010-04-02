@@ -164,16 +164,8 @@
         <translation>&amp;Spinnaker anzeigen</translation>
     </message>
     <message>
-        <source>S</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Toggle Mark &amp;Zone</source>
         <translation>Bahnmarkenzone &amp;anzeigen</translation>
-    </message>
-    <message>
-        <source>Z</source>
-        <translation>Z</translation>
     </message>
     <message>
         <source>Delete Track</source>
@@ -451,6 +443,14 @@ Möchten Sie die Datei ersetzen?</translation>
     <message>
         <source>About Boat Scenario</source>
         <translation>Über Boat Scenario</translation>
+    </message>
+    <message>
+        <source>Alt+S</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt+Z</source>
+        <translation></translation>
     </message>
 </context>
 <context>

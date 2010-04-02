@@ -144,10 +144,6 @@
         <translation>Izberi oznaki &amp;cono</translation>
     </message>
     <message>
-        <source>Z</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Delete Track</source>
         <translation>Izbrisi sled</translation>
     </message>
@@ -438,7 +434,7 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Ins</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Create Poin&amp;t</source>
@@ -449,8 +445,12 @@ Ali jo zelite zamenjati?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>S</source>
-        <translation type="unfinished"></translation>
+        <source>Alt+S</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt+Z</source>
+        <translation></translation>
     </message>
 </context>
 <context>

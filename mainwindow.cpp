@@ -915,10 +915,10 @@ void MainWindow::changeEvent(QEvent *event) {
         toggleTextAction->setShortcut(tr("Alt+T"));
 
         toggleSpinAction->setText(tr("Toggle &Spinnaker"));
-        toggleSpinAction->setShortcut(tr("S"));
+        toggleSpinAction->setShortcut(tr("Alt+S"));
 
         toggleMarkZoneAction->setText(tr("Toggle Mark &Zone"));
-        toggleMarkZoneAction->setShortcut(tr("Z"));
+        toggleMarkZoneAction->setShortcut(tr("Alt+Z"));
 
         deleteTrackAction->setText(tr("Delete Track"));
         deleteTrackAction->setShortcut(tr("Ctrl+Del"));

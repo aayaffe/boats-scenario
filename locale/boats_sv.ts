@@ -144,10 +144,6 @@
         <translation>Märkes&amp;zonen på och av</translation>
     </message>
     <message>
-        <source>Z</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Delete Track</source>
         <translation>Radera spår</translation>
     </message>
@@ -448,7 +444,11 @@ Vill du ersätta den?</translation>
         <translation>&amp;Spinnaker på och av</translation>
     </message>
     <message>
-        <source>S</source>
+        <source>Alt+S</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt+Z</source>
         <translation></translation>
     </message>
 </context>

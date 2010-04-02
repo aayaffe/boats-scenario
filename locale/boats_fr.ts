@@ -281,10 +281,6 @@
         <translation>&amp;Zone à la marque</translation>
     </message>
     <message>
-        <source>Z</source>
-        <translation>Z</translation>
-    </message>
-    <message>
         <source>New &amp;Tab</source>
         <translation>Nouvel &amp;Onglet</translation>
     </message>
@@ -449,7 +445,11 @@ Voulez-vous le remplacer?</translation>
         <translation>&amp;Spinnaker</translation>
     </message>
     <message>
-        <source>S</source>
+        <source>Alt+S</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt+Z</source>
         <translation></translation>
     </message>
 </context>

@@ -152,10 +152,6 @@
         <translation>Vis/skjul mærke&amp;zone</translation>
     </message>
     <message>
-        <source>Z</source>
-        <translation>Z</translation>
-    </message>
-    <message>
         <source>Delete Track</source>
         <translation>Slet spor</translation>
     </message>
@@ -451,8 +447,12 @@ Vil du overskrive den?</translation>
         <translation>Vis/skjul &amp;spiler</translation>
     </message>
     <message>
-        <source>S</source>
-        <translation>S</translation>
+        <source>Alt+S</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt+Z</source>
+        <translation></translation>
     </message>
 </context>
 <context>

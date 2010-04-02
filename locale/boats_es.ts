@@ -164,16 +164,8 @@
         <translation>Sacar &amp;Spi</translation>
     </message>
     <message>
-        <source>S</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Toggle Mark &amp;Zone</source>
         <translation>&amp;Zona Alrededor de la Baliza</translation>
-    </message>
-    <message>
-        <source>Z</source>
-        <translation></translation>
     </message>
     <message>
         <source>Delete Track</source>
@@ -448,6 +440,14 @@ Do you want to replace it?</source>
     <message>
         <source>About Boat Scenario</source>
         <translation>Acerca de Boat Scenario</translation>
+    </message>
+    <message>
+        <source>Alt+S</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt+Z</source>
+        <translation></translation>
     </message>
 </context>
 <context>

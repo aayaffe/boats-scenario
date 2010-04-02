@@ -164,16 +164,8 @@
         <translation>スピネーカーを表示(&amp;S)</translation>
     </message>
     <message>
-        <source>S</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Toggle Mark &amp;Zone</source>
         <translation>マークゾーンを表示(&amp;Z)</translation>
-    </message>
-    <message>
-        <source>Z</source>
-        <translation></translation>
     </message>
     <message>
         <source>Delete Track</source>
@@ -447,6 +439,14 @@ Do you want to replace it?</source>
     <message>
         <source>About Boat Scenario</source>
         <translation>BoatScenarioについて</translation>
+    </message>
+    <message>
+        <source>Alt+S</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt+Z</source>
+        <translation></translation>
     </message>
 </context>
 <context>
