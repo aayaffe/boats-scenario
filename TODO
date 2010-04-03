@@ -1,14 +1,11 @@
 Important:
-- flags
-- baloons
-- polygon/generic lines
 - jib
-- pole and bowsprit
-- spin
+- bowsprit
 
 Normal:
 - toggle number display
 - select colour for marks
+- arrows
 - clean selection before output
 - translate boat types in popup
 - more boat shapes
@@ -18,5 +15,4 @@ Normal:
 Wishlist:
 - gpx import
 - backtrack edit
-- track line to mouse position
 - insert between boats

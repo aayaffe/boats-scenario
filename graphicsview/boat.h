@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@
 #include <QColor>
 
 #include "boats.h"
+#include "sail.h"
+#include "spinnaker.h"
 #include "flag.h"
 #include "bubble.h"
 
@@ -69,10 +71,11 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void setHeading(qreal value);
         void setPosition(QPointF position);
         void setOrder(int value);
-        void setTrim(qreal value);
+        void setSpin(bool value);
         void setOverlap(Boats::Overlaps value);
         void setDisplayFlag(Boats::Flag value);
         void setColor(QColor value);
+        void setDim(bool value);
         void setSeries(Boats::Series value);
         void deleteItem(BoatModel *boat);
 
@@ -82,7 +85,6 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
     private:
-        void setSailAngle();
         void setOverlapLine();
 
         /// \a m_boat holds the BoatModel being represented
@@ -94,26 +96,11 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_angle holds the heading of the boat
         qreal m_angle;
 
-        /// \a m_sailAngle holds the ideal sail trimming angle
-        qreal m_sailAngle;
-
-        /// \a m_mast holds the position of the mast
-        QPointF m_mast;
-
         /// \a m_sail holds the sail that will be drawn
-        QGraphicsPathItem *m_sail;
+        SailGraphicsItem *m_sail;
 
-        /// \a m_sailPathPort holds the sail path when on port tack
-        QPainterPath m_sailPathPort;
-
-        /// \a m_sailPathStarboard holds the sail path when on starboard tack
-        QPainterPath m_sailPathStarboard;
-
-        /// \a m_sailPathStalled holds the sail path when head to wind
-        QPainterPath m_sailPathStalled;
-
-        /// \a m_trim holds the manual trimming angle override
-        qreal m_trim;
+        /// \a m_spin holds the spinnaker
+        SpinnakerGraphicsItem *m_spin;
 
         /// \a m_overlap holds whether an overlap line should be displayed
         Boats::Overlaps m_overlap;

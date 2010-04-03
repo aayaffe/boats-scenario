@@ -34,6 +34,8 @@
 #include "situationmodel.h"
 #include "trackmodel.h"
 #include "boatmodel.h"
+#include "polylinemodel.h"
+#include "pointmodel.h"
 
 #include "undocommands.h"
 #include "xmlsituationreader.h"
@@ -113,8 +115,12 @@ void MainWindow::createTranslations(QString locale) {
                        QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     qApp->installTranslator(qtTranslator);
 
-    translator->load(QString("boats_").append(locale).append(".qm"), TRANSLATEDIR);
-    qApp->installTranslator(translator);
+    if (translator->load(QString("boats_").append(locale).append(".qm"), TRANSLATEDIR)) {
+        qApp->installTranslator(translator);
+    } else {
+        QCoreApplication::postEvent(QCoreApplication::instance(),
+                                    new QEvent(QEvent::LanguageChange));
+    }
 }
 
 void MainWindow::createActions() {
@@ -204,6 +210,18 @@ void MainWindow::createActions() {
     connect(addMarkAction, SIGNAL(triggered()),
             this, SLOT(addMark()));
 
+    addPolyLineAction = new QAction(this);
+    addPolyLineAction->setIcon(QIcon(":/images/addpoly.png"));
+    addPolyLineAction->setCheckable(true);
+    connect(addPolyLineAction, SIGNAL(triggered()),
+            this, SLOT(addPolyLine()));
+
+    addPointAction = new QAction(this);
+    addPointAction->setIcon(QIcon(":/images/addpoint.png"));
+    addPointAction->setCheckable(true);
+    connect(addPointAction, SIGNAL(triggered()),
+            this, SLOT(addPoint()));
+
     togglePortOverlapAction = new QAction(this);
     togglePortOverlapAction->setCheckable(true);
     connect(togglePortOverlapAction, SIGNAL(triggered()),
@@ -218,6 +236,12 @@ void MainWindow::createActions() {
     toggleTextAction->setCheckable(true);
     connect(toggleTextAction, SIGNAL(triggered()),
             this, SLOT(toggleText()));
+
+    toggleSpinAction = new QAction(this);
+    toggleSpinAction->setCheckable(true);
+    toggleSpinAction->setEnabled(false);
+    connect(toggleSpinAction, SIGNAL(triggered()),
+            this, SLOT(toggleSpin()));
 
     toggleMarkZoneAction = new QAction(this);
     toggleMarkZoneAction->setIcon(QIcon(":/images/zone.png"));
@@ -309,17 +333,21 @@ void MainWindow::updateActions() {
 
     bool selectedItems = !scene->selectedItems().isEmpty();
     bool selectedBoats = !scene->selectedBoatModels().isEmpty();
+    bool selectedPoints = !scene->selectedPointModels().isEmpty();
 
     addBoatAction->setEnabled(selectedBoats || scene->state() == CREATE_BOAT);
+    addPointAction->setEnabled(selectedPoints || scene->state() == CREATE_POINT);
     togglePortOverlapAction->setEnabled(selectedBoats);
     toggleStarboardOverlapAction->setEnabled(selectedBoats);
-    toggleTextAction->setEnabled(selectedBoats);
+    toggleTextAction->setEnabled(selectedItems);
     flagMenu->setEnabled(selectedBoats);
     deleteTrackAction->setEnabled(selectedBoats);
     deleteAction->setEnabled(selectedItems);
 
     bool allPortSet = 1;
     bool allStarboardSet = 1;
+    bool allKeelboat = 1;
+    bool allSpinSet = 1;
     bool allTextSet = 1;
     int flagSize = ENUM_SIZE(Boats,Flag);
     bool allFlagSet[flagSize];
@@ -329,14 +357,22 @@ void MainWindow::updateActions() {
     foreach(BoatModel *boat, scene->selectedBoatModels()) {
         allPortSet = allPortSet && (boat->overlap() & Boats::port);
         allStarboardSet = allStarboardSet && (boat->overlap() & Boats::starboard);
-        allTextSet = allTextSet && (!boat->text().isEmpty());
+        allKeelboat = allKeelboat && (boat->track()->series() == Boats::keelboat);
+        allSpinSet = allSpinSet && (boat->spin());
         for (int i = 0; i < flagSize; i++) {
             allFlagSet[i] = allFlagSet[i] && (boat->flag() == i);
         }
     }
     togglePortOverlapAction->setChecked(selectedBoats && allPortSet);
     toggleStarboardOverlapAction->setChecked(selectedBoats && allStarboardSet);
-    toggleTextAction->setChecked(selectedBoats && allTextSet);
+    toggleSpinAction->setChecked(selectedBoats && allSpinSet);
+    toggleSpinAction->setEnabled(selectedBoats && allKeelboat);
+
+    foreach(PositionModel *position, scene->selectedModels()) {
+        allTextSet = allTextSet && (!position->text().isEmpty());
+    }
+    toggleTextAction->setEnabled(scene->selectedModels().size()==1);
+    toggleTextAction->setChecked(selectedItems && allTextSet);
     for (int i = 0; i < flagSize; i++) {
         QAction *flagAction = flagMenu->actions()[i];
         flagAction->setChecked(allFlagSet[i]);
@@ -353,6 +389,8 @@ void MainWindow::changeState(SceneState newState) {
             addTrackAction->setChecked(true);
             addBoatAction->setChecked(false);
             addMarkAction->setChecked(false);
+            addPolyLineAction->setChecked(false);
+            addPointAction->setChecked(false);
             animateAction->setChecked(false);
             break;
         case CREATE_BOAT:
@@ -361,6 +399,8 @@ void MainWindow::changeState(SceneState newState) {
             addTrackAction->setChecked(false);
             addBoatAction->setChecked(true);
             addMarkAction->setChecked(false);
+            addPolyLineAction->setChecked(false);
+            addPointAction->setChecked(false);
             animateAction->setChecked(false);
             break;
         case CREATE_MARK:
@@ -369,6 +409,28 @@ void MainWindow::changeState(SceneState newState) {
             addTrackAction->setChecked(false);
             addBoatAction->setChecked(false);
             addMarkAction->setChecked(true);
+            addPolyLineAction->setChecked(false);
+            addPointAction->setChecked(false);
+            animateAction->setChecked(false);
+            break;
+        case CREATE_LINE:
+            view->setCursor(Qt::CrossCursor);
+            statusbar->showMessage(tr("Create Line"));
+            addTrackAction->setChecked(false);
+            addBoatAction->setChecked(false);
+            addMarkAction->setChecked(false);
+            addPolyLineAction->setChecked(true);
+            addPointAction->setChecked(false);
+            animateAction->setChecked(false);
+            break;
+        case CREATE_POINT:
+            view->setCursor(Qt::CrossCursor);
+            statusbar->showMessage(tr("Create Line"));
+            addTrackAction->setChecked(false);
+            addBoatAction->setChecked(false);
+            addMarkAction->setChecked(false);
+            addPolyLineAction->setChecked(false);
+            addPointAction->setChecked(true);
             animateAction->setChecked(false);
             break;
         case ANIMATE:
@@ -376,6 +438,8 @@ void MainWindow::changeState(SceneState newState) {
             addTrackAction->setChecked(false);
             addBoatAction->setChecked(false);
             addMarkAction->setChecked(false);
+            addPolyLineAction->setChecked(false);
+            addPointAction->setChecked(false);
             animateAction->setChecked(true);
             break;
         default:
@@ -384,6 +448,8 @@ void MainWindow::changeState(SceneState newState) {
             addTrackAction->setChecked(false);
             addBoatAction->setChecked(false);
             addMarkAction->setChecked(false);
+            addPolyLineAction->setChecked(false);
+            addPointAction->setChecked(false);
             animateAction->setChecked(false);
     }
     updateActions();
@@ -442,6 +508,8 @@ void MainWindow::createMenus() {
     trackMenu->addAction(addTrackAction);
     trackMenu->addAction(addBoatAction);
     trackMenu->addAction(addMarkAction);
+    trackMenu->addAction(addPolyLineAction);
+    trackMenu->addAction(addPointAction);
     trackMenu->addSeparator();
     trackMenu->addAction(togglePortOverlapAction);
     trackMenu->addAction(toggleStarboardOverlapAction);
@@ -459,6 +527,7 @@ void MainWindow::createMenus() {
                 this, SLOT(toggleFlag()));
     }
     trackMenu->addMenu(flagMenu);
+    trackMenu->addAction(toggleSpinAction);
     trackMenu->addAction(toggleMarkZoneAction);
     trackMenu->addSeparator();
     trackMenu->addAction(deleteTrackAction);
@@ -531,6 +600,8 @@ void MainWindow::createMenus() {
     toolbar->addAction(addTrackAction);
     toolbar->addAction(addBoatAction);
     toolbar->addAction(addMarkAction);
+    toolbar->addAction(addPolyLineAction);
+    toolbar->addAction(addPointAction);
     toolbar->addSeparator();
     toolbar->addAction(animateAction);
     toolbar->addSeparator();
@@ -580,6 +651,7 @@ void MainWindow::newTab() {
 
     tabWidget->setCurrentIndex(situationList.size()-1);
     view->setFocus();
+    view->setMouseTracking(true);
     if (situationList.size() > 1) {
         removeTabAction->setEnabled(true);
         removeTabButton->setEnabled(true);
@@ -827,6 +899,12 @@ void MainWindow::changeEvent(QEvent *event) {
         addMarkAction->setText(tr("Create &Mark"));
         addMarkAction->setShortcut(tr("Alt+Ins"));
 
+        addPolyLineAction->setText(tr("Create &PolyLine"));
+        addPolyLineAction->setShortcut(tr("Ctrl+Alt+Ins"));
+
+        addPointAction->setText(tr("Create Poin&t"));
+        addPointAction->setShortcut(tr("Ctrl+T"));
+
         togglePortOverlapAction->setText(tr("&Port Overlap"));
         togglePortOverlapAction->setShortcut(tr("Alt+<"));
 
@@ -836,8 +914,11 @@ void MainWindow::changeEvent(QEvent *event) {
         toggleTextAction->setText(tr("&Text"));
         toggleTextAction->setShortcut(tr("Alt+T"));
 
+        toggleSpinAction->setText(tr("Toggle &Spinnaker"));
+        toggleSpinAction->setShortcut(tr("Alt+S"));
+
         toggleMarkZoneAction->setText(tr("Toggle Mark &Zone"));
-        toggleMarkZoneAction->setShortcut(tr("Z"));
+        toggleMarkZoneAction->setShortcut(tr("Alt+Z"));
 
         deleteTrackAction->setText(tr("Delete Track"));
         deleteTrackAction->setShortcut(tr("Ctrl+Del"));
@@ -1284,6 +1365,15 @@ void MainWindow::deleteModels() {
     foreach (MarkModel *mark, scene->selectedMarkModels()) {
         situation->undoStack()->push(new DeleteMarkUndoCommand(situation, mark));
     }
+
+    foreach (PointModel *point, scene->selectedPointModels()) {
+        PolyLineModel *polyLine = point->polyLine();
+        if (polyLine->size() > 1) {
+            situation->undoStack()->push(new DeletePointUndoCommand(polyLine, point));
+        } else {
+            situation->undoStack()->push(new DeletePolyLineUndoCommand(situation, polyLine));
+        }
+    }
 }
 
 void MainWindow::addMark() {
@@ -1293,6 +1383,26 @@ void MainWindow::addMark() {
         scene->setState(NO_STATE);
     } else {
         scene->setState(CREATE_MARK);
+    }
+}
+
+void MainWindow::addPolyLine() {
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    if (scene->state() == CREATE_LINE) {
+        scene->setState(NO_STATE);
+    } else {
+        scene->setState(CREATE_LINE);
+    }
+}
+
+void MainWindow::addPoint() {
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    if (scene->state() == CREATE_POINT) {
+        scene->setState(NO_STATE);
+    } else {
+        scene->setState(CREATE_POINT);
     }
 }
 
@@ -1320,13 +1430,13 @@ void MainWindow::toggleText() {
     SituationModel *situation = situationList.at(tabWidget->currentIndex());
     SituationScene *scene = sceneList.at(tabWidget->currentIndex());
 
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
-    if (! boatList.isEmpty()) {
+    QList<PositionModel *> modelList = scene->selectedModels();
+    if (! modelList.isEmpty()) {
         QString text;
-        if (boatList.first()->text().isEmpty()) {
+        if (modelList.first()->text().isEmpty()) {
             text = tr("Protest!");
         }
-        situation->undoStack()->push(new SetTextUndoCommand(boatList.first(), text));
+        situation->undoStack()->push(new SetTextUndoCommand(modelList.first(), text));
     }
 }
 
@@ -1342,6 +1452,16 @@ void MainWindow::toggleFlag() {
         if (! boatList.isEmpty()) {
             situation->undoStack()->push(new FlagBoatUndoCommand(situation, boatList, flag));
         }
+    }
+}
+
+void MainWindow::toggleSpin() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    if (! boatList.isEmpty()) {
+        situation->undoStack()->push(new SpinBoatUndoCommand(situation, boatList, !boatList.first()->spin()));
     }
 }
 

@@ -32,6 +32,8 @@
 #include "trackmodel.h"
 #include "boatmodel.h"
 #include "markmodel.h"
+#include "polylinemodel.h"
+#include "pointmodel.h"
 
 extern int debugLevel;
 
@@ -73,6 +75,8 @@ bool XmlSituationWriter::writeFile(QIODevice *device) {
         writeMark(mark);
     foreach (const TrackModel *track, m_situation->tracks())
         writeTrack(track);
+    foreach (const PolyLineModel *polyLine, m_situation->polyLines())
+        writePolyLine(polyLine);
 
     writeEndDocument();
     if (debugLevel & 1 << XML) std::cout << "done WriteFile" << std::endl;
@@ -112,6 +116,9 @@ void XmlSituationWriter::writeBoat(const BoatModel *boat) {
     if (boat->trim() != 0) {
         writeTextElement("trim",QString::number(boat->trim()));
     }
+    if (boat->spin()) {
+        writeTextElement("spin",QString::number(boat->spin()));
+    }
     if (boat->overlap() != Boats::none) {
         writeTextElement("overlap", FLAG_NAME(Boats, Overlap, boat->overlap()));
     }
@@ -149,6 +156,35 @@ void XmlSituationWriter::writeMark(const MarkModel *mark) {
     }
     foreach (const QString discarded, mark->discardedXml())
         writeUnknownElement(discarded);
+    writeEndElement();
+}
+
+void XmlSituationWriter::writePolyLine(const PolyLineModel *polyLine) {
+    if (debugLevel & 1 << XML) {
+        std::cout << "WritePolyLine" << std::endl;
+        std::cout << " points=" << polyLine->size() << std::endl;
+    }
+    writeStartElement("polyline");
+    foreach (const QString discarded, polyLine->discardedXml())
+        writeUnknownElement(discarded);
+    foreach (const PointModel *point, polyLine->points()) {
+        writePoint(point);
+    }
+    writeEndElement();
+}
+
+void XmlSituationWriter::writePoint(const PointModel *point) {
+    if (debugLevel & 1 << XML) {
+        std::cout << "WritePoint" << std::endl;
+        std::cout << " x=" << point->position().x() << std::endl;
+        std::cout << " y=" << point->position().y() << std::endl;
+    }
+
+    writeStartElement("point");
+    foreach (const QString discarded, point->discardedXml())
+        writeUnknownElement(discarded);
+    writeTextElement("x",QString::number(point->position().x()));
+    writeTextElement("y",QString::number(point->position().y()));
     writeEndElement();
 }
 

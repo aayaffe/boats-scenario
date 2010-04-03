@@ -32,6 +32,8 @@
 class TrackModel;
 class BoatModel;
 class MarkModel;
+class PolyLineModel;
+class PointModel;
 
 /**
     \class SituationModel
@@ -91,6 +93,8 @@ class SituationModel : public QObject {
         int markSize() const { return m_marks.size();}
         const QList<MarkModel*> marks() const { return m_marks; }
 
+        const QList<PolyLineModel*> polyLines() const { return m_lines; }
+
         // Setters and Getters for Non model Data
         QUndoStack * undoStack() const { return m_undoStack;}
 
@@ -103,6 +107,10 @@ class SituationModel : public QObject {
         // Helper to remotely trigger boat signals from elsewhere
         void addingBoat(BoatModel *boat) {emit boatAdded(boat);}
         void removingBoat(BoatModel *boat) {emit boatRemoved(boat);}
+
+        // Helper to remotely trigger point signals from elsewhere
+        void addingPoint(PointModel *point) {emit pointAdded(point);}
+        void removingPoint(PointModel *point) {emit pointRemoved(point);}
 
     signals:
         // Signals for Track
@@ -127,14 +135,26 @@ class SituationModel : public QObject {
         void markAdded(MarkModel *mark);
         void markRemoved(MarkModel *mark);
 
+        // Signals for Lines
+        void polyLineAdded(PolyLineModel *polyline);
+        void polyLineRemoved(PolyLineModel *polyline);
+
+        // Signals for Line Points
+        void pointAdded(PointModel *point);
+        void pointRemoved(PointModel *point);
+
     public slots:
         // Slots for Tracks
-        void addTrack(TrackModel *track, int order = 0);
+        void addTrack(TrackModel *track, int order = -1);
         void deleteTrack(TrackModel *track);
 
         // Slots for Marks
-        void addMark(MarkModel *mark, int order = 0);
+        void addMark(MarkModel *mark, int order = -1);
         int deleteMark(MarkModel *mark);
+
+        // Slots for Lines
+        void addPolyLine(PolyLineModel *polyline, int order = -1);
+        void deletePolyLine(PolyLineModel *polyline);
 
     private:
         // Model Data
@@ -168,6 +188,9 @@ class SituationModel : public QObject {
 
         /// \a m_marks holds the List of Marks of the Scenario
         QList<MarkModel*> m_marks;
+
+        /// \a m_lines holds the List of PolyLines of the Scenario
+        QList<PolyLineModel*> m_lines;
 
 
         // Non model Data

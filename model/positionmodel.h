@@ -27,6 +27,8 @@
 
 #include <QtGui>
 
+class SituationModel;
+
 /**
     \class PositionModel
 
@@ -45,7 +47,7 @@
 class PositionModel : public QObject {
         Q_OBJECT
     public:
-        PositionModel(QObject *parent = 0);
+        PositionModel(SituationModel* situation, QObject *parent = 0);
         virtual ~PositionModel();
 
         // Setters and Getters for Model Data
@@ -55,13 +57,23 @@ class PositionModel : public QObject {
         int order() const { return m_order; }
         void setOrder(const int theValue);
 
+        QString text() const {return m_text; }
+        void setText(const QString theValue);
+
+        QPointF textPosition() const {return m_textPosition; }
+        void setTextPosition(const QPointF& theValue);
+
         // Setters and Getters for Non model Data
+        SituationModel* situation() const { return m_situation; }
+
         QStringList discardedXml() const { return m_discardedXml; }
         void appendDiscardedXml(const QString& theValue);
 
     signals:
         void positionChanged(QPointF position);
         void orderChanged(int order);
+        void textChanged(QString text);
+        void textPositionChanged(QPointF textPosition);
 
     private:
         // Model Data
@@ -71,7 +83,17 @@ class PositionModel : public QObject {
         /// \a m_order holds the stacking order of the object
         int m_order;
 
+        /// \a m_text holds the text to display
+        QString m_text;
+
+        /// \a m_textPosition holds the position of the text to display
+        QPointF m_textPosition;
+
         // Non model Data
+        /// \a m_situation keeps a pointer to the SituationModel to which
+        /// it belongs
+        SituationModel *m_situation;
+
         /// \a m_discardedXml keeps all unparsed xml tags
         QStringList m_discardedXml;
 };

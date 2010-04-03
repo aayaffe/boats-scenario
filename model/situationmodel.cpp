@@ -30,6 +30,7 @@
 #include "commontypes.h"
 #include "trackmodel.h"
 #include "markmodel.h"
+#include "polylinemodel.h"
 
 extern int debugLevel;
 
@@ -151,7 +152,7 @@ void SituationModel::appendDiscardedXml(const QString& theValue) {
 }
 
 void SituationModel::addTrack(TrackModel *track, int order) {
-    if (order == 0) {
+    if (order == -1) {
         order = m_tracks.size();
     }
     m_tracks.insert(order,track);
@@ -176,7 +177,7 @@ void SituationModel::deleteTrack(TrackModel *track) {
 }
 
 void SituationModel::addMark(MarkModel *mark, int order) {
-    if (order == 0) {
+    if (order == -1) {
         order = m_marks.size();
     }
     m_marks.insert(order, mark);
@@ -197,3 +198,23 @@ int SituationModel::deleteMark(MarkModel *mark) {
     emit markRemoved(mark);
     return index;
 }
+
+void SituationModel::addPolyLine(PolyLineModel *polyline, int order) {
+    if (order == -1) {
+        order = m_lines.size();
+    }
+    m_lines.insert(order,polyline);
+    if (debugLevel & 1 << MODEL) std::cout << "Adding PolyLine " << order+1 <<  std::endl;
+    polyline->displayPoints();
+    emit polyLineAdded(polyline);
+}
+
+void SituationModel::deletePolyLine(PolyLineModel *polyline) {
+    int index = m_lines.indexOf(polyline);
+    if (debugLevel & 1 << MODEL) std::cout << "Removing Line " << index+1
+    << " with " << polyline->size() << std::endl;
+    polyline->hidePoints();
+    m_lines.removeOne(polyline);
+    emit polyLineRemoved(polyline);
+}
+

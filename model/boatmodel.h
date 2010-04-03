@@ -30,6 +30,7 @@
 #include "boats.h"
 #include "positionmodel.h"
 
+class SituationModel;
 class TrackModel;
 
 /**
@@ -66,30 +67,38 @@ class BoatModel : public PositionModel {
         qreal trim() const { return m_trim; }
         void setTrim(const qreal& theValue);
 
+        bool spin() const { return m_spin; }
+        void setSpin(const bool theValue);
+
+        qreal spinTrim() const { return m_spinTrim; }
+        void setSpinTrim(const qreal& theValue);
+
         Boats::Overlaps overlap() const {return m_overlap; }
         void setOverlap(const Boats::Overlaps theValue);
 
         Boats::Flag flag() const {return m_flag; }
         void setFlag(const Boats::Flag theValue);
 
-        QString text() const {return m_text; }
-        void setText(const QString theValue);
-
-        QPointF textPosition() const {return m_textPosition; }
-        void setTextPosition(const QPointF& theValue);
-
         // Setters and Getters for Non model Data
         TrackModel* track() const { return m_track; }
 
-        static qreal getSailAngle(qreal layline, qreal heading, Boats::Series series, qreal trim);
+        qreal sailAngle(qreal heading = -1) const;
+
+        qreal spinAngle(qreal heading = -1) const;
+
+        void setDim(bool dim = true);
+        bool dim() const { return m_dim; }
 
     signals:
         void headingChanged(qreal heading);
         void trimChanged(qreal trim);
+        void trimmedSailAngleChanged(qreal sailAngle);
+        void spinChanged(bool spin);
+        void spinTrimChanged(qreal spinTrim);
+        void trimmedSpinAngleChanged(qreal spinAngle);
         void overlapChanged(Boats::Overlaps overlap);
         void flagChanged(Boats::Flag flag);
-        void textChanged(QString text);
-        void textPositionChanged(QPointF textPosition);
+        void dimChanged(bool dim);
 
     private:
         // Model Data
@@ -99,22 +108,24 @@ class BoatModel : public PositionModel {
         /// \a m_trim holds the sailing trim of a Boat
         qreal m_trim;
 
+        /// \a m_spin holds whether a spinnaker is used
+        bool m_spin;
+
+        /// \a m_spinTrim holds the spinnaker trim
+        qreal m_spinTrim;
+
         /// \a m_overlap holds whether an overlap line should be displayed
         Boats::Overlaps m_overlap;
 
         /// \a m_flag holds the flag to display
         Boats::Flag m_flag;
 
-        /// \a m_text holds the text to display
-        QString m_text;
-
-        /// \a m_textPosition holds the position of the text to display
-        QPointF m_textPosition;
-
         // Non model Data
         /// \a m_track keeps a pointer to the TrackModel to which
         /// it belongs
         TrackModel *m_track;
+
+        bool m_dim;
 };
 
 #endif

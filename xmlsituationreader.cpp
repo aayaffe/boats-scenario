@@ -31,6 +31,8 @@
 #include "trackmodel.h"
 #include "boatmodel.h"
 #include "markmodel.h"
+#include "polylinemodel.h"
+#include "pointmodel.h"
 
 #include "undocommands.h"
 
@@ -126,6 +128,9 @@ void XmlSituationReader::readSituation() {
             } else if (name() == "track") {
                 readTrack(m_situation);
 
+            } else if (name() == "polyline") {
+                readPolyLine(m_situation);
+
             } else {
                 m_situation->appendDiscardedXml(readUnknownElement());
             }
@@ -160,6 +165,7 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     QPointF pos;
     qreal heading = 0;
     qreal trim = 0;
+    bool spin = false;
     Boats::Overlaps overlap = Boats::none;
     Boats::Flag flag = Boats::noFlag;
     QPointF textPos(10,10);
@@ -178,6 +184,8 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
                 heading = readElementText().toFloat();
             else if (name() == "trim")
                 trim = readElementText().toFloat();
+            else if (name() == "spin")
+                spin = (readElementText() == "1");
             else if (name() == "overlap") {
                 overlap = (Boats::Overlaps)FLAG_VALUE(Boats, Overlap, readElementText().toStdString().c_str());
             }
@@ -206,6 +214,7 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
         boat = command->boat();
     }
     boat->setTrim(trim);
+    boat->setSpin(spin);
     boat->setOverlap(overlap);
     boat->setFlag(flag);
     boat->setTextPosition(textPos);
@@ -248,6 +257,51 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     if (length != 0) {
         mark->setLength(length);
     }
+    foreach (const QString elem, discarded) {
+        mark->appendDiscardedXml(elem);
+    }
+}
+
+void XmlSituationReader::readPolyLine(SituationModel *situation) {
+    QStringList discarded;
+    AddPolyLineUndoCommand *command = new AddPolyLineUndoCommand(situation);
+    situation->undoStack()->push(command);
+    PolyLineModel *polyLine = command->polyLine();
+    while (!atEnd()) {
+        readNext();
+        if (isEndElement())
+            break;
+        if (isStartElement()) {
+            if (name() == "point")
+                readPoint(situation, polyLine);
+            else
+                polyLine->appendDiscardedXml(readUnknownElement());
+        }
+    }
+}
+
+void XmlSituationReader::readPoint(SituationModel *situation, PolyLineModel *polyLine) {
+    QPointF pos;
+    QStringList discarded;
+    while (!atEnd()) {
+        readNext();
+        if (isEndElement())
+            break;
+        if (isStartElement()) {
+            if (name() == "x")
+                pos.setX(readElementText().toFloat());
+            else if (name() == "y")
+                pos.setY(readElementText().toFloat());
+            else
+                discarded.append(readUnknownElement());
+        }
+    }
+    AddPointUndoCommand *command = new AddPointUndoCommand(polyLine, pos);
+    PointModel *point = command->point();
+    foreach (const QString elem, discarded) {
+        point->appendDiscardedXml(elem);
+    }
+    situation->undoStack()->push(command);
 }
 
 Boats::Series XmlSituationReader::series(const QString series) {

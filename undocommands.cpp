@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -34,6 +34,8 @@
 #include "trackmodel.h"
 #include "boatmodel.h"
 #include "markmodel.h"
+#include "polylinemodel.h"
+#include "pointmodel.h"
 
 extern int debugLevel;
 
@@ -624,11 +626,52 @@ bool TrimBoatUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
-// Set Text
-SetTextUndoCommand::SetTextUndoCommand(BoatModel* boat, QString text, QUndoCommand *parent)
+// Spin Boat
+SpinBoatUndoCommand::SpinBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, bool spin, QUndoCommand *parent)
         : QUndoCommand(parent),
-        m_boat(boat),
-        m_oldText(boat->text()),
+        m_situation(situation),
+        m_boatList(boatList),
+        m_spin(spin) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new spinboatundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_spinList << boat->spin();
+    }
+}
+
+SpinBoatUndoCommand::~SpinBoatUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end spinboatundocommand" << std::endl;
+}
+
+void SpinBoatUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo spinboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setSpin(m_spinList[i]);
+    }
+}
+
+void SpinBoatUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo spinboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setSpin(m_spin);
+    }
+}
+
+bool SpinBoatUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SpinBoatUndoCommand *spinCommand = static_cast<const SpinBoatUndoCommand*>(command);
+    if (m_boatList != spinCommand->m_boatList)
+        return false;
+
+    m_spin = spinCommand->m_spin;
+    return true;
+}
+
+// Set Text
+SetTextUndoCommand::SetTextUndoCommand(PositionModel* model, QString text, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_model(model),
+        m_oldText(model->text()),
         m_newText(text) {
     if (debugLevel & 1 << COMMAND) std::cout << "new settextundocommand" << std::endl;
 }
@@ -639,17 +682,17 @@ SetTextUndoCommand::~SetTextUndoCommand() {
 
 void SetTextUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo settextundocommand"<< std::endl;
-    m_boat->setText(m_oldText);
+    m_model->setText(m_oldText);
 }
 
 void SetTextUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo settextundocommand" << std::endl;
-    m_boat->setText(m_newText);
+    m_model->setText(m_newText);
 }
 
 bool SetTextUndoCommand::mergeWith(const QUndoCommand *command) {
     const SetTextUndoCommand *setTextCommand = static_cast<const SetTextUndoCommand*>(command);
-    if (m_boat != setTextCommand->m_boat)
+    if (m_model != setTextCommand->m_model)
         return false;
 
     m_newText = setTextCommand->m_newText;
@@ -657,9 +700,9 @@ bool SetTextUndoCommand::mergeWith(const QUndoCommand *command) {
 }
 
 // Move Text
-MoveTextUndoCommand::MoveTextUndoCommand(BoatModel *boat, const QPointF &deltaPosition, QUndoCommand *parent)
+MoveTextUndoCommand::MoveTextUndoCommand(PositionModel *model, const QPointF &deltaPosition, QUndoCommand *parent)
         : QUndoCommand(parent),
-        m_boat(boat),
+        m_model(model),
         m_deltaPosition(deltaPosition) {
     if (debugLevel & 1 << COMMAND) std::cout << "new movetextundocommand" << std::endl;
 }
@@ -670,17 +713,17 @@ MoveTextUndoCommand::~MoveTextUndoCommand() {
 
 void MoveTextUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo movetextundocommand" << std::endl;
-    m_boat->setTextPosition(m_boat->textPosition() - m_deltaPosition);
+    m_model->setTextPosition(m_model->textPosition() - m_deltaPosition);
 }
 
 void MoveTextUndoCommand::redo() {
     if (debugLevel & 1 << COMMAND) std::cout << "redo movetextundocommand" << std::endl;
-    m_boat->setTextPosition(m_boat->textPosition() + m_deltaPosition);
+    m_model->setTextPosition(m_model->textPosition() + m_deltaPosition);
 }
 
 bool MoveTextUndoCommand::mergeWith(const QUndoCommand *command) {
     const MoveTextUndoCommand *moveCommand = static_cast<const MoveTextUndoCommand*>(command);
-    if (m_boat != moveCommand->m_boat)
+    if (m_model != moveCommand->m_model)
         return false;
 
     m_deltaPosition += moveCommand->m_deltaPosition;
@@ -822,4 +865,95 @@ void DeleteMarkUndoCommand::redo() {
 void DeleteMarkUndoCommand::undo() {
     if (debugLevel & 1 << COMMAND) std::cout << "undo deletebmarkundocommand" << std::endl;
     m_situation->addMark(m_mark, m_order);
+}
+
+// Add PolyLine
+AddPolyLineUndoCommand::AddPolyLineUndoCommand(SituationModel* situation, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new addpolylineundocommand" << std::endl;
+    m_polyLine = new PolyLineModel(situation);
+}
+
+AddPolyLineUndoCommand::~AddPolyLineUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end addpolylineundocommand" << std::endl;
+    delete m_polyLine;
+}
+
+void AddPolyLineUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo addpolylineundocommand" << std::endl;
+    m_situation->addPolyLine(m_polyLine);
+}
+
+void AddPolyLineUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo addpolylineundocommand" << std::endl;
+    m_situation->deletePolyLine(m_polyLine);
+}
+
+// Delete PolyLine
+DeletePolyLineUndoCommand::DeletePolyLineUndoCommand(SituationModel* situation, PolyLineModel* polyLine, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_polyLine(polyLine) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new removepolylineundocommand" << std::endl;
+}
+
+DeletePolyLineUndoCommand::~DeletePolyLineUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end removepolylineundocommand" << std::endl;
+}
+
+void DeletePolyLineUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo removepolylineundocommand" << std::endl;
+    m_situation->deletePolyLine(m_polyLine);
+}
+
+void DeletePolyLineUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo removepolylineundocommand" << std::endl;
+    m_situation->addPolyLine(m_polyLine);
+}
+
+// Add Point
+AddPointUndoCommand::AddPointUndoCommand(PolyLineModel* polyLine, QPointF& position, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_polyLine(polyLine) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new addpointundocommand" << std::endl;
+    m_point = new PointModel(polyLine);
+    m_point->setPosition(position);
+}
+
+AddPointUndoCommand::~AddPointUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end addpointundocommand" << std::endl;
+    delete m_point;
+}
+
+void AddPointUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo addpointundocommand" << std::endl;
+    m_polyLine->addPoint(m_point);
+}
+
+void AddPointUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo addpointundocommand" << std::endl;
+    m_polyLine->deletePoint(m_point);
+}
+
+// Delete Point
+DeletePointUndoCommand::DeletePointUndoCommand(PolyLineModel* polyLine, PointModel* point, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_polyLine(polyLine),
+        m_point(point) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new deletepointundocommand" << std::endl;
+}
+
+DeletePointUndoCommand::~DeletePointUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end deletepointundocommand" << std::endl;
+}
+
+void DeletePointUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo deletepointundocommand" << std::endl;
+    m_order = m_polyLine->deletePoint(m_point);
+}
+
+void DeletePointUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo deletepointundocommand" << std::endl;
+    m_polyLine->addPoint(m_point, m_order);
 }

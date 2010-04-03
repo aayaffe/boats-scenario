@@ -60,10 +60,8 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxS
     QPointF point = path.elementAt(0);
     setPosAt(0,point);
     BoatModel *model = m_track->boats()[0];
-    qreal layline = m_track->situation()->laylineAngle();
-    Boats::Series series = m_track->series();
     setRotationAt(0,model->heading());
-    setsailAt(0, model->getSailAngle(layline, model->heading(), series, model->trim()));
+    setsailAt(0, model->sailAngle() + model->trim());
 
     for (int i=0; i< size; i++) {
         qreal index = 0;
@@ -87,7 +85,7 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxS
         if (stalled) {
             setRotationAt(index, fmod(model->heading(),360.0));
         }
-        setsailAt(index, model->getSailAngle(layline, model->heading(), series, model->trim()));
+        setsailAt(index, model->sailAngle() + model->trim());
         point = end;
     }
 
@@ -192,7 +190,7 @@ void BoatAnimation::afterAnimationStep(qreal step) {
     m_boat->boat()->setPosition(posAt(step));
     qreal heading = headingAt(step);
     m_boat->boat()->setHeading(heading);
-    qreal sailAngle = BoatModel::getSailAngle(m_track->situation()->laylineAngle(), heading, m_track->series(), 0);
+    qreal sailAngle = m_boat->boat()->sailAngle(heading);
     m_boat->boat()->setTrim(sailAt(step)- sailAngle);
 
     int index = floor(step * m_maxSize);
@@ -218,6 +216,7 @@ void BoatAnimation::afterAnimationStep(qreal step) {
     m_boat->boat()->setFlag(boat->flag());
     m_boat->boat()->setText(boat->text());
     m_boat->boat()->setTextPosition(boat->textPosition());
+    m_boat->boat()->setSpin(boat->spin());
 
     // trigger next update rate calculation
     m_time.start();

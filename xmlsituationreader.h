@@ -32,6 +32,7 @@
 class SituationModel;
 class TrackModel;
 class BoatModel;
+class PolyLineModel;
 
 class XmlSituationReader : public QXmlStreamReader {
     public:
@@ -46,6 +47,8 @@ class XmlSituationReader : public QXmlStreamReader {
         void readTrack(SituationModel *situation);
         void readBoat(SituationModel *situation, TrackModel *track);
         void readMark(SituationModel *situation);
+        void readPolyLine(SituationModel *situation);
+        void readPoint(SituationModel *situation, PolyLineModel *polyLine);
 
         Boats::Series series(const QString series);
 

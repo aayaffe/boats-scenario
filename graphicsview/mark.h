@@ -30,6 +30,7 @@
 #include <QColor>
 
 #include "commontypes.h"
+#include "bubble.h"
 
 class MarkModel;
 
@@ -55,6 +56,7 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
         ~MarkGraphicsItem();
 
         MarkModel* mark() const { return m_mark; }
+        BubbleGraphicsItem* bubble() const { return m_bubble; }
 
         QRectF boundingRect() const;
         QPainterPath shape() const;
@@ -86,6 +88,9 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_boatLength holds the size in scene coordinates for main series
         int m_boatLength;
+
+        /// \a m_bubble holds the bubble to display
+        BubbleGraphicsItem *m_bubble;
 
         /// \a m_selected holds selection information
         bool m_selected;

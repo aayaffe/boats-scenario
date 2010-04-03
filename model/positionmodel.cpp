@@ -29,9 +29,11 @@
 
 extern int debugLevel;
 
-PositionModel::PositionModel(QObject *parent)
+PositionModel::PositionModel(SituationModel* situation, QObject *parent)
         : QObject(parent),
-        m_position() {
+        m_position(),
+        m_textPosition(10,10),
+        m_situation(situation) {
     if (debugLevel & 1 << MODEL) std::cout << "new Position " << this << std::endl;
 }
 
@@ -55,6 +57,22 @@ void PositionModel::setOrder(const int theValue) {
         << " order " << theValue << std::endl;
         m_order = theValue;
         emit orderChanged(m_order);
+    }
+}
+
+void PositionModel::setText(const QString theValue) {
+    if (theValue != m_text) {
+        if (debugLevel & 1 << MODEL) std::cout
+                << "text = " << theValue.toStdString()  << std::endl;
+        m_text = theValue;
+        emit textChanged(m_text);
+    }
+}
+
+void PositionModel::setTextPosition(const QPointF& theValue) {
+    if (theValue != m_textPosition) {
+        m_textPosition = theValue;
+        emit textPositionChanged(m_textPosition);
     }
 }
 

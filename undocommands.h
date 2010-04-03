@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,6 +35,8 @@ class TrackModel;
 class PositionModel;
 class BoatModel;
 class MarkModel;
+class PolyLineModel;
+class PointModel;
 
 enum {
     SET_TITLE,
@@ -52,6 +54,7 @@ enum {
     OVERLAP_BOAT,
     FLAG_BOAT,
     TRIM_BOAT,
+    SPIN_BOAT,
     SET_TEXT,
     MOVE_TEXT,
     ZONE_MARK,
@@ -331,10 +334,26 @@ class TrimBoatUndoCommand : public QUndoCommand {
         qreal m_trim;
 };
 
+class SpinBoatUndoCommand : public QUndoCommand {
+
+    public:
+        SpinBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, bool spin, QUndoCommand *parent = 0);
+        ~SpinBoatUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SPIN_BOAT; }
+    private:
+        SituationModel *m_situation;
+        QList<BoatModel*> m_boatList;
+        QList<bool> m_spinList;
+        bool m_spin;
+};
+
 class SetTextUndoCommand : public QUndoCommand {
 
     public:
-        SetTextUndoCommand(BoatModel *boat, QString text, QUndoCommand *parent = 0);
+        SetTextUndoCommand(PositionModel *model, QString text, QUndoCommand *parent = 0);
         ~SetTextUndoCommand();
         void undo();
         void redo();
@@ -342,7 +361,7 @@ class SetTextUndoCommand : public QUndoCommand {
         int id() const { return SET_TEXT; }
 
     private:
-        BoatModel *m_boat;
+        PositionModel *m_model;
         QString m_oldText;
         QString m_newText;
 };
@@ -350,14 +369,14 @@ class SetTextUndoCommand : public QUndoCommand {
 class MoveTextUndoCommand : public QUndoCommand {
 
     public:
-        MoveTextUndoCommand(BoatModel *boat, const QPointF &deltaPosition, QUndoCommand *parent = 0);
+        MoveTextUndoCommand(PositionModel *model, const QPointF &deltaPosition, QUndoCommand *parent = 0);
         ~MoveTextUndoCommand();
         void undo();
         void redo();
         bool mergeWith(const QUndoCommand *command);
         int id() const { return MOVE_TEXT; }
     private:
-        BoatModel *m_boat;
+        PositionModel *m_model;
         QPointF m_deltaPosition;
 };
 
@@ -430,6 +449,61 @@ class DeleteMarkUndoCommand : public QUndoCommand {
     private:
         SituationModel *m_situation;
         MarkModel *m_mark;
+        int m_order;
+};
+
+class AddPolyLineUndoCommand : public QUndoCommand {
+
+    public:
+        AddPolyLineUndoCommand(SituationModel* situation, QUndoCommand *parent = 0);
+        ~AddPolyLineUndoCommand();
+        void undo();
+        void redo();
+
+        PolyLineModel *polyLine() {return m_polyLine; }
+
+    private:
+        SituationModel *m_situation;
+        PolyLineModel *m_polyLine;
+};
+
+class DeletePolyLineUndoCommand : public QUndoCommand {
+
+    public:
+        DeletePolyLineUndoCommand(SituationModel* situation, PolyLineModel* polyLine, QUndoCommand *parent = 0);
+        ~DeletePolyLineUndoCommand();
+        void undo();
+        void redo();
+    private:
+        SituationModel *m_situation;
+        PolyLineModel *m_polyLine;
+};
+
+class AddPointUndoCommand : public QUndoCommand {
+
+    public:
+        AddPointUndoCommand(PolyLineModel* polyLine, QPointF& position, QUndoCommand *parent = 0);
+        ~AddPointUndoCommand();
+        void undo();
+        void redo();
+
+        PointModel *point() {return m_point; }
+
+    private:
+        PolyLineModel *m_polyLine;
+        PointModel *m_point;
+};
+
+class DeletePointUndoCommand : public QUndoCommand {
+
+    public:
+        DeletePointUndoCommand(PolyLineModel* polyLine, PointModel* point, QUndoCommand *parent = 0);
+        ~DeletePointUndoCommand();
+        void undo();
+        void redo();
+    private:
+        PolyLineModel *m_polyLine;
+        PointModel *m_point;
         int m_order;
 };
 

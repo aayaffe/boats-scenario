@@ -33,6 +33,7 @@
 #include "situationscene.h"
 #include "situationmodel.h"
 #include "markmodel.h"
+#include "bubble.h"
 
 extern int debugLevel;
 
@@ -43,6 +44,7 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
         m_zone(mark->zone()),
         m_length(mark->length()),
         m_boatLength(m_mark->situation()->sizeForSeries(m_mark->situation()->situationSeries())),
+        m_bubble(new BubbleGraphicsItem(m_mark, this)),
         m_selected(false),
         m_order(mark->order()) {
     setFlag(QGraphicsItem::ItemIsMovable);
@@ -50,6 +52,8 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
 
     setPos(mark->position());
     setZValue(m_order);
+
+    m_bubble->setZValue(1);
 
     connect(mark, SIGNAL(positionChanged(QPointF)),
             this, SLOT(setPosition(QPointF)));

@@ -192,16 +192,6 @@
         <translation>&amp;Animation</translation>
     </message>
     <message>
-        <source>Application</source>
-        <translation type="obsolete">Application</translation>
-    </message>
-    <message>
-        <source>The document has been modified.
-Do you want to save your changes?</source>
-        <translation type="obsolete">Le document a été modifié.
-Voulez-vous sauver vos modifications?</translation>
-    </message>
-    <message>
         <source>Open Scenario File</source>
         <translation>Ouvrir un fichier Scénario</translation>
     </message>
@@ -289,10 +279,6 @@ Voulez-vous sauver vos modifications?</translation>
     <message>
         <source>Toggle Mark &amp;Zone</source>
         <translation>&amp;Zone à la marque</translation>
-    </message>
-    <message>
-        <source>Z</source>
-        <translation>Z</translation>
     </message>
     <message>
         <source>New &amp;Tab</source>
@@ -416,7 +402,7 @@ Voulez-vous le remplacer?</translation>
     </message>
     <message>
         <source>&amp;Text</source>
-        <translation></translation>
+        <translation>&amp;Texte</translation>
     </message>
     <message>
         <source>Alt+T</source>
@@ -436,6 +422,34 @@ Voulez-vous le remplacer?</translation>
     </message>
     <message>
         <source>Protest!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Create Line</source>
+        <translation>Créer une Ligne</translation>
+    </message>
+    <message>
+        <source>Create &amp;PolyLine</source>
+        <translation>Créer une &amp;Polyligne</translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+Ins</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Create Poin&amp;t</source>
+        <translation>Créer un Poin&amp;t</translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Spinnaker</source>
+        <translation>&amp;Spinnaker</translation>
+    </message>
+    <message>
+        <source>Alt+S</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt+Z</source>
         <translation></translation>
     </message>
 </context>

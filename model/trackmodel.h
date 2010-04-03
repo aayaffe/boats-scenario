@@ -57,7 +57,7 @@ class TrackModel : public QObject {
         TrackModel(SituationModel* situation = 0, QObject *parent = 0);
         ~TrackModel();
 
-        BoatModel * addBoat(BoatModel *boat, int order = 0);
+        BoatModel * addBoat(BoatModel *boat, int order = -1);
         int deleteBoat(BoatModel *boat);
 
         void displayBoats();
@@ -88,6 +88,8 @@ class TrackModel : public QObject {
 
         QStringList discardedXml() const { return m_discardedXml; }
         void appendDiscardedXml(const QString& theValue);
+
+        qreal headingForNext(int index, QPointF point);
 
         void changingTrack(TrackModel *track);
 

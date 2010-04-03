@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,6 +32,8 @@ class TrackModel;
 class PositionModel;
 class BoatModel;
 class MarkModel;
+class PolyLineModel;
+class PointModel;
 class BoatAnimation;
 
 /**
@@ -64,12 +66,15 @@ typedef enum {
     CREATE_TRACK,
     CREATE_BOAT,
     CREATE_MARK,
+    CREATE_LINE,
+    CREATE_POINT,
     ANIMATE
 } SceneState;
 
 enum {
     BOAT_TYPE = QGraphicsItem::UserType + 1,
-    MARK_TYPE
+    MARK_TYPE,
+    POINT_TYPE
 };
 
 /**
@@ -111,11 +116,13 @@ class SituationScene : public QGraphicsScene {
         SituationScene(SituationModel* situation);
         ~SituationScene() {}
 
-        void setState(const SceneState& theValue) { m_state = theValue; emit stateChanged(m_state); }
+        void setState(const SceneState& theValue, bool commit = false);
         void setModelPressed(BoatModel *theValue) {m_modelPressed = theValue; }
         SceneState state() const { return m_state; }
+        QList< PositionModel * > selectedModels() const { return m_selectedModels; }
         QList< BoatModel * > selectedBoatModels() const { return m_selectedBoatModels; }
         QList< MarkModel * > selectedMarkModels() const { return m_selectedMarkModels; }
+        QList< PointModel * > selectedPointModels() const { return m_selectedPointModels; }
         void setActionMenu(QMenu *theValue) { m_actionMenu = theValue; }
 
     signals:
@@ -129,11 +136,10 @@ class SituationScene : public QGraphicsScene {
 
         // Slots for SituationModel signals
         void addTrack(TrackModel *track);
-        void deleteTrack(TrackModel *track);
         void addBoatItem(BoatModel *boat);
-        void deleteBoatItem();
         void addMarkItem(MarkModel *mark);
-        void deleteMarkItem();
+        void addPolyLine(PolyLineModel *polyline);
+        void addPoint(PointModel *point);
         void setLaylines(const int angle);
 
         // Slots for animation signals
@@ -146,15 +152,19 @@ class SituationScene : public QGraphicsScene {
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
         void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+        void mouseClickEvent(QGraphicsSceneMouseEvent *event);
+        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
     private:
         // Specialised Event methods
         void mouseSelectEvent(QGraphicsSceneMouseEvent *event);
-        void mouseMoveModelEvent(QGraphicsSceneMouseEvent *event);
-        void mouseHeadingEvent(QGraphicsSceneMouseEvent *event);
-        void mouseCreateTrackEvent(QGraphicsSceneMouseEvent *event);
-        void mouseCreateBoatEvent(QGraphicsSceneMouseEvent *event);
-        void mouseCreateMarkEvent(QGraphicsSceneMouseEvent *event);
+        void createTrack(QPointF pos);
+        void moveModel(QPointF pos);
+        void headingBoat(QPointF pos);
+        void createBoat(QPointF pos);
+        void createMark(QPointF pos);
+        void createLine(QPointF pos);
+        void createPoint(QPointF pos);
 
         SituationModel *m_situation;
 
@@ -168,6 +178,9 @@ class SituationScene : public QGraphicsScene {
         /// \a m_selectedMarkModels holds the list of selected MarkModel
         QList<MarkModel*> m_selectedMarkModels;
 
+        /// \a m_selectedPointModels holds the list of selected PointModel
+        QList<PointModel*> m_selectedPointModels;
+
         /// \a m_animationItems holds the list of BoatAnimation items
         /// created for animation mode
         QList<BoatAnimation*> m_animationItems;
@@ -178,8 +191,17 @@ class SituationScene : public QGraphicsScene {
         /// \a m_trackCreated holds the last selected TrackModel
         TrackModel *m_trackCreated;
 
+        /// \a m_polyLineCreated holds the last selected PolyLineModel
+        PolyLineModel *m_polyLineCreated;
+
+        /// \a m_markCreated holds the last selected MarkModel
+        MarkModel *m_markCreated;
+
         /// \a m_fromPosition holds the QPointF where mouse was pressed
         QPointF m_fromPosition;
+
+        /// \a m_curPosition holds the QPointF where mouse was last seen
+        QPointF m_curPosition;
 
         /// \a m_state holds the SceneState for the current scenario
         SceneState m_state;
@@ -189,6 +211,12 @@ class SituationScene : public QGraphicsScene {
 
         /// \a m_clickTime holds the timer used for click/press detection
         QTime m_clickTime;
+
+        enum {
+            SINGLE,
+            DOUBLE,
+            NONE
+        } m_clickState;
 
         QMenu *m_actionMenu;
 };
