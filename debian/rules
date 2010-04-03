@@ -1,10 +1,5 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# This file was originally written by Joey Hess and Craig Small.
-# As a special exception, when this file is copied by dh-make into a
-# dh-make output file, you may use that output file without restriction.
-# This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -52,24 +47,9 @@ install: build
 
 	# Add here commands to install the package into debian/boats.
 	$(MAKE) INSTALL_ROOT=$(CURDIR)/debian/boats install
+	rm $(CURDIR)/debian/boats/usr/share/mime/boats.xml
 	install -m644 $(CURDIR)/boats.xml \
 		$(CURDIR)/debian/boats.sharedmimeinfo
-	install -D -m644 $(CURDIR)/boats.desktop \
-		$(CURDIR)/debian/boats/usr/share/applications/boats.desktop
-	install -D -m644 $(CURDIR)/images/boats_16.png \
-		$(CURDIR)/debian/boats/usr/share/icons/hicolor/16x16/apps/boats.png
-	install -D -m644 $(CURDIR)/images/application-x-boats_16.png \
-		$(CURDIR)/debian/boats/usr/share/icons/hicolor/16x16/mimetypes/application-x-boats.png
-	install -D -m644 $(CURDIR)/images/boats_32.png \
-		$(CURDIR)/debian/boats/usr/share/icons/hicolor/32x32/apps/boats.png
-	install -D -m644 $(CURDIR)/images/application-x-boats_32.png \
-		$(CURDIR)/debian/boats/usr/share/icons/hicolor/32x32/mimetypes/application-x-boats.png
-	install -D -m644 $(CURDIR)/images/boats_48.png \
-		$(CURDIR)/debian/boats/usr/share/icons/hicolor/48x48/apps/boats.png
-	install -D -m644 $(CURDIR)/images/application-x-boats_48.png \
-		$(CURDIR)/debian/boats/usr/share/icons/hicolor/48x48/mimetypes/application-x-boats.png
-	install -D -m644 $(CURDIR)/images/boats_128.png \
-		$(CURDIR)/debian/boats/usr/share/icons/hicolor/128x128/apps/boats.png
 
 
 # Build architecture-independent files here.
