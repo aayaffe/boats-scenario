@@ -12,7 +12,6 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
-	lupdate boats.pro
 	lrelease boats.pro
 	qmake $(QMAKE_OPT)
 	touch configure-stamp
