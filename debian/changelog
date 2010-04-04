@@ -1,3 +1,14 @@
+boats (201004-1) unstable; urgency=low
+
+  * New upstream release.
+  * Removing patches applied upstream
+  * Not installing files provided by make install
+  * Updating Standards-Version
+  * Using misc:Depends
+  * Simplifying translation generation
+
+ -- Thibaut GRIDEL <tgridel@free.fr>  Sun, 04 Apr 2010 14:19:16 +0200
+
 boats (200910-1) unstable; urgency=low
 
   * New upstream release.
