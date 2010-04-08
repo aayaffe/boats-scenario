@@ -61,7 +61,7 @@
     </message>
     <message>
         <source>&amp;Export Pdf...</source>
-        <translation>&amp;Izvozi Pdf...</translation>
+        <translation>&amp;Izvozi pdf...</translation>
     </message>
     <message>
         <source>Ctrl+E</source>
@@ -69,7 +69,7 @@
     </message>
     <message>
         <source>Export &amp;Image...</source>
-        <translation>Izvozi &amp;Sliko...</translation>
+        <translation>Izvozi &amp;sliko...</translation>
     </message>
     <message>
         <source>Ctrl+I</source>
@@ -418,19 +418,19 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Print P&amp;review...</source>
-        <translation type="unfinished"></translation>
+        <translation>Predogled &amp;tiskanja...</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Izhod</translation>
     </message>
     <message>
         <source>Create Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustvari crto</translation>
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustvari &amp;veccrtje</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Ins</source>
@@ -438,11 +438,11 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Create Poin&amp;t</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustvari &amp;tocko</translation>
     </message>
     <message>
         <source>Toggle &amp;Spinnaker</source>
-        <translation type="unfinished"></translation>
+        <translation>Narisi &amp;spinaker</translation>
     </message>
     <message>
         <source>Alt+S</source>
@@ -479,7 +479,7 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Show Laylines</source>
-        <translation>Prikazi Layline</translation>
+        <translation>Prikazi layline</translation>
     </message>
     <message>
         <source>Laylines</source>
