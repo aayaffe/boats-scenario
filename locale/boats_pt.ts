@@ -61,7 +61,7 @@
     </message>
     <message>
         <source>Print P&amp;review...</source>
-        <translation>Visualizaçao da S&amp;impressao...</translation>
+        <translation>Visualizaçao de &amp;impressao...</translation>
     </message>
     <message>
         <source>&amp;Export Pdf...</source>
@@ -177,7 +177,7 @@
     </message>
     <message>
         <source>&amp;Delete Selection</source>
-        <translation>Cancelar&amp;r Selecçao</translation>
+        <translation>Cancela&amp;r Selecçao</translation>
     </message>
     <message>
         <source>Del</source>
@@ -253,7 +253,7 @@
     </message>
     <message>
         <source>Zoom &amp;Out</source>
-        <translation>R&amp;educir</translation>
+        <translation>R&amp;eduzir</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
