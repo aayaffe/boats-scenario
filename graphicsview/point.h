@@ -49,7 +49,9 @@ class PointModel;
 */
 
 class PointGraphicsItem : public QObject, public QGraphicsItem {
-        Q_OBJECT
+    Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
+
     public:
         PointGraphicsItem(PointModel *point = 0, QGraphicsItem *parent = 0);
         ~PointGraphicsItem();

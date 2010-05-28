@@ -50,7 +50,9 @@ class MarkModel;
 */
 
 class MarkGraphicsItem : public QObject, public QGraphicsItem {
-        Q_OBJECT
+    Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
+
     public:
         MarkGraphicsItem(MarkModel *mark = 0, QGraphicsItem *parent = 0);
         ~MarkGraphicsItem();
