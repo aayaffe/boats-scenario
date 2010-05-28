@@ -79,6 +79,9 @@ class BoatModel : public PositionModel {
         Boats::Flag flag() const {return m_flag; }
         void setFlag(const Boats::Flag theValue);
 
+        bool hidden() const {return m_hidden; }
+        void setHidden(const bool theValue);
+
         // Setters and Getters for Non model Data
         TrackModel* track() const { return m_track; }
 
@@ -98,6 +101,7 @@ class BoatModel : public PositionModel {
         void trimmedSpinAngleChanged(qreal spinAngle);
         void overlapChanged(Boats::Overlaps overlap);
         void flagChanged(Boats::Flag flag);
+        void hiddenChanged(bool hidden);
         void dimChanged(bool dim);
 
     private:
@@ -119,6 +123,9 @@ class BoatModel : public PositionModel {
 
         /// \a m_flag holds the flag to display
         Boats::Flag m_flag;
+
+        /// \a m_hidden holds whether the boat should display the hidden symbol
+        bool m_hidden;
 
         // Non model Data
         /// \a m_track keeps a pointer to the TrackModel to which
