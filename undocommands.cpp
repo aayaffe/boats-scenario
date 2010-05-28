@@ -667,6 +667,47 @@ bool SpinBoatUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Hidden Boat
+HiddenBoatUndoCommand::HiddenBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, bool hidden, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_boatList(boatList),
+        m_hidden(hidden) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new hiddenboatundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_hiddenList << boat->hidden();
+    }
+}
+
+HiddenBoatUndoCommand::~HiddenBoatUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end hiddenboatundocommand" << std::endl;
+}
+
+void HiddenBoatUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo hiddenboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setHidden(m_hiddenList[i]);
+    }
+}
+
+void HiddenBoatUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo hiddenboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setHidden(m_hidden);
+    }
+}
+
+bool HiddenBoatUndoCommand::mergeWith(const QUndoCommand *command) {
+    const HiddenBoatUndoCommand *hiddenCommand = static_cast<const HiddenBoatUndoCommand*>(command);
+    if (m_boatList != hiddenCommand->m_boatList)
+        return false;
+
+    m_hidden = hiddenCommand->m_hidden;
+    return true;
+}
+
 // Set Text
 SetTextUndoCommand::SetTextUndoCommand(PositionModel* model, QString text, QUndoCommand *parent)
         : QUndoCommand(parent),

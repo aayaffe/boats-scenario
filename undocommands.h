@@ -55,6 +55,7 @@ enum {
     FLAG_BOAT,
     TRIM_BOAT,
     SPIN_BOAT,
+    HIDE_BOAT,
     SET_TEXT,
     MOVE_TEXT,
     ZONE_MARK,
@@ -348,6 +349,22 @@ class SpinBoatUndoCommand : public QUndoCommand {
         QList<BoatModel*> m_boatList;
         QList<bool> m_spinList;
         bool m_spin;
+};
+
+class HiddenBoatUndoCommand : public QUndoCommand {
+
+    public:
+        HiddenBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, bool hidden, QUndoCommand *parent = 0);
+        ~HiddenBoatUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return HIDE_BOAT; }
+    private:
+        SituationModel *m_situation;
+        QList<BoatModel*> m_boatList;
+        QList<bool> m_hiddenList;
+        bool m_hidden;
 };
 
 class SetTextUndoCommand : public QUndoCommand {
