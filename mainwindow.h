@@ -90,6 +90,7 @@ class MainWindow : public QMainWindow {
         void togglePortOverlap();
         void toggleStarboardOverlap();
         void toggleFlag();
+        void toggleHidden();
         void toggleText();
         void toggleSpin();
         void toggleMarkZone();
@@ -179,6 +180,7 @@ class MainWindow : public QMainWindow {
         QAction *addPointAction;
         QAction *togglePortOverlapAction;
         QAction *toggleStarboardOverlapAction;
+        QAction *toggleHiddenAction;
         QAction *toggleTextAction;
         QAction *toggleSpinAction;
         QAction *toggleMarkZoneAction;

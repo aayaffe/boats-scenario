@@ -232,6 +232,11 @@ void MainWindow::createActions() {
     connect(toggleStarboardOverlapAction, SIGNAL(triggered()),
             this, SLOT(toggleStarboardOverlap()));
 
+    toggleHiddenAction = new QAction(this);
+    toggleHiddenAction->setCheckable(true);
+    connect(toggleHiddenAction, SIGNAL(triggered()),
+            this, SLOT(toggleHidden()));
+
     toggleTextAction = new QAction(this);
     toggleTextAction->setCheckable(true);
     connect(toggleTextAction, SIGNAL(triggered()),
@@ -339,6 +344,7 @@ void MainWindow::updateActions() {
     addPointAction->setEnabled(selectedPoints || scene->state() == CREATE_POINT);
     togglePortOverlapAction->setEnabled(selectedBoats);
     toggleStarboardOverlapAction->setEnabled(selectedBoats);
+    toggleHiddenAction->setEnabled(selectedBoats);
     toggleTextAction->setEnabled(selectedItems);
     flagMenu->setEnabled(selectedBoats);
     deleteTrackAction->setEnabled(selectedBoats);
@@ -346,6 +352,7 @@ void MainWindow::updateActions() {
 
     bool allPortSet = 1;
     bool allStarboardSet = 1;
+    bool allHiddenSet = 1;
     bool allKeelboat = 1;
     bool allSpinSet = 1;
     bool allTextSet = 1;
@@ -357,6 +364,7 @@ void MainWindow::updateActions() {
     foreach(BoatModel *boat, scene->selectedBoatModels()) {
         allPortSet = allPortSet && (boat->overlap() & Boats::port);
         allStarboardSet = allStarboardSet && (boat->overlap() & Boats::starboard);
+        allHiddenSet = allHiddenSet && boat->hidden();
         allKeelboat = allKeelboat && (boat->track()->series() == Boats::keelboat);
         allSpinSet = allSpinSet && (boat->spin());
         for (int i = 0; i < flagSize; i++) {
@@ -365,6 +373,7 @@ void MainWindow::updateActions() {
     }
     togglePortOverlapAction->setChecked(selectedBoats && allPortSet);
     toggleStarboardOverlapAction->setChecked(selectedBoats && allStarboardSet);
+    toggleHiddenAction->setChecked(selectedBoats && allHiddenSet);
     toggleSpinAction->setChecked(selectedBoats && allSpinSet);
     toggleSpinAction->setEnabled(selectedBoats && allKeelboat);
 
@@ -513,6 +522,7 @@ void MainWindow::createMenus() {
     trackMenu->addSeparator();
     trackMenu->addAction(togglePortOverlapAction);
     trackMenu->addAction(toggleStarboardOverlapAction);
+    trackMenu->addAction(toggleHiddenAction);
     trackMenu->addAction(toggleTextAction);
     int flagSize = ENUM_SIZE(Boats, Flag);
     flagMenu = new QMenu(this);
@@ -910,6 +920,9 @@ void MainWindow::changeEvent(QEvent *event) {
 
         toggleStarboardOverlapAction->setText(tr("&Starboard Overlap"));
         toggleStarboardOverlapAction->setShortcut(tr("Alt+>"));
+
+        toggleHiddenAction->setText(tr("&Hide"));
+        toggleHiddenAction->setShortcut(tr("Alt+D"));
 
         toggleTextAction->setText(tr("&Text"));
         toggleTextAction->setShortcut(tr("Alt+T"));
@@ -1423,6 +1436,16 @@ void MainWindow::toggleStarboardOverlap() {
     QList<BoatModel *> boatList = scene->selectedBoatModels();
     if (! boatList.isEmpty()) {
         situation->undoStack()->push(new OverlapBoatUndoCommand(situation, boatList, Boats::starboard));
+    }
+}
+
+void MainWindow::toggleHidden() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    if (! boatList.isEmpty()) {
+        situation->undoStack()->push(new HiddenBoatUndoCommand(situation, boatList, !boatList.first()->hidden()));
     }
 }
 

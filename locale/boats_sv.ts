@@ -451,6 +451,14 @@ Vill du ersätta den?</translation>
         <source>Alt+Z</source>
         <translation></translation>
     </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt+D</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
