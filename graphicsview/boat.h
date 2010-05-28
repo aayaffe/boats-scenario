@@ -53,7 +53,9 @@ class BoatModel;
 */
 
 class BoatGraphicsItem : public QObject, public QGraphicsItem {
-        Q_OBJECT
+    Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
+
     public:
         BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent = 0);
         virtual ~BoatGraphicsItem();
@@ -74,6 +76,7 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void setSpin(bool value);
         void setOverlap(Boats::Overlaps value);
         void setDisplayFlag(Boats::Flag value);
+        void setHidden(bool value);
         void setColor(QColor value);
         void setDim(bool value);
         void setSeries(Boats::Series value);
@@ -112,6 +115,9 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_flag holds the flag to display
         Boats::Flag m_flag;
         FlagGraphicsItem *m_flagRect;
+
+        /// \a m_hidden holds whether the hidden symbol should be displayed
+        bool m_hidden;
 
         /// \a m_bubble holds the bubble to display
         BubbleGraphicsItem *m_bubble;

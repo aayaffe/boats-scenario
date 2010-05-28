@@ -49,6 +49,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         m_color(boat->track()->color()),
         m_flag(Boats::noFlag),
         m_flagRect(new FlagGraphicsItem(this)),
+        m_hidden(false),
         m_bubble(new BubbleGraphicsItem(m_boat, this)),
         m_series(Boats::unknown),
         m_selected(false),
@@ -81,9 +82,10 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     m_sail->setSailAngle(m_boat->sailAngle() + m_boat->trim());
     m_spin->setHeading(m_boat->heading());
     m_spin->setSailAngle(m_boat->spinAngle() + m_boat->spinTrim());
-    m_spin->setVisible(boat->spin());
+    setSpin(boat->spin());
     setOverlap(boat->overlap());
     setDisplayFlag(boat->flag());
+    setHidden(boat->hidden());
 
     connect(boat, SIGNAL(headingChanged(qreal)),
             this, SLOT(setHeading(qreal)));
@@ -103,6 +105,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
             this, SLOT(setOverlap(Boats::Overlaps)));
     connect(boat, SIGNAL(flagChanged(Boats::Flag)),
             this, SLOT(setDisplayFlag(Boats::Flag)));
+    connect(boat, SIGNAL(hiddenChanged(bool)),
+            this, SLOT(setHidden(bool)));
     connect(boat, SIGNAL(dimChanged(bool)),
             this, SLOT(setDim(bool)));
     connect(boat->track(), SIGNAL(colorChanged(QColor)),
@@ -135,7 +139,7 @@ void BoatGraphicsItem::setPosition(QPointF position) {
 }
 
 void BoatGraphicsItem::setSpin(bool value) {
-    m_spin->setVisible(value);
+    m_spin->setVisible(!m_hidden && value);
 }
 
 void BoatGraphicsItem::setOrder(int value) {
@@ -199,7 +203,7 @@ void BoatGraphicsItem::setOverlapLine() {
         if (m_overlap & Boats::port) {
             line.setP1(QPointF(-border - size, size/2));
         }
-        m_overlapLine->setVisible(true);
+        m_overlapLine->setVisible(!m_hidden && true);
         m_overlapLine->setLine(line);
     }
 }
@@ -211,8 +215,29 @@ void BoatGraphicsItem::setDisplayFlag(Boats::Flag value) {
     if (m_flag == Boats::noFlag) {
         m_flagRect->setVisible(false);
     } else {
-        m_flagRect->setVisible(true);
+        m_flagRect->setVisible(!m_hidden && true);
     }
+}
+
+void BoatGraphicsItem::setHidden(bool value) {
+    prepareGeometryChange();
+    m_hidden = value;
+    if (m_hidden) {
+        m_sail->setVisible(false);
+        m_spin->setVisible(false);
+        m_overlapLine->setVisible(false);
+        m_flagRect->setVisible(false);
+        m_bubble->setVisible(false);
+        m_numberPath->setVisible(false);
+    } else {
+        m_sail->setVisible(true);
+        m_spin->setVisible(boat()->spin());
+        m_overlapLine->setVisible(m_overlap != Boats::none);
+        m_flagRect->setVisible(m_flag != Boats::noFlag);
+        m_bubble->setVisible(!boat()->text().isEmpty());
+        m_numberPath->setVisible(true);
+    }
+
 }
 
 void BoatGraphicsItem::setColor(QColor value) {
@@ -426,7 +451,10 @@ void BoatGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     else
         painter->setPen(Qt::black);
     painter->setBrush(m_color);
-    painter->drawPath(m_hullPath);
+    if (m_hidden)
+        painter->drawEllipse(-3, -3, 6, 6);
+    else
+        painter->drawPath(m_hullPath);
 
 }
 
