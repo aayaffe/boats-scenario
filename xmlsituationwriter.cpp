@@ -125,6 +125,9 @@ void XmlSituationWriter::writeBoat(const BoatModel *boat) {
     if (boat->flag() != Boats::noFlag) {
         writeTextElement("flag", ENUM_NAME(Boats, Flag, boat->flag()));
     }
+    if (boat->hidden()) {
+        writeTextElement("hidden",QString::number(boat->hidden()));
+    }
     if (!boat->text().isEmpty()) {
         writeTextElement("bubble_x",QString::number(boat->textPosition().x()));
         writeTextElement("bubble_y",QString::number(boat->textPosition().y()));
