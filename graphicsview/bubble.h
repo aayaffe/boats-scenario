@@ -59,6 +59,7 @@ class BubbleGraphicsItem : public QGraphicsTextItem {
         void paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget);
+        void setVisible(bool visible);
 
     public slots:
         void updateText(QString value);

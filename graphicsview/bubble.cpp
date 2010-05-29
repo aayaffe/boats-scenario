@@ -73,7 +73,6 @@ BubbleGraphicsItem::~BubbleGraphicsItem() {}
 /// update view from model changes
 void BubbleGraphicsItem::updateText(QString value) {
     setVisible(!value.isEmpty());
-    m_tail->setVisible(!value.isEmpty());
     if (document()->toPlainText() != value)
         setPlainText(value);
     setTail();
@@ -85,7 +84,6 @@ void BubbleGraphicsItem::setText() {
         if (document()->toPlainText() != m_model->text()) {
             m_model->situation()->undoStack()->push(new SetTextUndoCommand(m_model, document()->toPlainText()));
             setVisible(!document()->toPlainText().isEmpty());
-            m_tail->setVisible(!document()->toPlainText().isEmpty());
             setTail();
         }
     }
@@ -138,6 +136,12 @@ void BubbleGraphicsItem::paint(QPainter *painter,
     painter->restore();
     QGraphicsTextItem::paint(painter, option, widget);
 }
+
+void BubbleGraphicsItem::setVisible(bool visible) {
+    QGraphicsItem::setVisible(visible);
+    m_tail->setVisible(visible);
+}
+
 
 void BubbleGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     m_clickTime.start();
