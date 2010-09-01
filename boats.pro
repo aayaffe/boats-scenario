@@ -3,6 +3,7 @@ TARGET = boats
 CONFIG += qt \
     warn_on
 
+include(animation/animation.pri)
 include(graphicsview/graphicsview.pri)
 include(itemviews/itemviews.pri)
 include(model/model.pri)

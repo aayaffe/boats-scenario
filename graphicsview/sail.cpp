@@ -75,7 +75,7 @@ void SailGraphicsItem::setSailSize(qreal sailSize) {
         sailPathPort.lineTo(0, 0);
         m_sailPathPort = sailPathPort;
 
-        setSailAngle(m_boat->sailAngle() + m_boat->trim());
+        setSailAngle(m_boat->trimmedSailAngle());
 }
 
 /// calculate a sail incidence angle, corrected with user trimming

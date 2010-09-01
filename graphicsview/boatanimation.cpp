@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 #include <QtGui>
 
 #include "boatanimation.h"
+#include "headinganimation.h"
 #include "situationmodel.h"
 #include "trackmodel.h"
 #include "boatmodel.h"
@@ -48,6 +49,8 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxS
     : QGraphicsItemAnimation(parent),
     m_track(track),
     m_boat(boat),
+    m_headingAnimation(new HeadingAnimation(boat->boat(), "heading")),
+    m_sailAngleAnimation(new HeadingAnimation(boat->boat(), "trimSailAngle")),
     m_maxSize(maxSize),
     m_time(QTime::currentTime()) {
 
@@ -61,9 +64,12 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxS
     QPointF point = path.elementAt(0);
     setPosAt(0,point);
     BoatModel *model = m_track->boats()[0];
-    setRotationAt(0,model->heading());
-    setsailAt(0, model->sailAngle() + model->trim());
+    m_headingAnimation->setDuration(2000*m_maxSize);
+    m_headingAnimation->setStartValue(model->heading());
+    m_sailAngleAnimation->setDuration(2000*m_maxSize);
+    m_sailAngleAnimation->setStartValue(model->trimmedSailAngle());
 
+    // through all boats of the track
     for (int i=0; i< size; i++) {
         qreal index = 0;
         QPointF c1 = path.elementAt(i*3+1);
@@ -74,24 +80,22 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxS
         curve.cubicTo(c1,c2,end);
         qreal length = curve.length();
         float e = 8;
+        // through 8 intermediary points between 2 boats
         for (int j=1; j<=e; j++) {
             qreal percent = curve.percentAtLength(length*j/e);
             index = (i*e+j)/(maxSize*e);
             setPosAt(index, curve.pointAtPercent(percent));
             if (!stalled) {
-                setRotationAt(index, fmod(360+90-curve.angleAtPercent(percent),360.0));
+                m_headingAnimation->setKeyValueAt(index, fmod(360+90-curve.angleAtPercent(percent),360.0));
             }
         }
         model = m_track->boats()[i+1];
         if (stalled) {
-            setRotationAt(index, fmod(model->heading(),360.0));
+            m_headingAnimation->setKeyValueAt(index, model->heading());
         }
-        setsailAt(index, model->sailAngle() + model->trim());
+        m_sailAngleAnimation->setKeyValueAt(index, model->trimmedSailAngle());
         point = end;
     }
-
-    if (m_rotationList.isEmpty())
-        m_rotationList = rotationList();
 
     // dim all track boats
     foreach(BoatModel *boat, m_track->boats()) {
@@ -116,68 +120,6 @@ BoatAnimation::~BoatAnimation() {
 }
 
 /**
-    Calculates an intermediate heading value that makes the least
-    angle change between 2 values, unlike \m linearRotationForStep()
-*/
-
-qreal BoatAnimation::linearAngleForStep(PairList pairList, qreal step, qreal defaultValue) const {
-    const PairList *source = &pairList;
-    step = qMin<qreal>(qMax<qreal>(step, 0), 1);
-
-    if (step == 1)
-        return source->last().second;
-
-    qreal stepBefore = 0;
-    qreal stepAfter = 1;
-    qreal valueBefore = source->first().first == 0 ? source->first().second : defaultValue;
-    qreal valueAfter = source->last().second;
-
-    // Find the closest step and value before the given step.
-    for (int i = 0; i < source->size() && step >= source->at(i).first; ++i) {
-        stepBefore = source->at(i).first;
-        valueBefore = source->at(i).second;
-    }
-
-    // Find the closest step and value after the given step.
-    for (int j = source->size() - 1; j >= 0 && step < source->at(j).first; --j) {
-        stepAfter = source->at(j).first;
-        valueAfter = source->at(j).second;
-    }
-
-    qreal minValue = qMin<qreal>(valueBefore,valueAfter);
-    qreal maxValue = qMax<qreal>(valueBefore,valueAfter);
-
-    if (maxValue - minValue <= 360 + minValue - maxValue) {
-        // Do a simple linear interpolation.
-        return valueBefore + (valueAfter - valueBefore) * ((step - stepBefore) / (stepAfter - stepBefore));
-    } else {
-        // Do a reverse linear interpolation.
-        if (valueBefore > valueAfter)
-            return valueBefore + (360 + valueAfter - valueBefore) * ((step - stepBefore) / (stepAfter - stepBefore));
-        else
-            return valueBefore + (valueAfter - valueBefore - 360) * ((step - stepBefore) / (stepAfter - stepBefore));
-
-    }
-}
-
-/**
-    Returns the interpolated value of heading at \a step
-*/
-
-qreal BoatAnimation::headingAt(qreal step) const {
-    if (step < 0.0 || step > 1.0)
-        qWarning("BoatAnimation::headingAt: invalid step = %f", step);
-    return linearAngleForStep(m_rotationList, step);
-}
-
-
-qreal BoatAnimation::sailAt(qreal step) const {
-    if (step < 0.0 || step > 1.0)
-        qWarning("BoatAnimation::sailAt: invalid step = %f", step);
-    return linearAngleForStep(m_sailList, step);
-}
-
-/**
     Updates TrackModel and animation boat position and heading
     at \a step time, with a rate limit of one refresh every 40ms
 */
@@ -189,10 +131,9 @@ void BoatAnimation::afterAnimationStep(qreal step) {
     }
 
     m_boat->boat()->setPosition(posAt(step));
-    qreal heading = headingAt(step);
-    m_boat->boat()->setHeading(heading);
-    qreal sailAngle = m_boat->boat()->sailAngle(heading);
-    m_boat->boat()->setTrim(sailAt(step)- sailAngle);
+
+    m_headingAnimation->setCurrentTime(step*2000*m_maxSize);
+    m_sailAngleAnimation->setCurrentTime(step*2000*m_maxSize);
 
     int index = floor(step * m_maxSize);
     BoatModel *boat;

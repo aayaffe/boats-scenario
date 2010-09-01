@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -54,9 +54,11 @@ BoatModel::~BoatModel() {
 
 void BoatModel::setHeading(const qreal& theValue) {
     if (theValue != m_heading) {
+        if (debugLevel & 1 << MODEL) std::cout
+                << "heading = " << theValue  << std::endl;
         m_heading = fmod(theValue+360.0,360.0);
         emit headingChanged(m_heading);
-        emit trimmedSailAngleChanged(sailAngle()+ m_trim);
+        setTrimmedSailAngle(trimmedSailAngle());
         emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
         m_track->changingTrack(m_track);
     }
@@ -76,8 +78,12 @@ void BoatModel::setTrim(const qreal& theValue) {
         if (debugLevel & 1 << MODEL) std::cout
                 << "trim = " << theValue  << std::endl;
         emit trimChanged(m_trim);
-        emit trimmedSailAngleChanged(sailAngle()+ m_trim);
+        setTrimmedSailAngle(trimmedSailAngle());
     }
+}
+
+void BoatModel::setTrimmedSailAngle(qreal theValue) {
+    emit trimmedSailAngleChanged(theValue);
 }
 
 void BoatModel::setSpin(const bool theValue) {

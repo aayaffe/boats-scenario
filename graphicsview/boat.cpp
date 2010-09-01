@@ -79,7 +79,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     setPos(boat->position());
     setOrder(boat->order());
     setDim(boat->dim());
-    m_sail->setSailAngle(m_boat->sailAngle() + m_boat->trim());
+    m_sail->setSailAngle(m_boat->trimmedSailAngle());
     m_spin->setHeading(m_boat->heading());
     m_spin->setSailAngle(m_boat->spinAngle() + m_boat->spinTrim());
     setSpin(boat->spin());

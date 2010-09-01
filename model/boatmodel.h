@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -54,6 +54,9 @@ class TrackModel;
 
 class BoatModel : public PositionModel {
         Q_OBJECT
+        Q_PROPERTY(qreal heading READ heading WRITE setHeading)
+        Q_PROPERTY(qreal trimSailAngle READ trimmedSailAngle WRITE setTrimmedSailAngle)
+
     public:
         BoatModel(TrackModel *track, QObject *parent = 0);
         ~BoatModel();
@@ -66,6 +69,9 @@ class BoatModel : public PositionModel {
 
         qreal trim() const { return m_trim; }
         void setTrim(const qreal& theValue);
+
+        qreal trimmedSailAngle() const { return sailAngle() + m_trim; }
+        void setTrimmedSailAngle(qreal theValue);
 
         bool spin() const { return m_spin; }
         void setSpin(const bool theValue);
