@@ -208,3 +208,7 @@ void BoatModel::setDim(bool dim) {
     m_dim = dim;
     dimChanged(dim);
 }
+
+void BoatModel::setPath(QPainterPath path) {
+    m_path = path;
+}

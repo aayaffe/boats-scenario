@@ -30,6 +30,7 @@
 #include "boatanimation.h"
 #include "headinganimation.h"
 #include "situationmodel.h"
+#include "splineanimation.h"
 #include "trackmodel.h"
 #include "boatmodel.h"
 #include "boat.h"
@@ -51,6 +52,7 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxS
     m_boat(boat),
     m_headingAnimation(new HeadingAnimation(boat->boat(), "heading")),
     m_sailAngleAnimation(new HeadingAnimation(boat->boat(), "trimSailAngle")),
+    m_posAnimation(new QSequentialAnimationGroup),
     m_maxSize(maxSize),
     m_time(QTime::currentTime()) {
 
@@ -84,7 +86,6 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxS
         for (int j=1; j<=e; j++) {
             qreal percent = curve.percentAtLength(length*j/e);
             index = (i*e+j)/(maxSize*e);
-            setPosAt(index, curve.pointAtPercent(percent));
             if (!stalled) {
                 m_headingAnimation->setKeyValueAt(index, fmod(360+90-curve.angleAtPercent(percent),360.0));
             }
@@ -94,6 +95,11 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxS
             m_headingAnimation->setKeyValueAt(index, model->heading());
         }
         m_sailAngleAnimation->setKeyValueAt(index, model->trimmedSailAngle());
+        SplineAnimation *splineAnimation = new SplineAnimation(m_boat->boat(), "pos", m_track->boats()[i]->path());
+        splineAnimation->setStartValue(point);
+        splineAnimation->setEndValue(end);
+        splineAnimation->setDuration(2000);
+        m_posAnimation->addAnimation(splineAnimation);
         point = end;
     }
 
@@ -130,10 +136,9 @@ void BoatAnimation::afterAnimationStep(qreal step) {
         return;
     }
 
-    m_boat->boat()->setPosition(posAt(step));
-
     m_headingAnimation->setCurrentTime(step*2000*m_maxSize);
     m_sailAngleAnimation->setCurrentTime(step*2000*m_maxSize);
+    m_posAnimation->setCurrentTime(step*2000*m_maxSize);
 
     int index = floor(step * m_maxSize);
     BoatModel *boat;

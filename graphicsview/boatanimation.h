@@ -26,6 +26,7 @@
 #define BOATANIMATION_H
 
 #include <QGraphicsItemAnimation>
+#include <QSequentialAnimationGroup>
 #include <QTime>
 
 class BoatGraphicsItem;
@@ -73,6 +74,8 @@ class BoatAnimation : public QGraphicsItemAnimation {
 
         HeadingAnimation *m_headingAnimation;
         HeadingAnimation *m_sailAngleAnimation;
+
+        QSequentialAnimationGroup *m_posAnimation;
 
         /// \a m_maxSize holds the maximum track size of the scenario
         int m_maxSize;

@@ -145,6 +145,7 @@ qreal TrackModel::headingForNext(int index, QPointF point) {
 
 void TrackModel::changingTrack(TrackModel *track) {
     QPainterPath path;
+    QPainterPath wholePath;
 
     if (m_boats.size() < 1) {
         m_path = path;
@@ -154,10 +155,11 @@ void TrackModel::changingTrack(TrackModel *track) {
     QPointF pos0(m_boats[0]->position());
     qreal heading0 = m_boats[0]->heading();
 
-    path.moveTo(pos0);
+    wholePath.moveTo(pos0);
     QListIterator<BoatModel*> boatI(m_boats);
-    boatI.next();
+    BoatModel *oldBoat = boatI.next();
     while (boatI.hasNext()) {
+        path.moveTo(pos0);
         BoatModel *boat = boatI.next();
         QPointF pos1(boat->position());
         qreal heading1 = boat->heading();
@@ -187,9 +189,13 @@ void TrackModel::changingTrack(TrackModel *track) {
         }
 
         path.cubicTo(c1, c2, pos1);
+        oldBoat->setPath(path);
+        oldBoat = boat;
+        wholePath.cubicTo(c1, c2, pos1);
         pos0 = pos1;
         heading0 = heading1;
+        path = QPainterPath();
     }
-    m_path = path;
+    m_path = wholePath;
     emit trackChanged(track);
 }

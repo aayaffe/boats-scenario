@@ -56,6 +56,7 @@ class BoatModel : public PositionModel {
         Q_OBJECT
         Q_PROPERTY(qreal heading READ heading WRITE setHeading)
         Q_PROPERTY(qreal trimSailAngle READ trimmedSailAngle WRITE setTrimmedSailAngle)
+        Q_PROPERTY(QPointF pos READ position WRITE setPosition)
 
     public:
         BoatModel(TrackModel *track, QObject *parent = 0);
@@ -98,6 +99,9 @@ class BoatModel : public PositionModel {
         void setDim(bool dim = true);
         bool dim() const { return m_dim; }
 
+        void  setPath(QPainterPath path);
+        const QPainterPath path() const { return m_path; }
+
     signals:
         void headingChanged(qreal heading);
         void trimChanged(qreal trim);
@@ -139,6 +143,9 @@ class BoatModel : public PositionModel {
         TrackModel *m_track;
 
         bool m_dim;
+
+        /// \a m_path holds the QPainterPath to the next boat
+        QPainterPath m_path;
 };
 
 #endif
