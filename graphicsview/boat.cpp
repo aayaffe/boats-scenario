@@ -373,10 +373,8 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
 
         m_flagRect->setRect(flagRect);
 
-        if (sailSize) {
-            m_sail->setPosition(mast);
-            m_sail->setSailSize(sailSize);
-        }
+        m_sail->setPosition(mast);
+        m_sail->setSailSize(sailSize);
         if (m_series == Boats::keelboat) {
             m_spin->setSailSize(1.1*sailSize);
             m_spin->setPosition(mast);
