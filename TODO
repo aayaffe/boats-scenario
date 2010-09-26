@@ -1,6 +1,7 @@
 Important:
 - jib
 - bowsprit
+- menu entry for sail trim
 
 Normal:
 - toggle number display
@@ -11,8 +12,13 @@ Normal:
 - more boat shapes
 - one line for config options and their toggle
 - open in new tab
+- more flags
 
 Wishlist:
 - gpx import
 - backtrack edit
 - insert between boats
+- change wind direction
+- set the boat speed/acceleration around the path
+- starting a boat at a later number
+- timing for the start boat
