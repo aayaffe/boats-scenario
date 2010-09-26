@@ -57,6 +57,7 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxS
         return;
     }
 
+    m_boat->setOrder(0);
     QPointF point = path.elementAt(0);
     setPosAt(0,point);
     BoatModel *model = m_track->boats()[0];
@@ -89,15 +90,13 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxS
         point = end;
     }
 
-    QColor color = m_track->color();
-    color.setAlpha(64);
-    m_track->setColor(color);
-    color.setAlpha(255);
-    m_boat->setColor(color);
-    m_boat->setOrder(0);
-
     if (m_rotationList.isEmpty())
         m_rotationList = rotationList();
+
+    // dim all track boats
+    foreach(BoatModel *boat, m_track->boats()) {
+        boat->setDim(true);
+    }
 }
 
 /**
@@ -105,12 +104,14 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxS
 */
 
 BoatAnimation::~BoatAnimation() {
-    QColor color = m_track->color();
-    color.setAlpha(255);
-    m_track->setColor(color);
     while (!m_boats.isEmpty()) {
         m_track->addBoat(m_boats.last());
         m_boats.pop_back();
+    }
+
+    // undim all track boats
+    foreach(BoatModel *boat, m_track->boats()) {
+        boat->setDim(false);
     }
 }
 
