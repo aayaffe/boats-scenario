@@ -79,6 +79,7 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void setHidden(bool value);
         void setColor(QColor value);
         void setDim(bool value);
+        void setVisible(bool value);
         void setSeries(Boats::Series value);
         void deleteItem(BoatModel *boat);
 

@@ -79,6 +79,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     setPos(boat->position());
     setOrder(boat->order());
     setDim(boat->dim());
+    setVisible(boat->visible());
     m_sail->setSailAngle(m_boat->trimmedSailAngle());
     m_spin->setHeading(m_boat->heading());
     m_spin->setSailAngle(m_boat->spinAngle() + m_boat->spinTrim());
@@ -109,6 +110,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
             this, SLOT(setHidden(bool)));
     connect(boat, SIGNAL(dimChanged(bool)),
             this, SLOT(setDim(bool)));
+    connect(boat, SIGNAL(visibleChanged(bool)),
+            this, SLOT(setVisible(bool)));
     connect(boat->track(), SIGNAL(colorChanged(QColor)),
             this, SLOT(setColor(QColor)));
     connect(boat->track(), SIGNAL(seriesChanged(Boats::Series)),
@@ -264,6 +267,11 @@ void BoatGraphicsItem::setDim(bool value) {
     }
     update();
 }
+
+void BoatGraphicsItem::setVisible(bool value) {
+    QGraphicsItem::setVisible(value);
+}
+
 void BoatGraphicsItem::setSeries(Boats::Series value) {
     if (m_series != value) {
         prepareGeometryChange();

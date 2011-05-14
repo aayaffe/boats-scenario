@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2010 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -54,9 +54,15 @@ class TrackModel;
 
 class BoatModel : public PositionModel {
         Q_OBJECT
+        Q_PROPERTY(QPointF pos READ position WRITE setPosition)
         Q_PROPERTY(qreal heading READ heading WRITE setHeading)
         Q_PROPERTY(qreal trimSailAngle READ trimmedSailAngle WRITE setTrimmedSailAngle)
-        Q_PROPERTY(QPointF pos READ position WRITE setPosition)
+        Q_PROPERTY(bool spin READ spin WRITE setSpin)
+        Q_PROPERTY(QString text READ text WRITE setText)
+        Q_PROPERTY(QPointF textPos READ textPosition WRITE setTextPosition)
+        Q_PROPERTY(Boats::Overlaps overlap READ overlap WRITE setOverlap)
+        Q_PROPERTY(Boats::Flag flag READ flag WRITE setFlag)
+        Q_PROPERTY(bool visible READ visible WRITE setVisible)
 
     public:
         BoatModel(TrackModel *track, QObject *parent = 0);
@@ -99,6 +105,9 @@ class BoatModel : public PositionModel {
         void setDim(bool dim = true);
         bool dim() const { return m_dim; }
 
+        void setVisible(bool visible);
+        bool visible() const { return m_visible; }
+
         void  setPath(QPainterPath path);
         const QPainterPath path() const { return m_path; }
 
@@ -113,6 +122,7 @@ class BoatModel : public PositionModel {
         void flagChanged(Boats::Flag flag);
         void hiddenChanged(bool hidden);
         void dimChanged(bool dim);
+        void visibleChanged(bool visible);
 
     private:
         // Model Data
@@ -143,6 +153,8 @@ class BoatModel : public PositionModel {
         TrackModel *m_track;
 
         bool m_dim;
+
+        bool m_visible;
 
         /// \a m_path holds the QPainterPath to the next boat
         QPainterPath m_path;
