@@ -1,12 +1,12 @@
 //
-// C++ Implementation: HeadingAnimation
+// C++ Implementation: ScenarioAnimation
 //
 // Description:
 //
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2011 Thibaut GRIDEL
+// Copyright (c) 2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,24 +22,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <cmath>
+#include <iostream>
 
-#include "headinganimation.h"
-#include "angleanimation.h"
+#include "scenarioanimation.h"
 
-HeadingAnimation::HeadingAnimation(QObject *target, const QByteArray &propertyName, const QPainterPath &path, QObject *parent)
-    : PropertyAnimation(target, propertyName, parent),
-      m_path(path)
+void ScenarioAnimation::updateCurrentTime(int currentTime)
 {
-}
-
-QVariant HeadingAnimation::interpolated ( const QVariant & from, const QVariant & to, qreal progress ) const
-{
-    Q_UNUSED(from)
-    Q_UNUSED(to)
-
-    qreal length = m_path.length();
-    qreal percent = m_path.percentAtLength(length * progress);
-
-    return fmod(360+90-m_path.angleAtPercent(percent),360.0);
+    QParallelAnimationGroup::updateCurrentTime(currentTime);
+    emit timeChanged(currentTime);
 }

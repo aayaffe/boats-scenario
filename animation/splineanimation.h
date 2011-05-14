@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2010 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,8 +25,9 @@
 #ifndef SPLINEANIMATION_H
 #define SPLINEANIMATION_H
 
-#include <QPropertyAnimation>
 #include <QPainterPath>
+
+#include "propertyanimation.h"
 
 /**
     \class SplineAnimation
@@ -43,12 +44,10 @@
     \sa BoatGraphicsItem
 */
 
-class SplineAnimation : public QPropertyAnimation
+class SplineAnimation : public PropertyAnimation
 {
     public:
         SplineAnimation(QObject *target, const QByteArray &propertyName, const QPainterPath &path, QObject *parent = 0);
-
-        virtual void updateCurrentValue ( const QVariant & value );
 
         virtual QVariant interpolated ( const QVariant & from, const QVariant & to, qreal progress ) const;
 

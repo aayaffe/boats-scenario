@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2010 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -26,16 +26,9 @@
 
 SplineAnimation::SplineAnimation(QObject *target, const QByteArray &propertyName,
                                  const QPainterPath &path, QObject *parent)
-    : QPropertyAnimation(target, propertyName, parent),
+    : PropertyAnimation(target, propertyName, parent),
     m_path(path)
 {
-}
-
-void SplineAnimation::updateCurrentValue ( const QVariant & value )
-{
-//    doesn't work because QPropertyAnimationPrivate::updateProperty checks for not Stopped
-//    QPropertyAnimation::updateCurrentValue(value);
-    targetObject()->setProperty(propertyName(), value);
 }
 
 QVariant SplineAnimation::interpolated ( const QVariant & from, const QVariant & to, qreal progress ) const

@@ -1,5 +1,5 @@
 //
-// C++ Interface: HeadingAnimation
+// C++ Interface: AngleAnimation
 //
 // Description:
 //
@@ -22,38 +22,32 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#ifndef HEADINGANIMATION_H
-#define HEADINGANIMATION_H
-
-#include <QPainterPath>
+#ifndef ANGLEANIMATION_H
+#define ANGLEANIMATION_H
 
 #include "propertyanimation.h"
 
 /**
-    \class HeadingAnimation
+    \class AngleAnimation
 
     \brief Animation for angles with correct rotation
 
     The class is the animation helper for an angle, according to the
     Animation Framework.
 
-    It inherits QVariantAnimation and provides proper animation
-    to BoatGraphicsItem elements along a QPainterPath, like the boat heading, so
-    that the heading follows the path
+    It inherits QVariantAnimation and provides proper angle animation
+    to BoatGraphicsItem elements, like heading or sail position, so that
+    the shortest angle is taken between two options
 
     \sa BoatGraphicsItem
 */
 
-class HeadingAnimation : public PropertyAnimation
+class AngleAnimation : public PropertyAnimation
 {
 public:
-    HeadingAnimation(QObject *target, const QByteArray &propertyName, const QPainterPath &path, QObject *parent = 0);
+    AngleAnimation(QObject *target, const QByteArray &propertyName, QObject *parent = 0);
 
     virtual QVariant interpolated ( const QVariant & from, const QVariant & to, qreal progress ) const;
-
-private:
-    QPainterPath m_path;
-
 };
 
-#endif // HEADINGANIMATION_H
+#endif // ANGLEANIMATION_H

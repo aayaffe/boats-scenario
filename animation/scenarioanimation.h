@@ -1,12 +1,12 @@
 //
-// C++ Implementation: HeadingAnimation
+// C++ Interface: ScenarioAnimation
 //
 // Description:
 //
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2011 Thibaut GRIDEL
+// Copyright (c) 2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,24 +22,35 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <cmath>
+#ifndef SCENARIOANIMATION_H
+#define SCENARIOANIMATION_H
 
-#include "headinganimation.h"
-#include "angleanimation.h"
+#include <QParallelAnimationGroup>
 
-HeadingAnimation::HeadingAnimation(QObject *target, const QByteArray &propertyName, const QPainterPath &path, QObject *parent)
-    : PropertyAnimation(target, propertyName, parent),
-      m_path(path)
+/**
+    \class ScenarioAnimation
+
+    \brief Animation for the whole scenario
+
+    The class is the animation group for a scenario, according
+    to the Animation Framework.
+
+    It inherits QParallelAnimationGroup and contains TrackAnimations
+    for the different tracks of the scenario
+
+    \sa TrackAnimation
+*/
+
+class ScenarioAnimation: public QParallelAnimationGroup
 {
-}
+    Q_OBJECT
 
-QVariant HeadingAnimation::interpolated ( const QVariant & from, const QVariant & to, qreal progress ) const
-{
-    Q_UNUSED(from)
-    Q_UNUSED(to)
+    public:
+        virtual void updateCurrentTime(int currentTime);
 
-    qreal length = m_path.length();
-    qreal percent = m_path.percentAtLength(length * progress);
+    signals:
+        void timeChanged(int time);
 
-    return fmod(360+90-m_path.angleAtPercent(percent),360.0);
-}
+};
+
+#endif // SCENARIOANIMATION_H
