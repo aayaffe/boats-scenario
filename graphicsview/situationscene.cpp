@@ -193,6 +193,11 @@ void SituationScene::setAnimation() {
         BoatGraphicsItem *boatItem = new BoatGraphicsItem(new BoatModel(track));
         addItem(boatItem);
         boatItem->setOrder(0);
+        QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
+        shadow->setXOffset(4);
+        shadow->setYOffset(4);
+        shadow->setBlurRadius(4);
+        boatItem->setGraphicsEffect(shadow);
 
         TrackAnimation *animation = new TrackAnimation(track, boatItem->boat(), m_scenarioAnimation);
         m_scenarioAnimation->addAnimation(animation);
