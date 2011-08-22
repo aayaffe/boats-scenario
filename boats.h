@@ -59,7 +59,7 @@ public:
         starboard = 0x1,
         port = 0x2
     };
-    Q_ENUMS (Overlap);
+    Q_FLAGS( Overlap Overlaps)
     Q_DECLARE_FLAGS(Overlaps, Overlap)
 
     enum Flag {
@@ -77,6 +77,6 @@ private:
 
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(Boats::Overlaps)
+Q_DECLARE_METATYPE(Boats::Overlaps)
 
 #endif

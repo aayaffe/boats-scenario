@@ -44,13 +44,15 @@
 #include "mark.h"
 #include "polyline.h"
 #include "point.h"
-#include "boatanimation.h"
+#include "trackanimation.h"
+#include "scenarioanimation.h"
 
 extern int debugLevel;
 
 SituationScene::SituationScene(SituationModel *situation)
         : QGraphicsScene(situation),
         m_situation(situation),
+        m_scenarioAnimation(new ScenarioAnimation),
         m_trackCreated(0),
         m_state(NO_STATE),
         m_time(QTime::currentTime()),
@@ -176,24 +178,24 @@ void SituationScene::addPoint(PointModel *point) {
     This method finds the maximum size of track, and sets the timer length
     accordingly.
     It then creates a BoatGraphicsItem for animation purpose, and associates
-    an BoatAnimation to move it along the \a timer values
+    an TrackAnimation.
 */
 
-void SituationScene::setAnimation(QTimeLine *timer) {
+void SituationScene::setAnimation() {
     if (debugLevel & 1 << VIEW) std::cout << "preparing for Animation" << std::endl;
     int maxSize = 0;
     foreach (const TrackModel *track, m_situation->tracks()) {
         if (track->boats().size() > maxSize)
             maxSize = track->boats().size() - 1;
     }
-    timer->setDuration(2000 * maxSize);
 
     foreach (TrackModel *track, m_situation->tracks()) {
         BoatGraphicsItem *boatItem = new BoatGraphicsItem(new BoatModel(track));
         addItem(boatItem);
+        boatItem->setOrder(0);
 
-        BoatAnimation *animation = new BoatAnimation(track, boatItem, maxSize);
-        animation->setTimeLine(timer);
+        TrackAnimation *animation = new TrackAnimation(track, boatItem->boat(), m_scenarioAnimation);
+        m_scenarioAnimation->addAnimation(animation);
         m_animationItems.push_back(animation);
     }
 }
@@ -201,15 +203,17 @@ void SituationScene::setAnimation(QTimeLine *timer) {
 /**
     Restores the Scene out of animation mode.
     This method brings the scene back to the normal drawing mode.
-    For this it removes all BoatAnimation objects created in setAnimation().
+    For this it removes all TrackAnimation objects created in setAnimation().
 */
 
 void SituationScene::unSetAnimation() {
     if (debugLevel & 1 << VIEW) std::cout << "ending Animation" << std::endl;
-    foreach (BoatAnimation *animation, m_animationItems) {
-        removeItem(animation->boat());
+    foreach (TrackAnimation *animation, m_animationItems) {
+        // the boat was never really part of the track, we use situation signal
+        // directly to have the graphicsitem removed
+        animation->boat()->track()->situation()->removingBoat(animation->boat());
+        m_scenarioAnimation->removeAnimation(animation);
         m_animationItems.removeOne(animation);
-        delete animation->boat()->boat();
         delete animation->boat();
         delete animation;
     }

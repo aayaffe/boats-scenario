@@ -37,6 +37,8 @@
 #include "polylinemodel.h"
 #include "pointmodel.h"
 
+#include "scenarioanimation.h"
+
 #include "undocommands.h"
 #include "xmlsituationreader.h"
 #include "xmlsituationwriter.h"
@@ -62,18 +64,11 @@ MainWindow::MainWindow(QWidget *parent)
         situationDock(new QDockWidget(this)),
         situationWidget(new SituationWidget(situationDock)),
         statusbar(new QStatusBar(this)),
-        timeline(new QTimeLine(1000,this)),
         qtTranslator(new QTranslator(this)),
         translator(new QTranslator(this)) {
 
     // Actions
     createActions();
-
-    // Timeline
-    timeline->setCurveShape(QTimeLine::LinearCurve);
-    //timeline->setLoopCount(0);
-    connect(timeline, SIGNAL(stateChanged(QTimeLine::State)),
-            this, SLOT(changeAnimationState(QTimeLine::State)));
 
     // Bars
     createMenus();
@@ -334,7 +329,7 @@ void MainWindow::createActions() {
 }
 
 void MainWindow::updateActions() {
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(currentSituation);
 
     bool selectedItems = !scene->selectedItems().isEmpty();
     bool selectedBoats = !scene->selectedBoatModels().isEmpty();
@@ -389,7 +384,7 @@ void MainWindow::updateActions() {
 }
 
 void MainWindow::changeState(SceneState newState) {
-    SituationView *view = viewList.at(tabWidget->currentIndex());
+    SituationView *view = viewList.at(currentSituation);
 
     switch(newState) {
         case CREATE_TRACK:
@@ -465,7 +460,7 @@ void MainWindow::changeState(SceneState newState) {
 }
 
 void MainWindow::cleanState(bool state) {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
     if (situation->fileName().isEmpty())
         saveFileAction->setEnabled(false);
     else
@@ -474,9 +469,9 @@ void MainWindow::cleanState(bool state) {
     QString shownName = QFileInfo(situation->fileName()).fileName();
     setWindowTitle(tr("%1 - %2 [*]").arg(tr("Boat Scenario")).arg(shownName));
     if (!state) {
-        tabWidget->setTabText(tabWidget->currentIndex(),shownName.append(" *"));
+        tabWidget->setTabText(currentSituation,shownName.append(" *"));
     } else {
-        tabWidget->setTabText(tabWidget->currentIndex(),shownName);
+        tabWidget->setTabText(currentSituation,shownName);
     }
     setWindowModified(!state);
 }
@@ -633,10 +628,6 @@ void MainWindow::createMenus() {
     animationBar->addAction(loopAction);
     animationBar->addSeparator();
     animationBar->addWidget(animationSlider);
-    connect(timeline, SIGNAL(frameChanged(int)),
-            animationSlider, SLOT(setValue(int)));
-    connect(animationSlider, SIGNAL(valueChanged(int)),
-            timeline, SLOT(setCurrentTime(int)));
 }
 
 void MainWindow::createDocks() {
@@ -673,6 +664,7 @@ void MainWindow::unsetTab() {
         return;
     }
 
+    std::cout << "unsetTab" << std::endl;
     SituationModel *situation = situationList.at(currentSituation);
     SituationScene *scene = sceneList.at(currentSituation);
     if (scene->state() == ANIMATE) {
@@ -693,6 +685,7 @@ void MainWindow::unsetTab() {
 }
 
 void MainWindow::setTab(int index) {
+    std::cout << "setTab " << index << std::endl;
     unsetTab();
     currentSituation = index;
     SituationModel *situation = situationList.at(index);
@@ -841,7 +834,7 @@ bool MainWindow::maybeSave(SituationModel *situation) {
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(currentSituation);
 
     bool animated = (scene->state() == ANIMATE);
     if (animated) {
@@ -993,9 +986,9 @@ void MainWindow::changeEvent(QEvent *event) {
 }
 
 void MainWindow::newFile() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
-    SituationView *view = viewList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
+    SituationView *view = viewList.at(currentSituation);
 
     if (maybeSave(situation)) {
         scene->setState(NO_STATE);
@@ -1054,9 +1047,9 @@ void MainWindow::openFile(const QString &fileName, bool inNewTab) {
         newFile();
     }
 
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
-    SituationView *view = viewList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
+    SituationView *view = viewList.at(currentSituation);
 
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
@@ -1129,8 +1122,8 @@ bool MainWindow::saveSituation(SituationModel *situation, QString fileName) {
 }
 
 bool MainWindow::saveFile() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
 
     bool animated = (scene->state() == ANIMATE);
     if (animated) {
@@ -1144,8 +1137,8 @@ bool MainWindow::saveFile() {
 }
 
 bool MainWindow::saveAs() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
 
     bool animated = (scene->state() == ANIMATE);
     if (animated) {
@@ -1159,8 +1152,8 @@ bool MainWindow::saveAs() {
 }
 
 void MainWindow::print() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationView *view = viewList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationView *view = viewList.at(currentSituation);
     QPrinter printer(QPrinter::HighResolution);
 
     QPrintDialog *dialog = new QPrintDialog(&printer, this);
@@ -1175,8 +1168,8 @@ void MainWindow::print() {
 }
 
 void MainWindow::printPreview() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationView *view = viewList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationView *view = viewList.at(currentSituation);
     SituationPrint printSituation(situation, view);
     QPrinter printer(QPrinter::HighResolution);
     QPrintPreviewDialog dialog(&printer);
@@ -1188,8 +1181,8 @@ void MainWindow::printPreview() {
 }
 
 void MainWindow::exportPdf() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationView *view = viewList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationView *view = viewList.at(currentSituation);
 
     QString defaultName(situation->fileName());
     defaultName.chop(4);
@@ -1209,8 +1202,8 @@ void MainWindow::exportPdf() {
 }
 
 void MainWindow::exportImage() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationView *view = viewList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationView *view = viewList.at(currentSituation);
 
     QString defaultName(situation->fileName());
     defaultName.chop(4);
@@ -1255,8 +1248,9 @@ void MainWindow::exportImage() {
 
 #ifdef GIF_EXPORT
 void MainWindow::exportAnimation() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationView *view = viewList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationView *view = viewList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
 
     QString defaultName(situation->fileName());
     defaultName.chop(4);
@@ -1282,17 +1276,17 @@ void MainWindow::exportAnimation() {
     GifWriter *writer = new GifWriter();
 
     animate(true, false);
-    QProgressDialog progress(tr("Exporting Animation..."), tr("Abort"), 0, timeline->duration(), this);
+    QProgressDialog progress(tr("Exporting Animation..."), tr("Abort"), 0, scene->animation()->duration(), this);
     progress.setWindowModality(Qt::WindowModal);
     statusbar->showMessage("Exporting animation");
-    timeline->setCurrentTime(timeline->duration()/2);
+    scene->animation()->setCurrentTime(scene->animation()->duration()/2);
     QPixmap pixmap = view->screenShot();
     QImage shot = pixmap.toImage().convertToFormat(QImage::Format_Indexed8);
     writer->setColorMap(shot);
 
     QList<QImage*> imageList;
-    for (int i=0; i<=timeline->duration(); i+=80) {
-        timeline->setCurrentTime(i);
+    for (int i=0; i<=scene->animation()->duration(); i+=80) {
+        scene->animation()->setCurrentTime(i);
         pixmap = view->screenShot();
         QImage *image = new QImage(pixmap.toImage()
                                    .convertToFormat(QImage::Format_Indexed8, writer->colormap()));
@@ -1332,7 +1326,7 @@ void MainWindow::setCurrentFile(SituationModel *situation, const QString &fileNa
 }
 
 void MainWindow::addTrack() {
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(currentSituation);
 
     if(scene->state() == CREATE_TRACK) {
         scene->setState(NO_STATE);
@@ -1342,8 +1336,8 @@ void MainWindow::addTrack() {
 }
 
 void MainWindow::deleteTrack() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
 
     // TODO trick to delete first selected track
     if (!scene->selectedBoatModels().isEmpty()) {
@@ -1354,7 +1348,7 @@ void MainWindow::deleteTrack() {
 }
 
 void MainWindow::addBoat() {
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(currentSituation);
 
     if (scene->state() == CREATE_BOAT) {
         scene->setState(NO_STATE);
@@ -1364,8 +1358,8 @@ void MainWindow::addBoat() {
 }
 
 void MainWindow::deleteModels() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
 
     foreach (BoatModel *boat, scene->selectedBoatModels()) {
         TrackModel* track = boat->track();
@@ -1390,7 +1384,7 @@ void MainWindow::deleteModels() {
 }
 
 void MainWindow::addMark() {
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(currentSituation);
 
     if (scene->state() == CREATE_MARK) {
         scene->setState(NO_STATE);
@@ -1400,7 +1394,7 @@ void MainWindow::addMark() {
 }
 
 void MainWindow::addPolyLine() {
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(currentSituation);
 
     if (scene->state() == CREATE_LINE) {
         scene->setState(NO_STATE);
@@ -1410,7 +1404,7 @@ void MainWindow::addPolyLine() {
 }
 
 void MainWindow::addPoint() {
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(currentSituation);
 
     if (scene->state() == CREATE_POINT) {
         scene->setState(NO_STATE);
@@ -1420,8 +1414,8 @@ void MainWindow::addPoint() {
 }
 
 void MainWindow::togglePortOverlap() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
 
     QList<BoatModel *> boatList = scene->selectedBoatModels();
     if (! boatList.isEmpty()) {
@@ -1430,8 +1424,8 @@ void MainWindow::togglePortOverlap() {
 }
 
 void MainWindow::toggleStarboardOverlap() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
 
     QList<BoatModel *> boatList = scene->selectedBoatModels();
     if (! boatList.isEmpty()) {
@@ -1440,8 +1434,8 @@ void MainWindow::toggleStarboardOverlap() {
 }
 
 void MainWindow::toggleHidden() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
 
     QList<BoatModel *> boatList = scene->selectedBoatModels();
     if (! boatList.isEmpty()) {
@@ -1450,8 +1444,8 @@ void MainWindow::toggleHidden() {
 }
 
 void MainWindow::toggleText() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
 
     QList<PositionModel *> modelList = scene->selectedModels();
     if (! modelList.isEmpty()) {
@@ -1464,8 +1458,8 @@ void MainWindow::toggleText() {
 }
 
 void MainWindow::toggleFlag() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
 
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
@@ -1479,8 +1473,8 @@ void MainWindow::toggleFlag() {
 }
 
 void MainWindow::toggleSpin() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
 
     QList<BoatModel *> boatList = scene->selectedBoatModels();
     if (! boatList.isEmpty()) {
@@ -1489,8 +1483,8 @@ void MainWindow::toggleSpin() {
 }
 
 void MainWindow::toggleMarkZone() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
 
     QList<MarkModel *> markList = scene->selectedMarkModels();
     if (! markList.isEmpty()) {
@@ -1513,20 +1507,26 @@ void MainWindow::toggleLang() {
 }
 
 void MainWindow::animate(bool state, bool interactive) {
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(currentSituation);
 
     if (state) {
         if (scene->state() != ANIMATE) {
             scene->setState(ANIMATE);
-            scene->setAnimation(timeline);
-            timeline->setFrameRange(0,timeline->duration());
-            timeline->setCurrentTime(timeline->duration());
-            timeline->setCurrentTime(0);
+            scene->setAnimation();
+
+            connect(scene->animation(), SIGNAL(stateChanged(QAbstractAnimation::State, QAbstractAnimation::State)),
+                    this, SLOT(changeAnimationState(QAbstractAnimation::State, QAbstractAnimation::State)));
+            connect(scene->animation(), SIGNAL(timeChanged(int)),
+                    animationSlider, SLOT(setValue(int)));
+            connect(animationSlider, SIGNAL(valueChanged(int)),
+                    scene->animation(), SLOT(setCurrentTime(int)));
+
+            scene->animation()->setCurrentTime(0);
             if (interactive) {
                 if (!toggleAnimationToolbarAction->isChecked()) {
                     toggleAnimationToolbarAction->setChecked(true);
                 }
-                animationSlider->setRange(0,timeline->duration());
+                animationSlider->setRange(0,scene->animation()->duration());
                 animationSlider->setEnabled(true);
                 startAction->setEnabled(true);
                 loopAction->setEnabled(true);
@@ -1537,8 +1537,12 @@ void MainWindow::animate(bool state, bool interactive) {
             scene->setState(NO_STATE);
         }
         scene->unSetAnimation();
+        disconnect(this, SLOT(changeAnimationState(QAbstractAnimation::State,QAbstractAnimation::State)));
+        disconnect(animationSlider, SLOT(setValue(int)));
+        disconnect(scene->animation(), SLOT(setCurrentTime(int)));
+
         animationSlider->setEnabled(false);
-        timeline->stop();
+        scene->animation()->stop();
         startAction->setEnabled(false);
         stopAction->setEnabled(false);
         loopAction->setEnabled(false);
@@ -1547,40 +1551,44 @@ void MainWindow::animate(bool state, bool interactive) {
 
 void MainWindow::play() {
     if (debugLevel & 1 << ANIMATION) std::cout << "playing" << std::endl;
+    SituationScene *scene = sceneList.at(currentSituation);
     pauseAction->setChecked(false);
-    timeline->start();
+    scene->animation()->start();
 }
 
 void MainWindow::pause(bool pause) {
+    SituationScene *scene = sceneList.at(currentSituation);
     if (pause) {
         if (debugLevel & 1 << ANIMATION) std::cout << "pausing" << std::endl;
-        timeline->setPaused(true);
+        scene->animation()->setPaused(true);
     } else {
         if (debugLevel & 1 << ANIMATION) std::cout << "resuming" << std::endl;
-        timeline->resume();
+        scene->animation()->setPaused(false);
     }
 }
 
 void MainWindow::stop() {
     if (debugLevel & 1 << ANIMATION) std::cout << "stopping" << std::endl;
+    SituationScene *scene = sceneList.at(currentSituation);
     pauseAction->setChecked(false);
-    timeline->stop();
-    timeline->setCurrentTime(0);
+    scene->animation()->stop();
+    scene->animation()->setCurrentTime(0);
 }
 
 void MainWindow::loop(bool loop) {
+    SituationScene *scene = sceneList.at(currentSituation);
     if (loop) {
         if (debugLevel & 1 << ANIMATION) std::cout << "loop play" << std::endl;
-        timeline->setLoopCount(0);
+        scene->animation()->setLoopCount(0);
     } else {
         if (debugLevel & 1 << ANIMATION) std::cout << "single play" << std::endl;
-        timeline->setLoopCount(1);
+        scene->animation()->setLoopCount(1);
     }
 }
 
-void MainWindow::changeAnimationState(QTimeLine::State newState) {
+void MainWindow::changeAnimationState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState) {
     switch(newState) {
-        case QTimeLine::Running:
+        case QAbstractAnimation::Running:
             if (debugLevel & 1 << ANIMATION) std::cout << "state running" << std::endl;
             startAction->setEnabled(false);
             pauseAction->setEnabled(true);
@@ -1588,7 +1596,7 @@ void MainWindow::changeAnimationState(QTimeLine::State newState) {
             animationSlider->blockSignals(true);
             break;
 
-        case QTimeLine::Paused:
+        case QAbstractAnimation::Paused:
             if (debugLevel & 1 << ANIMATION) std::cout << "state paused" << std::endl;
             startAction->setEnabled(true);
             pauseAction->setEnabled(true);
@@ -1596,7 +1604,7 @@ void MainWindow::changeAnimationState(QTimeLine::State newState) {
             animationSlider->blockSignals(false);
             break;
 
-        case QTimeLine::NotRunning:
+        case QAbstractAnimation::Stopped:
             if (debugLevel & 1 << ANIMATION) std::cout << "state not running" << std::endl;
             startAction->setEnabled(true);
             pauseAction->setEnabled(false);
@@ -1611,7 +1619,7 @@ void MainWindow::about() {
 	QString("<center><img src=\":/images/about.png\">"
             "<p><b>Boat Scenario</b> - a Race Scenario drawing tool.</p>"
             "<p>Version %1</p></center>"
-            "<p>Copyright (C) 2008-2009 Thibaut GRIDEL </p>"
+            "<p>Copyright (C) 2008-2011 Thibaut GRIDEL </p>"
             "<p></p>"
             "<p>visit <a href=\"http://boats.berlios.de\">http://boats.berlios.de</a></p>"
             "<p>This program is free software; you can redistribute it and/or modify "

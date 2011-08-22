@@ -103,7 +103,7 @@ class MainWindow : public QMainWindow {
         void pause(bool pause);
         void stop();
         void loop(bool loop);
-        void changeAnimationState(QTimeLine::State newState);
+        void changeAnimationState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 
         // About actions
         void toggleLang();
@@ -151,7 +151,6 @@ class MainWindow : public QMainWindow {
         QDockWidget *situationDock;
         SituationWidget *situationWidget;
         QStatusBar *statusbar;
-        QTimeLine *timeline;
         QSlider *animationSlider;
         QTranslator *qtTranslator;
         QTranslator *translator;

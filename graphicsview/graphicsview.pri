@@ -3,7 +3,6 @@ DEPENDPATH += $$PWD
 
 HEADERS += \
     $$PWD/boat.h \
-    $$PWD/boatanimation.h \
     $$PWD/bubble.h \
     $$PWD/flag.h \
     $$PWD/mark.h \
@@ -17,7 +16,6 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/boat.cpp \
-    $$PWD/boatanimation.cpp \
     $$PWD/bubble.cpp \
     $$PWD/flag.cpp \
     $$PWD/mark.cpp \

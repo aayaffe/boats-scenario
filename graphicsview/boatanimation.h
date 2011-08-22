@@ -25,7 +25,7 @@
 #ifndef BOATANIMATION_H
 #define BOATANIMATION_H
 
-#include <QGraphicsItemAnimation>
+#include <QParallelAnimationGroup>
 #include <QSequentialAnimationGroup>
 #include <QTime>
 
@@ -52,9 +52,9 @@ class HeadingAnimation;
     \sa SituationScene, SituationModel
 */
 
-class BoatAnimation : public QGraphicsItemAnimation {
+class BoatAnimation : public QParallelAnimationGroup {
     public:
-        BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxSize,  QGraphicsItemAnimation *parent = 0);
+        BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxSize,  QObject *parent = 0);
         ~BoatAnimation();
         BoatGraphicsItem *boat() const {return m_boat; }
 

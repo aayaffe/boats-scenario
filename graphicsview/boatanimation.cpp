@@ -46,8 +46,8 @@
     original color for animation \a boat.
 */
 
-BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxSize, QGraphicsItemAnimation *parent)
-    : QGraphicsItemAnimation(parent),
+BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxSize, QObject *parent)
+    : QParallelAnimationGroup(parent),
     m_track(track),
     m_boat(boat),
     m_headingAnimation(new HeadingAnimation(boat->boat(), "heading")),
@@ -64,7 +64,7 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxS
 
     m_boat->setOrder(0);
     QPointF point = path.elementAt(0);
-    setPosAt(0,point);
+//    setPosAt(0,point);
     BoatModel *model = m_track->boats()[0];
     m_headingAnimation->setDuration(2000*m_maxSize);
     m_headingAnimation->setStartValue(model->heading());
