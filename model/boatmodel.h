@@ -105,9 +105,6 @@ class BoatModel : public PositionModel {
         void setDim(int dim);
         int dim() const { return m_dim; }
 
-        void setVisible(bool visible);
-        bool visible() const { return m_visible; }
-
         void  setPath(QPainterPath path);
         const QPainterPath path() const { return m_path; }
 
@@ -122,7 +119,6 @@ class BoatModel : public PositionModel {
         void flagChanged(Boats::Flag flag);
         void hiddenChanged(bool hidden);
         void dimChanged(int dim);
-        void visibleChanged(bool visible);
 
     private:
         // Model Data
@@ -153,8 +149,6 @@ class BoatModel : public PositionModel {
         TrackModel *m_track;
 
         int m_dim;
-
-        bool m_visible;
 
         /// \a m_path holds the QPainterPath to the next boat
         QPainterPath m_path;

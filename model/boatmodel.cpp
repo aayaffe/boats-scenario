@@ -43,8 +43,7 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         m_flag(Boats::noFlag),
         m_hidden(false),
         m_track(track),
-        m_dim(255),
-        m_visible(true) {
+        m_dim(255) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
     setOrder(track->size()+1);
 }
@@ -208,11 +207,6 @@ qreal BoatModel::spinAngle(qreal heading) const {
 void BoatModel::setDim(int dim) {
     m_dim = dim;
     emit dimChanged(dim);
-}
-
-void BoatModel::setVisible(bool visible) {
-    m_visible = visible;
-    emit visibleChanged(visible);
 }
 
 void BoatModel::setPath(QPainterPath path) {
