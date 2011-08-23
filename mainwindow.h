@@ -87,6 +87,9 @@ class MainWindow : public QMainWindow {
         void addMark();
         void addPolyLine();
         void addPoint();
+        void trimSail();
+        void autotrimSail();
+        void untrimSail();
         void togglePortOverlap();
         void toggleStarboardOverlap();
         void toggleFlag();
@@ -177,6 +180,9 @@ class MainWindow : public QMainWindow {
         QAction *addMarkAction;
         QAction *addPolyLineAction;
         QAction *addPointAction;
+        QAction *trimSailAction;
+        QAction *autotrimSailAction;
+        QAction *untrimSailAction;
         QAction *togglePortOverlapAction;
         QAction *toggleStarboardOverlapAction;
         QAction *toggleHiddenAction;

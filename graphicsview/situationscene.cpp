@@ -242,15 +242,6 @@ void SituationScene::keyPressEvent(QKeyEvent *event) {
         } else if (event->key() == Qt::Key_Minus) {
             qreal theta = fmod(m_selectedBoatModels[0]->heading() - 5 + 360.0, 360.0);
             m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
-
-        } else if (event->key() == Qt::Key_Less) {
-            m_situation->undoStack()->push(new TrimBoatUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->trim() - 5));
-
-        } else if (event->key() == Qt::Key_Greater) {
-            m_situation->undoStack()->push(new TrimBoatUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->trim() + 5));
-
-        } else if (event->key() == Qt::Key_Equal) {
-            m_situation->undoStack()->push(new TrimBoatUndoCommand(m_selectedBoatModels, 0));
         }
     }
 

@@ -217,6 +217,18 @@ void MainWindow::createActions() {
     connect(addPointAction, SIGNAL(triggered()),
             this, SLOT(addPoint()));
 
+    trimSailAction = new QAction(this);
+    connect(trimSailAction, SIGNAL(triggered()),
+            this, SLOT(trimSail()));
+
+    autotrimSailAction = new QAction(this);
+    connect(autotrimSailAction, SIGNAL(triggered()),
+            this, SLOT(autotrimSail()));
+
+    untrimSailAction = new QAction(this);
+    connect(untrimSailAction, SIGNAL(triggered()),
+            this, SLOT(untrimSail()));
+
     togglePortOverlapAction = new QAction(this);
     togglePortOverlapAction->setCheckable(true);
     connect(togglePortOverlapAction, SIGNAL(triggered()),
@@ -337,6 +349,9 @@ void MainWindow::updateActions() {
 
     addBoatAction->setEnabled(selectedBoats || scene->state() == CREATE_BOAT);
     addPointAction->setEnabled(selectedPoints || scene->state() == CREATE_POINT);
+    trimSailAction->setEnabled(selectedBoats);
+    autotrimSailAction->setEnabled(selectedBoats);
+    untrimSailAction->setEnabled(selectedBoats);
     togglePortOverlapAction->setEnabled(selectedBoats);
     toggleStarboardOverlapAction->setEnabled(selectedBoats);
     toggleHiddenAction->setEnabled(selectedBoats);
@@ -515,6 +530,9 @@ void MainWindow::createMenus() {
     trackMenu->addAction(addPolyLineAction);
     trackMenu->addAction(addPointAction);
     trackMenu->addSeparator();
+    trackMenu->addAction(trimSailAction);
+    trackMenu->addAction(autotrimSailAction);
+    trackMenu->addAction(untrimSailAction);
     trackMenu->addAction(togglePortOverlapAction);
     trackMenu->addAction(toggleStarboardOverlapAction);
     trackMenu->addAction(toggleHiddenAction);
@@ -907,6 +925,15 @@ void MainWindow::changeEvent(QEvent *event) {
 
         addPointAction->setText(tr("Create Poin&t"));
         addPointAction->setShortcut(tr("Ctrl+T"));
+
+        trimSailAction->setText(tr("Trim Sail"));
+        trimSailAction->setShortcut(tr("<"));
+
+        autotrimSailAction->setText(tr("Auto Trim"));
+        autotrimSailAction->setShortcut(tr("="));
+
+        untrimSailAction->setText(tr("Untrim Sail"));
+        untrimSailAction->setShortcut(tr(">"));
 
         togglePortOverlapAction->setText(tr("&Port Overlap"));
         togglePortOverlapAction->setShortcut(tr("Alt+<"));
@@ -1410,6 +1437,48 @@ void MainWindow::addPoint() {
         scene->setState(NO_STATE);
     } else {
         scene->setState(CREATE_POINT);
+    }
+}
+
+void MainWindow::trimSail() {
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
+
+    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    if (! boatList.isEmpty()) {
+        qreal trim = boatList[0]->trim();
+        if (boatList[0]->heading() < 180) {
+            trim -= 5;
+        } else {
+            trim += 5;
+        }
+        situation->undoStack()->push(new TrimBoatUndoCommand(boatList, trim));
+    }
+}
+
+void MainWindow::autotrimSail() {
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
+
+    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    if (! boatList.isEmpty()) {
+        situation->undoStack()->push(new TrimBoatUndoCommand(boatList, 0));
+    }
+}
+
+void MainWindow::untrimSail() {
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
+
+    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    if (! boatList.isEmpty()) {
+        qreal trim = boatList[0]->trim();
+        if (boatList[0]->heading() < 180) {
+            trim += 5;
+        } else {
+            trim -= 5;
+        }
+        situation->undoStack()->push(new TrimBoatUndoCommand(boatList, trim));
     }
 }
 
