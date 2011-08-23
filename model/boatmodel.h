@@ -62,7 +62,7 @@ class BoatModel : public PositionModel {
         Q_PROPERTY(QPointF textPos READ textPosition WRITE setTextPosition)
         Q_PROPERTY(Boats::Overlaps overlap READ overlap WRITE setOverlap)
         Q_PROPERTY(Boats::Flag flag READ flag WRITE setFlag)
-        Q_PROPERTY(bool visible READ visible WRITE setVisible)
+        Q_PROPERTY(int dim READ dim WRITE setDim)
 
     public:
         BoatModel(TrackModel *track, QObject *parent = 0);
@@ -102,8 +102,8 @@ class BoatModel : public PositionModel {
 
         qreal spinAngle(qreal heading = -1) const;
 
-        void setDim(bool dim = true);
-        bool dim() const { return m_dim; }
+        void setDim(int dim);
+        int dim() const { return m_dim; }
 
         void setVisible(bool visible);
         bool visible() const { return m_visible; }
@@ -121,7 +121,7 @@ class BoatModel : public PositionModel {
         void overlapChanged(Boats::Overlaps overlap);
         void flagChanged(Boats::Flag flag);
         void hiddenChanged(bool hidden);
-        void dimChanged(bool dim);
+        void dimChanged(int dim);
         void visibleChanged(bool visible);
 
     private:
@@ -152,7 +152,7 @@ class BoatModel : public PositionModel {
         /// it belongs
         TrackModel *m_track;
 
-        bool m_dim;
+        int m_dim;
 
         bool m_visible;
 

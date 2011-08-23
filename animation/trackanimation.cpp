@@ -40,7 +40,7 @@ TrackAnimation::TrackAnimation(TrackModel *track, BoatModel *boat, QObject *pare
     m_boat(boat)
 {
 
-    int size = m_track->size() - 1;
+    int size = m_track->size();
     if (size < 0) {
         return;
     }
@@ -49,23 +49,34 @@ TrackAnimation::TrackAnimation(TrackModel *track, BoatModel *boat, QObject *pare
 
     // through all boats of the track
     for (int i=0; i< size; i++) {
-        BoatAnimation *boatAnimation = new BoatAnimation(m_track, m_boat, i, this);
-        boatsAnimation->addAnimation(boatAnimation);
-        PropertyAnimation *visibleboatAnimation = new PropertyAnimation(m_track->boats()[i],"visible", this);
-        visibleboatAnimation->setDuration(2000 * (size-1));
-        visibleboatAnimation->setStartValue(false);
-        visibleboatAnimation->setKeyValueAt((qreal)i/(qreal)(size-1), true);
-        visibleboatAnimation->setEndValue(true);
-        addAnimation(visibleboatAnimation);
+        if (i<size-1) {
+            BoatAnimation *boatAnimation = new BoatAnimation(m_track, m_boat, i, this);
+            boatsAnimation->addAnimation(boatAnimation);
+        }
+
+        QSequentialAnimationGroup *visibilityAnimation = new QSequentialAnimationGroup(this);
+        PropertyAnimation *invisibletAnimation = new PropertyAnimation(m_track->boats()[i],"dim", this);
+        invisibletAnimation->setDuration(2000*i);
+        invisibletAnimation->setStartValue(0);
+        invisibletAnimation->setEndValue(0);
+        visibilityAnimation->addAnimation(invisibletAnimation);
+        PropertyAnimation *dimAnimation = new PropertyAnimation(m_track->boats()[i],"dim", this);
+        if (i<size-1) {
+            dimAnimation->setDuration(2000);
+        } else {
+            dimAnimation->setDuration(0);
+        }
+        dimAnimation->setStartValue(255);
+        dimAnimation->setEndValue(64);
+        visibilityAnimation->addAnimation(dimAnimation);
+        addAnimation(visibilityAnimation);
     }
 
     addAnimation(boatsAnimation);
 
     // dim all track boats
     foreach(BoatModel *boat, m_track->boats()) {
-        boat->setDim(true);
-        boat->setVisible(false);
-        boat->track()->setShowPath(false);
+        boat->setDim(0);
     }
 }
 
@@ -76,8 +87,7 @@ TrackAnimation::TrackAnimation(TrackModel *track, BoatModel *boat, QObject *pare
 TrackAnimation::~TrackAnimation() {
     // undim all track boats
     foreach(BoatModel *boat, m_track->boats()) {
-        boat->setDim(false);
-        boat->setVisible(true);
-        boat->track()->setShowPath(true);
+        boat->setDim(255);
     }
+    m_track->changingTrack(m_track);
 }

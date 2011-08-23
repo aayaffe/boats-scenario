@@ -108,8 +108,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
             this, SLOT(setDisplayFlag(Boats::Flag)));
     connect(boat, SIGNAL(hiddenChanged(bool)),
             this, SLOT(setHidden(bool)));
-    connect(boat, SIGNAL(dimChanged(bool)),
-            this, SLOT(setDim(bool)));
+    connect(boat, SIGNAL(dimChanged(int)),
+            this, SLOT(setDim(int)));
     connect(boat, SIGNAL(visibleChanged(bool)),
             this, SLOT(setVisible(bool)));
     connect(boat->track(), SIGNAL(colorChanged(QColor)),
@@ -252,18 +252,23 @@ void BoatGraphicsItem::setColor(QColor value) {
     }
 }
 
-void BoatGraphicsItem::setDim(bool value) {
-    if (value) {
-        m_color.setAlpha(64);
-        int maxSize = 0;
-        foreach (const TrackModel *track, boat()->situation()->tracks()) {
-            if (track->boats().size() > maxSize)
-                maxSize = track->boats().size() - 1;
+void BoatGraphicsItem::setDim(int value) {
+    m_color.setAlpha(value);
+    if (value == 0 ) {
+        setVisible(false);
+    }
+    else {
+        setVisible(true);
+        if (value != 255) {
+            int maxSize = 0;
+            foreach (const TrackModel *track, boat()->situation()->tracks()) {
+                if (track->boats().size() > maxSize)
+                    maxSize = track->boats().size() - 1;
+            }
+            setZValue(maxSize+1);
+        } else {
+            setZValue(boat()->order());
         }
-        setZValue(maxSize+1);
-    } else {
-        m_color.setAlpha(255);
-        setZValue(boat()->order());
     }
     update();
 }

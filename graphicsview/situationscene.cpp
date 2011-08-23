@@ -503,7 +503,7 @@ void SituationScene::createTrack(QPointF pos) {
     m_situation->undoStack()->push(command);
     TrackModel *track = command->track();
     BoatModel *boat = new BoatModel(track, track);
-    boat->setDim(true);
+    boat->setDim(64);
     boat->setPosition(pos);
     track->addBoat(boat);
     m_trackCreated = track;
@@ -512,10 +512,10 @@ void SituationScene::createTrack(QPointF pos) {
 void SituationScene::createBoat(QPointF pos) {
     if (m_trackCreated) {
         m_situation->undoStack()->endMacro();
-        m_trackCreated->boats().last()->setDim(false);
+        m_trackCreated->boats().last()->setDim(255);
         qreal heading = m_trackCreated->boats().last()->heading();
         AddBoatUndoCommand *command = new AddBoatUndoCommand(m_trackCreated, pos, heading);
-        command->boat()->setDim(true);
+        command->boat()->setDim(64);
         m_situation->undoStack()->beginMacro("");
         m_situation->undoStack()->push(command);
     }
