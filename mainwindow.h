@@ -143,6 +143,7 @@ class MainWindow : public QMainWindow {
         static const int maxRecent;
         QStringList recentList;
         QStringList fileList;
+        QString filePath;
 
         // Widgets on the window
         QMenuBar *menubar;

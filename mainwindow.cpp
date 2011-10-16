@@ -791,6 +791,7 @@ void MainWindow::writeSettings() {
     }
     settings.setValue("recentList", recentList);
     settings.setValue("fileList",fileList);
+    settings.setValue("filePath", filePath);
     settings.endGroup();
 }
 
@@ -816,6 +817,7 @@ void MainWindow::readSettings() {
     updateRecentList();
 
     fileList = settings.value("fileList").toStringList();
+    filePath = settings.value("filePath").toString();
     settings.endGroup();
 }
 
@@ -1032,11 +1034,12 @@ void MainWindow::newFile() {
 void MainWindow::openFile() {
     QString fileName =
              QFileDialog::getOpenFileName(this, tr("Open Scenario File"),
-                                          QDir::currentPath(),
+                                          filePath,
                                           tr("xmlscenario Files (*.xbs)"));
     if (fileName.isEmpty())
         return;
 
+    filePath = QFileInfo(fileName).absolutePath();
     openFile(fileName);
 }
 
