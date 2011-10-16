@@ -44,8 +44,8 @@ class SituationWidget : public QTabWidget {
         void unSetSituation();
 
         // set the model from widgets
-        void setTitle(QString title);
-        void setRules(QString rules);
+        void setTitle();
+        void setRules();
         void setShowLayline(bool);
         void setLayline(int angle);
         void setSeries(int series);

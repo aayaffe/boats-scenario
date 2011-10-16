@@ -161,13 +161,13 @@ void SituationWidget::setSituation(SituationModel *situation) {
         update();
 
         // Scenario Group
-        connect (titleEdit, SIGNAL(textEdited(QString)),
-                this, SLOT(setTitle(QString)));
+        connect (titleEdit, SIGNAL(editingFinished()),
+                this, SLOT(setTitle()));
         connect (situation, SIGNAL(titleChanged(QString)),
                 titleEdit, SLOT(setText(QString)));
 
-        connect (rulesEdit, SIGNAL(textEdited(QString)),
-                this, SLOT(setRules(QString)));
+        connect (rulesEdit, SIGNAL(editingFinished()),
+                this, SLOT(setRules()));
         connect (situation, SIGNAL(rulesChanged(QString)),
                 rulesEdit, SLOT(setText(QString)));
 
@@ -254,18 +254,18 @@ void SituationWidget::unSetSituation() {
     m_situation = 0;
 }
 
-void SituationWidget::setTitle(QString title) {
+void SituationWidget::setTitle() {
     if (m_situation) {
-        if (title != m_situation->title()) {
-            m_situation->undoStack()->push(new SetTitleUndoCommand(m_situation, title));
+        if (titleEdit->text() != m_situation->title()) {
+            m_situation->undoStack()->push(new SetTitleUndoCommand(m_situation, titleEdit->text()));
         }
     }
 }
 
-void SituationWidget::setRules(QString rules) {
+void SituationWidget::setRules() {
     if (m_situation) {
-        if (rules != m_situation->rules()) {
-            m_situation->undoStack()->push(new SetRulesUndoCommand(m_situation, rules));
+        if (rulesEdit->text() != m_situation->rules()) {
+            m_situation->undoStack()->push(new SetRulesUndoCommand(m_situation, rulesEdit->text()));
         }
     }
 }
