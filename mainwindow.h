@@ -217,6 +217,10 @@ class MainWindow : public QMainWindow {
         QMenu *recentMenu;
         QMenu *trackMenu;
         QMenu *flagMenu;
+        QMenu *defaultPopup;
+        QMenu *boatPopup;
+        QMenu *markPopup;
+        QMenu *pointPopup;
         QMenu *historyMenu;
         QMenu *zoomMenu;
         QMenu *animationMenu;

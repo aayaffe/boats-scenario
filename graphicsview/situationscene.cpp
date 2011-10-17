@@ -58,7 +58,9 @@ SituationScene::SituationScene(SituationModel *situation)
         m_time(QTime::currentTime()),
         m_clickTime(QTime::currentTime()),
         m_clickState(SINGLE),
-        m_actionMenu(0) {
+        m_defaultPopup(0),
+        m_boatPopup(0),
+        m_markPopup(0) {
 
     // try to set a minimum scene rect
     QGraphicsItem *e1 = addEllipse(QRectF(-1000,-1000, 1, 1));
@@ -396,7 +398,27 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
     if (click && (event->button() == Qt::RightButton
                 || (event->button() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0)))) {
-        m_actionMenu->popup(event->screenPos());
+        if (!m_selectedModels.isEmpty()) {
+            switch(selectedItems()[0]->type()) {
+                case BOAT_TYPE: {
+                    m_boatPopup->popup(event->screenPos());
+                    return;
+                }
+                break;
+
+                case MARK_TYPE: {
+                    m_markPopup->popup(event->screenPos());
+                    return;
+                }
+                break;
+            case POINT_TYPE: {
+                m_markPopup->popup(event->screenPos());
+                return;
+            }
+            break;
+            }
+        }
+        m_defaultPopup->popup(event->screenPos());
         return;
     }
 

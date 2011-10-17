@@ -124,7 +124,10 @@ class SituationScene : public QGraphicsScene {
         QList< BoatModel * > selectedBoatModels() const { return m_selectedBoatModels; }
         QList< MarkModel * > selectedMarkModels() const { return m_selectedMarkModels; }
         QList< PointModel * > selectedPointModels() const { return m_selectedPointModels; }
-        void setActionMenu(QMenu *theValue) { m_actionMenu = theValue; }
+        void setDefaultPopup(QMenu *theValue) { m_defaultPopup = theValue; }
+        void setBoatPopup(QMenu *theValue) { m_boatPopup = theValue; }
+        void setMarkPopup(QMenu *theValue) { m_markPopup = theValue; }
+        void setPointPopup(QMenu *theValue) { m_pointPopup = theValue; }
         ScenarioAnimation *animation() const { return m_scenarioAnimation; }
 
     signals:
@@ -224,7 +227,10 @@ class SituationScene : public QGraphicsScene {
             NONE
         } m_clickState;
 
-        QMenu *m_actionMenu;
+        QMenu *m_defaultPopup;
+        QMenu *m_boatPopup;
+        QMenu *m_markPopup;
+        QMenu *m_pointPopup;
 };
 
 #endif

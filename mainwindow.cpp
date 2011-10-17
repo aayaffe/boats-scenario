@@ -556,6 +556,40 @@ void MainWindow::createMenus() {
     trackMenu->addAction(deleteTrackAction);
     trackMenu->addAction(deleteAction);
 
+    defaultPopup = new QMenu(this);
+    defaultPopup->addAction(addTrackAction);
+    defaultPopup->addAction(addMarkAction);
+    defaultPopup->addAction(addPolyLineAction);
+
+    boatPopup = new QMenu(this);
+    boatPopup->addAction(addBoatAction);
+    boatPopup->addSeparator();
+    boatPopup->addAction(trimSailAction);
+    boatPopup->addAction(autotrimSailAction);
+    boatPopup->addAction(untrimSailAction);
+    boatPopup->addAction(togglePortOverlapAction);
+    boatPopup->addAction(toggleStarboardOverlapAction);
+    boatPopup->addAction(toggleHiddenAction);
+    boatPopup->addAction(toggleTextAction);
+    boatPopup->addMenu(flagMenu);
+    boatPopup->addAction(toggleSpinAction);
+    boatPopup->addSeparator();
+    boatPopup->addAction(deleteTrackAction);
+    boatPopup->addAction(deleteAction);
+
+    markPopup = new QMenu(this);
+    markPopup->addAction(toggleTextAction);
+    markPopup->addAction(toggleMarkZoneAction);
+    markPopup->addSeparator();
+    markPopup->addAction(deleteAction);
+
+    pointPopup = new QMenu(this);
+    pointPopup->addAction(addPointAction);
+    pointPopup->addSeparator();
+    pointPopup->addAction(toggleTextAction);
+    pointPopup->addSeparator();
+    pointPopup->addAction(deleteAction);
+
     historyMenu = new QMenu(this);
     menubar->addMenu(historyMenu);
     historyMenu->addAction(undoAction);
@@ -664,7 +698,10 @@ void MainWindow::newTab() {
 
     situationList.append(situation);
     sceneList.append(scene);
-    scene->setActionMenu(trackMenu);
+    scene->setDefaultPopup(defaultPopup);
+    scene->setBoatPopup(boatPopup);
+    scene->setMarkPopup(markPopup);
+    scene->setPointPopup(pointPopup);
     viewList.append(view);
     tabWidget->addTab(view, "");
 
