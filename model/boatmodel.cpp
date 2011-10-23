@@ -42,6 +42,7 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         m_overlap(Boats::none),
         m_flag(Boats::noFlag),
         m_hidden(false),
+        m_acceleration(Boats::constant),
         m_track(track),
         m_dim(255) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
@@ -131,6 +132,14 @@ void BoatModel::setHidden(const  bool theValue) {
                 << "hidden = " << theValue  << std::endl;
         m_hidden = theValue;
         emit hiddenChanged(m_hidden);
+    }
+}
+
+void BoatModel::setAcceleration(const  Boats::Acceleration theValue) {
+    if (theValue != m_acceleration) {
+        if (debugLevel & 1 << MODEL) std::cout
+                << "acceleration = " << theValue  << std::endl;
+        m_acceleration = theValue;
     }
 }
 

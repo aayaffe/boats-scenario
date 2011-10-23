@@ -72,6 +72,13 @@ public:
     };
     Q_ENUMS (Flag);
 
+    enum Acceleration {
+        constant,
+        accelerating,
+        decelerating
+    };
+    Q_ENUMS (Acceleration);
+
 private:
     static QList<QString> m_seriesList;
 

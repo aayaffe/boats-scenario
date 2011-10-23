@@ -95,6 +95,9 @@ class BoatModel : public PositionModel {
         bool hidden() const {return m_hidden; }
         void setHidden(const bool theValue);
 
+        Boats::Acceleration acceleration() const {return m_acceleration; }
+        void setAcceleration(const Boats::Acceleration theValue);
+
         // Setters and Getters for Non model Data
         TrackModel* track() const { return m_track; }
 
@@ -142,6 +145,9 @@ class BoatModel : public PositionModel {
 
         /// \a m_hidden holds whether the boat should display the hidden symbol
         bool m_hidden;
+
+        /// \a m_acceleration holds how the boat speed should vary for the next period
+        Boats::Acceleration m_acceleration;
 
         // Non model Data
         /// \a m_track keeps a pointer to the TrackModel to which
