@@ -128,6 +128,9 @@ void XmlSituationWriter::writeBoat(const BoatModel *boat) {
     if (boat->hidden()) {
         writeTextElement("hidden",QString::number(boat->hidden()));
     }
+    if (boat->acceleration() != Boats::constant) {
+        writeTextElement("acceleration", ENUM_NAME(Boats, Acceleration, boat->acceleration()));
+    }
     if (!boat->text().isEmpty()) {
         writeTextElement("bubble_x",QString::number(boat->textPosition().x()));
         writeTextElement("bubble_y",QString::number(boat->textPosition().y()));

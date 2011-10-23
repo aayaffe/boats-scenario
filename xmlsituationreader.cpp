@@ -169,6 +169,7 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     Boats::Overlaps overlap = Boats::none;
     Boats::Flag flag = Boats::noFlag;
     bool hidden = false;
+    Boats::Acceleration acceleration = Boats::constant;
     QPointF textPos(10,10);
     QString text;
     QStringList discarded;
@@ -196,6 +197,9 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
             else if (name() == "hidden") {
                 hidden = (readElementText() == "1");
             }
+            else if (name() == "acceleration") {
+                acceleration = (Boats::Acceleration)ENUM_VALUE(Boats, Acceleration, readElementText().toStdString().c_str());
+            }
             else if (name() == "bubble_x")
                 textPos.setX(readElementText().toFloat());
             else if (name() == "bubble_y")
@@ -222,6 +226,7 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     boat->setOverlap(overlap);
     boat->setFlag(flag);
     boat->setHidden(hidden);
+    boat->setAcceleration(acceleration);
     boat->setTextPosition(textPos);
     boat->setText(text);
     foreach (const QString elem, discarded) {
