@@ -26,6 +26,7 @@
 #define BOATANIMATION_H
 
 #include <QParallelAnimationGroup>
+#include <QEasingCurve>
 
 class TrackModel;
 class BoatModel;
@@ -49,6 +50,8 @@ class BoatAnimation : public QParallelAnimationGroup {
         BoatAnimation(TrackModel *track, BoatModel *boat, int index,  QObject *parent = 0);
         ~BoatAnimation();
         BoatModel *boat() const {return m_boat; }
+
+        void setEasingCurve ( const QEasingCurve & easing );
 
     private:
         /// \a m_track holds the reference to the track

@@ -115,6 +115,18 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatModel *boat, int index, QObj
     flagAnimation->setEndValue(model->flag());
     addAnimation(flagAnimation);
 
+    // acceleration
+    switch(model->acceleration()) {
+        case Boats::accelerating:
+            setEasingCurve(QEasingCurve::InSine);
+            break;
+        case Boats::decelerating:
+            setEasingCurve(QEasingCurve::OutSine);
+            break;
+        default:
+            break;
+    }
+
     // end values that need next boat position
     model = m_track->boats()[index+1];
     headingAnimation->setEndValue(model->heading());
@@ -123,4 +135,13 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatModel *boat, int index, QObj
 }
 
 BoatAnimation::~BoatAnimation() {
+}
+
+void BoatAnimation::setEasingCurve(const QEasingCurve &easing) {
+    for (int i=0; i< animationCount(); ++i) {
+        QVariantAnimation *animation = dynamic_cast<QVariantAnimation*>(animationAt(i));
+        if(animation) {
+            animation->setEasingCurve(easing);
+        }
+    }
 }
