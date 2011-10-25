@@ -708,6 +708,47 @@ bool HiddenBoatUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Accelerate Boat
+AccelerateBoatUndoCommand::AccelerateBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, Boats::Acceleration acceleration, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_boatList(boatList),
+        m_acceleration(acceleration) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new accelerateboatundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_accelerationList << boat->acceleration();
+    }
+}
+
+AccelerateBoatUndoCommand::~AccelerateBoatUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end accelerateboatundocommand" << std::endl;
+}
+
+void AccelerateBoatUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo accelerateboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setAcceleration(m_accelerationList[i]);
+    }
+}
+
+void AccelerateBoatUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo accelerateboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setAcceleration(m_acceleration);
+    }
+}
+
+bool AccelerateBoatUndoCommand::mergeWith(const QUndoCommand *command) {
+    const AccelerateBoatUndoCommand *accelerationCommand = static_cast<const AccelerateBoatUndoCommand*>(command);
+    if (m_boatList != accelerationCommand->m_boatList)
+        return false;
+
+    m_acceleration = accelerationCommand->m_acceleration;
+    return true;
+}
+
 // Set Text
 SetTextUndoCommand::SetTextUndoCommand(PositionModel* model, QString text, QUndoCommand *parent)
         : QUndoCommand(parent),

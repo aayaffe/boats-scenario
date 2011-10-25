@@ -357,6 +357,7 @@ void MainWindow::updateActions() {
     toggleHiddenAction->setEnabled(selectedBoats);
     toggleTextAction->setEnabled(selectedItems);
     flagMenu->setEnabled(selectedBoats);
+    accelerationMenu->setEnabled(selectedBoats);
     deleteTrackAction->setEnabled(selectedBoats);
     deleteAction->setEnabled(selectedItems);
 
@@ -371,6 +372,11 @@ void MainWindow::updateActions() {
     for(int i=0; i < flagSize; i++) {
         allFlagSet[i] = 1;
     }
+    int accelerationSize = ENUM_SIZE(Boats,Acceleration);
+    bool allAccelerationSet[accelerationSize];
+    for(int i=0; i<accelerationSize; i++) {
+        allAccelerationSet[i] = 1;
+    }
     foreach(BoatModel *boat, scene->selectedBoatModels()) {
         allPortSet = allPortSet && (boat->overlap() & Boats::port);
         allStarboardSet = allStarboardSet && (boat->overlap() & Boats::starboard);
@@ -379,6 +385,9 @@ void MainWindow::updateActions() {
         allSpinSet = allSpinSet && (boat->spin());
         for (int i = 0; i < flagSize; i++) {
             allFlagSet[i] = allFlagSet[i] && (boat->flag() == i);
+        }
+        for (int i=0; i<accelerationSize; i++) {
+            allAccelerationSet[i] = allAccelerationSet[i] && (boat->acceleration() == i);
         }
     }
     togglePortOverlapAction->setChecked(selectedBoats && allPortSet);
@@ -395,6 +404,10 @@ void MainWindow::updateActions() {
     for (int i = 0; i < flagSize; i++) {
         QAction *flagAction = flagMenu->actions()[i];
         flagAction->setChecked(allFlagSet[i]);
+    }
+    for (int i=0; i<accelerationSize; i++) {
+        QAction *accelerationAction = accelerationMenu->actions()[i];
+        accelerationAction->setChecked(allAccelerationSet[i]);
     }
 }
 
@@ -550,6 +563,19 @@ void MainWindow::createMenus() {
                 this, SLOT(toggleFlag()));
     }
     trackMenu->addMenu(flagMenu);
+    int accelerationSize = ENUM_SIZE(Boats, Acceleration);
+    accelerationMenu = new QMenu(this);
+    QActionGroup *accelerationGroup = new QActionGroup(accelerationMenu);
+    for (int i = 0; i < accelerationSize; i++) {
+        QAction * accelerationAction = new QAction(ENUM_NAME(Boats, Acceleration, i), this);
+        accelerationAction->setCheckable(true);
+        accelerationAction->setData(i);
+        accelerationGroup->addAction(accelerationAction);
+        accelerationMenu->addAction(accelerationAction);
+        connect(accelerationAction, SIGNAL(triggered()),
+                this, SLOT(toggleAcceleration()));
+    }
+    trackMenu->addMenu(accelerationMenu);
     trackMenu->addAction(toggleSpinAction);
     trackMenu->addAction(toggleMarkZoneAction);
     trackMenu->addSeparator();
@@ -572,6 +598,7 @@ void MainWindow::createMenus() {
     boatPopup->addAction(toggleHiddenAction);
     boatPopup->addAction(toggleTextAction);
     boatPopup->addMenu(flagMenu);
+    boatPopup->addMenu(accelerationMenu);
     boatPopup->addAction(toggleSpinAction);
     boatPopup->addSeparator();
     boatPopup->addAction(deleteTrackAction);
@@ -1040,6 +1067,7 @@ void MainWindow::changeEvent(QEvent *event) {
         fileMenu->setTitle(tr("&File"));
         trackMenu->setTitle(tr("&Edit"));
         flagMenu->setTitle(tr("&Flag"));
+        accelerationMenu->setTitle(tr("&Acceleration"));
         historyMenu->setTitle(tr("&History"));
         animationMenu->setTitle(tr("&Animation"));
         zoomMenu->setTitle(tr("&Zoom"));
@@ -1577,6 +1605,21 @@ void MainWindow::toggleFlag() {
         QList<BoatModel *> boatList = scene->selectedBoatModels();
         if (! boatList.isEmpty()) {
             situation->undoStack()->push(new FlagBoatUndoCommand(situation, boatList, flag));
+        }
+    }
+}
+
+void MainWindow::toggleAcceleration() {
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
+
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (action) {
+        Boats::Acceleration acceleration = (Boats::Acceleration)action->data().toInt();
+
+        QList<BoatModel *> boatList = scene->selectedBoatModels();
+        if (! boatList.isEmpty()) {
+            situation->undoStack()->push(new AccelerateBoatUndoCommand(situation, boatList, acceleration));
         }
     }
 }

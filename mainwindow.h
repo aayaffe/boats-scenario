@@ -93,6 +93,7 @@ class MainWindow : public QMainWindow {
         void togglePortOverlap();
         void toggleStarboardOverlap();
         void toggleFlag();
+        void toggleAcceleration();
         void toggleHidden();
         void toggleText();
         void toggleSpin();
@@ -217,6 +218,7 @@ class MainWindow : public QMainWindow {
         QMenu *recentMenu;
         QMenu *trackMenu;
         QMenu *flagMenu;
+        QMenu *accelerationMenu;
         QMenu *defaultPopup;
         QMenu *boatPopup;
         QMenu *markPopup;

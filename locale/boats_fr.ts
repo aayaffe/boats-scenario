@@ -484,6 +484,10 @@ Voulez-vous le remplacer?</translation>
         <source>&gt;</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&amp;Acceleration</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
