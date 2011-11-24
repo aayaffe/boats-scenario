@@ -29,6 +29,7 @@
 
 #include "commontypes.h"
 #include "trackmodel.h"
+#include "boatmodel.h"
 #include "markmodel.h"
 #include "polylinemodel.h"
 
@@ -43,6 +44,8 @@ SituationModel::SituationModel(QObject *parent)
         m_wind(this),
         m_undoStack(new QUndoStack(this)) {
     if (debugLevel & 1 << MODEL) std::cout << "new situation " << this << std::endl;
+    connect(&m_wind, SIGNAL(windReset()),
+            this, SLOT(resetWind()));
 }
 
 SituationModel::~SituationModel() {
@@ -219,3 +222,10 @@ void SituationModel::deletePolyLine(PolyLineModel *polyline) {
     emit polyLineRemoved(polyline);
 }
 
+void SituationModel::resetWind() {
+    foreach (TrackModel *track, m_tracks) {
+        foreach (BoatModel *boat, track->boats()) {
+            boat->setTrimmedSailAngle(boat->trimmedSailAngle());
+        }
+    }
+}

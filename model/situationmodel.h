@@ -159,6 +159,9 @@ class SituationModel : public QObject {
         void addPolyLine(PolyLineModel *polyline, int order = -1);
         void deletePolyLine(PolyLineModel *polyline);
 
+        // Slot for Wind
+        void resetWind();
+
     private:
         // Model Data
         /// \a m_title holds the Title of the Scenario

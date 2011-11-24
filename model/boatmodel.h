@@ -29,6 +29,7 @@
 
 #include "boats.h"
 #include "positionmodel.h"
+#include "situationmodel.h"
 
 class SituationModel;
 class TrackModel;
@@ -56,6 +57,7 @@ class BoatModel : public PositionModel {
         Q_OBJECT
         Q_PROPERTY(QPointF pos READ position WRITE setPosition)
         Q_PROPERTY(qreal heading READ heading WRITE setHeading)
+        Q_PROPERTY(qreal wind READ wind WRITE setWind)
         Q_PROPERTY(qreal trimSailAngle READ trimmedSailAngle WRITE setTrimmedSailAngle)
         Q_PROPERTY(bool spin READ spin WRITE setSpin)
         Q_PROPERTY(QString text READ text WRITE setText)
@@ -100,6 +102,9 @@ class BoatModel : public PositionModel {
 
         // Setters and Getters for Non model Data
         TrackModel* track() const { return m_track; }
+
+        void setWind(qreal wind);
+        qreal wind() const;
 
         qreal sailAngle(qreal heading = -1) const;
 
@@ -153,6 +158,8 @@ class BoatModel : public PositionModel {
         /// \a m_track keeps a pointer to the TrackModel to which
         /// it belongs
         TrackModel *m_track;
+
+        qreal m_wind;
 
         int m_dim;
 

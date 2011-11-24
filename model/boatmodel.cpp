@@ -44,6 +44,7 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         m_hidden(false),
         m_acceleration(Boats::constant),
         m_track(track),
+        m_wind(-1),
         m_dim(255) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
     setOrder(track->size()+1);
@@ -60,7 +61,9 @@ void BoatModel::setHeading(const qreal& theValue) {
         m_heading = fmod(theValue+360.0,360.0);
         emit headingChanged(m_heading);
         setTrimmedSailAngle(trimmedSailAngle());
-        emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
+        if (m_spin) {
+            emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
+        }
         m_track->changingTrack(m_track);
     }
 }
@@ -143,12 +146,23 @@ void BoatModel::setAcceleration(const  Boats::Acceleration theValue) {
     }
 }
 
+void BoatModel::setWind(qreal wind) {
+    m_wind = wind;
+}
+
+qreal BoatModel::wind() const {
+    if (m_wind == -1) {
+        return m_situation->wind().windAt(m_order-1);
+    }
+    return m_wind;
+}
+
 qreal BoatModel::sailAngle(qreal heading) const {
     qreal layline = situation()->laylineAngle();
     qreal sailAngle;
 
     if (heading == -1) {
-        heading = m_heading;
+        heading = fmod(m_heading - m_situation->wind().windAt(m_order-1) + 360, 360);
     }
     // within 10° inside layline angle, the sail is headed
     if (heading < layline-10) {
