@@ -38,12 +38,14 @@
 #include "markmodel.h"
 #include "polylinemodel.h"
 #include "pointmodel.h"
+#include "windmodel.h"
 
 #include "boat.h"
 #include "track.h"
 #include "mark.h"
 #include "polyline.h"
 #include "point.h"
+#include "arrow.h"
 #include "trackanimation.h"
 #include "scenarioanimation.h"
 
@@ -98,6 +100,9 @@ SituationScene::SituationScene(SituationModel *situation)
             this, SLOT(setLaylines(const int)));
 
     setLaylines(situation->laylineAngle());
+
+    ArrowGraphicsItem *arrow= new ArrowGraphicsItem(&situation->wind());
+    addItem(arrow);
 }
 
 void SituationScene::setState(const SceneState& theValue, bool commit) {
@@ -592,6 +597,10 @@ void SituationScene::setSelectedModels() {
                 m_selectedPointModels << point;
                 }
                 break;
+            case ARROW_TYPE: {
+                WindModel *wind = &m_situation->wind();
+                m_selectedModels << wind;
+            }
         }
     }
     if (debugLevel & 1 << VIEW) std::cout << "SelectedModels update " << m_selectedModels.size() << std::endl;

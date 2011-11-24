@@ -2,6 +2,7 @@ INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
 HEADERS += \
+    $$PWD/arrow.h \
     $$PWD/boat.h \
     $$PWD/bubble.h \
     $$PWD/flag.h \
@@ -15,6 +16,7 @@ HEADERS += \
     $$PWD/track.h
 
 SOURCES += \
+    $$PWD/arrow.cpp \
     $$PWD/boat.cpp \
     $$PWD/bubble.cpp \
     $$PWD/flag.cpp \

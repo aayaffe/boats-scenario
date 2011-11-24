@@ -75,7 +75,8 @@ typedef enum {
 enum {
     BOAT_TYPE = QGraphicsItem::UserType + 1,
     MARK_TYPE,
-    POINT_TYPE
+    POINT_TYPE,
+    ARROW_TYPE
 };
 
 /**
