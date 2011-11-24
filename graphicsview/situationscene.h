@@ -187,6 +187,9 @@ class SituationScene : public QGraphicsScene {
         /// \a m_selectedPointModels holds the list of selected PointModel
         QList<PointModel*> m_selectedPointModels;
 
+        /// \a m_windAnimation holds the animation for wind
+        QAnimationGroup *m_windAnimation;
+
         /// \a m_animationItems holds the list of TrackAnimation items
         /// created for animation mode
         QList<TrackAnimation*> m_animationItems;

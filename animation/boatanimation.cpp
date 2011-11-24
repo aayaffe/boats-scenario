@@ -89,6 +89,11 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatModel *boat, int index, QObj
     headingAnimation->setStartValue(model->heading());
     addAnimation(headingAnimation);
 
+    AngleAnimation *windAnimation = new AngleAnimation(boat, "wind");
+    windAnimation->setDuration(2000);
+    windAnimation->setStartValue(model->wind());
+    addAnimation(windAnimation);
+
     // sail angle
     AngleAnimation *sailAngleAnimation = new AngleAnimation(boat, "trimSailAngle");
     sailAngleAnimation->setDuration(2000);
@@ -130,6 +135,7 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatModel *boat, int index, QObj
     // end values that need next boat position
     model = m_track->boats()[index+1];
     headingAnimation->setEndValue(model->heading());
+    windAnimation->setEndValue(model->wind());
     sailAngleAnimation->setEndValue(model->trimmedSailAngle());
     spinAnimation->setEndValue(model->spin());
 }

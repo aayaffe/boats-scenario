@@ -48,6 +48,7 @@
 #include "arrow.h"
 #include "trackanimation.h"
 #include "scenarioanimation.h"
+#include "angleanimation.h"
 
 extern int debugLevel;
 
@@ -196,10 +197,21 @@ void SituationScene::setAnimation() {
             maxSize = track->boats().size() - 1;
     }
 
+    m_windAnimation = new QSequentialAnimationGroup(this);
+    for (int i = 0; i < m_situation->wind().size()-1; ++i) {
+        AngleAnimation *wind = new AngleAnimation(&m_situation->wind(), "direction");
+        wind->setDuration(2000);
+        wind->setStartValue(m_situation->wind().windAt(i));
+        wind->setEndValue(m_situation->wind().windAt(i+1));
+        m_windAnimation->addAnimation(wind);
+    }
+    m_scenarioAnimation->addAnimation(m_windAnimation);
+
+
     foreach (TrackModel *track, m_situation->tracks()) {
         BoatGraphicsItem *boatItem = new BoatGraphicsItem(new BoatModel(track));
         addItem(boatItem);
-        boatItem->setOrder(0);
+        boatItem->boat()->setOrder(0);
         boatItem->setPosition(track->boats()[0]->position());
         QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
         shadow->setXOffset(4);
@@ -221,6 +233,10 @@ void SituationScene::setAnimation() {
 
 void SituationScene::unSetAnimation() {
     if (debugLevel & 1 << VIEW) std::cout << "ending Animation" << std::endl;
+
+    m_scenarioAnimation->removeAnimation(m_windAnimation);
+    delete m_windAnimation;
+
     foreach (TrackAnimation *animation, m_animationItems) {
         // the boat was never really part of the track, we use situation signal
         // directly to have the graphicsitem removed
