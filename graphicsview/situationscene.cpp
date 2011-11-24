@@ -519,20 +519,28 @@ void SituationScene::moveModel(QPointF pos) {
 void SituationScene::headingBoat(QPointF pos) {
     if (!m_selectedBoatModels.isEmpty() && pos != m_modelPressed->position()) {
         QPointF point = pos - m_modelPressed->position();
+        qreal wind = m_modelPressed->wind();
         qreal theta = fmod((atan2 (point.x(), -point.y()) * 180 / M_PI) + 360.0, 360.0);
+        qreal delta = fmod(theta - wind + 360, 360);
         qreal snap = m_situation->laylineAngle();
-        if (fabs(theta)<=5) {
-            theta = 0;
-        } else if (fabs(theta-snap)<=5) {
-            theta = snap;
-        } else if (fabs(theta-(180-snap)) <=5) {
-            theta = 180-snap;
-        } else if (fabs(theta-180)<=5) {
-            theta = 180;
-        } else if (fabs(theta-(180+snap)) <=5) {
-            theta = 180+snap;
-        } else if (fabs(theta-(360-snap)) <=5) {
-            theta = 360-snap;
+        // face to wind
+        if (fabs(delta)<=5) {
+            theta = wind;
+        // port closehauled
+        } else if (fabs(delta - snap)<=5) {
+            theta = fmod(wind + snap, 360);
+        // port downwind
+        } else if (fabs(delta -(180-snap)) <=5) {
+            theta = fmod(wind + 180-snap, 360);
+        // deadwind
+        } else if (fabs(delta - 180)<=5) {
+            theta = fmod(wind - 180, 360);
+        // starboard downwind
+        } else if (fabs(delta - (180+snap)) <=5) {
+            theta = fmod(wind + 180 + snap, 360);
+        // starboard closehauled
+        } else if (fabs(delta - (360-snap)) <=5) {
+            theta = fmod(wind + 360 - snap, 360);
         }
         m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
     }
