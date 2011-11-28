@@ -38,9 +38,9 @@ class SituationModel;
     Observer Pattern.
 
     PositionModel contains data which represents an object with a position,
-    and a stacking order. It is inherited by BoatModel and TrackModel.
+    and a stacking order. It is inherited by BoatModel and PointModel.
 
-    \sa SituationModel, BoatModel, TrackModel
+    \sa SituationModel, BoatModel, PointModel
 
 */
 
