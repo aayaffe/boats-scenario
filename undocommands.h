@@ -37,6 +37,7 @@ class BoatModel;
 class MarkModel;
 class PolyLineModel;
 class PointModel;
+class WindModel;
 
 enum {
     SET_TITLE,
@@ -49,6 +50,7 @@ enum {
     SET_SERIES,
     SET_COLOR,
     SET_SHOWPATH,
+    SET_WIND,
     MOVE_MODEL,
     HEADING_BOAT,
     OVERLAP_BOAT,
@@ -244,6 +246,50 @@ class SetShowPathUndoCommand : public QUndoCommand {
 
     private:
         TrackModel *m_track;
+};
+
+class AddWindUndoCommand : public QUndoCommand {
+
+    public:
+        AddWindUndoCommand(WindModel* wind, qreal heading, QUndoCommand *parent = 0);
+        ~AddWindUndoCommand();
+        void undo();
+        void redo();
+
+    private:
+        WindModel *m_wind;
+        qreal m_heading;
+};
+
+class SetWindUndoCommand : public QUndoCommand {
+
+    public:
+        SetWindUndoCommand(WindModel* wind, int index, qreal direction, QUndoCommand *parent = 0);
+        ~SetWindUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_WIND; }
+
+    private:
+        WindModel *m_wind;
+        int m_index;
+        qreal m_oldDirection;
+        qreal m_newDirection;
+};
+
+class DeleteWindUndoCommand : public QUndoCommand {
+
+    public:
+        DeleteWindUndoCommand(WindModel* wind, int index, QUndoCommand *parent = 0);
+        ~DeleteWindUndoCommand();
+        void undo();
+        void redo();
+
+    private:
+        WindModel *m_wind;
+        int m_index;
+        qreal m_heading;
 };
 
 class MoveModelUndoCommand : public QUndoCommand {

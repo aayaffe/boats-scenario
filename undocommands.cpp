@@ -400,6 +400,84 @@ bool SetShowPathUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Add Wind
+AddWindUndoCommand::AddWindUndoCommand(WindModel* wind, qreal heading, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_wind(wind),
+        m_heading(heading) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new addwindundocommand" << std::endl;
+}
+
+AddWindUndoCommand::~AddWindUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end addwindundocommand" << std::endl;
+}
+
+void AddWindUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo addwindundocommand" << std::endl;
+    m_wind->addWind(m_heading);
+}
+
+void AddWindUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo addwindundocommand" << std::endl;
+    m_wind->deleteWind(m_wind->size()-1);
+}
+
+// Set Wind
+SetWindUndoCommand::SetWindUndoCommand(WindModel* wind, int index, qreal direction, QUndoCommand *parent)
+    : QUndoCommand(parent),
+    m_wind(wind),
+    m_index(index),
+    m_oldDirection(wind->windAt(index)),
+    m_newDirection(direction) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new setwindundocommand" << std::endl;
+}
+
+SetWindUndoCommand::~SetWindUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end setwindundocommand" << std::endl;
+}
+
+void SetWindUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo setwindundocommand" << std::endl;
+    m_wind->setWindAt(m_oldDirection, m_index);
+}
+
+void SetWindUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo setwindundocommand" << std::endl;
+    m_wind->setWindAt(m_newDirection, m_index);
+}
+
+bool SetWindUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetWindUndoCommand *setWindCommand = static_cast<const SetWindUndoCommand*>(command);
+    if (m_index != setWindCommand->m_index)
+        return false;
+
+    m_newDirection = setWindCommand->m_newDirection;
+    return true;
+}
+
+// Delete Wind
+DeleteWindUndoCommand::DeleteWindUndoCommand(WindModel* wind, int index, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_wind(wind),
+        m_index(index),
+        m_heading(m_wind->windAt(index)) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new deletewindundocommand" << std::endl;
+}
+
+DeleteWindUndoCommand::~DeleteWindUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end deletewindundocommand" << std::endl;
+}
+
+void DeleteWindUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo deletewindundocommand" << std::endl;
+    m_wind->deleteWind(m_index);
+}
+
+void DeleteWindUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo deletewindundocommand" << std::endl;
+    m_wind->addWind(m_heading, m_index);
+}
+
 // Move Model
 MoveModelUndoCommand::MoveModelUndoCommand(QList<PositionModel*> &modelList, const QPointF &deltaPosition, QUndoCommand *parent)
         : QUndoCommand(parent),
