@@ -202,6 +202,9 @@ void XmlSituationWriter::writeWind(const WindModel &wind) {
     writeStartElement("wind");
     foreach (const QString discarded, wind.discardedXml())
         writeUnknownElement(discarded);
+    if (wind.visible()) {
+        writeTextElement("visible",QString::number(wind.visible()));
+    }
     writeTextElement("x",QString::number(wind.position().x()));
     writeTextElement("y",QString::number(wind.position().y()));
     for(int i = 0; i < wind.size(); ++i) {

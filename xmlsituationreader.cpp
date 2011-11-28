@@ -319,6 +319,7 @@ void XmlSituationReader::readPoint(SituationModel *situation, PolyLineModel *pol
 }
 
 void XmlSituationReader::readWind(SituationModel *situation) {
+    bool visible = false;
     QPointF pos;
     QList<qreal> winds;
     QStringList discarded;
@@ -327,7 +328,9 @@ void XmlSituationReader::readWind(SituationModel *situation) {
         if (isEndElement())
             break;
         if (isStartElement()) {
-            if (name() == "x")
+            if (name() == "visible")
+                visible = (readElementText() == "1");
+            else if (name() == "x")
                 pos.setX(readElementText().toFloat());
             else if (name() == "y")
                 pos.setY(readElementText().toFloat());
@@ -338,10 +341,10 @@ void XmlSituationReader::readWind(SituationModel *situation) {
                 discarded.append(readUnknownElement());
         }
     }
-    situation->wind().clearWind();
     foreach (const QString elem, discarded) {
         situation->wind().appendDiscardedXml(elem);
     }
+    situation->wind().setVisible(visible);
     foreach (qreal heading, winds) {
         situation->undoStack()->push(new AddWindUndoCommand(&situation->wind(), heading));
     }
