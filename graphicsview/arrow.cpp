@@ -56,6 +56,8 @@ ArrowGraphicsItem::ArrowGraphicsItem(WindModel *wind, QGraphicsItem *parent)
     m_path.lineTo(-7,23);
     m_path.lineTo(0,30);
 
+    connect(wind, SIGNAL(windVisibleChanged(bool)),
+            this, SLOT(setVisible(bool)));
     connect(wind, SIGNAL(positionChanged(QPointF)),
             this, SLOT(setPosition(QPointF)));
     connect(wind, SIGNAL(directionChanged(qreal)),
@@ -67,6 +69,10 @@ ArrowGraphicsItem::ArrowGraphicsItem(WindModel *wind, QGraphicsItem *parent)
 
 
 ArrowGraphicsItem::~ArrowGraphicsItem() {}
+
+void ArrowGraphicsItem::setVisible(bool visible) {
+    QGraphicsItem::setVisible(visible);
+}
 
 void ArrowGraphicsItem::resetArrow() {
     setHeading(m_wind->windAt(0));

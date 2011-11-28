@@ -103,6 +103,7 @@ SituationScene::SituationScene(SituationModel *situation)
     setLaylines(situation->laylineAngle());
 
     ArrowGraphicsItem *arrow= new ArrowGraphicsItem(&situation->wind());
+    arrow->setVisible(situation->wind().visible());
     addItem(arrow);
 }
 
