@@ -1801,7 +1801,7 @@ void MainWindow::about() {
             "<p>Version %1</p></center>"
             "<p>Copyright (C) 2008-2011 Thibaut GRIDEL </p>"
             "<p></p>"
-            "<p>visit <a href=\"http://boats.berlios.de\">http://boats.berlios.de</a></p>"
+            "<p>visit <a href=\"http://boats.sf.net\">http://boats.sf.net</a></p>"
             "<p>This program is free software; you can redistribute it and/or modify "
             "it under the terms of the GNU General Public License as published by "
             "the Free Software Foundation; either version 3 of the License, or "
