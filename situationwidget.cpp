@@ -66,6 +66,10 @@ SituationWidget::SituationWidget(QWidget *parent)
     lengthSpinLabel = new QLabel(optionsGroup);
     optionsForm->addRow(lengthSpinLabel, lengthSpin);
 
+    windCheck = new QCheckBox(optionsGroup);
+    windCheckLabel = new QLabel(optionsGroup);
+    optionsForm->addRow(windCheckLabel, windCheck);
+
     // Track layout
     trackGroup = new QGroupBox(scenarioFrame);
     trackLayout = new QGridLayout(trackGroup);
@@ -143,6 +147,7 @@ void SituationWidget::changeEvent(QEvent *event) {
         laylineCheckLabel->setText(tr("Show Laylines"));
         laylineSpinLabel->setText(tr("Laylines"));
         lengthSpinLabel->setText(tr("Zone Length"));
+        windCheckLabel->setText(tr("Show Wind"));
         trackGroup->setTitle(tr("Tracks"));
         windGroup->setTitle(tr("Wind"));
         setTabText(0, tr("Scenario"));
@@ -166,6 +171,8 @@ void SituationWidget::update() {
         laylineCheck->setChecked(m_situation->showLayline());
         laylineSpin->setValue(m_situation->laylineAngle());
         lengthSpin->setValue(m_situation->situationLength());
+        windCheck->setChecked(m_situation->wind().visible());
+        windGroup->setVisible(m_situation->wind().visible());
         abstractEdit->setPlainText(m_situation->abstract());
         descriptionEdit->setPlainText(m_situation->description());
     }
@@ -211,6 +218,14 @@ void SituationWidget::setSituation(SituationModel *situation) {
                 this, SLOT(setLength(int)));
         connect (situation, SIGNAL(lengthChanged(const int)),
                 lengthSpin, SLOT(setValue(int)));
+
+        connect(windCheck, SIGNAL(toggled(bool)),
+                this, SLOT(setShowWind(bool)));
+        connect(&situation->wind(), SIGNAL(windVisibleChanged(bool)),
+                windCheck, SLOT(setChecked(bool)));
+
+        connect(windCheck, SIGNAL(toggled(bool)),
+                windGroup, SLOT(setVisible(bool)));
 
         connect(abstractEdit->document(), SIGNAL(contentsChanged()),
                 this, SLOT(setAbstract()));
@@ -264,6 +279,10 @@ void SituationWidget::unSetSituation() {
     disconnect(m_situation, 0, lengthSpin, 0);
     lengthSpin->setValue(3);
 
+    disconnect(windCheck, 0, 0, 0);
+    disconnect(&m_situation->wind(), 0, windCheck, 0);
+    windCheck->setChecked(false);
+
     disconnect(m_situation, 0, this, 0);
     disconnect(abstractEdit->document(), 0, 0, 0);
     abstractEdit->clear();
@@ -316,6 +335,12 @@ void SituationWidget::setLength(int length) {
     }
 }
 
+void SituationWidget::setShowWind(bool show) {
+    if (m_situation) {
+        if (show != m_situation->wind().visible())
+            m_situation->undoStack()->push(new SetShowWindUndoCommand(&m_situation->wind()));
+    }
+}
 
 void SituationWidget::setSeries(int series) {
     if (m_situation) {

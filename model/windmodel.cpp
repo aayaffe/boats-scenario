@@ -62,8 +62,8 @@ void WindModel::deleteWind(int order) {
 }
 
 void WindModel::clearWind() {
-    m_position = QPointF();
-    emit positionChanged(m_position);
+    setVisible(false);
+    setPosition(QPointF());
     m_discardedXml.clear();
     m_directions.clear();
     emit windReset();

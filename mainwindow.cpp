@@ -1089,6 +1089,7 @@ void MainWindow::newFile() {
         situation->undoStack()->setIndex(0);
         setCurrentFile(situation, "");
         situation->undoStack()->clear();
+        situation->wind().clearWind();
         situationWidget->unSetSituation();
         situationWidget->setSituation(situation);
         view->centerOn(0,0);

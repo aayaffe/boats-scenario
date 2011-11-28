@@ -553,6 +553,10 @@ Ali jo zelite zamenjati?</translation>
         <source>Wind</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Show Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>

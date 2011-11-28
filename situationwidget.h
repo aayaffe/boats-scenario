@@ -51,6 +51,7 @@ class SituationWidget : public QTabWidget {
         void setLayline(int angle);
         void setSeries(int series);
         void setLength(int length);
+        void setShowWind(bool);
         void setAbstract();
         void setDescription();
 
@@ -76,6 +77,8 @@ class SituationWidget : public QTabWidget {
         QLabel *laylineSpinLabel;
         QSpinBox *lengthSpin;
         QLabel *lengthSpinLabel;
+        QCheckBox *windCheck;
+        QLabel *windCheckLabel;
         QFormLayout *optionsForm;
 
         QGroupBox *trackGroup;
