@@ -33,6 +33,7 @@
 #include "markmodel.h"
 #include "polylinemodel.h"
 #include "pointmodel.h"
+#include "windmodel.h"
 
 #include "undocommands.h"
 
@@ -130,6 +131,9 @@ void XmlSituationReader::readSituation() {
 
             } else if (name() == "polyline") {
                 readPolyLine(m_situation);
+
+            } else if (name() == "wind") {
+                readWind(m_situation);
 
             } else {
                 m_situation->appendDiscardedXml(readUnknownElement());
@@ -312,6 +316,36 @@ void XmlSituationReader::readPoint(SituationModel *situation, PolyLineModel *pol
         point->appendDiscardedXml(elem);
     }
     situation->undoStack()->push(command);
+}
+
+void XmlSituationReader::readWind(SituationModel *situation) {
+    QPointF pos;
+    QList<qreal> winds;
+    QStringList discarded;
+    while (!atEnd()) {
+        readNext();
+        if (isEndElement())
+            break;
+        if (isStartElement()) {
+            if (name() == "x")
+                pos.setX(readElementText().toFloat());
+            else if (name() == "y")
+                pos.setY(readElementText().toFloat());
+            else if (name() == "direction") {
+                winds.append(readElementText().toFloat());
+            }
+            else
+                discarded.append(readUnknownElement());
+        }
+    }
+    situation->wind().clearWind();
+    foreach (const QString elem, discarded) {
+        situation->wind().appendDiscardedXml(elem);
+    }
+    foreach (qreal heading, winds) {
+        situation->undoStack()->push(new AddWindUndoCommand(&situation->wind(), heading));
+    }
+    situation->wind().setPosition(pos);
 }
 
 Boats::Series XmlSituationReader::series(const QString series) {

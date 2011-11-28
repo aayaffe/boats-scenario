@@ -69,6 +69,7 @@ bool XmlSituationWriter::writeFile(QIODevice *device) {
     writeTextElement("showlayline",QString::number(m_situation->showLayline()));
     writeTextElement("layline",QString::number(m_situation->laylineAngle()));
     writeTextElement("length",QString::number(m_situation->situationLength()));
+    writeWind(m_situation->wind());
     foreach (const QString discarded, m_situation->discardedXml())
         writeUnknownElement(discarded);
     foreach (const MarkModel *mark, m_situation->marks())
@@ -191,6 +192,21 @@ void XmlSituationWriter::writePoint(const PointModel *point) {
         writeUnknownElement(discarded);
     writeTextElement("x",QString::number(point->position().x()));
     writeTextElement("y",QString::number(point->position().y()));
+    writeEndElement();
+}
+
+void XmlSituationWriter::writeWind(const WindModel &wind) {
+    if (debugLevel & 1 << XML) {
+        std::cout << "WritePoint" << std::endl;
+    }
+    writeStartElement("wind");
+    foreach (const QString discarded, wind.discardedXml())
+        writeUnknownElement(discarded);
+    writeTextElement("x",QString::number(wind.position().x()));
+    writeTextElement("y",QString::number(wind.position().y()));
+    for(int i = 0; i < wind.size(); ++i) {
+        writeTextElement("direction", QString::number(wind.windAt(i)));
+    }
     writeEndElement();
 }
 
