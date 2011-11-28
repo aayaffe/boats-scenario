@@ -30,12 +30,20 @@
 extern int debugLevel;
 
 WindModel::WindModel(SituationModel *situation, QObject *parent)
-    : PositionModel(situation, parent) {
+    : PositionModel(situation, parent),
+    m_visible(false) {
     if (debugLevel & 1 << MODEL) std::cout << "new Wind " << this << std::endl;
 }
 
 WindModel::~WindModel() {
     if (debugLevel & 1 << MODEL) std::cout << "delete Wind " << this << std::endl;
+}
+
+void WindModel::setVisible(bool visible) {
+    if (m_visible != visible) {
+        m_visible = visible;
+        emit windVisibleChanged(visible);
+    }
 }
 
 void WindModel::addWind(const qreal direction, int order) {

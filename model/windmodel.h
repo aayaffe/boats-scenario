@@ -52,6 +52,9 @@ class WindModel : public PositionModel {
         ~WindModel();
 
         // Setters and Getters for Model Data
+        bool visible() const { return m_visible; };
+        void setVisible(bool visible);
+
         void addWind(const qreal direction, int order = -1);
         void deleteWind(int order = -1);
         void clearWind();
@@ -65,11 +68,13 @@ class WindModel : public PositionModel {
         void setDirection(qreal direction);
 
     signals:
+        void windVisibleChanged(bool visible);
         void windReset();
         void directionChanged(qreal);
 
     private:
         // Model Data
+        bool m_visible;
         QList<qreal> m_directions;
 
         // Non model Data
