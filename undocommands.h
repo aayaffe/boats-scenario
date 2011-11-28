@@ -50,6 +50,7 @@ enum {
     SET_SERIES,
     SET_COLOR,
     SET_SHOWPATH,
+    SET_SHOWWIND,
     SET_WIND,
     MOVE_MODEL,
     HEADING_BOAT,
@@ -247,6 +248,21 @@ class SetShowPathUndoCommand : public QUndoCommand {
     private:
         TrackModel *m_track;
 };
+
+class SetShowWindUndoCommand : public QUndoCommand {
+
+    public:
+        SetShowWindUndoCommand(WindModel* wind, QUndoCommand *parent = 0);
+        ~SetShowWindUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_SHOWWIND; }
+
+    private:
+        WindModel *m_wind;
+};
+
 
 class AddWindUndoCommand : public QUndoCommand {
 

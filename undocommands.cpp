@@ -400,6 +400,36 @@ bool SetShowPathUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Show Wind
+SetShowWindUndoCommand::SetShowWindUndoCommand(WindModel *wind, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_wind(wind) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new showwindundocommand" << std::endl;
+}
+
+SetShowWindUndoCommand::~SetShowWindUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end showwindundocommand" << std::endl;
+}
+
+void SetShowWindUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo showwindundocommand" << std::endl;
+    m_wind->setVisible(!m_wind->visible());
+}
+
+void SetShowWindUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo showwindundocommand" << std::endl;
+    m_wind->setVisible(!m_wind->visible());
+}
+
+bool SetShowWindUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetShowWindUndoCommand *visibleCommand = static_cast<const SetShowWindUndoCommand*>(command);
+    if (m_wind != visibleCommand->m_wind)
+        return false;
+    undo();
+    m_wind->situation()->undoStack()->setIndex(m_wind->situation()->undoStack()->index()-1);
+    return true;
+}
+
 // Add Wind
 AddWindUndoCommand::AddWindUndoCommand(WindModel* wind, qreal heading, QUndoCommand *parent)
         : QUndoCommand(parent),
