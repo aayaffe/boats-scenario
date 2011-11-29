@@ -90,9 +90,7 @@ SituationWidget::SituationWidget(QWidget *parent)
     windTableView = new QTableView(windGroup);
     windTableView->setItemDelegate(new WindDelegate);
     windTableView->verticalHeader()->hide();
-    windTableView->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
-    windTableView->horizontalHeader()->setDefaultSectionSize(60);
-    windTableView->horizontalHeader()->setStretchLastSection(true);
+    windTableView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     windTableView->horizontalHeader()->setClickable(false);
     windLayout->addWidget(windTableView);
 
