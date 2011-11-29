@@ -147,6 +147,7 @@ class SituationScene : public QGraphicsScene {
         void addPolyLine(PolyLineModel *polyline);
         void addPoint(PointModel *point);
         void setLaylines(const int angle);
+        void setWind(bool visible);
 
         // Slots for animation signals
         void setAnimation();

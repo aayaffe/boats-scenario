@@ -100,11 +100,11 @@ SituationScene::SituationScene(SituationModel *situation)
     connect(situation, SIGNAL(laylineChanged(const int)),
             this, SLOT(setLaylines(const int)));
 
+    connect(&situation->wind(), SIGNAL(windVisibleChanged(bool)),
+            this, SLOT(setWind(bool)));
+
     setLaylines(situation->laylineAngle());
 
-    ArrowGraphicsItem *arrow= new ArrowGraphicsItem(&situation->wind());
-    arrow->setVisible(situation->wind().visible());
-    addItem(arrow);
 }
 
 void SituationScene::setState(const SceneState& theValue, bool commit) {
@@ -180,6 +180,14 @@ void SituationScene::addPoint(PointModel *point) {
     if (debugLevel & 1 << VIEW) std::cout << "adding point graphics for model " << point << std::endl;
     PointGraphicsItem *pointItem = new PointGraphicsItem(point);
     addItem(pointItem);
+}
+
+void SituationScene::setWind(bool visible) {
+    if (visible) {
+        if (debugLevel & 1 << VIEW) std::cout << "adding wind graphics" << std::endl;
+        ArrowGraphicsItem *arrow= new ArrowGraphicsItem(&m_situation->wind());
+        addItem(arrow);
+    }
 }
 
 /**

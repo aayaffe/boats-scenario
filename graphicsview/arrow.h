@@ -60,11 +60,10 @@ class ArrowGraphicsItem : public QObject, public QGraphicsItem {
         virtual int type() const;
 
     public slots:
-        void setVisible(bool visible);
         void resetArrow();
         void setHeading(qreal value);
         void setPosition(QPointF position);
-        void deleteItem(WindModel *wind);
+        void deleteItem(bool visible);
 
     private:
         WindModel *m_wind;

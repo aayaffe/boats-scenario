@@ -44,7 +44,8 @@ ArrowGraphicsItem::ArrowGraphicsItem(WindModel *wind, QGraphicsItem *parent)
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
-//    setBoundingRegionGranularity(1);
+    setVisible(wind->visible());
+    setPosition(wind->position());
 
     setZValue(0);
     m_path.moveTo(0,30);
@@ -57,7 +58,7 @@ ArrowGraphicsItem::ArrowGraphicsItem(WindModel *wind, QGraphicsItem *parent)
     m_path.lineTo(0,30);
 
     connect(wind, SIGNAL(windVisibleChanged(bool)),
-            this, SLOT(setVisible(bool)));
+            this, SLOT(deleteItem(bool)));
     connect(wind, SIGNAL(positionChanged(QPointF)),
             this, SLOT(setPosition(QPointF)));
     connect(wind, SIGNAL(directionChanged(qreal)),
@@ -69,10 +70,6 @@ ArrowGraphicsItem::ArrowGraphicsItem(WindModel *wind, QGraphicsItem *parent)
 
 
 ArrowGraphicsItem::~ArrowGraphicsItem() {}
-
-void ArrowGraphicsItem::setVisible(bool visible) {
-    QGraphicsItem::setVisible(visible);
-}
 
 void ArrowGraphicsItem::resetArrow() {
     setHeading(m_wind->windAt(0));
@@ -91,10 +88,12 @@ void ArrowGraphicsItem::setPosition(QPointF position) {
     update();
 }
 
-void ArrowGraphicsItem::deleteItem(WindModel *wind) {
-    if (debugLevel & 1 << VIEW) std::cout << "deleting ArrowGraphicsItem for model" << wind << std::endl;
-    scene()->removeItem(this);
-    delete this;
+void ArrowGraphicsItem::deleteItem(bool visible) {
+    if(!visible) {
+        if (debugLevel & 1 << VIEW) std::cout << "deleting ArrowGraphicsItem for model" << m_wind << std::endl;
+        scene()->removeItem(this);
+        delete this;
+    }
 }
 
 QRectF ArrowGraphicsItem::boundingRect() const {
