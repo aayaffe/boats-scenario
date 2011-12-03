@@ -34,6 +34,7 @@ PositionModel::PositionModel(SituationModel* situation, QObject *parent)
         : QObject(parent),
         m_position(),
         m_textPosition(10,10),
+        m_laylines(false),
         m_situation(situation),
         m_wind(-1) {
     if (debugLevel & 1 << MODEL) std::cout << "new Position " << this << std::endl;
@@ -75,6 +76,13 @@ void PositionModel::setTextPosition(const QPointF& theValue) {
     if (theValue != m_textPosition) {
         m_textPosition = theValue;
         emit textPositionChanged(m_textPosition);
+    }
+}
+
+void PositionModel::setLaylines(bool theValue) {
+    if(theValue != m_laylines) {
+        m_laylines = theValue;
+        emit laylinesChanged(m_laylines);
     }
 }
 

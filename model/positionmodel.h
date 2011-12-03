@@ -63,6 +63,9 @@ class PositionModel : public QObject {
         QPointF textPosition() const {return m_textPosition; }
         void setTextPosition(const QPointF& theValue);
 
+        bool laylines() const {return m_laylines; }
+        void setLaylines(bool theValue);
+
         // Setters and Getters for Non model Data
         SituationModel* situation() const { return m_situation; }
 
@@ -78,6 +81,7 @@ class PositionModel : public QObject {
         void textChanged(QString text);
         void textPositionChanged(QPointF textPosition);
         void windChanged();
+        void laylinesChanged(bool laylines);
 
     protected:
         // Model Data
@@ -92,6 +96,9 @@ class PositionModel : public QObject {
 
         /// \a m_textPosition holds the position of the text to display
         QPointF m_textPosition;
+
+        /// \a m_laylines holds wether the object should display laylines
+        bool m_laylines;
 
         // Non model Data
         /// \a m_situation keeps a pointer to the SituationModel to which
