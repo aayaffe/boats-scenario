@@ -103,9 +103,6 @@ class BoatModel : public PositionModel {
         // Setters and Getters for Non model Data
         TrackModel* track() const { return m_track; }
 
-        void setWind(qreal wind);
-        qreal wind() const;
-
         qreal sailAngle(qreal heading = -1) const;
 
         qreal spinAngle(qreal heading = -1) const;
@@ -158,8 +155,6 @@ class BoatModel : public PositionModel {
         /// \a m_track keeps a pointer to the TrackModel to which
         /// it belongs
         TrackModel *m_track;
-
-        qreal m_wind;
 
         int m_dim;
 

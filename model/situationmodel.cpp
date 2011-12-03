@@ -223,9 +223,14 @@ void SituationModel::deletePolyLine(PolyLineModel *polyline) {
 }
 
 void SituationModel::resetWind() {
+    if (debugLevel & 1 << MODEL) std::cout << "Resetting Wind " << std::endl;
     foreach (TrackModel *track, m_tracks) {
         foreach (BoatModel *boat, track->boats()) {
+            boat->setWind(m_wind.windAt(boat->order()-1));
             boat->setTrimmedSailAngle(boat->trimmedSailAngle());
         }
+    }
+    foreach (MarkModel *mark, m_marks) {
+        mark->setWind(m_wind.windAt(0));
     }
 }

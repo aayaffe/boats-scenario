@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -66,6 +66,9 @@ class PositionModel : public QObject {
         // Setters and Getters for Non model Data
         SituationModel* situation() const { return m_situation; }
 
+        void setWind(qreal wind);
+        virtual qreal wind() const;
+
         QStringList discardedXml() const { return m_discardedXml; }
         void appendDiscardedXml(const QString& theValue);
 
@@ -74,13 +77,14 @@ class PositionModel : public QObject {
         void orderChanged(int order);
         void textChanged(QString text);
         void textPositionChanged(QPointF textPosition);
+        void windChanged();
 
     protected:
         // Model Data
         /// \a m_position holds the position of the object
         QPointF m_position;
 
-        /// \a m_order holds the stacking order of the object
+        /// \a m_order holds the stacking order of the object. It starts at 1 for track boat
         int m_order;
 
         /// \a m_text holds the text to display
@@ -93,6 +97,8 @@ class PositionModel : public QObject {
         /// \a m_situation keeps a pointer to the SituationModel to which
         /// it belongs
         SituationModel *m_situation;
+
+        qreal m_wind;
 
         /// \a m_discardedXml keeps all unparsed xml tags
         QStringList m_discardedXml;

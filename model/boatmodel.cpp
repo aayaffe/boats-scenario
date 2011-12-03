@@ -44,7 +44,6 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         m_hidden(false),
         m_acceleration(Boats::constant),
         m_track(track),
-        m_wind(-1),
         m_dim(255) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
     setOrder(track->size()+1);
@@ -144,17 +143,6 @@ void BoatModel::setAcceleration(const  Boats::Acceleration theValue) {
                 << "acceleration = " << theValue  << std::endl;
         m_acceleration = theValue;
     }
-}
-
-void BoatModel::setWind(qreal wind) {
-    m_wind = wind;
-}
-
-qreal BoatModel::wind() const {
-    if (m_wind == -1) {
-        return m_situation->wind().windAt(m_order-1);
-    }
-    return m_wind;
 }
 
 qreal BoatModel::sailAngle(qreal heading) const {

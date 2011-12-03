@@ -50,15 +50,15 @@ void WindModel::addWind(const qreal direction, int order) {
     if (order == -1) {
         order = m_directions.size();
     }
+    if (debugLevel & 1 << MODEL) std::cout << "Adding Wind " << order+1 << std::endl;
     m_directions.insert(order, direction);
     emit windReset();
-    if (debugLevel & 1 << MODEL) std::cout << "Adding Wind " << order+1 << std::endl;
 }
 
 void WindModel::deleteWind(int order) {
+    if (debugLevel & 1 << MODEL) std::cout << "Removing Wind " << order+1 << std::endl;
     m_directions.removeAt(order);
     emit windReset();
-    if (debugLevel & 1 << MODEL) std::cout << "Removing Wind " << order+1 << std::endl;
 }
 
 void WindModel::clearWind() {

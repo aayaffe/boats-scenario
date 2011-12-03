@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include <iostream>
 
 #include "positionmodel.h"
+#include "situationmodel.h"
 #include "commontypes.h"
 
 extern int debugLevel;
@@ -33,7 +34,8 @@ PositionModel::PositionModel(SituationModel* situation, QObject *parent)
         : QObject(parent),
         m_position(),
         m_textPosition(10,10),
-        m_situation(situation) {
+        m_situation(situation),
+        m_wind(-1) {
     if (debugLevel & 1 << MODEL) std::cout << "new Position " << this << std::endl;
 }
 
@@ -74,6 +76,18 @@ void PositionModel::setTextPosition(const QPointF& theValue) {
         m_textPosition = theValue;
         emit textPositionChanged(m_textPosition);
     }
+}
+
+void PositionModel::setWind(qreal wind) {
+    m_wind = wind;
+    emit windChanged();
+}
+
+qreal PositionModel::wind() const {
+    if (m_wind == -1) {
+        return m_situation->wind().windAt(m_order-1);
+    }
+    return m_wind;
 }
 
 void PositionModel::appendDiscardedXml(const QString& theValue) {
