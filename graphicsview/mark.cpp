@@ -97,6 +97,7 @@ void MarkGraphicsItem::setColor(QColor value) {
 
 void MarkGraphicsItem::setZone(bool value) {
     if (m_zone != value) {
+        prepareGeometryChange();
         m_zone = value;
         update();
     }
@@ -104,9 +105,8 @@ void MarkGraphicsItem::setZone(bool value) {
 
 void MarkGraphicsItem::setLength(int value) {
     if (m_length != value) {
-        setZone(!m_zone);
+        prepareGeometryChange();
         m_length = value;
-        setZone(!m_zone);
         update();
     }
 }
@@ -114,9 +114,8 @@ void MarkGraphicsItem::setLength(int value) {
 void MarkGraphicsItem::setSeries(int value) {
     int boatLength = m_mark->situation()->sizeForSeries((Boats::Series)value);
     if (m_boatLength != boatLength) {
-        setZone(!m_zone);
+        prepareGeometryChange();
         m_boatLength = boatLength;
-        setZone(!m_zone);
         update();
     }
 }
@@ -127,6 +126,23 @@ void MarkGraphicsItem::deleteItem(MarkModel *mark) {
         scene()->removeItem(this);
         delete this;
     }
+}
+
+void MarkGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    bool multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
+    if (!multiSelect) {
+        scene()->clearSelection();
+    }
+    setSelected(true);
+    update();
+}
+
+void MarkGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+    Q_UNUSED(event);
+}
+
+void MarkGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+    Q_UNUSED(event);
 }
 
 QRectF MarkGraphicsItem::boundingRect() const {

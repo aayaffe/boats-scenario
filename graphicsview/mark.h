@@ -75,6 +75,11 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
         void setSeries(int value);
         void deleteItem(MarkModel *mark);
 
+    protected:
+        virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
     private:
         /// \a m_mark holds the MarkModel being represented
         MarkModel *m_mark;
