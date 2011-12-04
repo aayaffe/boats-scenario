@@ -63,7 +63,8 @@ SituationScene::SituationScene(SituationModel *situation)
         m_clickState(SINGLE),
         m_defaultPopup(0),
         m_boatPopup(0),
-        m_markPopup(0) {
+        m_markPopup(0),
+        m_pointPopup(0) {
 
     // try to set a minimum scene rect
     QGraphicsItem *e1 = addEllipse(QRectF(-1000,-1000, 1, 1));
@@ -239,8 +240,15 @@ void SituationScene::setAnimation() {
     }
 
     foreach (MarkModel *mark, m_situation->marks()) {
-        connect(&mark->situation()->wind(), SIGNAL(directionChanged(qreal)),
+        connect(&m_situation->wind(), SIGNAL(directionChanged(qreal)),
                 mark, SLOT(setWind(qreal)));
+    }
+
+    foreach(PolyLineModel *poly, m_situation->polyLines()) {
+        foreach(PointModel *point, poly->points()) {
+            connect(&m_situation->wind(), SIGNAL(directionChanged(qreal)),
+                    point, SLOT(setWind(qreal)));
+        }
     }
 }
 
@@ -456,11 +464,11 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
                     return;
                 }
                 break;
-            case POINT_TYPE: {
-                m_markPopup->popup(event->screenPos());
-                return;
-            }
-            break;
+                case POINT_TYPE: {
+                    m_pointPopup->popup(event->screenPos());
+                    return;
+                }
+                break;
             }
         }
         m_defaultPopup->popup(event->screenPos());

@@ -164,6 +164,11 @@ void XmlSituationWriter::writeMark(const MarkModel *mark) {
     if (mark->length() != mark->situation()->situationLength()) {
         writeTextElement("length",QString::number(mark->length()));
     }
+    if (!mark->text().isEmpty()) {
+        writeTextElement("bubble_x",QString::number(mark->textPosition().x()));
+        writeTextElement("bubble_y",QString::number(mark->textPosition().y()));
+        writeTextElement("bubble_text",mark->text());
+    }
     if (mark->laylines()) {
         writeTextElement("laylines", QString::number(mark->laylines()));
     }
@@ -198,6 +203,14 @@ void XmlSituationWriter::writePoint(const PointModel *point) {
         writeUnknownElement(discarded);
     writeTextElement("x",QString::number(point->position().x()));
     writeTextElement("y",QString::number(point->position().y()));
+    if (!point->text().isEmpty()) {
+        writeTextElement("bubble_x",QString::number(point->textPosition().x()));
+        writeTextElement("bubble_y",QString::number(point->textPosition().y()));
+        writeTextElement("bubble_text",point->text());
+    }
+    if (point->laylines()) {
+        writeTextElement("laylines", QString::number(point->laylines()));
+    }
     writeEndElement();
 }
 

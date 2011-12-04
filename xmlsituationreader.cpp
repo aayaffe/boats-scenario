@@ -247,6 +247,8 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     QColor color;
     bool zone = false;
     int length = 0;
+    QPointF textPos(10,10);
+    QString text;
     bool laylines = 0;
     QStringList discarded;
     while (!atEnd()) {
@@ -264,6 +266,12 @@ void XmlSituationReader::readMark(SituationModel *situation) {
                 zone = (readElementText() == "1");
             else if (name() == "length")
                 length = (readElementText().toInt());
+            else if (name() == "bubble_x")
+                textPos.setX(readElementText().toFloat());
+            else if (name() == "bubble_y")
+                textPos.setY(readElementText().toFloat());
+            else if (name() == "bubble_text")
+                text = readElementText();
             else if (name() == "laylines")
                 laylines = (readElementText() == "1");
             else
@@ -278,6 +286,8 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     if (length != 0) {
         mark->setLength(length);
     }
+    mark->setTextPosition(textPos);
+    mark->setText(text);
     mark->setLaylines(laylines);
     foreach (const QString elem, discarded) {
         mark->appendDiscardedXml(elem);
@@ -304,6 +314,9 @@ void XmlSituationReader::readPolyLine(SituationModel *situation) {
 
 void XmlSituationReader::readPoint(SituationModel *situation, PolyLineModel *polyLine) {
     QPointF pos;
+    QPointF textPos(10,10);
+    QString text;
+    bool laylines = 0;
     QStringList discarded;
     while (!atEnd()) {
         readNext();
@@ -314,12 +327,23 @@ void XmlSituationReader::readPoint(SituationModel *situation, PolyLineModel *pol
                 pos.setX(readElementText().toFloat());
             else if (name() == "y")
                 pos.setY(readElementText().toFloat());
+            else if (name() == "bubble_x")
+                textPos.setX(readElementText().toFloat());
+            else if (name() == "bubble_y")
+                textPos.setY(readElementText().toFloat());
+            else if (name() == "bubble_text")
+                text = readElementText();
+            else if (name() == "laylines")
+                laylines = (readElementText() == "1");
             else
                 discarded.append(readUnknownElement());
         }
     }
     AddPointUndoCommand *command = new AddPointUndoCommand(polyLine, pos);
     PointModel *point = command->point();
+    point->setTextPosition(textPos);
+    point->setText(text);
+    point->setLaylines(laylines);
     foreach (const QString elem, discarded) {
         point->appendDiscardedXml(elem);
     }

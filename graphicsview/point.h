@@ -30,6 +30,7 @@
 
 #include "commontypes.h"
 #include "bubble.h"
+#include "laylines.h"
 
 class PointModel;
 
@@ -80,6 +81,9 @@ class PointGraphicsItem : public QObject, public QGraphicsItem {
         bool m_selected;
 
         QPolygon m_points;
+
+        /// \a m_laylines holds the laylines for the mark
+        LaylinesGraphicsItem *m_laylines;
 };
 
 #endif
