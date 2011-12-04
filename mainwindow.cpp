@@ -1766,7 +1766,7 @@ void MainWindow::loop(bool loop) {
     }
 }
 
-void MainWindow::changeAnimationState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState) {
+void MainWindow::changeAnimationState(QAbstractAnimation::State newState, QAbstractAnimation::State) {
     switch(newState) {
         case QAbstractAnimation::Running:
             if (debugLevel & 1 << ANIMATION) std::cout << "state running" << std::endl;
