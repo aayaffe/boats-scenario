@@ -488,6 +488,14 @@ Ali jo zelite zamenjati?</translation>
         <source>&amp;Acceleration</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Toggle &amp;Laylines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt+L</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

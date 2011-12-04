@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -260,6 +260,12 @@ void MainWindow::createActions() {
     connect(toggleMarkZoneAction, SIGNAL(triggered()),
             this, SLOT(toggleMarkZone()));
 
+    toggleLaylinesAction = new QAction(this);
+    toggleLaylinesAction->setIcon(QIcon(":/images/laylines.png"));
+    toggleLaylinesAction->setCheckable(true);
+    connect(toggleLaylinesAction, SIGNAL(triggered()),
+            this, SLOT(toggleLaylines()));
+
     deleteTrackAction = new QAction(this);
     connect(deleteTrackAction, SIGNAL(triggered()),
             this, SLOT(deleteTrack()));
@@ -367,6 +373,7 @@ void MainWindow::updateActions() {
     bool allKeelboat = 1;
     bool allSpinSet = 1;
     bool allTextSet = 1;
+    bool allLaylinesSet = 1;
     int flagSize = ENUM_SIZE(Boats,Flag);
     bool allFlagSet[flagSize];
     for(int i=0; i < flagSize; i++) {
@@ -398,6 +405,7 @@ void MainWindow::updateActions() {
 
     foreach(PositionModel *position, scene->selectedModels()) {
         allTextSet = allTextSet && (!position->text().isEmpty());
+        allLaylinesSet = allLaylinesSet && position->laylines();
     }
     toggleTextAction->setEnabled(scene->selectedModels().size()==1);
     toggleTextAction->setChecked(selectedItems && allTextSet);
@@ -409,6 +417,8 @@ void MainWindow::updateActions() {
         QAction *accelerationAction = accelerationMenu->actions()[i];
         accelerationAction->setChecked(allAccelerationSet[i]);
     }
+    toggleLaylinesAction->setChecked(selectedItems && allLaylinesSet);
+    toggleLaylinesAction->setEnabled(selectedItems);
 }
 
 void MainWindow::changeState(SceneState newState) {
@@ -578,6 +588,7 @@ void MainWindow::createMenus() {
     trackMenu->addMenu(accelerationMenu);
     trackMenu->addAction(toggleSpinAction);
     trackMenu->addAction(toggleMarkZoneAction);
+    trackMenu->addAction(toggleLaylinesAction);
     trackMenu->addSeparator();
     trackMenu->addAction(deleteTrackAction);
     trackMenu->addAction(deleteAction);
@@ -600,6 +611,7 @@ void MainWindow::createMenus() {
     boatPopup->addMenu(flagMenu);
     boatPopup->addMenu(accelerationMenu);
     boatPopup->addAction(toggleSpinAction);
+    boatPopup->addAction(toggleLaylinesAction);
     boatPopup->addSeparator();
     boatPopup->addAction(deleteTrackAction);
     boatPopup->addAction(deleteAction);
@@ -607,6 +619,7 @@ void MainWindow::createMenus() {
     markPopup = new QMenu(this);
     markPopup->addAction(toggleTextAction);
     markPopup->addAction(toggleMarkZoneAction);
+    markPopup->addAction(toggleLaylinesAction);
     markPopup->addSeparator();
     markPopup->addAction(deleteAction);
 
@@ -614,6 +627,7 @@ void MainWindow::createMenus() {
     pointPopup->addAction(addPointAction);
     pointPopup->addSeparator();
     pointPopup->addAction(toggleTextAction);
+    pointPopup->addAction(toggleLaylinesAction);
     pointPopup->addSeparator();
     pointPopup->addAction(deleteAction);
 
@@ -1018,6 +1032,9 @@ void MainWindow::changeEvent(QEvent *event) {
 
         toggleMarkZoneAction->setText(tr("Toggle Mark &Zone"));
         toggleMarkZoneAction->setShortcut(tr("Alt+Z"));
+
+        toggleLaylinesAction->setText(tr("Toggle &Laylines"));
+        toggleLaylinesAction->setShortcut(tr("Alt+L"));
 
         deleteTrackAction->setText(tr("Delete Track"));
         deleteTrackAction->setShortcut(tr("Ctrl+Del"));
@@ -1644,6 +1661,16 @@ void MainWindow::toggleMarkZone() {
         situation->undoStack()->push(new ZoneMarkUndoCommand(situation, markList));
     } else {
         situation->undoStack()->push(new ZoneMarkUndoCommand(situation, situation->marks()));
+    }
+}
+
+void MainWindow::toggleLaylines() {
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
+
+    QList<PositionModel *> modelList = scene->selectedModels();
+    if (! modelList.isEmpty()) {
+        situation->undoStack()->push(new SetLaylinesUndoCommand(modelList, !modelList.first()->laylines()));
     }
 }
 

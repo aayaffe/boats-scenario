@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -98,6 +98,7 @@ class MainWindow : public QMainWindow {
         void toggleText();
         void toggleSpin();
         void toggleMarkZone();
+        void toggleLaylines();
         void deleteTrack();
         void deleteModels();
 
@@ -191,6 +192,7 @@ class MainWindow : public QMainWindow {
         QAction *toggleTextAction;
         QAction *toggleSpinAction;
         QAction *toggleMarkZoneAction;
+        QAction *toggleLaylinesAction;
         QAction *deleteTrackAction;
         QAction *deleteAction;
 
