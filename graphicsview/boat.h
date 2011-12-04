@@ -34,6 +34,7 @@
 #include "spinnaker.h"
 #include "flag.h"
 #include "bubble.h"
+#include "laylines.h"
 
 class BoatModel;
 
@@ -137,6 +138,9 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_numberSize holds the font size of the number
         int m_numberSize;
+
+        /// \a m_laylines holds the laylines for the boat
+        LaylinesGraphicsItem *m_laylines;
 };
 
 #endif

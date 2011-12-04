@@ -54,7 +54,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         m_series(Boats::unknown),
         m_selected(false),
         m_order(0),
-        m_numberPath(new QGraphicsPathItem(this)) {
+        m_numberPath(new QGraphicsPathItem(this)),
+        m_laylines(new LaylinesGraphicsItem(boat, this)) {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
@@ -229,6 +230,7 @@ void BoatGraphicsItem::setHidden(bool value) {
         m_flagRect->setVisible(false);
         m_bubble->setVisible(false);
         m_numberPath->setVisible(false);
+        m_laylines->setVisible(false);
     } else {
         m_sail->setVisible(true);
         m_spin->setVisible(boat()->spin());
@@ -236,6 +238,7 @@ void BoatGraphicsItem::setHidden(bool value) {
         m_flagRect->setVisible(m_flag != Boats::noFlag);
         m_bubble->setVisible(!boat()->text().isEmpty());
         m_numberPath->setVisible(true);
+        m_laylines->setVisible(boat()->laylines());
     }
 
 }

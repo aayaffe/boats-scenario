@@ -31,6 +31,7 @@
 
 #include "commontypes.h"
 #include "bubble.h"
+#include "laylines.h"
 
 class MarkModel;
 
@@ -104,6 +105,9 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_order holds the stacking order in the mark list
         int m_order;
+
+        /// \a m_laylines holds the laylines for the mark
+        LaylinesGraphicsItem *m_laylines;
 };
 
 #endif

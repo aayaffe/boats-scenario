@@ -6,6 +6,7 @@ HEADERS += \
     $$PWD/boat.h \
     $$PWD/bubble.h \
     $$PWD/flag.h \
+    $$PWD/laylines.h \
     $$PWD/mark.h \
     $$PWD/point.h \
     $$PWD/polyline.h \
@@ -20,6 +21,7 @@ SOURCES += \
     $$PWD/boat.cpp \
     $$PWD/bubble.cpp \
     $$PWD/flag.cpp \
+    $$PWD/laylines.cpp \
     $$PWD/mark.cpp \
     $$PWD/point.cpp \
     $$PWD/polyline.cpp \

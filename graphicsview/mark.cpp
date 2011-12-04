@@ -46,7 +46,8 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
         m_boatLength(m_mark->situation()->sizeForSeries(m_mark->situation()->situationSeries())),
         m_bubble(new BubbleGraphicsItem(m_mark, this)),
         m_selected(false),
-        m_order(mark->order()) {
+        m_order(mark->order()),
+        m_laylines(new LaylinesGraphicsItem(m_mark, this)) {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
