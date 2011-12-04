@@ -78,6 +78,13 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatModel *boat, int index, QObj
     textPosAnimation->setEndValue(model->textPosition());
     addAnimation(textPosAnimation);
 
+    // laylines
+    PropertyAnimation *laylinesAnimation = new PropertyAnimation(boat, "laylines");
+    laylinesAnimation->setDuration(2000);
+    laylinesAnimation->setStartValue(model->laylines());
+    laylinesAnimation->setEndValue(model->laylines());
+    addAnimation(laylinesAnimation);
+
     // heading
     QVariantAnimation *headingAnimation;
     if (stalled) {

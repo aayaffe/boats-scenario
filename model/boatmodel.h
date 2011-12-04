@@ -56,6 +56,7 @@ class TrackModel;
 class BoatModel : public PositionModel {
         Q_OBJECT
         Q_PROPERTY(QPointF pos READ position WRITE setPosition)
+        Q_PROPERTY(bool laylines READ laylines() WRITE setLaylines)
         Q_PROPERTY(qreal heading READ heading WRITE setHeading)
         Q_PROPERTY(qreal wind READ wind WRITE setWind)
         Q_PROPERTY(qreal trimSailAngle READ trimmedSailAngle WRITE setTrimmedSailAngle)

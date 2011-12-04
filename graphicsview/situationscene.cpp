@@ -218,11 +218,13 @@ void SituationScene::setAnimation() {
 
 
     foreach (TrackModel *track, m_situation->tracks()) {
+        BoatModel *boat = track->boats()[0];
         BoatGraphicsItem *boatItem = new BoatGraphicsItem(new BoatModel(track));
         addItem(boatItem);
         boatItem->boat()->setOrder(0);
-        boatItem->setPosition(track->boats()[0]->position());
+        boatItem->setPosition(boat->position());
         boatItem->boat()->setWind(m_situation->wind().windAt(0));
+        boatItem->boat()->setLaylines(boat->laylines());
         connect(&track->situation()->wind(), SIGNAL(directionChanged(qreal)),
                 boatItem->boat(), SLOT(setWind(qreal)));
         QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
@@ -235,6 +237,11 @@ void SituationScene::setAnimation() {
         m_scenarioAnimation->addAnimation(animation);
         m_animationItems.push_back(animation);
     }
+
+    foreach (MarkModel *mark, m_situation->marks()) {
+        connect(&mark->situation()->wind(), SIGNAL(directionChanged(qreal)),
+                mark, SLOT(setWind(qreal)));
+    }
 }
 
 /**
@@ -246,6 +253,7 @@ void SituationScene::setAnimation() {
 void SituationScene::unSetAnimation() {
     if (debugLevel & 1 << VIEW) std::cout << "ending Animation" << std::endl;
 
+    m_situation->wind().setDirection(m_situation->wind().windAt(0));
     m_scenarioAnimation->removeAnimation(m_windAnimation);
     delete m_windAnimation;
 
@@ -257,6 +265,10 @@ void SituationScene::unSetAnimation() {
         m_animationItems.removeOne(animation);
         delete animation->boat();
         delete animation;
+    }
+
+    foreach (MarkModel *mark, m_situation->marks()) {
+        disconnect(mark, SLOT(setWind(qreal)));
     }
 }
 
