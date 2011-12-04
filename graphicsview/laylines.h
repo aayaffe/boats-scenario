@@ -61,7 +61,7 @@ class LaylinesGraphicsItem : public QObject, public QGraphicsPathItem {
         void setLength(int length);
         void setSeries(int value);
         void setLaylineAngle(int value);
-        void setWind();
+        void setWind(qreal value);
         void setVisible(bool visible);
 
     protected:

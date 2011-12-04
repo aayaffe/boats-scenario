@@ -69,18 +69,20 @@ class PositionModel : public QObject {
         // Setters and Getters for Non model Data
         SituationModel* situation() const { return m_situation; }
 
-        void setWind(qreal wind);
         virtual qreal wind() const;
 
         QStringList discardedXml() const { return m_discardedXml; }
         void appendDiscardedXml(const QString& theValue);
+
+    public slots:
+        virtual void setWind(qreal wind);
 
     signals:
         void positionChanged(QPointF position);
         void orderChanged(int order);
         void textChanged(QString text);
         void textPositionChanged(QPointF textPosition);
-        void windChanged();
+        void windChanged(qreal wind);
         void laylinesChanged(bool laylines);
 
     protected:

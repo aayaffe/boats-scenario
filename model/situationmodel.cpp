@@ -227,7 +227,6 @@ void SituationModel::resetWind() {
     foreach (TrackModel *track, m_tracks) {
         foreach (BoatModel *boat, track->boats()) {
             boat->setWind(m_wind.windAt(boat->order()-1));
-            boat->setTrimmedSailAngle(boat->trimmedSailAngle());
         }
     }
     foreach (MarkModel *mark, m_marks) {

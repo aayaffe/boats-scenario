@@ -150,7 +150,7 @@ qreal BoatModel::sailAngle(qreal heading) const {
     qreal sailAngle;
 
     if (heading == -1) {
-        heading = fmod(m_heading - m_situation->wind().windAt(m_order-1) + 360, 360);
+        heading = fmod(m_heading - m_wind + 360, 360);
     }
     // within 10° inside layline angle, the sail is headed
     if (heading < layline-10) {
@@ -213,6 +213,11 @@ qreal BoatModel::spinAngle(qreal heading) const {
             << " spin = " << sailAngle
             << std::endl;
     return sailAngle;
+}
+
+void BoatModel::setWind(qreal wind) {
+    PositionModel::setWind(wind);
+    setTrimmedSailAngle(trimmedSailAngle());
 }
 
 void BoatModel::setDim(int dim) {

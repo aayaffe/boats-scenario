@@ -107,6 +107,8 @@ class BoatModel : public PositionModel {
 
         qreal spinAngle(qreal heading = -1) const;
 
+        void setWind(qreal wind);
+
         void setDim(int dim);
         int dim() const { return m_dim; }
 

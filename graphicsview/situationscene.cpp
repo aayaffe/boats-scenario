@@ -222,6 +222,9 @@ void SituationScene::setAnimation() {
         addItem(boatItem);
         boatItem->boat()->setOrder(0);
         boatItem->setPosition(track->boats()[0]->position());
+        boatItem->boat()->setWind(m_situation->wind().windAt(0));
+        connect(&track->situation()->wind(), SIGNAL(directionChanged(qreal)),
+                boatItem->boat(), SLOT(setWind(qreal)));
         QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
         shadow->setXOffset(4);
         shadow->setYOffset(4);

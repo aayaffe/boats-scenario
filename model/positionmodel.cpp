@@ -88,7 +88,7 @@ void PositionModel::setLaylines(bool theValue) {
 
 void PositionModel::setWind(qreal wind) {
     m_wind = wind;
-    emit windChanged();
+    emit windChanged(m_wind);
 }
 
 qreal PositionModel::wind() const {

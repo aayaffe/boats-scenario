@@ -50,8 +50,8 @@ LaylinesGraphicsItem::LaylinesGraphicsItem(PositionModel *model, QGraphicsItem *
 
     connect(m_model, SIGNAL(laylinesChanged(bool)),
             this, SLOT(setVisible(bool)));
-    connect(m_model, SIGNAL(windChanged()),
-            this, SLOT(setWind()));
+    connect(m_model, SIGNAL(windChanged(qreal)),
+            this, SLOT(setWind(qreal)));
     connect(m_model->situation(), SIGNAL(lengthChanged(int)),
             this, SLOT(setLength(int)));
     connect(m_model->situation(), SIGNAL(laylineChanged(int)),
@@ -86,10 +86,9 @@ void LaylinesGraphicsItem::setLaylineAngle(int value) {
     }
 }
 
-void LaylinesGraphicsItem::setWind() {
-    qreal wind = m_model->wind();
-    if(m_wind != wind) {
-        m_wind = wind;
+void LaylinesGraphicsItem::setWind(qreal value) {
+    if(m_wind != value) {
+        m_wind = value;
 
         QTransform transform;
         transform.rotate(m_wind);
