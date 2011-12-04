@@ -137,6 +137,9 @@ void XmlSituationWriter::writeBoat(const BoatModel *boat) {
         writeTextElement("bubble_y",QString::number(boat->textPosition().y()));
         writeTextElement("bubble_text",boat->text());
     }
+    if (boat->laylines()) {
+        writeTextElement("laylines", QString::number(boat->laylines()));
+    }
     foreach (const QString discarded, boat->discardedXml())
         writeUnknownElement(discarded);
     writeEndElement();
@@ -160,6 +163,9 @@ void XmlSituationWriter::writeMark(const MarkModel *mark) {
     }
     if (mark->length() != mark->situation()->situationLength()) {
         writeTextElement("length",QString::number(mark->length()));
+    }
+    if (mark->laylines()) {
+        writeTextElement("laylines", QString::number(mark->laylines()));
     }
     foreach (const QString discarded, mark->discardedXml())
         writeUnknownElement(discarded);

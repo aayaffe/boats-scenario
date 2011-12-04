@@ -176,6 +176,7 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     Boats::Acceleration acceleration = Boats::constant;
     QPointF textPos(10,10);
     QString text;
+    bool laylines = 0;
     QStringList discarded;
     while (!atEnd()) {
         readNext();
@@ -210,6 +211,8 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
                 textPos.setY(readElementText().toFloat());
             else if (name() == "bubble_text")
                 text = readElementText();
+            else if (name() == "laylines")
+                laylines = (readElementText() == "1");
             else
                 discarded.append(readUnknownElement());
         }
@@ -233,6 +236,7 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     boat->setAcceleration(acceleration);
     boat->setTextPosition(textPos);
     boat->setText(text);
+    boat->setLaylines(laylines);
     foreach (const QString elem, discarded) {
         boat->appendDiscardedXml(elem);
     }
@@ -243,6 +247,7 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     QColor color;
     bool zone = false;
     int length = 0;
+    bool laylines = 0;
     QStringList discarded;
     while (!atEnd()) {
         readNext();
@@ -259,6 +264,8 @@ void XmlSituationReader::readMark(SituationModel *situation) {
                 zone = (readElementText() == "1");
             else if (name() == "length")
                 length = (readElementText().toInt());
+            else if (name() == "laylines")
+                laylines = (readElementText() == "1");
             else
                 discarded.append(readUnknownElement());
         }
@@ -271,6 +278,7 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     if (length != 0) {
         mark->setLength(length);
     }
+    mark->setLaylines(laylines);
     foreach (const QString elem, discarded) {
         mark->appendDiscardedXml(elem);
     }
