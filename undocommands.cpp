@@ -545,6 +545,46 @@ bool MoveModelUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Laylines Boat
+SetLaylinesUndoCommand::SetLaylinesUndoCommand(QList<PositionModel*> &modelList, bool laylines, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_modelList(modelList),
+        m_laylines(laylines) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new laylinesboatundocommand" << std::endl;
+    foreach (const PositionModel *model, modelList) {
+        m_laylinesList << model->laylines();
+    }
+}
+
+SetLaylinesUndoCommand::~SetLaylinesUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end laylinesboatundocommand" << std::endl;
+}
+
+void SetLaylinesUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo laylinesboatundocommand" << std::endl;
+    for(int i=0; i< m_modelList.size(); i++) {
+        PositionModel *model = m_modelList[i];
+        model->setLaylines(m_laylinesList[i]);
+    }
+}
+
+void SetLaylinesUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo laylinesboatundocommand" << std::endl;
+    for(int i=0; i< m_modelList.size(); i++) {
+        PositionModel *model = m_modelList[i];
+        model->setLaylines(m_laylines);
+    }
+}
+
+bool SetLaylinesUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetLaylinesUndoCommand *laylinesCommand = static_cast<const SetLaylinesUndoCommand*>(command);
+    if (m_modelList != laylinesCommand->m_modelList)
+        return false;
+
+    m_laylines = laylinesCommand->m_laylines;
+    return true;
+}
+
 // Add Boat
 AddBoatUndoCommand::AddBoatUndoCommand(TrackModel* track, QPointF& position, qreal heading, QUndoCommand *parent)
         : QUndoCommand(parent),

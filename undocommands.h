@@ -53,6 +53,7 @@ enum {
     SET_SHOWWIND,
     SET_WIND,
     MOVE_MODEL,
+    SET_LAYLINES,
     HEADING_BOAT,
     OVERLAP_BOAT,
     FLAG_BOAT,
@@ -320,6 +321,22 @@ class MoveModelUndoCommand : public QUndoCommand {
     private:
         QList<PositionModel*> m_modelList;
         QPointF m_deltaPosition;
+};
+
+class SetLaylinesUndoCommand : public QUndoCommand {
+
+    public:
+        SetLaylinesUndoCommand(QList<PositionModel*> &modelList, bool laylines, QUndoCommand *parent = 0);
+        ~SetLaylinesUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_LAYLINES; }
+
+    private:
+        QList<PositionModel*> m_modelList;
+        QList<bool> m_laylinesList;
+        bool m_laylines;
 };
 
 class AddBoatUndoCommand : public QUndoCommand {
