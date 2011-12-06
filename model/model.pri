@@ -8,7 +8,8 @@ HEADERS += \
     $$PWD/polylinemodel.h \
     $$PWD/positionmodel.h \
     $$PWD/situationmodel.h \
-    $$PWD/trackmodel.h
+    $$PWD/trackmodel.h \
+    $$PWD/windmodel.h
 
 SOURCES += \
     $$PWD/boatmodel.cpp \
@@ -17,4 +18,5 @@ SOURCES += \
     $$PWD/polylinemodel.cpp \
     $$PWD/positionmodel.cpp \
     $$PWD/situationmodel.cpp \
-    $$PWD/trackmodel.cpp
+    $$PWD/trackmodel.cpp \
+    $$PWD/windmodel.cpp

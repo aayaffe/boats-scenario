@@ -40,6 +40,7 @@ SituationModel::SituationModel(QObject *parent)
         m_laylineAngle(40),
         m_situationSeries(Boats::keelboat),
         m_situationLength(3),
+        m_wind(this),
         m_undoStack(new QUndoStack(this)) {
     if (debugLevel & 1 << MODEL) std::cout << "new situation " << this << std::endl;
 }

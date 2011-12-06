@@ -28,6 +28,7 @@
 #include <QtGui>
 
 #include "boats.h"
+#include "windmodel.h"
 
 class TrackModel;
 class BoatModel;
@@ -94,6 +95,8 @@ class SituationModel : public QObject {
         const QList<MarkModel*> marks() const { return m_marks; }
 
         const QList<PolyLineModel*> polyLines() const { return m_lines; }
+
+        WindModel& wind() { return m_wind; };
 
         // Setters and Getters for Non model Data
         QUndoStack * undoStack() const { return m_undoStack;}
@@ -182,6 +185,9 @@ class SituationModel : public QObject {
         /// \a m_situationLength holds the size of the Zone at Marks of
         /// the Scenario
         int m_situationLength;
+
+        /// \a m_wind holds the WindModel of the Scenario
+        WindModel m_wind;
 
         /// \a m_tracks holds the List of Tracks of the Scenario
         QList<TrackModel*> m_tracks;

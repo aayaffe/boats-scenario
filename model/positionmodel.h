@@ -75,7 +75,7 @@ class PositionModel : public QObject {
         void textChanged(QString text);
         void textPositionChanged(QPointF textPosition);
 
-    private:
+    protected:
         // Model Data
         /// \a m_position holds the position of the object
         QPointF m_position;
