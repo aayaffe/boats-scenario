@@ -1,12 +1,12 @@
 //
-// C++ Interface: commontypes
+// C++ Interface: winddelegate
 //
 // Description:
 //
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2011 Thibaut GRIDEL
+// Copyright (c) 2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,30 +22,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#ifndef COMMONTYPES_H
-#define COMMONTYPES_H
+#ifndef WINDDELEGATE_H
+#define WINDDELEGATE_H
 
-#define VERSION "201004"
+#include <QtGui>
 
-enum DebugTraces {
-    MODEL,
-    VIEW,
-    COMMAND,
-    ANIMATION,
-    DELEGATE,
-    XML,
-    EXPORT
+class WindDelegate : public QItemDelegate
+{
+     Q_OBJECT
+
+    public:
+        WindDelegate(QWidget *parent = 0) : QItemDelegate(parent) {}
+
+        QWidget *createEditor(QWidget *parent,
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) const;
+
+        void setEditorData(QWidget *editor,
+        const QModelIndex &index) const;
 };
 
-typedef enum {
-    TRACK_COLOR,
-    TRACK_PATH,
-    TRACK_SERIES
-} TrackTableItem;
-
-typedef enum {
-    WIND_INDEX,
-    WIND_DIRECTION,
-    WIND_DELETE
-} WindTableItem;
 #endif

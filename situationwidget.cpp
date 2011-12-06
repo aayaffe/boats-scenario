@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 
 #include "situationwidget.h"
 #include "trackdelegate.h"
+#include "winddelegate.h"
 
 #include "situationmodel.h"
 
@@ -78,9 +79,24 @@ SituationWidget::SituationWidget(QWidget *parent)
     trackTableView->horizontalHeader()->setClickable(false);
     trackLayout->addWidget(trackTableView);
 
+    // Wind layout
+    windGroup = new QGroupBox(scenarioFrame);
+    windLayout = new QGridLayout(windGroup);
+    windTableModel = new WindTableModel(&m_situation->wind());
+    windTableView = new QTableView(windGroup);
+    windTableView->setItemDelegate(new WindDelegate);
+    windTableView->verticalHeader()->hide();
+    windTableView->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
+    windTableView->horizontalHeader()->setDefaultSectionSize(60);
+    windTableView->horizontalHeader()->setStretchLastSection(true);
+    windTableView->horizontalHeader()->setClickable(false);
+    windLayout->addWidget(windTableView);
+
+
     // last bricks
     scenarioLayout->addWidget(optionsGroup);
     scenarioLayout->addWidget(trackGroup);
+    scenarioLayout->addWidget(windGroup);
 
     addTab(scenarioFrame,tr("Scenario"));
 
@@ -128,6 +144,7 @@ void SituationWidget::changeEvent(QEvent *event) {
         laylineSpinLabel->setText(tr("Laylines"));
         lengthSpinLabel->setText(tr("Zone Length"));
         trackGroup->setTitle(tr("Tracks"));
+        windGroup->setTitle(tr("Wind"));
         setTabText(0, tr("Scenario"));
 
         titleLabel->setText(tr("Title"));
@@ -213,6 +230,11 @@ void SituationWidget::setSituation(SituationModel *situation) {
                 trackTableModel, SLOT(deleteTrack(TrackModel*)));
         trackTableView->setModel(trackTableModel);
 
+        // Wind group
+        windTableModel->setWind(&m_situation->wind());
+        connect(&m_situation->wind(), SIGNAL(windReset()),
+                windTableModel, SLOT(updateWind()));
+        windTableView->setModel(windTableModel);
     }
 }
 
@@ -250,6 +272,7 @@ void SituationWidget::unSetSituation() {
 
     // Track Group
     disconnect(m_situation, 0, trackTableModel, 0);
+    disconnect(&m_situation->wind(), 0, windTableModel, 0);
 
     m_situation = 0;
 }

@@ -551,6 +551,10 @@ Vil du overskrive den?</translation>
         <source>Description</source>
         <translation>Beskrivelse</translation>
     </message>
+    <message>
+        <source>Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>
@@ -576,6 +580,21 @@ Vil du overskrive den?</translation>
     <message>
         <source>Series</source>
         <translation>Bådtype</translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 #include <QtGui>
 
 #include "tracktablemodel.h"
+#include "windtablemodel.h"
 
 class SituationModel;
 
@@ -81,6 +82,11 @@ class SituationWidget : public QTabWidget {
         TrackTableModel *trackTableModel;
         QTableView *trackTableView;
         QGridLayout *trackLayout;
+
+        QGroupBox *windGroup;
+        WindTableModel *windTableModel;
+        QTableView *windTableView;
+        QGridLayout *windLayout;
 
         QFrame *descriptionFrame;
         QLineEdit *titleEdit;

@@ -546,6 +546,10 @@ Do you want to replace it?</source>
         <source>Description</source>
         <translation>Descripción</translation>
     </message>
+    <message>
+        <source>Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>
@@ -571,6 +575,21 @@ Do you want to replace it?</source>
     <message>
         <source>Series</source>
         <translation>Series</translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

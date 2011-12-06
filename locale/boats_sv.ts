@@ -548,6 +548,10 @@ Vill du ersätta den?</translation>
         <source>Description</source>
         <translation>Beskrivning</translation>
     </message>
+    <message>
+        <source>Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>
@@ -573,6 +577,21 @@ Vill du ersätta den?</translation>
     <message>
         <source>Path</source>
         <translation>Spår</translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

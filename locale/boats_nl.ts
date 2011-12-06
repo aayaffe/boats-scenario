@@ -550,6 +550,10 @@ Wilt u het vervangen?</translation>
         <source>Description</source>
         <translation>Omschrijving</translation>
     </message>
+    <message>
+        <source>Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>
@@ -575,6 +579,21 @@ Wilt u het vervangen?</translation>
     <message>
         <source>Series</source>
         <translation>Serie</translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

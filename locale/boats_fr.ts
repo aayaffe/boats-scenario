@@ -549,6 +549,10 @@ Voulez-vous le remplacer?</translation>
         <source>Show Laylines</source>
         <translation>Voir Laylines</translation>
     </message>
+    <message>
+        <source>Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>
@@ -574,6 +578,21 @@ Voulez-vous le remplacer?</translation>
     <message>
         <source>Path</source>
         <translation>Chemin</translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
