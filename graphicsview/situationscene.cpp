@@ -263,6 +263,11 @@ void SituationScene::unSetAnimation() {
 
     m_situation->wind().setDirection(m_situation->wind().windAt(0));
     m_scenarioAnimation->removeAnimation(m_windAnimation);
+    for (int i = 0; i < m_situation->wind().size()-1; ++i) {
+        QAbstractAnimation *animation = m_windAnimation->animationAt(0);
+        m_windAnimation->removeAnimation(animation);
+        delete animation;
+    }
     delete m_windAnimation;
 
     foreach (TrackAnimation *animation, m_animationItems) {

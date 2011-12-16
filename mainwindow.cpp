@@ -277,7 +277,7 @@ void MainWindow::createActions() {
     animateAction = new QAction(this);
     animateAction->setIcon(QIcon(":/images/animate.png"));
     animateAction->setCheckable(true);
-    connect(animateAction, SIGNAL(toggled(bool)),
+    connect(animateAction, SIGNAL(triggered(bool)),
             this, SLOT(animate(bool)));
 
     startAction  = new QAction(this);
@@ -290,7 +290,7 @@ void MainWindow::createActions() {
     pauseAction->setIcon(QIcon(":/images/player_pause.png"));
     pauseAction->setEnabled(false);
     pauseAction->setCheckable(true);
-    connect(pauseAction, SIGNAL(toggled(bool)),
+    connect(pauseAction, SIGNAL(triggered(bool)),
             this, SLOT(pause(bool)));
 
     stopAction = new QAction(this);
@@ -303,7 +303,7 @@ void MainWindow::createActions() {
     loopAction->setIcon(QIcon(":/images/player_loop.png"));
     loopAction->setEnabled(false);
     loopAction->setCheckable(true);
-    connect(loopAction, SIGNAL(toggled(bool)),
+    connect(loopAction, SIGNAL(triggered(bool)),
             this, SLOT(loop(bool)));
 
     undoAction = new QAction(this);
@@ -1715,17 +1715,17 @@ void MainWindow::animate(bool state, bool interactive) {
     } else {
         if (scene->state() == ANIMATE) {
             scene->setState(NO_STATE);
-        }
-        scene->unSetAnimation();
-        disconnect(this, SLOT(changeAnimationState(QAbstractAnimation::State,QAbstractAnimation::State)));
-        disconnect(animationSlider, SLOT(setValue(int)));
-        disconnect(scene->animation(), SLOT(setCurrentTime(int)));
+            scene->unSetAnimation();
+            disconnect(this, SLOT(changeAnimationState(QAbstractAnimation::State,QAbstractAnimation::State)));
+            disconnect(animationSlider, SLOT(setValue(int)));
+            disconnect(scene->animation(), SLOT(setCurrentTime(int)));
 
-        animationSlider->setEnabled(false);
-        scene->animation()->stop();
-        startAction->setEnabled(false);
-        stopAction->setEnabled(false);
-        loopAction->setEnabled(false);
+            animationSlider->setEnabled(false);
+            scene->animation()->stop();
+            startAction->setEnabled(false);
+            stopAction->setEnabled(false);
+            loopAction->setEnabled(false);
+        }
     }
 }
 
