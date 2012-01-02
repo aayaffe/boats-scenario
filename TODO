@@ -1,4 +1,9 @@
 Important:
+- fix laylines on boats
+- integrate lookat
+- animate lookat
+- fix printing document
+- statechart
 - jib
 - bowsprit
 
