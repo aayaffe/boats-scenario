@@ -522,14 +522,6 @@ Möchten Sie die Datei ersetzen?</translation>
         <translation>Serien</translation>
     </message>
     <message>
-        <source>Show Laylines</source>
-        <translation>Zeige Anlieger</translation>
-    </message>
-    <message>
-        <source>Laylines</source>
-        <translation>Anlieger</translation>
-    </message>
-    <message>
         <source>Zone Length</source>
         <translation>Größe der Zone</translation>
     </message>
@@ -563,6 +555,14 @@ Möchten Sie die Datei ersetzen?</translation>
     </message>
     <message>
         <source>Show Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

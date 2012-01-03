@@ -142,8 +142,8 @@ void SituationWidget::changeEvent(QEvent *event) {
     if(event->type() == QEvent::LanguageChange) {
         optionsGroup->setTitle(tr("Options"));
         seriesLabel->setText(tr("Series"));
-        laylineCheckLabel->setText(tr("Show Laylines"));
-        laylineSpinLabel->setText(tr("Laylines"));
+        laylineCheckLabel->setText(tr("Show Grid"));
+        laylineSpinLabel->setText(tr("Layline Angle"));
         lengthSpinLabel->setText(tr("Zone Length"));
         windCheckLabel->setText(tr("Show Wind"));
         trackGroup->setTitle(tr("Tracks"));

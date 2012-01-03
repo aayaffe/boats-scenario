@@ -522,14 +522,6 @@ Ali jo zelite zamenjati?</translation>
         <translation>Serija</translation>
     </message>
     <message>
-        <source>Show Laylines</source>
-        <translation>Prikazi layline</translation>
-    </message>
-    <message>
-        <source>Laylines</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Zone Length</source>
         <translation>Dolzina cone</translation>
     </message>
@@ -563,6 +555,14 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Show Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

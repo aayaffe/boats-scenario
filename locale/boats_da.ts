@@ -524,14 +524,6 @@ Vil du overskrive den?</translation>
         <translation>Bådtype</translation>
     </message>
     <message>
-        <source>Show Laylines</source>
-        <translation>Vis laylines</translation>
-    </message>
-    <message>
-        <source>Laylines</source>
-        <translation>Layline vinkel</translation>
-    </message>
-    <message>
         <source>Zone Length</source>
         <translation>Mærkexone længde</translation>
     </message>
@@ -565,6 +557,14 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>Show Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

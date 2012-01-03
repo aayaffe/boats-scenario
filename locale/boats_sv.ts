@@ -521,14 +521,6 @@ Vill du ersätta den?</translation>
         <translation>Båttyp</translation>
     </message>
     <message>
-        <source>Show Laylines</source>
-        <translation>Visa laylines</translation>
-    </message>
-    <message>
-        <source>Laylines</source>
-        <translation>Laylines</translation>
-    </message>
-    <message>
         <source>Zone Length</source>
         <translation>Zonens storlek</translation>
     </message>
@@ -562,6 +554,14 @@ Vill du ersätta den?</translation>
     </message>
     <message>
         <source>Show Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

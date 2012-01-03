@@ -518,14 +518,6 @@ Do you want to replace it?</source>
         <translation>艇種</translation>
     </message>
     <message>
-        <source>Show Laylines</source>
-        <translation>レイラインを表示</translation>
-    </message>
-    <message>
-        <source>Laylines</source>
-        <translation>レイラインの角度</translation>
-    </message>
-    <message>
         <source>Zone Length</source>
         <translation>ゾーンの半径</translation>
     </message>
@@ -559,6 +551,14 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Show Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

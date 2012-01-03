@@ -490,11 +490,11 @@ Voulez-vous le remplacer?</translation>
     </message>
     <message>
         <source>Toggle &amp;Laylines</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher les Laylines</translation>
     </message>
     <message>
         <source>Alt+L</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -530,10 +530,6 @@ Voulez-vous le remplacer?</translation>
         <translation>Séries</translation>
     </message>
     <message>
-        <source>Laylines</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Description</source>
         <translation>Description</translation>
     </message>
@@ -554,16 +550,20 @@ Voulez-vous le remplacer?</translation>
         <translation></translation>
     </message>
     <message>
-        <source>Show Laylines</source>
-        <translation>Voir Laylines</translation>
-    </message>
-    <message>
         <source>Wind</source>
         <translation>Vent</translation>
     </message>
     <message>
         <source>Show Wind</source>
         <translation>Afficher le Vent</translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation>Afficher la Grille</translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
+        <translation>Angle des Laylines</translation>
     </message>
 </context>
 <context>

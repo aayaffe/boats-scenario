@@ -518,14 +518,6 @@ Do you want to replace it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show Laylines</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Laylines</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Zone Length</source>
         <translation type="unfinished"></translation>
     </message>
@@ -559,6 +551,14 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Show Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
