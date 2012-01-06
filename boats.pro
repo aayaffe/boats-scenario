@@ -9,6 +9,8 @@ include(itemviews/itemviews.pri)
 include(model/model.pri)
 include(locale/locale.pri)
 
+INCLUDEPATH += $$PWD
+
 HEADERS += \
     boatapplication.h \
     boats.h \
@@ -86,3 +88,4 @@ MOC_DIR = .moc/
 OBJECTS_DIR = .obj/
 
 win32:RC_FILE = boats.rc
+win32:QMAKE_LFLAGS += -static

@@ -13,11 +13,11 @@ TRANSLATIONS += \
     $$PWD/boats_sv.ts
 
 isEmpty(QMAKE_LUPDATE) {
-    win32:QMAKE_LUPDATE = $$[QT_INSTALL_BINS]\lupdate.exe
+    win32:QMAKE_LUPDATE = $$[QT_INSTALL_BINS]/lupdate.exe
     else:QMAKE_LUPDATE = $$[QT_INSTALL_BINS]/lupdate
 }
 isEmpty(QMAKE_LRELEASE) {
-    win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\lrelease.exe
+    win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease.exe
     else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
 }
 
