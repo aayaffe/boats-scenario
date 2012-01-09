@@ -451,47 +451,47 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>&amp;Hide</source>
-        <translation type="unfinished"></translation>
+        <translation>Nascondi</translation>
     </message>
     <message>
         <source>Alt+D</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Trim Sail</source>
-        <translation type="unfinished"></translation>
+        <translation>Regola Vele</translation>
     </message>
     <message>
         <source>&lt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Auto Trim</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto Regola</translation>
     </message>
     <message>
         <source>=</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Untrim Sail</source>
-        <translation type="unfinished"></translation>
+        <translation>Molla Vele</translation>
     </message>
     <message>
         <source>&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Acceleration</source>
-        <translation type="unfinished"></translation>
+        <translation>Accelerazione</translation>
     </message>
     <message>
         <source>Toggle &amp;Laylines</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra Laylines</translation>
     </message>
     <message>
         <source>Alt+L</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -548,19 +548,19 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>Vento</translation>
     </message>
     <message>
         <source>Show Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra Vento</translation>
     </message>
     <message>
         <source>Show Grid</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra Griglia</translation>
     </message>
     <message>
         <source>Layline Angle</source>
-        <translation type="unfinished"></translation>
+        <translation>Angolo Layline</translation>
     </message>
 </context>
 <context>
@@ -593,15 +593,15 @@ Do you want to replace it?</source>
     <name>WindTableModel</name>
     <message>
         <source>Index</source>
-        <translation type="unfinished"></translation>
+        <translation>Indice</translation>
     </message>
     <message>
         <source>Direction</source>
-        <translation type="unfinished"></translation>
+        <translation>Direzione</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancele Linea</translation>
     </message>
 </context>
 </TS>

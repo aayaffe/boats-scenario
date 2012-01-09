@@ -456,47 +456,47 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>&amp;Hide</source>
-        <translation type="unfinished"></translation>
+        <translation>Skjul</translation>
     </message>
     <message>
         <source>Alt+D</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Trim Sail</source>
-        <translation type="unfinished"></translation>
+        <translation>Hal hjem</translation>
     </message>
     <message>
         <source>&lt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Auto Trim</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisk skødning</translation>
     </message>
     <message>
         <source>=</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Untrim Sail</source>
-        <translation type="unfinished"></translation>
+        <translation>Slæk ud</translation>
     </message>
     <message>
         <source>&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Acceleration</source>
-        <translation type="unfinished"></translation>
+        <translation>Acceleration</translation>
     </message>
     <message>
         <source>Toggle &amp;Laylines</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis/skjul laylines</translation>
     </message>
     <message>
         <source>Alt+L</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -553,19 +553,19 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>Vind</translation>
     </message>
     <message>
         <source>Show Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis vind</translation>
     </message>
     <message>
         <source>Show Grid</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis gitter</translation>
     </message>
     <message>
         <source>Layline Angle</source>
-        <translation type="unfinished"></translation>
+        <translation>Layline vinkel</translation>
     </message>
 </context>
 <context>
@@ -598,15 +598,15 @@ Vil du overskrive den?</translation>
     <name>WindTableModel</name>
     <message>
         <source>Index</source>
-        <translation type="unfinished"></translation>
+        <translation>Indeks</translation>
     </message>
     <message>
         <source>Direction</source>
-        <translation type="unfinished"></translation>
+        <translation>Retning</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Slet</translation>
     </message>
 </context>
 </TS>

@@ -453,47 +453,50 @@ Vill du ersätta den?</translation>
     </message>
     <message>
         <source>&amp;Hide</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>Could not find a phrase including the letter H.</translatorcomment>
+        <translation>&amp;Göm</translation>
     </message>
     <message>
         <source>Alt+D</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+D</translation>
     </message>
     <message>
         <source>Trim Sail</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>Alternatively this could be only Skota, but then we run into trouble with the words for easing the sheet.</translatorcomment>
+        <translation>Skota in</translation>
     </message>
     <message>
         <source>&lt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;</translation>
     </message>
     <message>
         <source>Auto Trim</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto Trim</translation>
     </message>
     <message>
         <source>=</source>
-        <translation type="unfinished"></translation>
+        <translation>=</translation>
     </message>
     <message>
         <source>Untrim Sail</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>Skota ut is not really good Swedish, but the correct term &quot;slacka på skotet&quot; is probably too long in this context.</translatorcomment>
+        <translation>Skota ut</translation>
     </message>
     <message>
         <source>&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&gt;</translation>
     </message>
     <message>
         <source>&amp;Acceleration</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Acceleration</translation>
     </message>
     <message>
         <source>Toggle &amp;Laylines</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Laylines på och av</translation>
     </message>
     <message>
         <source>Alt+L</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+L</translation>
     </message>
 </context>
 <context>
@@ -550,19 +553,19 @@ Vill du ersätta den?</translation>
     </message>
     <message>
         <source>Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>Vind</translation>
     </message>
     <message>
         <source>Show Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>Visa vinden</translation>
     </message>
     <message>
         <source>Show Grid</source>
-        <translation type="unfinished"></translation>
+        <translation>Visa rutnät</translation>
     </message>
     <message>
         <source>Layline Angle</source>
-        <translation type="unfinished"></translation>
+        <translation>Kryssvinkel</translation>
     </message>
 </context>
 <context>
@@ -595,15 +598,15 @@ Vill du ersätta den?</translation>
     <name>WindTableModel</name>
     <message>
         <source>Index</source>
-        <translation type="unfinished"></translation>
+        <translation>Index</translation>
     </message>
     <message>
         <source>Direction</source>
-        <translation type="unfinished"></translation>
+        <translation>Riktning</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Radera</translation>
     </message>
 </context>
 </TS>
