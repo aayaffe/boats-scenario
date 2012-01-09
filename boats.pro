@@ -40,6 +40,7 @@ unix_deploy:RESOURCES = boats_unix.qrc
 else:RESOURCES = boats.qrc
 
 mac {
+    QMAKE_LFLAGS += -static
     QMAKE_INFO_PLIST = Info.plist
     ICON = boats.icns
     mime.path = boats.app/Contents/Resources
@@ -86,6 +87,9 @@ PRE_TARGETDEPS += compiler_updateqm_make_all
 MOC_DIR = .moc/
 
 OBJECTS_DIR = .obj/
+
+QMAKE_CFLAGS_RELEASE += -fvisibility=hidden
+QMAKE_CXXFLAGS_RELEASE += -fvisibility=hidden -fvisibility-inlines-hidden
 
 win32:RC_FILE = boats.rc
 win32:QMAKE_LFLAGS += -static
