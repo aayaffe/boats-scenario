@@ -150,7 +150,7 @@ qreal BoatModel::sailAngle(qreal heading) const {
     qreal sailAngle;
 
     if (heading == -1) {
-        heading = fmod(m_heading - m_wind + 360, 360);
+        heading = fmod(m_heading - wind() + 360, 360);
     }
     // within 10° inside layline angle, the sail is headed
     if (heading < layline-10) {
