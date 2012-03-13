@@ -39,14 +39,14 @@ LaylinesGraphicsItem::LaylinesGraphicsItem(PositionModel *model, QGraphicsItem *
         m_model(model),
         m_length(model->situation()->situationLength()),
         m_boatLength(model->situation()->sizeForSeries(model->situation()->situationSeries())),
-        m_laylineAngle(model->situation()->laylineAngle()),
-        m_wind(model->wind()) {
+        m_laylineAngle(model->situation()->laylineAngle()) {
     setFlag(QGraphicsItem::ItemIgnoresTransformations);
     setFlag(QGraphicsItem::ItemStacksBehindParent);
     setPen(Qt::DashLine);
 
     updatePath();
     setVisible(m_model->laylines());
+    setWind(model->wind());
 
     connect(m_model, SIGNAL(laylinesChanged(bool)),
             this, SLOT(setVisible(bool)));
