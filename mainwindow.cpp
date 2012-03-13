@@ -1533,7 +1533,8 @@ void MainWindow::trimSail() {
     QList<BoatModel *> boatList = scene->selectedBoatModels();
     if (! boatList.isEmpty()) {
         qreal trim = boatList[0]->trim();
-        if (boatList[0]->heading() < 180) {
+        qreal heading = fmod(boatList[0]->heading() - boatList[0]->wind() + 360, 360);
+        if (heading < 180) {
             trim -= 5;
         } else {
             trim += 5;
@@ -1559,7 +1560,8 @@ void MainWindow::untrimSail() {
     QList<BoatModel *> boatList = scene->selectedBoatModels();
     if (! boatList.isEmpty()) {
         qreal trim = boatList[0]->trim();
-        if (boatList[0]->heading() < 180) {
+        qreal heading = fmod(boatList[0]->heading() - boatList[0]->wind() + 360, 360);
+        if (heading < 180) {
             trim += 5;
         } else {
             trim -= 5;
