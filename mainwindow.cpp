@@ -51,6 +51,8 @@
 #include "gifwriter.h"
 #endif
 
+#define VERSION "201004"
+
 extern int debugLevel;
 
 const int MainWindow::maxRecent(5);
