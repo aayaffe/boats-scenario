@@ -65,7 +65,7 @@
     </message>
     <message>
         <source>&amp;Export Pdf...</source>
-        <translation>Pdfを出力(&amp;E)</translation>
+        <translation>Pdfとして保存(&amp;E)</translation>
     </message>
     <message>
         <source>Ctrl+E</source>
@@ -73,7 +73,7 @@
     </message>
     <message>
         <source>Export &amp;Image...</source>
-        <translation>画像を出力(&amp;I)</translation>
+        <translation>画像として保存(&amp;I)</translation>
     </message>
     <message>
         <source>Ctrl+I</source>
@@ -81,7 +81,7 @@
     </message>
     <message>
         <source>Export Ani&amp;mation...</source>
-        <translation>アニメを出力(&amp;M)</translation>
+        <translation>アニメとして保存(&amp;M)</translation>
     </message>
     <message>
         <source>Ctrl+V</source>
@@ -125,7 +125,7 @@
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
-        <translation>ポリラインを作成(&amp;P)</translation>
+        <translation>新しい線(&amp;P)</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Ins</source>
@@ -133,11 +133,11 @@
     </message>
     <message>
         <source>Create Poin&amp;t</source>
-        <translation>ポイントを作成(&amp;T)</translation>
+        <translation>線を延長(&amp;T)</translation>
     </message>
     <message>
         <source>&amp;Port Overlap</source>
-        <translation>ポートオーバーラップ(&amp;P)</translation>
+        <translation>オーバーラップ ポート(&amp;P)</translation>
     </message>
     <message>
         <source>Alt+&lt;</source>
@@ -145,7 +145,7 @@
     </message>
     <message>
         <source>&amp;Starboard Overlap</source>
-        <translation>スターボオーバーラップ(&amp;S)</translation>
+        <translation>オーバーラップ スターボ(&amp;S)</translation>
     </message>
     <message>
         <source>Alt+&gt;</source>
@@ -161,11 +161,11 @@
     </message>
     <message>
         <source>Toggle &amp;Spinnaker</source>
-        <translation>スピネーカーを表示(&amp;S)</translation>
+        <translation>スピネーカー表示/非表示(&amp;S)</translation>
     </message>
     <message>
         <source>Toggle Mark &amp;Zone</source>
-        <translation>マークゾーンを表示(&amp;Z)</translation>
+        <translation>マークゾーン表示/非表示(&amp;Z)</translation>
     </message>
     <message>
         <source>Delete Track</source>
@@ -341,7 +341,7 @@
     </message>
     <message>
         <source>Create Line</source>
-        <translation>ポリラインを作成</translation>
+        <translation>新しい線</translation>
     </message>
     <message>
         <source>The document %1 has been modified.
@@ -418,11 +418,11 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Export Image</source>
-        <translation>画像を出力</translation>
+        <translation>画像として保存</translation>
     </message>
     <message>
         <source>Export Animation</source>
-        <translation>アニメを出力</translation>
+        <translation>アニメとして保存</translation>
     </message>
     <message>
         <source>Exporting Animation...</source>
@@ -450,47 +450,47 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>&amp;Hide</source>
-        <translation type="unfinished"></translation>
+        <translation>艇を隠す(&amp;H)</translation>
     </message>
     <message>
         <source>Alt+D</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Trim Sail</source>
-        <translation type="unfinished"></translation>
+        <translation>セールを引き込む</translation>
     </message>
     <message>
         <source>&lt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Auto Trim</source>
-        <translation type="unfinished"></translation>
+        <translation>セールをトリム（自動）</translation>
     </message>
     <message>
         <source>=</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Untrim Sail</source>
-        <translation type="unfinished"></translation>
+        <translation>セールを緩める</translation>
     </message>
     <message>
         <source>&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Acceleration</source>
-        <translation type="unfinished"></translation>
+        <translation>加速(&amp;A)</translation>
     </message>
     <message>
         <source>Toggle &amp;Laylines</source>
-        <translation type="unfinished"></translation>
+        <translation>レイライン表示/非表示(&amp;L)</translation>
     </message>
     <message>
         <source>Alt+L</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -547,19 +547,19 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>風情報</translation>
     </message>
     <message>
         <source>Show Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>風を表示</translation>
     </message>
     <message>
         <source>Show Grid</source>
-        <translation type="unfinished"></translation>
+        <translation>グリッド表示</translation>
     </message>
     <message>
         <source>Layline Angle</source>
-        <translation type="unfinished"></translation>
+        <translation>レイラインの角度</translation>
     </message>
 </context>
 <context>
@@ -592,15 +592,15 @@ Do you want to replace it?</source>
     <name>WindTableModel</name>
     <message>
         <source>Index</source>
-        <translation type="unfinished"></translation>
+        <translation>一覧</translation>
     </message>
     <message>
         <source>Direction</source>
-        <translation type="unfinished"></translation>
+        <translation>風向</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>消去</translation>
     </message>
 </context>
 </TS>
