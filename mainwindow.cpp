@@ -51,7 +51,7 @@
 #include "gifwriter.h"
 #endif
 
-#define VERSION "201004"
+#define VERSION "201204"
 
 extern int debugLevel;
 
