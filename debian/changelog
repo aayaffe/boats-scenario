@@ -1,3 +1,12 @@
+boats (201204-1) unstable; urgency=low
+
+  * New upstream release.
+  * Upstream moved to sf.net.
+  * Simplifying rules and adding build-* targets.
+  * Bumping Standards (no change).
+
+ -- Thibaut Gridel <tgridel@free.fr>  Thu, 12 Apr 2012 23:45:26 +0200
+
 boats (201004-1) unstable; urgency=low
 
   * New upstream release.
