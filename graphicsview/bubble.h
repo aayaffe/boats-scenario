@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2009 Thibaut GRIDEL
+// Copyright (c) 2009-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -59,6 +59,7 @@ class BubbleGraphicsItem : public QGraphicsTextItem {
         void paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget);
+        void setVisible(bool visible);
 
     public slots:
         void updateText(QString value);

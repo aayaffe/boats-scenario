@@ -447,11 +447,55 @@ Wilt u het vervangen?</translation>
     </message>
     <message>
         <source>Alt+S</source>
-        <translation></translation>
+        <translation>Alt+S</translation>
     </message>
     <message>
         <source>Alt+Z</source>
-        <translation></translation>
+        <translation>Alt+Z</translation>
+    </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translation>&amp;Verberg</translation>
+    </message>
+    <message>
+        <source>Alt+D</source>
+        <translation>Alt+D</translation>
+    </message>
+    <message>
+        <source>Trim Sail</source>
+        <translation>Schoot Aan</translation>
+    </message>
+    <message>
+        <source>&lt;</source>
+        <translation>&lt;</translation>
+    </message>
+    <message>
+        <source>Auto Trim</source>
+        <translation>Auto Trim</translation>
+    </message>
+    <message>
+        <source>=</source>
+        <translation>=</translation>
+    </message>
+    <message>
+        <source>Untrim Sail</source>
+        <translation>Schoot Vieren</translation>
+    </message>
+    <message>
+        <source>&gt;</source>
+        <translation>&gt;</translation>
+    </message>
+    <message>
+        <source>&amp;Acceleration</source>
+        <translation>&amp;Versnelling</translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Laylines</source>
+        <translation>Toggle &amp;Laylines</translation>
+    </message>
+    <message>
+        <source>Alt+L</source>
+        <translation>Alt+L</translation>
     </message>
 </context>
 <context>
@@ -477,14 +521,6 @@ Wilt u het vervangen?</translation>
     <message>
         <source>Series</source>
         <translation>Series</translation>
-    </message>
-    <message>
-        <source>Show Laylines</source>
-        <translation>Toon Laylines</translation>
-    </message>
-    <message>
-        <source>Laylines</source>
-        <translation>Laylines</translation>
     </message>
     <message>
         <source>Zone Length</source>
@@ -514,6 +550,22 @@ Wilt u het vervangen?</translation>
         <source>Description</source>
         <translation>Omschrijving</translation>
     </message>
+    <message>
+        <source>Wind</source>
+        <translation>Wind</translation>
+    </message>
+    <message>
+        <source>Show Wind</source>
+        <translation>Toon Wind</translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation>Toon Rooster</translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
+        <translation>Layline Hoek</translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>
@@ -539,6 +591,21 @@ Wilt u het vervangen?</translation>
     <message>
         <source>Series</source>
         <translation>Serie</translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation>Index</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Richting</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Verwijder</translation>
     </message>
 </context>
 </TS>

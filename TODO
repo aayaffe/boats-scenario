@@ -1,4 +1,9 @@
 Important:
+- fix laylines on boats
+- integrate lookat
+- animate lookat
+- fix printing document
+- statechart
 - jib
 - bowsprit
 
@@ -11,8 +16,11 @@ Normal:
 - more boat shapes
 - one line for config options and their toggle
 - open in new tab
+- more flags
 
 Wishlist:
 - gpx import
 - backtrack edit
 - insert between boats
+- starting a boat at a later number
+- timing for the start boat

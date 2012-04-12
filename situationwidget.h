@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 #include <QtGui>
 
 #include "tracktablemodel.h"
+#include "windtablemodel.h"
 
 class SituationModel;
 
@@ -44,12 +45,13 @@ class SituationWidget : public QTabWidget {
         void unSetSituation();
 
         // set the model from widgets
-        void setTitle(QString title);
-        void setRules(QString rules);
+        void setTitle();
+        void setRules();
         void setShowLayline(bool);
         void setLayline(int angle);
         void setSeries(int series);
         void setLength(int length);
+        void setShowWind(bool);
         void setAbstract();
         void setDescription();
 
@@ -75,12 +77,19 @@ class SituationWidget : public QTabWidget {
         QLabel *laylineSpinLabel;
         QSpinBox *lengthSpin;
         QLabel *lengthSpinLabel;
+        QCheckBox *windCheck;
+        QLabel *windCheckLabel;
         QFormLayout *optionsForm;
 
         QGroupBox *trackGroup;
         TrackTableModel *trackTableModel;
         QTableView *trackTableView;
         QGridLayout *trackLayout;
+
+        QGroupBox *windGroup;
+        WindTableModel *windTableModel;
+        QTableView *windTableView;
+        QGridLayout *windLayout;
 
         QFrame *descriptionFrame;
         QLineEdit *titleEdit;

@@ -61,7 +61,7 @@
     </message>
     <message>
         <source>&amp;Export Pdf...</source>
-        <translation>&amp;Izvozi Pdf...</translation>
+        <translation>&amp;Izvozi pdf...</translation>
     </message>
     <message>
         <source>Ctrl+E</source>
@@ -69,7 +69,7 @@
     </message>
     <message>
         <source>Export &amp;Image...</source>
-        <translation>Izvozi &amp;Sliko...</translation>
+        <translation>Izvozi &amp;sliko...</translation>
     </message>
     <message>
         <source>Ctrl+I</source>
@@ -418,19 +418,19 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Print P&amp;review...</source>
-        <translation type="unfinished"></translation>
+        <translation>Predogled &amp;tiskanja...</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Izhod</translation>
     </message>
     <message>
         <source>Create Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustvari crto</translation>
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustvari &amp;veccrtje</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Ins</source>
@@ -438,11 +438,11 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Create Poin&amp;t</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustvari &amp;tocko</translation>
     </message>
     <message>
         <source>Toggle &amp;Spinnaker</source>
-        <translation type="unfinished"></translation>
+        <translation>Narisi &amp;spinaker</translation>
     </message>
     <message>
         <source>Alt+S</source>
@@ -451,6 +451,50 @@ Ali jo zelite zamenjati?</translation>
     <message>
         <source>Alt+Z</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt+D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trim Sail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto Trim</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Untrim Sail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Acceleration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Laylines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt+L</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -476,14 +520,6 @@ Ali jo zelite zamenjati?</translation>
     <message>
         <source>Series</source>
         <translation>Serija</translation>
-    </message>
-    <message>
-        <source>Show Laylines</source>
-        <translation>Prikazi Layline</translation>
-    </message>
-    <message>
-        <source>Laylines</source>
-        <translation></translation>
     </message>
     <message>
         <source>Zone Length</source>
@@ -513,6 +549,22 @@ Ali jo zelite zamenjati?</translation>
         <source>Description</source>
         <translation>Opis</translation>
     </message>
+    <message>
+        <source>Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>
@@ -538,6 +590,21 @@ Ali jo zelite zamenjati?</translation>
     <message>
         <source>Series</source>
         <translation>Serija</translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

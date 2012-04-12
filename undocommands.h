@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2010 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ class BoatModel;
 class MarkModel;
 class PolyLineModel;
 class PointModel;
+class WindModel;
 
 enum {
     SET_TITLE,
@@ -49,12 +50,17 @@ enum {
     SET_SERIES,
     SET_COLOR,
     SET_SHOWPATH,
+    SET_SHOWWIND,
+    SET_WIND,
     MOVE_MODEL,
+    SET_LAYLINES,
     HEADING_BOAT,
     OVERLAP_BOAT,
     FLAG_BOAT,
     TRIM_BOAT,
     SPIN_BOAT,
+    HIDE_BOAT,
+    ACCELERATE_BOAT,
     SET_TEXT,
     MOVE_TEXT,
     ZONE_MARK,
@@ -244,6 +250,65 @@ class SetShowPathUndoCommand : public QUndoCommand {
         TrackModel *m_track;
 };
 
+class SetShowWindUndoCommand : public QUndoCommand {
+
+    public:
+        SetShowWindUndoCommand(WindModel* wind, QUndoCommand *parent = 0);
+        ~SetShowWindUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_SHOWWIND; }
+
+    private:
+        WindModel *m_wind;
+};
+
+
+class AddWindUndoCommand : public QUndoCommand {
+
+    public:
+        AddWindUndoCommand(WindModel* wind, qreal heading, QUndoCommand *parent = 0);
+        ~AddWindUndoCommand();
+        void undo();
+        void redo();
+
+    private:
+        WindModel *m_wind;
+        qreal m_heading;
+};
+
+class SetWindUndoCommand : public QUndoCommand {
+
+    public:
+        SetWindUndoCommand(WindModel* wind, int index, qreal direction, QUndoCommand *parent = 0);
+        ~SetWindUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_WIND; }
+
+    private:
+        WindModel *m_wind;
+        int m_index;
+        qreal m_oldDirection;
+        qreal m_newDirection;
+};
+
+class DeleteWindUndoCommand : public QUndoCommand {
+
+    public:
+        DeleteWindUndoCommand(WindModel* wind, int index, QUndoCommand *parent = 0);
+        ~DeleteWindUndoCommand();
+        void undo();
+        void redo();
+
+    private:
+        WindModel *m_wind;
+        int m_index;
+        qreal m_heading;
+};
+
 class MoveModelUndoCommand : public QUndoCommand {
 
     public:
@@ -256,6 +321,22 @@ class MoveModelUndoCommand : public QUndoCommand {
     private:
         QList<PositionModel*> m_modelList;
         QPointF m_deltaPosition;
+};
+
+class SetLaylinesUndoCommand : public QUndoCommand {
+
+    public:
+        SetLaylinesUndoCommand(QList<PositionModel*> &modelList, bool laylines, QUndoCommand *parent = 0);
+        ~SetLaylinesUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_LAYLINES; }
+
+    private:
+        QList<PositionModel*> m_modelList;
+        QList<bool> m_laylinesList;
+        bool m_laylines;
 };
 
 class AddBoatUndoCommand : public QUndoCommand {
@@ -348,6 +429,38 @@ class SpinBoatUndoCommand : public QUndoCommand {
         QList<BoatModel*> m_boatList;
         QList<bool> m_spinList;
         bool m_spin;
+};
+
+class HiddenBoatUndoCommand : public QUndoCommand {
+
+    public:
+        HiddenBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, bool hidden, QUndoCommand *parent = 0);
+        ~HiddenBoatUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return HIDE_BOAT; }
+    private:
+        SituationModel *m_situation;
+        QList<BoatModel*> m_boatList;
+        QList<bool> m_hiddenList;
+        bool m_hidden;
+};
+
+class AccelerateBoatUndoCommand : public QUndoCommand {
+
+    public:
+        AccelerateBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, Boats::Acceleration acceleration, QUndoCommand *parent = 0);
+        ~AccelerateBoatUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return ACCELERATE_BOAT; }
+    private:
+        SituationModel *m_situation;
+        QList<BoatModel*> m_boatList;
+        QList<Boats::Acceleration> m_accelerationList;
+        Boats::Acceleration m_acceleration;
 };
 
 class SetTextUndoCommand : public QUndoCommand {

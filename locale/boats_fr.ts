@@ -57,7 +57,7 @@
     </message>
     <message>
         <source>Create &amp;Track</source>
-        <translation>Créer &amp;Piste</translation>
+        <translation>Ajouter un &amp;Bateau</translation>
     </message>
     <message>
         <source>Ctrl+Ins</source>
@@ -65,7 +65,7 @@
     </message>
     <message>
         <source>Create &amp;Boat</source>
-        <translation>Créer &amp;Bateau</translation>
+        <translation>Ajouter une &amp;Position</translation>
     </message>
     <message>
         <source>Ins</source>
@@ -73,7 +73,7 @@
     </message>
     <message>
         <source>Create &amp;Mark</source>
-        <translation>Créer &amp;Marque</translation>
+        <translation>Ajouter une &amp;Marque</translation>
     </message>
     <message>
         <source>Alt+Ins</source>
@@ -81,7 +81,7 @@
     </message>
     <message>
         <source>Delete Track</source>
-        <translation>Supprimer Piste</translation>
+        <translation>Supprimer un Bateau</translation>
     </message>
     <message>
         <source>Ctrl+Del</source>
@@ -89,7 +89,7 @@
     </message>
     <message>
         <source>&amp;Delete Selection</source>
-        <translation>&amp;Supprimer Sélection</translation>
+        <translation>&amp;Supprimer la Sélection</translation>
     </message>
     <message>
         <source>Del</source>
@@ -161,15 +161,15 @@
     </message>
     <message>
         <source>Create Track</source>
-        <translation>Créer une Piste</translation>
+        <translation>Ajouter un Bateau</translation>
     </message>
     <message>
         <source>Create Boat</source>
-        <translation>Créer un Bateau</translation>
+        <translation>Ajouter une Position</translation>
     </message>
     <message>
         <source>Create Mark</source>
-        <translation>Créer une Marque</translation>
+        <translation>Ajouter une Marque</translation>
     </message>
     <message>
         <source>Animate</source>
@@ -322,7 +322,7 @@
     </message>
     <message>
         <source>&amp;Port Overlap</source>
-        <translation>Engagement à &amp;Babord</translation>
+        <translation>Engagement à &amp;Bâbord</translation>
     </message>
     <message>
         <source>Alt+&lt;</source>
@@ -426,11 +426,11 @@ Voulez-vous le remplacer?</translation>
     </message>
     <message>
         <source>Create Line</source>
-        <translation>Créer une Ligne</translation>
+        <translation>Ajouter une Ligne</translation>
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
-        <translation>Créer une &amp;Polyligne</translation>
+        <translation>Ajouter une &amp;Polyligne</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Ins</source>
@@ -438,7 +438,7 @@ Voulez-vous le remplacer?</translation>
     </message>
     <message>
         <source>Create Poin&amp;t</source>
-        <translation>Créer un Poin&amp;t</translation>
+        <translation>Ajouter un Poin&amp;t</translation>
     </message>
     <message>
         <source>Toggle &amp;Spinnaker</source>
@@ -450,6 +450,50 @@ Voulez-vous le remplacer?</translation>
     </message>
     <message>
         <source>Alt+Z</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translation>&amp;Masquer</translation>
+    </message>
+    <message>
+        <source>Alt+D</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Trim Sail</source>
+        <translation>Border la Voile</translation>
+    </message>
+    <message>
+        <source>&lt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto Trim</source>
+        <translation>Réglage Auto</translation>
+    </message>
+    <message>
+        <source>=</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Untrim Sail</source>
+        <translation>Choquer la Voile</translation>
+    </message>
+    <message>
+        <source>&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Acceleration</source>
+        <translation>&amp;Accélération</translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Laylines</source>
+        <translation>Afficher les Laylines</translation>
+    </message>
+    <message>
+        <source>Alt+L</source>
         <translation></translation>
     </message>
 </context>
@@ -486,10 +530,6 @@ Voulez-vous le remplacer?</translation>
         <translation>Séries</translation>
     </message>
     <message>
-        <source>Laylines</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Description</source>
         <translation>Description</translation>
     </message>
@@ -510,8 +550,20 @@ Voulez-vous le remplacer?</translation>
         <translation></translation>
     </message>
     <message>
-        <source>Show Laylines</source>
-        <translation>Voir Laylines</translation>
+        <source>Wind</source>
+        <translation>Vent</translation>
+    </message>
+    <message>
+        <source>Show Wind</source>
+        <translation>Afficher le Vent</translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation>Afficher la Grille</translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
+        <translation>Angle des Laylines</translation>
     </message>
 </context>
 <context>
@@ -538,6 +590,21 @@ Voulez-vous le remplacer?</translation>
     <message>
         <source>Path</source>
         <translation>Chemin</translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation>Index</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Direction</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Supprimer</translation>
     </message>
 </context>
 </TS>

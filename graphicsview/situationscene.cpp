@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2010 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -38,25 +38,33 @@
 #include "markmodel.h"
 #include "polylinemodel.h"
 #include "pointmodel.h"
+#include "windmodel.h"
 
 #include "boat.h"
 #include "track.h"
 #include "mark.h"
 #include "polyline.h"
 #include "point.h"
-#include "boatanimation.h"
+#include "arrow.h"
+#include "trackanimation.h"
+#include "scenarioanimation.h"
+#include "angleanimation.h"
 
 extern int debugLevel;
 
 SituationScene::SituationScene(SituationModel *situation)
         : QGraphicsScene(situation),
         m_situation(situation),
+        m_scenarioAnimation(new ScenarioAnimation),
         m_trackCreated(0),
         m_state(NO_STATE),
         m_time(QTime::currentTime()),
         m_clickTime(QTime::currentTime()),
         m_clickState(SINGLE),
-        m_actionMenu(0) {
+        m_defaultPopup(0),
+        m_boatPopup(0),
+        m_markPopup(0),
+        m_pointPopup(0) {
 
     // try to set a minimum scene rect
     QGraphicsItem *e1 = addEllipse(QRectF(-1000,-1000, 1, 1));
@@ -93,7 +101,11 @@ SituationScene::SituationScene(SituationModel *situation)
     connect(situation, SIGNAL(laylineChanged(const int)),
             this, SLOT(setLaylines(const int)));
 
+    connect(&situation->wind(), SIGNAL(windVisibleChanged(bool)),
+            this, SLOT(setWind(bool)));
+
     setLaylines(situation->laylineAngle());
+
 }
 
 void SituationScene::setState(const SceneState& theValue, bool commit) {
@@ -171,47 +183,105 @@ void SituationScene::addPoint(PointModel *point) {
     addItem(pointItem);
 }
 
+void SituationScene::setWind(bool visible) {
+    if (visible) {
+        if (debugLevel & 1 << VIEW) std::cout << "adding wind graphics" << std::endl;
+        ArrowGraphicsItem *arrow= new ArrowGraphicsItem(&m_situation->wind());
+        addItem(arrow);
+    }
+}
+
 /**
     Prepares the Scene for animation mode.
     This method finds the maximum size of track, and sets the timer length
     accordingly.
     It then creates a BoatGraphicsItem for animation purpose, and associates
-    an BoatAnimation to move it along the \a timer values
+    an TrackAnimation.
 */
 
-void SituationScene::setAnimation(QTimeLine *timer) {
+void SituationScene::setAnimation() {
     if (debugLevel & 1 << VIEW) std::cout << "preparing for Animation" << std::endl;
     int maxSize = 0;
     foreach (const TrackModel *track, m_situation->tracks()) {
         if (track->boats().size() > maxSize)
             maxSize = track->boats().size() - 1;
     }
-    timer->setDuration(2000 * maxSize);
+
+    m_windAnimation = new QSequentialAnimationGroup(this);
+    for (int i = 0; i < m_situation->wind().size()-1; ++i) {
+        AngleAnimation *wind = new AngleAnimation(&m_situation->wind(), "direction");
+        wind->setDuration(2000);
+        wind->setStartValue(m_situation->wind().windAt(i));
+        wind->setEndValue(m_situation->wind().windAt(i+1));
+        m_windAnimation->addAnimation(wind);
+    }
+    m_scenarioAnimation->addAnimation(m_windAnimation);
+
 
     foreach (TrackModel *track, m_situation->tracks()) {
+        BoatModel *boat = track->boats()[0];
         BoatGraphicsItem *boatItem = new BoatGraphicsItem(new BoatModel(track));
         addItem(boatItem);
+        boatItem->boat()->setOrder(0);
+        boatItem->setPosition(boat->position());
+        boatItem->boat()->setWind(m_situation->wind().windAt(0));
+        boatItem->boat()->setLaylines(boat->laylines());
+        connect(&track->situation()->wind(), SIGNAL(directionChanged(qreal)),
+                boatItem->boat(), SLOT(setWind(qreal)));
+        QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
+        shadow->setXOffset(4);
+        shadow->setYOffset(4);
+        shadow->setBlurRadius(4);
+        boatItem->setGraphicsEffect(shadow);
 
-        BoatAnimation *animation = new BoatAnimation(track, boatItem, maxSize);
-        animation->setTimeLine(timer);
+        TrackAnimation *animation = new TrackAnimation(track, boatItem->boat(), m_scenarioAnimation);
+        m_scenarioAnimation->addAnimation(animation);
         m_animationItems.push_back(animation);
+    }
+
+    foreach (MarkModel *mark, m_situation->marks()) {
+        connect(&m_situation->wind(), SIGNAL(directionChanged(qreal)),
+                mark, SLOT(setWind(qreal)));
+    }
+
+    foreach(PolyLineModel *poly, m_situation->polyLines()) {
+        foreach(PointModel *point, poly->points()) {
+            connect(&m_situation->wind(), SIGNAL(directionChanged(qreal)),
+                    point, SLOT(setWind(qreal)));
+        }
     }
 }
 
 /**
     Restores the Scene out of animation mode.
     This method brings the scene back to the normal drawing mode.
-    For this it removes all BoatAnimation objects created in setAnimation().
+    For this it removes all TrackAnimation objects created in setAnimation().
 */
 
 void SituationScene::unSetAnimation() {
     if (debugLevel & 1 << VIEW) std::cout << "ending Animation" << std::endl;
-    foreach (BoatAnimation *animation, m_animationItems) {
-        removeItem(animation->boat());
+
+    m_situation->wind().setDirection(m_situation->wind().windAt(0));
+    m_scenarioAnimation->removeAnimation(m_windAnimation);
+    for (int i = 0; i < m_situation->wind().size()-1; ++i) {
+        QAbstractAnimation *animation = m_windAnimation->animationAt(0);
+        m_windAnimation->removeAnimation(animation);
+        delete animation;
+    }
+    delete m_windAnimation;
+
+    foreach (TrackAnimation *animation, m_animationItems) {
+        // the boat was never really part of the track, we use situation signal
+        // directly to have the graphicsitem removed
+        animation->boat()->track()->situation()->removingBoat(animation->boat());
+        m_scenarioAnimation->removeAnimation(animation);
         m_animationItems.removeOne(animation);
-        delete animation->boat()->boat();
         delete animation->boat();
         delete animation;
+    }
+
+    foreach (MarkModel *mark, m_situation->marks()) {
+        disconnect(mark, SLOT(setWind(qreal)));
     }
 }
 
@@ -233,15 +303,6 @@ void SituationScene::keyPressEvent(QKeyEvent *event) {
         } else if (event->key() == Qt::Key_Minus) {
             qreal theta = fmod(m_selectedBoatModels[0]->heading() - 5 + 360.0, 360.0);
             m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
-
-        } else if (event->key() == Qt::Key_Less) {
-            m_situation->undoStack()->push(new TrimBoatUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->trim() - 5));
-
-        } else if (event->key() == Qt::Key_Greater) {
-            m_situation->undoStack()->push(new TrimBoatUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->trim() + 5));
-
-        } else if (event->key() == Qt::Key_Equal) {
-            m_situation->undoStack()->push(new TrimBoatUndoCommand(m_selectedBoatModels, 0));
         }
     }
 
@@ -395,7 +456,27 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
     if (click && (event->button() == Qt::RightButton
                 || (event->button() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0)))) {
-        m_actionMenu->popup(event->screenPos());
+        if (!m_selectedModels.isEmpty()) {
+            switch(selectedItems()[0]->type()) {
+                case BOAT_TYPE: {
+                    m_boatPopup->popup(event->screenPos());
+                    return;
+                }
+                break;
+
+                case MARK_TYPE: {
+                    m_markPopup->popup(event->screenPos());
+                    return;
+                }
+                break;
+                case POINT_TYPE: {
+                    m_pointPopup->popup(event->screenPos());
+                    return;
+                }
+                break;
+            }
+        }
+        m_defaultPopup->popup(event->screenPos());
         return;
     }
 
@@ -475,20 +556,28 @@ void SituationScene::moveModel(QPointF pos) {
 void SituationScene::headingBoat(QPointF pos) {
     if (!m_selectedBoatModels.isEmpty() && pos != m_modelPressed->position()) {
         QPointF point = pos - m_modelPressed->position();
+        qreal wind = m_modelPressed->wind();
         qreal theta = fmod((atan2 (point.x(), -point.y()) * 180 / M_PI) + 360.0, 360.0);
+        qreal delta = fmod(theta - wind + 360, 360);
         qreal snap = m_situation->laylineAngle();
-        if (fabs(theta)<=5) {
-            theta = 0;
-        } else if (fabs(theta-snap)<=5) {
-            theta = snap;
-        } else if (fabs(theta-(180-snap)) <=5) {
-            theta = 180-snap;
-        } else if (fabs(theta-180)<=5) {
-            theta = 180;
-        } else if (fabs(theta-(180+snap)) <=5) {
-            theta = 180+snap;
-        } else if (fabs(theta-(360-snap)) <=5) {
-            theta = 360-snap;
+        // face to wind
+        if (fabs(delta)<=5) {
+            theta = wind;
+        // port closehauled
+        } else if (fabs(delta - snap)<=5) {
+            theta = fmod(wind + snap, 360);
+        // port downwind
+        } else if (fabs(delta -(180-snap)) <=5) {
+            theta = fmod(wind + 180-snap, 360);
+        // deadwind
+        } else if (fabs(delta - 180)<=5) {
+            theta = fmod(wind - 180, 360);
+        // starboard downwind
+        } else if (fabs(delta - (180+snap)) <=5) {
+            theta = fmod(wind + 180 + snap, 360);
+        // starboard closehauled
+        } else if (fabs(delta - (360-snap)) <=5) {
+            theta = fmod(wind + 360 - snap, 360);
         }
         m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
     }
@@ -499,7 +588,7 @@ void SituationScene::createTrack(QPointF pos) {
     m_situation->undoStack()->push(command);
     TrackModel *track = command->track();
     BoatModel *boat = new BoatModel(track, track);
-    boat->setDim(true);
+    boat->setDim(64);
     boat->setPosition(pos);
     track->addBoat(boat);
     m_trackCreated = track;
@@ -508,10 +597,10 @@ void SituationScene::createTrack(QPointF pos) {
 void SituationScene::createBoat(QPointF pos) {
     if (m_trackCreated) {
         m_situation->undoStack()->endMacro();
-        m_trackCreated->boats().last()->setDim(false);
+        m_trackCreated->boats().last()->setDim(255);
         qreal heading = m_trackCreated->boats().last()->heading();
         AddBoatUndoCommand *command = new AddBoatUndoCommand(m_trackCreated, pos, heading);
-        command->boat()->setDim(true);
+        command->boat()->setDim(64);
         m_situation->undoStack()->beginMacro("");
         m_situation->undoStack()->push(command);
     }
@@ -569,6 +658,10 @@ void SituationScene::setSelectedModels() {
                 m_selectedPointModels << point;
                 }
                 break;
+            case ARROW_TYPE: {
+                WindModel *wind = &m_situation->wind();
+                m_selectedModels << wind;
+            }
         }
     }
     if (debugLevel & 1 << VIEW) std::cout << "SelectedModels update " << m_selectedModels.size() << std::endl;

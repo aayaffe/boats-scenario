@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -87,12 +87,18 @@ class MainWindow : public QMainWindow {
         void addMark();
         void addPolyLine();
         void addPoint();
+        void trimSail();
+        void autotrimSail();
+        void untrimSail();
         void togglePortOverlap();
         void toggleStarboardOverlap();
         void toggleFlag();
+        void toggleAcceleration();
+        void toggleHidden();
         void toggleText();
         void toggleSpin();
         void toggleMarkZone();
+        void toggleLaylines();
         void deleteTrack();
         void deleteModels();
 
@@ -102,7 +108,7 @@ class MainWindow : public QMainWindow {
         void pause(bool pause);
         void stop();
         void loop(bool loop);
-        void changeAnimationState(QTimeLine::State newState);
+        void changeAnimationState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 
         // About actions
         void toggleLang();
@@ -139,6 +145,7 @@ class MainWindow : public QMainWindow {
         static const int maxRecent;
         QStringList recentList;
         QStringList fileList;
+        QString filePath;
 
         // Widgets on the window
         QMenuBar *menubar;
@@ -150,7 +157,6 @@ class MainWindow : public QMainWindow {
         QDockWidget *situationDock;
         SituationWidget *situationWidget;
         QStatusBar *statusbar;
-        QTimeLine *timeline;
         QSlider *animationSlider;
         QTranslator *qtTranslator;
         QTranslator *translator;
@@ -177,11 +183,16 @@ class MainWindow : public QMainWindow {
         QAction *addMarkAction;
         QAction *addPolyLineAction;
         QAction *addPointAction;
+        QAction *trimSailAction;
+        QAction *autotrimSailAction;
+        QAction *untrimSailAction;
         QAction *togglePortOverlapAction;
         QAction *toggleStarboardOverlapAction;
+        QAction *toggleHiddenAction;
         QAction *toggleTextAction;
         QAction *toggleSpinAction;
         QAction *toggleMarkZoneAction;
+        QAction *toggleLaylinesAction;
         QAction *deleteTrackAction;
         QAction *deleteAction;
 
@@ -209,6 +220,11 @@ class MainWindow : public QMainWindow {
         QMenu *recentMenu;
         QMenu *trackMenu;
         QMenu *flagMenu;
+        QMenu *accelerationMenu;
+        QMenu *defaultPopup;
+        QMenu *boatPopup;
+        QMenu *markPopup;
+        QMenu *pointPopup;
         QMenu *historyMenu;
         QMenu *zoomMenu;
         QMenu *animationMenu;

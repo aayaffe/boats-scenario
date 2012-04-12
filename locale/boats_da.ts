@@ -454,6 +454,50 @@ Vil du overskrive den?</translation>
         <source>Alt+Z</source>
         <translation></translation>
     </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translation>Skjul</translation>
+    </message>
+    <message>
+        <source>Alt+D</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Trim Sail</source>
+        <translation>Hal hjem</translation>
+    </message>
+    <message>
+        <source>&lt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto Trim</source>
+        <translation>Automatisk skødning</translation>
+    </message>
+    <message>
+        <source>=</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Untrim Sail</source>
+        <translation>Slæk ud</translation>
+    </message>
+    <message>
+        <source>&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Acceleration</source>
+        <translation>Acceleration</translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Laylines</source>
+        <translation>Vis/skjul laylines</translation>
+    </message>
+    <message>
+        <source>Alt+L</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -478,14 +522,6 @@ Vil du overskrive den?</translation>
     <message>
         <source>Series</source>
         <translation>Bådtype</translation>
-    </message>
-    <message>
-        <source>Show Laylines</source>
-        <translation>Vis laylines</translation>
-    </message>
-    <message>
-        <source>Laylines</source>
-        <translation>Layline vinkel</translation>
     </message>
     <message>
         <source>Zone Length</source>
@@ -515,6 +551,22 @@ Vil du overskrive den?</translation>
         <source>Description</source>
         <translation>Beskrivelse</translation>
     </message>
+    <message>
+        <source>Wind</source>
+        <translation>Vind</translation>
+    </message>
+    <message>
+        <source>Show Wind</source>
+        <translation>Vis vind</translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation>Vis gitter</translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
+        <translation>Layline vinkel</translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>
@@ -540,6 +592,21 @@ Vil du overskrive den?</translation>
     <message>
         <source>Series</source>
         <translation>Bådtype</translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation>Indeks</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Retning</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Slet</translation>
     </message>
 </context>
 </TS>

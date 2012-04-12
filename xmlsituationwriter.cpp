@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -69,6 +69,7 @@ bool XmlSituationWriter::writeFile(QIODevice *device) {
     writeTextElement("showlayline",QString::number(m_situation->showLayline()));
     writeTextElement("layline",QString::number(m_situation->laylineAngle()));
     writeTextElement("length",QString::number(m_situation->situationLength()));
+    writeWind(m_situation->wind());
     foreach (const QString discarded, m_situation->discardedXml())
         writeUnknownElement(discarded);
     foreach (const MarkModel *mark, m_situation->marks())
@@ -125,10 +126,19 @@ void XmlSituationWriter::writeBoat(const BoatModel *boat) {
     if (boat->flag() != Boats::noFlag) {
         writeTextElement("flag", ENUM_NAME(Boats, Flag, boat->flag()));
     }
+    if (boat->hidden()) {
+        writeTextElement("hidden",QString::number(boat->hidden()));
+    }
+    if (boat->acceleration() != Boats::constant) {
+        writeTextElement("acceleration", ENUM_NAME(Boats, Acceleration, boat->acceleration()));
+    }
     if (!boat->text().isEmpty()) {
         writeTextElement("bubble_x",QString::number(boat->textPosition().x()));
         writeTextElement("bubble_y",QString::number(boat->textPosition().y()));
         writeTextElement("bubble_text",boat->text());
+    }
+    if (boat->laylines()) {
+        writeTextElement("laylines", QString::number(boat->laylines()));
     }
     foreach (const QString discarded, boat->discardedXml())
         writeUnknownElement(discarded);
@@ -153,6 +163,14 @@ void XmlSituationWriter::writeMark(const MarkModel *mark) {
     }
     if (mark->length() != mark->situation()->situationLength()) {
         writeTextElement("length",QString::number(mark->length()));
+    }
+    if (!mark->text().isEmpty()) {
+        writeTextElement("bubble_x",QString::number(mark->textPosition().x()));
+        writeTextElement("bubble_y",QString::number(mark->textPosition().y()));
+        writeTextElement("bubble_text",mark->text());
+    }
+    if (mark->laylines()) {
+        writeTextElement("laylines", QString::number(mark->laylines()));
     }
     foreach (const QString discarded, mark->discardedXml())
         writeUnknownElement(discarded);
@@ -185,6 +203,32 @@ void XmlSituationWriter::writePoint(const PointModel *point) {
         writeUnknownElement(discarded);
     writeTextElement("x",QString::number(point->position().x()));
     writeTextElement("y",QString::number(point->position().y()));
+    if (!point->text().isEmpty()) {
+        writeTextElement("bubble_x",QString::number(point->textPosition().x()));
+        writeTextElement("bubble_y",QString::number(point->textPosition().y()));
+        writeTextElement("bubble_text",point->text());
+    }
+    if (point->laylines()) {
+        writeTextElement("laylines", QString::number(point->laylines()));
+    }
+    writeEndElement();
+}
+
+void XmlSituationWriter::writeWind(const WindModel &wind) {
+    if (debugLevel & 1 << XML) {
+        std::cout << "WritePoint" << std::endl;
+    }
+    writeStartElement("wind");
+    foreach (const QString discarded, wind.discardedXml())
+        writeUnknownElement(discarded);
+    if (wind.visible()) {
+        writeTextElement("visible",QString::number(wind.visible()));
+    }
+    writeTextElement("x",QString::number(wind.position().x()));
+    writeTextElement("y",QString::number(wind.position().y()));
+    for(int i = 0; i < wind.size(); ++i) {
+        writeTextElement("direction", QString::number(wind.windAt(i)));
+    }
     writeEndElement();
 }
 

@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 
 #include "commontypes.h"
 #include "bubble.h"
+#include "laylines.h"
 
 class MarkModel;
 
@@ -50,7 +51,9 @@ class MarkModel;
 */
 
 class MarkGraphicsItem : public QObject, public QGraphicsItem {
-        Q_OBJECT
+    Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
+
     public:
         MarkGraphicsItem(MarkModel *mark = 0, QGraphicsItem *parent = 0);
         ~MarkGraphicsItem();
@@ -72,6 +75,11 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
         void setLength(int length);
         void setSeries(int value);
         void deleteItem(MarkModel *mark);
+
+    protected:
+        virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
     private:
         /// \a m_mark holds the MarkModel being represented
@@ -97,6 +105,9 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_order holds the stacking order in the mark list
         int m_order;
+
+        /// \a m_laylines holds the laylines for the mark
+        LaylinesGraphicsItem *m_laylines;
 };
 
 #endif

@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2009-2010 Thibaut GRIDEL
+// Copyright (c) 2009-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
 
 #include "commontypes.h"
 #include "bubble.h"
+#include "laylines.h"
 
 class PointModel;
 
@@ -49,7 +50,9 @@ class PointModel;
 */
 
 class PointGraphicsItem : public QObject, public QGraphicsItem {
-        Q_OBJECT
+    Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
+
     public:
         PointGraphicsItem(PointModel *point = 0, QGraphicsItem *parent = 0);
         ~PointGraphicsItem();
@@ -78,6 +81,9 @@ class PointGraphicsItem : public QObject, public QGraphicsItem {
         bool m_selected;
 
         QPolygon m_points;
+
+        /// \a m_laylines holds the laylines for the mark
+        LaylinesGraphicsItem *m_laylines;
 };
 
 #endif

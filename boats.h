@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2009 Thibaut GRIDEL
+// Copyright (c) 2009-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ public:
         starboard = 0x1,
         port = 0x2
     };
-    Q_ENUMS (Overlap);
+    Q_FLAGS( Overlap Overlaps)
     Q_DECLARE_FLAGS(Overlaps, Overlap)
 
     enum Flag {
@@ -72,11 +72,18 @@ public:
     };
     Q_ENUMS (Flag);
 
+    enum Acceleration {
+        constant,
+        accelerating,
+        decelerating
+    };
+    Q_ENUMS (Acceleration);
+
 private:
     static QList<QString> m_seriesList;
 
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(Boats::Overlaps)
+Q_DECLARE_METATYPE(Boats::Overlaps)
 
 #endif

@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -46,7 +46,8 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
         m_boatLength(m_mark->situation()->sizeForSeries(m_mark->situation()->situationSeries())),
         m_bubble(new BubbleGraphicsItem(m_mark, this)),
         m_selected(false),
-        m_order(mark->order()) {
+        m_order(mark->order()),
+        m_laylines(new LaylinesGraphicsItem(m_mark, this)) {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
@@ -97,6 +98,7 @@ void MarkGraphicsItem::setColor(QColor value) {
 
 void MarkGraphicsItem::setZone(bool value) {
     if (m_zone != value) {
+        prepareGeometryChange();
         m_zone = value;
         update();
     }
@@ -104,9 +106,8 @@ void MarkGraphicsItem::setZone(bool value) {
 
 void MarkGraphicsItem::setLength(int value) {
     if (m_length != value) {
-        setZone(!m_zone);
+        prepareGeometryChange();
         m_length = value;
-        setZone(!m_zone);
         update();
     }
 }
@@ -114,9 +115,8 @@ void MarkGraphicsItem::setLength(int value) {
 void MarkGraphicsItem::setSeries(int value) {
     int boatLength = m_mark->situation()->sizeForSeries((Boats::Series)value);
     if (m_boatLength != boatLength) {
-        setZone(!m_zone);
+        prepareGeometryChange();
         m_boatLength = boatLength;
-        setZone(!m_zone);
         update();
     }
 }
@@ -127,6 +127,23 @@ void MarkGraphicsItem::deleteItem(MarkModel *mark) {
         scene()->removeItem(this);
         delete this;
     }
+}
+
+void MarkGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    bool multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
+    if (!multiSelect) {
+        scene()->clearSelection();
+    }
+    setSelected(true);
+    update();
+}
+
+void MarkGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+    Q_UNUSED(event);
+}
+
+void MarkGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+    Q_UNUSED(event);
 }
 
 QRectF MarkGraphicsItem::boundingRect() const {

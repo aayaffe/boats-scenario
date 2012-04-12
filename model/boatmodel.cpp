@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -41,8 +41,10 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         m_spinTrim(0),
         m_overlap(Boats::none),
         m_flag(Boats::noFlag),
+        m_hidden(false),
+        m_acceleration(Boats::constant),
         m_track(track),
-        m_dim(false) {
+        m_dim(255) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
     setOrder(track->size()+1);
 }
@@ -53,10 +55,14 @@ BoatModel::~BoatModel() {
 
 void BoatModel::setHeading(const qreal& theValue) {
     if (theValue != m_heading) {
+        if (debugLevel & 1 << MODEL) std::cout
+                << "heading = " << theValue  << std::endl;
         m_heading = fmod(theValue+360.0,360.0);
         emit headingChanged(m_heading);
-        emit trimmedSailAngleChanged(sailAngle()+ m_trim);
-        emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
+        setTrimmedSailAngle(trimmedSailAngle());
+        if (m_spin) {
+            emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
+        }
         m_track->changingTrack(m_track);
     }
 }
@@ -75,8 +81,12 @@ void BoatModel::setTrim(const qreal& theValue) {
         if (debugLevel & 1 << MODEL) std::cout
                 << "trim = " << theValue  << std::endl;
         emit trimChanged(m_trim);
-        emit trimmedSailAngleChanged(sailAngle()+ m_trim);
+        setTrimmedSailAngle(trimmedSailAngle());
     }
+}
+
+void BoatModel::setTrimmedSailAngle(qreal theValue) {
+    emit trimmedSailAngleChanged(theValue);
 }
 
 void BoatModel::setSpin(const bool theValue) {
@@ -118,12 +128,29 @@ void BoatModel::setFlag(const  Boats::Flag theValue) {
     }
 }
 
+void BoatModel::setHidden(const  bool theValue) {
+    if (theValue != m_hidden) {
+        if (debugLevel & 1 << MODEL) std::cout
+                << "hidden = " << theValue  << std::endl;
+        m_hidden = theValue;
+        emit hiddenChanged(m_hidden);
+    }
+}
+
+void BoatModel::setAcceleration(const  Boats::Acceleration theValue) {
+    if (theValue != m_acceleration) {
+        if (debugLevel & 1 << MODEL) std::cout
+                << "acceleration = " << theValue  << std::endl;
+        m_acceleration = theValue;
+    }
+}
+
 qreal BoatModel::sailAngle(qreal heading) const {
     qreal layline = situation()->laylineAngle();
     qreal sailAngle;
 
     if (heading == -1) {
-        heading = m_heading;
+        heading = fmod(m_heading - wind() + 360, 360);
     }
     // within 10° inside layline angle, the sail is headed
     if (heading < layline-10) {
@@ -188,7 +215,16 @@ qreal BoatModel::spinAngle(qreal heading) const {
     return sailAngle;
 }
 
-void BoatModel::setDim(bool dim) {
+void BoatModel::setWind(qreal wind) {
+    PositionModel::setWind(wind);
+    setTrimmedSailAngle(trimmedSailAngle());
+}
+
+void BoatModel::setDim(int dim) {
     m_dim = dim;
-    dimChanged(dim);
+    emit dimChanged(dim);
+}
+
+void BoatModel::setPath(QPainterPath path) {
+    m_path = path;
 }

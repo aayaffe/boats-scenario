@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2010 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@
 #include "spinnaker.h"
 #include "flag.h"
 #include "bubble.h"
+#include "laylines.h"
 
 class BoatModel;
 
@@ -53,7 +54,9 @@ class BoatModel;
 */
 
 class BoatGraphicsItem : public QObject, public QGraphicsItem {
-        Q_OBJECT
+    Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
+
     public:
         BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent = 0);
         virtual ~BoatGraphicsItem();
@@ -74,8 +77,10 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void setSpin(bool value);
         void setOverlap(Boats::Overlaps value);
         void setDisplayFlag(Boats::Flag value);
+        void setHidden(bool value);
         void setColor(QColor value);
-        void setDim(bool value);
+        void setDim(int value);
+        void setVisible(bool value);
         void setSeries(Boats::Series value);
         void deleteItem(BoatModel *boat);
 
@@ -113,6 +118,9 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         Boats::Flag m_flag;
         FlagGraphicsItem *m_flagRect;
 
+        /// \a m_hidden holds whether the hidden symbol should be displayed
+        bool m_hidden;
+
         /// \a m_bubble holds the bubble to display
         BubbleGraphicsItem *m_bubble;
 
@@ -130,6 +138,9 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_numberSize holds the font size of the number
         int m_numberSize;
+
+        /// \a m_laylines holds the laylines for the boat
+        LaylinesGraphicsItem *m_laylines;
 };
 
 #endif

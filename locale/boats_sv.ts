@@ -451,6 +451,53 @@ Vill du ersätta den?</translation>
         <source>Alt+Z</source>
         <translation></translation>
     </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translatorcomment>Could not find a phrase including the letter H.</translatorcomment>
+        <translation>&amp;Göm</translation>
+    </message>
+    <message>
+        <source>Alt+D</source>
+        <translation>Alt+D</translation>
+    </message>
+    <message>
+        <source>Trim Sail</source>
+        <translatorcomment>Alternatively this could be only Skota, but then we run into trouble with the words for easing the sheet.</translatorcomment>
+        <translation>Skota in</translation>
+    </message>
+    <message>
+        <source>&lt;</source>
+        <translation>&lt;</translation>
+    </message>
+    <message>
+        <source>Auto Trim</source>
+        <translation>Auto Trim</translation>
+    </message>
+    <message>
+        <source>=</source>
+        <translation>=</translation>
+    </message>
+    <message>
+        <source>Untrim Sail</source>
+        <translatorcomment>Skota ut is not really good Swedish, but the correct term &quot;slacka på skotet&quot; is probably too long in this context.</translatorcomment>
+        <translation>Skota ut</translation>
+    </message>
+    <message>
+        <source>&gt;</source>
+        <translation>&gt;</translation>
+    </message>
+    <message>
+        <source>&amp;Acceleration</source>
+        <translation>&amp;Acceleration</translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Laylines</source>
+        <translation>&amp;Laylines på och av</translation>
+    </message>
+    <message>
+        <source>Alt+L</source>
+        <translation>Alt+L</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -475,14 +522,6 @@ Vill du ersätta den?</translation>
     <message>
         <source>Series</source>
         <translation>Båttyp</translation>
-    </message>
-    <message>
-        <source>Show Laylines</source>
-        <translation>Visa laylines</translation>
-    </message>
-    <message>
-        <source>Laylines</source>
-        <translation>Laylines</translation>
     </message>
     <message>
         <source>Zone Length</source>
@@ -512,6 +551,22 @@ Vill du ersätta den?</translation>
         <source>Description</source>
         <translation>Beskrivning</translation>
     </message>
+    <message>
+        <source>Wind</source>
+        <translation>Vind</translation>
+    </message>
+    <message>
+        <source>Show Wind</source>
+        <translation>Visa vinden</translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation>Visa rutnät</translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
+        <translation>Kryssvinkel</translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>
@@ -537,6 +592,21 @@ Vill du ersätta den?</translation>
     <message>
         <source>Path</source>
         <translation>Spår</translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation>Index</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Riktning</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Radera</translation>
     </message>
 </context>
 </TS>

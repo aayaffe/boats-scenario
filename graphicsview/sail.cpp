@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2010 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -75,13 +75,13 @@ void SailGraphicsItem::setSailSize(qreal sailSize) {
         sailPathPort.lineTo(0, 0);
         m_sailPathPort = sailPathPort;
 
-        setSailAngle(m_boat->sailAngle() + m_boat->trim());
+        setSailAngle(m_boat->trimmedSailAngle());
 }
 
 /// calculate a sail incidence angle, corrected with user trimming
 void SailGraphicsItem::setSailAngle(qreal value) {
     m_sailAngle = value;
-    qreal angle = fmod(m_boat->heading() - m_sailAngle +360, 360);
+    qreal angle = fmod(m_boat->heading() - m_boat->wind() - m_sailAngle +360, 360);
 
     if ((angle < 10 || angle > 350 || (angle > 170 && angle < 190)) && path() != m_sailPathStalled) {
         setPath(m_sailPathStalled);

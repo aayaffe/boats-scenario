@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,8 +25,6 @@
 #ifndef COMMONTYPES_H
 #define COMMONTYPES_H
 
-#define VERSION "201004"
-
 enum DebugTraces {
     MODEL,
     VIEW,
@@ -43,4 +41,9 @@ typedef enum {
     TRACK_SERIES
 } TrackTableItem;
 
+typedef enum {
+    WIND_INDEX,
+    WIND_DIRECTION,
+    WIND_DELETE
+} WindTableItem;
 #endif

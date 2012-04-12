@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 
 #include "commontypes.h"
 #include "trackmodel.h"
+#include "boatmodel.h"
 #include "markmodel.h"
 #include "polylinemodel.h"
 
@@ -40,8 +41,11 @@ SituationModel::SituationModel(QObject *parent)
         m_laylineAngle(40),
         m_situationSeries(Boats::keelboat),
         m_situationLength(3),
+        m_wind(this),
         m_undoStack(new QUndoStack(this)) {
     if (debugLevel & 1 << MODEL) std::cout << "new situation " << this << std::endl;
+    connect(&m_wind, SIGNAL(windReset()),
+            this, SLOT(resetWind()));
 }
 
 SituationModel::~SituationModel() {
@@ -218,3 +222,14 @@ void SituationModel::deletePolyLine(PolyLineModel *polyline) {
     emit polyLineRemoved(polyline);
 }
 
+void SituationModel::resetWind() {
+    if (debugLevel & 1 << MODEL) std::cout << "Resetting Wind " << std::endl;
+    foreach (TrackModel *track, m_tracks) {
+        foreach (BoatModel *boat, track->boats()) {
+            boat->setWind(m_wind.windAt(boat->order()-1));
+        }
+    }
+    foreach (MarkModel *mark, m_marks) {
+        mark->setWind(m_wind.windAt(0));
+    }
+}

@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -145,6 +145,7 @@ qreal TrackModel::headingForNext(int index, QPointF point) {
 
 void TrackModel::changingTrack(TrackModel *track) {
     QPainterPath path;
+    QPainterPath wholePath;
 
     if (m_boats.size() < 1) {
         m_path = path;
@@ -154,11 +155,12 @@ void TrackModel::changingTrack(TrackModel *track) {
     QPointF pos0(m_boats[0]->position());
     qreal heading0 = m_boats[0]->heading();
 
-    path.moveTo(pos0);
-    QListIterator<BoatModel*> boatI(m_boats);
-    boatI.next();
-    while (boatI.hasNext()) {
-        BoatModel *boat = boatI.next();
+    wholePath.moveTo(pos0);
+    BoatModel *oldBoat = m_boats[0];
+    int i = 1;
+    while (i < m_boats.size() && m_boats[i]->dim() ) {
+        path.moveTo(pos0);
+        BoatModel *boat = m_boats[i];
         QPointF pos1(boat->position());
         qreal heading1 = boat->heading();
 
@@ -187,9 +189,14 @@ void TrackModel::changingTrack(TrackModel *track) {
         }
 
         path.cubicTo(c1, c2, pos1);
+        oldBoat->setPath(path);
+        oldBoat = boat;
+        wholePath.cubicTo(c1, c2, pos1);
         pos0 = pos1;
         heading0 = heading1;
+        path = QPainterPath();
+        i++;
     }
-    m_path = path;
+    m_path = wholePath;
     emit trackChanged(track);
 }

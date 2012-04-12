@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 #include "markmodel.h"
 #include "polylinemodel.h"
 #include "pointmodel.h"
+#include "windmodel.h"
 
 #include "undocommands.h"
 
@@ -131,6 +132,9 @@ void XmlSituationReader::readSituation() {
             } else if (name() == "polyline") {
                 readPolyLine(m_situation);
 
+            } else if (name() == "wind") {
+                readWind(m_situation);
+
             } else {
                 m_situation->appendDiscardedXml(readUnknownElement());
             }
@@ -168,8 +172,11 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     bool spin = false;
     Boats::Overlaps overlap = Boats::none;
     Boats::Flag flag = Boats::noFlag;
+    bool hidden = false;
+    Boats::Acceleration acceleration = Boats::constant;
     QPointF textPos(10,10);
     QString text;
+    bool laylines = 0;
     QStringList discarded;
     while (!atEnd()) {
         readNext();
@@ -192,12 +199,20 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
             else if (name() == "flag") {
                 flag = (Boats::Flag)ENUM_VALUE(Boats, Flag, readElementText().toStdString().c_str());
             }
+            else if (name() == "hidden") {
+                hidden = (readElementText() == "1");
+            }
+            else if (name() == "acceleration") {
+                acceleration = (Boats::Acceleration)ENUM_VALUE(Boats, Acceleration, readElementText().toStdString().c_str());
+            }
             else if (name() == "bubble_x")
                 textPos.setX(readElementText().toFloat());
             else if (name() == "bubble_y")
                 textPos.setY(readElementText().toFloat());
             else if (name() == "bubble_text")
                 text = readElementText();
+            else if (name() == "laylines")
+                laylines = (readElementText() == "1");
             else
                 discarded.append(readUnknownElement());
         }
@@ -217,8 +232,11 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     boat->setSpin(spin);
     boat->setOverlap(overlap);
     boat->setFlag(flag);
+    boat->setHidden(hidden);
+    boat->setAcceleration(acceleration);
     boat->setTextPosition(textPos);
     boat->setText(text);
+    boat->setLaylines(laylines);
     foreach (const QString elem, discarded) {
         boat->appendDiscardedXml(elem);
     }
@@ -229,6 +247,9 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     QColor color;
     bool zone = false;
     int length = 0;
+    QPointF textPos(10,10);
+    QString text;
+    bool laylines = 0;
     QStringList discarded;
     while (!atEnd()) {
         readNext();
@@ -245,6 +266,14 @@ void XmlSituationReader::readMark(SituationModel *situation) {
                 zone = (readElementText() == "1");
             else if (name() == "length")
                 length = (readElementText().toInt());
+            else if (name() == "bubble_x")
+                textPos.setX(readElementText().toFloat());
+            else if (name() == "bubble_y")
+                textPos.setY(readElementText().toFloat());
+            else if (name() == "bubble_text")
+                text = readElementText();
+            else if (name() == "laylines")
+                laylines = (readElementText() == "1");
             else
                 discarded.append(readUnknownElement());
         }
@@ -257,6 +286,9 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     if (length != 0) {
         mark->setLength(length);
     }
+    mark->setTextPosition(textPos);
+    mark->setText(text);
+    mark->setLaylines(laylines);
     foreach (const QString elem, discarded) {
         mark->appendDiscardedXml(elem);
     }
@@ -282,6 +314,9 @@ void XmlSituationReader::readPolyLine(SituationModel *situation) {
 
 void XmlSituationReader::readPoint(SituationModel *situation, PolyLineModel *polyLine) {
     QPointF pos;
+    QPointF textPos(10,10);
+    QString text;
+    bool laylines = 0;
     QStringList discarded;
     while (!atEnd()) {
         readNext();
@@ -292,16 +327,60 @@ void XmlSituationReader::readPoint(SituationModel *situation, PolyLineModel *pol
                 pos.setX(readElementText().toFloat());
             else if (name() == "y")
                 pos.setY(readElementText().toFloat());
+            else if (name() == "bubble_x")
+                textPos.setX(readElementText().toFloat());
+            else if (name() == "bubble_y")
+                textPos.setY(readElementText().toFloat());
+            else if (name() == "bubble_text")
+                text = readElementText();
+            else if (name() == "laylines")
+                laylines = (readElementText() == "1");
             else
                 discarded.append(readUnknownElement());
         }
     }
     AddPointUndoCommand *command = new AddPointUndoCommand(polyLine, pos);
     PointModel *point = command->point();
+    point->setTextPosition(textPos);
+    point->setText(text);
+    point->setLaylines(laylines);
     foreach (const QString elem, discarded) {
         point->appendDiscardedXml(elem);
     }
     situation->undoStack()->push(command);
+}
+
+void XmlSituationReader::readWind(SituationModel *situation) {
+    bool visible = false;
+    QPointF pos;
+    QList<qreal> winds;
+    QStringList discarded;
+    while (!atEnd()) {
+        readNext();
+        if (isEndElement())
+            break;
+        if (isStartElement()) {
+            if (name() == "visible")
+                visible = (readElementText() == "1");
+            else if (name() == "x")
+                pos.setX(readElementText().toFloat());
+            else if (name() == "y")
+                pos.setY(readElementText().toFloat());
+            else if (name() == "direction") {
+                winds.append(readElementText().toFloat());
+            }
+            else
+                discarded.append(readUnknownElement());
+        }
+    }
+    foreach (const QString elem, discarded) {
+        situation->wind().appendDiscardedXml(elem);
+    }
+    situation->wind().setVisible(visible);
+    foreach (qreal heading, winds) {
+        situation->undoStack()->push(new AddWindUndoCommand(&situation->wind(), heading));
+    }
+    situation->wind().setPosition(pos);
 }
 
 Boats::Series XmlSituationReader::series(const QString series) {

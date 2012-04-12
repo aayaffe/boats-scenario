@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 
 #include "boats.h"
 #include "positionmodel.h"
+#include "situationmodel.h"
 
 class SituationModel;
 class TrackModel;
@@ -54,6 +55,18 @@ class TrackModel;
 
 class BoatModel : public PositionModel {
         Q_OBJECT
+        Q_PROPERTY(QPointF pos READ position WRITE setPosition)
+        Q_PROPERTY(bool laylines READ laylines() WRITE setLaylines)
+        Q_PROPERTY(qreal heading READ heading WRITE setHeading)
+        Q_PROPERTY(qreal wind READ wind WRITE setWind)
+        Q_PROPERTY(qreal trimSailAngle READ trimmedSailAngle WRITE setTrimmedSailAngle)
+        Q_PROPERTY(bool spin READ spin WRITE setSpin)
+        Q_PROPERTY(QString text READ text WRITE setText)
+        Q_PROPERTY(QPointF textPos READ textPosition WRITE setTextPosition)
+        Q_PROPERTY(Boats::Overlaps overlap READ overlap WRITE setOverlap)
+        Q_PROPERTY(Boats::Flag flag READ flag WRITE setFlag)
+        Q_PROPERTY(int dim READ dim WRITE setDim)
+
     public:
         BoatModel(TrackModel *track, QObject *parent = 0);
         ~BoatModel();
@@ -67,6 +80,9 @@ class BoatModel : public PositionModel {
         qreal trim() const { return m_trim; }
         void setTrim(const qreal& theValue);
 
+        qreal trimmedSailAngle() const { return sailAngle() + m_trim; }
+        void setTrimmedSailAngle(qreal theValue);
+
         bool spin() const { return m_spin; }
         void setSpin(const bool theValue);
 
@@ -79,6 +95,12 @@ class BoatModel : public PositionModel {
         Boats::Flag flag() const {return m_flag; }
         void setFlag(const Boats::Flag theValue);
 
+        bool hidden() const {return m_hidden; }
+        void setHidden(const bool theValue);
+
+        Boats::Acceleration acceleration() const {return m_acceleration; }
+        void setAcceleration(const Boats::Acceleration theValue);
+
         // Setters and Getters for Non model Data
         TrackModel* track() const { return m_track; }
 
@@ -86,8 +108,13 @@ class BoatModel : public PositionModel {
 
         qreal spinAngle(qreal heading = -1) const;
 
-        void setDim(bool dim = true);
-        bool dim() const { return m_dim; }
+        void setWind(qreal wind);
+
+        void setDim(int dim);
+        int dim() const { return m_dim; }
+
+        void  setPath(QPainterPath path);
+        const QPainterPath path() const { return m_path; }
 
     signals:
         void headingChanged(qreal heading);
@@ -98,7 +125,8 @@ class BoatModel : public PositionModel {
         void trimmedSpinAngleChanged(qreal spinAngle);
         void overlapChanged(Boats::Overlaps overlap);
         void flagChanged(Boats::Flag flag);
-        void dimChanged(bool dim);
+        void hiddenChanged(bool hidden);
+        void dimChanged(int dim);
 
     private:
         // Model Data
@@ -120,12 +148,21 @@ class BoatModel : public PositionModel {
         /// \a m_flag holds the flag to display
         Boats::Flag m_flag;
 
+        /// \a m_hidden holds whether the boat should display the hidden symbol
+        bool m_hidden;
+
+        /// \a m_acceleration holds how the boat speed should vary for the next period
+        Boats::Acceleration m_acceleration;
+
         // Non model Data
         /// \a m_track keeps a pointer to the TrackModel to which
         /// it belongs
         TrackModel *m_track;
 
-        bool m_dim;
+        int m_dim;
+
+        /// \a m_path holds the QPainterPath to the next boat
+        QPainterPath m_path;
 };
 
 #endif

@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2009-2010 Thibaut GRIDEL
+// Copyright (c) 2009-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -43,7 +43,8 @@ PointGraphicsItem::PointGraphicsItem(PointModel *point, QGraphicsItem *parent)
         : QGraphicsItem(parent),
         m_point(point),
         m_bubble(new BubbleGraphicsItem(m_point, this)),
-        m_selected(false) {
+        m_selected(false),
+        m_laylines(new LaylinesGraphicsItem(m_point, this)) {
     setZValue(1);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);

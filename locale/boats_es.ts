@@ -449,6 +449,50 @@ Do you want to replace it?</source>
         <source>Alt+Z</source>
         <translation></translation>
     </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translation>Esconder</translation>
+    </message>
+    <message>
+        <source>Alt+D</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Trim Sail</source>
+        <translation>Cazar</translation>
+    </message>
+    <message>
+        <source>&lt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto Trim</source>
+        <translation>Auto Trimado</translation>
+    </message>
+    <message>
+        <source>=</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Untrim Sail</source>
+        <translation>Amollar</translation>
+    </message>
+    <message>
+        <source>&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Acceleration</source>
+        <translation>Aceleración</translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Laylines</source>
+        <translation>Mostrar laylines</translation>
+    </message>
+    <message>
+        <source>Alt+L</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -473,14 +517,6 @@ Do you want to replace it?</source>
     <message>
         <source>Series</source>
         <translation>Series</translation>
-    </message>
-    <message>
-        <source>Show Laylines</source>
-        <translation>Mostrar Laylines</translation>
-    </message>
-    <message>
-        <source>Laylines</source>
-        <translation>Laylines</translation>
     </message>
     <message>
         <source>Zone Length</source>
@@ -510,6 +546,22 @@ Do you want to replace it?</source>
         <source>Description</source>
         <translation>Descripción</translation>
     </message>
+    <message>
+        <source>Wind</source>
+        <translation>Viento</translation>
+    </message>
+    <message>
+        <source>Show Wind</source>
+        <translation>Mostrar Viento</translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation>Mostrar Cuadrícula</translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
+        <translation> Ángulo del Layline</translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>
@@ -535,6 +587,21 @@ Do you want to replace it?</source>
     <message>
         <source>Series</source>
         <translation>Series</translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation>Listado</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Dirección</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Borrar</translation>
     </message>
 </context>
 </TS>

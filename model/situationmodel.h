@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 #include <QtGui>
 
 #include "boats.h"
+#include "windmodel.h"
 
 class TrackModel;
 class BoatModel;
@@ -95,6 +96,8 @@ class SituationModel : public QObject {
 
         const QList<PolyLineModel*> polyLines() const { return m_lines; }
 
+        WindModel& wind() { return m_wind; };
+
         // Setters and Getters for Non model Data
         QUndoStack * undoStack() const { return m_undoStack;}
 
@@ -156,6 +159,9 @@ class SituationModel : public QObject {
         void addPolyLine(PolyLineModel *polyline, int order = -1);
         void deletePolyLine(PolyLineModel *polyline);
 
+        // Slot for Wind
+        void resetWind();
+
     private:
         // Model Data
         /// \a m_title holds the Title of the Scenario
@@ -182,6 +188,9 @@ class SituationModel : public QObject {
         /// \a m_situationLength holds the size of the Zone at Marks of
         /// the Scenario
         int m_situationLength;
+
+        /// \a m_wind holds the WindModel of the Scenario
+        WindModel m_wind;
 
         /// \a m_tracks holds the List of Tracks of the Scenario
         QList<TrackModel*> m_tracks;

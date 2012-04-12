@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -38,9 +38,9 @@ class SituationModel;
     Observer Pattern.
 
     PositionModel contains data which represents an object with a position,
-    and a stacking order. It is inherited by BoatModel and TrackModel.
+    and a stacking order. It is inherited by BoatModel and PointModel.
 
-    \sa SituationModel, BoatModel, TrackModel
+    \sa SituationModel, BoatModel, PointModel
 
 */
 
@@ -63,24 +63,34 @@ class PositionModel : public QObject {
         QPointF textPosition() const {return m_textPosition; }
         void setTextPosition(const QPointF& theValue);
 
+        bool laylines() const {return m_laylines; }
+        void setLaylines(bool theValue);
+
         // Setters and Getters for Non model Data
         SituationModel* situation() const { return m_situation; }
 
+        virtual qreal wind() const;
+
         QStringList discardedXml() const { return m_discardedXml; }
         void appendDiscardedXml(const QString& theValue);
+
+    public slots:
+        virtual void setWind(qreal wind);
 
     signals:
         void positionChanged(QPointF position);
         void orderChanged(int order);
         void textChanged(QString text);
         void textPositionChanged(QPointF textPosition);
+        void windChanged(qreal wind);
+        void laylinesChanged(bool laylines);
 
-    private:
+    protected:
         // Model Data
         /// \a m_position holds the position of the object
         QPointF m_position;
 
-        /// \a m_order holds the stacking order of the object
+        /// \a m_order holds the stacking order of the object. It starts at 1 for track boat
         int m_order;
 
         /// \a m_text holds the text to display
@@ -89,10 +99,15 @@ class PositionModel : public QObject {
         /// \a m_textPosition holds the position of the text to display
         QPointF m_textPosition;
 
+        /// \a m_laylines holds wether the object should display laylines
+        bool m_laylines;
+
         // Non model Data
         /// \a m_situation keeps a pointer to the SituationModel to which
         /// it belongs
         SituationModel *m_situation;
+
+        qreal m_wind;
 
         /// \a m_discardedXml keeps all unparsed xml tags
         QStringList m_discardedXml;

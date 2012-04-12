@@ -452,6 +452,50 @@ Möchten Sie die Datei ersetzen?</translation>
         <source>Alt+Z</source>
         <translation></translation>
     </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translation>Ausblenden</translation>
+    </message>
+    <message>
+        <source>Alt+D</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Trim Sail</source>
+        <translation>Segel dichtholen</translation>
+    </message>
+    <message>
+        <source>&lt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto Trim</source>
+        <translation>Auto Segeltrimm</translation>
+    </message>
+    <message>
+        <source>=</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Untrim Sail</source>
+        <translation>Segel auffieren</translation>
+    </message>
+    <message>
+        <source>&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Acceleration</source>
+        <translation>Beschleunigung</translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Laylines</source>
+        <translation>Layline anzeigen</translation>
+    </message>
+    <message>
+        <source>Alt+L</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -476,14 +520,6 @@ Möchten Sie die Datei ersetzen?</translation>
     <message>
         <source>Series</source>
         <translation>Serien</translation>
-    </message>
-    <message>
-        <source>Show Laylines</source>
-        <translation>Zeige Anlieger</translation>
-    </message>
-    <message>
-        <source>Laylines</source>
-        <translation>Anlieger</translation>
     </message>
     <message>
         <source>Zone Length</source>
@@ -513,6 +549,22 @@ Möchten Sie die Datei ersetzen?</translation>
         <source>Description</source>
         <translation>Beschreibung</translation>
     </message>
+    <message>
+        <source>Wind</source>
+        <translation>Wind</translation>
+    </message>
+    <message>
+        <source>Show Wind</source>
+        <translation>Windrichtung anzeigen</translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation>Raster einlenden</translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
+        <translation>Layline Winkel</translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>
@@ -538,6 +590,21 @@ Möchten Sie die Datei ersetzen?</translation>
     <message>
         <source>Series</source>
         <translation>Reihe</translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation> Index</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Richtung</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>löschen</translation>
     </message>
 </context>
 </TS>

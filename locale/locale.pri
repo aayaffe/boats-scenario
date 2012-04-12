@@ -12,12 +12,14 @@ TRANSLATIONS += \
     $$PWD/boats_sl.ts \
     $$PWD/boats_sv.ts
 
+QM_FILES = $$replace(TRANSLATIONS, "\\.ts", ".qm")
+
 isEmpty(QMAKE_LUPDATE) {
-    win32:QMAKE_LUPDATE = $$[QT_INSTALL_BINS]\lupdate.exe
+    win32:QMAKE_LUPDATE = $$[QT_INSTALL_BINS]/lupdate.exe
     else:QMAKE_LUPDATE = $$[QT_INSTALL_BINS]/lupdate
 }
 isEmpty(QMAKE_LRELEASE) {
-    win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\lrelease.exe
+    win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease.exe
     else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
 }
 
@@ -30,3 +32,5 @@ updateqm.output = locale/${QMAKE_FILE_BASE}.qm
 updateqm.commands = $$QMAKE_LRELEASE ${QMAKE_FILE_IN}
 updateqm.CONFIG += no_link
 QMAKE_EXTRA_COMPILERS += updateqm
+
+rcc.depends = $$QM_FILES

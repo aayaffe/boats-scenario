@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2010 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,11 +25,14 @@
 #ifndef BOATANIMATION_H
 #define BOATANIMATION_H
 
-#include <QGraphicsItemAnimation>
+#include <QParallelAnimationGroup>
+#include <QSequentialAnimationGroup>
+#include <QTime>
 
 class BoatGraphicsItem;
 class TrackModel;
 class BoatModel;
+class HeadingAnimation;
 
 /**
     \class BoatAnimation
@@ -49,32 +52,16 @@ class BoatModel;
     \sa SituationScene, SituationModel
 */
 
-typedef QPair<qreal, qreal> Pair;
-typedef QList<Pair> PairList;
-
-
-class BoatAnimation : public QGraphicsItemAnimation {
+class BoatAnimation : public QParallelAnimationGroup {
     public:
-        BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxSize,  QGraphicsItemAnimation *parent = 0);
+        BoatAnimation(TrackModel *track, BoatGraphicsItem *boat, int maxSize,  QObject *parent = 0);
         ~BoatAnimation();
         BoatGraphicsItem *boat() const {return m_boat; }
-
-        qreal headingAt(qreal step) const;
-        qreal sailAt(qreal step) const;
-        void setsailAt(qreal step, qreal sail) { m_sailList.append(Pair(step,sail)); }
 
     protected:
         virtual void afterAnimationStep(qreal step);
 
     private:
-
-        qreal linearAngleForStep (PairList pairList, qreal step, qreal defaultValue = 0) const;
-
-        /// \a m_rotationList holds the list of (step,heading) pair values
-        PairList m_rotationList;
-
-        /// \a m_sailList holds the list of (step,sail) pair values
-        PairList m_sailList;
 
         /// \a m_track holds the reference to the track
         TrackModel *m_track;
@@ -84,6 +71,11 @@ class BoatAnimation : public QGraphicsItemAnimation {
 
         /// \a m_boat holds the reference to the animation BoatGraphicsItem
         BoatGraphicsItem *m_boat;
+
+        HeadingAnimation *m_headingAnimation;
+        HeadingAnimation *m_sailAngleAnimation;
+
+        QSequentialAnimationGroup *m_posAnimation;
 
         /// \a m_maxSize holds the maximum track size of the scenario
         int m_maxSize;

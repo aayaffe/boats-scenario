@@ -448,6 +448,50 @@ Do you want to replace it?</source>
         <source>Alt+Z</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt+D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trim Sail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Untrim Sail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto Trim</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Acceleration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Laylines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt+L</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -471,14 +515,6 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Series</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Laylines</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Laylines</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -509,6 +545,22 @@ Do you want to replace it?</source>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layline Angle</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TrackDelegate</name>
@@ -533,6 +585,21 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Series</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WindTableModel</name>
+    <message>
+        <source>Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

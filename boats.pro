@@ -3,10 +3,13 @@ TARGET = boats
 CONFIG += qt \
     warn_on
 
+include(animation/animation.pri)
 include(graphicsview/graphicsview.pri)
 include(itemviews/itemviews.pri)
 include(model/model.pri)
 include(locale/locale.pri)
+
+INCLUDEPATH += $$PWD
 
 HEADERS += \
     boatapplication.h \
@@ -37,6 +40,7 @@ unix_deploy:RESOURCES = boats_unix.qrc
 else:RESOURCES = boats.qrc
 
 mac {
+    QMAKE_LFLAGS += -static
     QMAKE_INFO_PLIST = Info.plist
     ICON = boats.icns
     mime.path = boats.app/Contents/Resources
@@ -84,4 +88,8 @@ MOC_DIR = .moc/
 
 OBJECTS_DIR = .obj/
 
+QMAKE_CFLAGS_RELEASE += -fvisibility=hidden
+QMAKE_CXXFLAGS_RELEASE += -fvisibility=hidden -fvisibility-inlines-hidden
+
 win32:RC_FILE = boats.rc
+win32:QMAKE_LFLAGS += -static

@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2010 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -400,6 +400,114 @@ bool SetShowPathUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Show Wind
+SetShowWindUndoCommand::SetShowWindUndoCommand(WindModel *wind, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_wind(wind) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new showwindundocommand" << std::endl;
+}
+
+SetShowWindUndoCommand::~SetShowWindUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end showwindundocommand" << std::endl;
+}
+
+void SetShowWindUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo showwindundocommand" << std::endl;
+    m_wind->setVisible(!m_wind->visible());
+}
+
+void SetShowWindUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo showwindundocommand" << std::endl;
+    m_wind->setVisible(!m_wind->visible());
+}
+
+bool SetShowWindUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetShowWindUndoCommand *visibleCommand = static_cast<const SetShowWindUndoCommand*>(command);
+    if (m_wind != visibleCommand->m_wind)
+        return false;
+    undo();
+    m_wind->situation()->undoStack()->setIndex(m_wind->situation()->undoStack()->index()-1);
+    return true;
+}
+
+// Add Wind
+AddWindUndoCommand::AddWindUndoCommand(WindModel* wind, qreal heading, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_wind(wind),
+        m_heading(heading) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new addwindundocommand" << std::endl;
+}
+
+AddWindUndoCommand::~AddWindUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end addwindundocommand" << std::endl;
+}
+
+void AddWindUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo addwindundocommand" << std::endl;
+    m_wind->addWind(m_heading);
+}
+
+void AddWindUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo addwindundocommand" << std::endl;
+    m_wind->deleteWind(m_wind->size()-1);
+}
+
+// Set Wind
+SetWindUndoCommand::SetWindUndoCommand(WindModel* wind, int index, qreal direction, QUndoCommand *parent)
+    : QUndoCommand(parent),
+    m_wind(wind),
+    m_index(index),
+    m_oldDirection(wind->windAt(index)),
+    m_newDirection(direction) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new setwindundocommand" << std::endl;
+}
+
+SetWindUndoCommand::~SetWindUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end setwindundocommand" << std::endl;
+}
+
+void SetWindUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo setwindundocommand" << std::endl;
+    m_wind->setWindAt(m_oldDirection, m_index);
+}
+
+void SetWindUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo setwindundocommand" << std::endl;
+    m_wind->setWindAt(m_newDirection, m_index);
+}
+
+bool SetWindUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetWindUndoCommand *setWindCommand = static_cast<const SetWindUndoCommand*>(command);
+    if (m_index != setWindCommand->m_index)
+        return false;
+
+    m_newDirection = setWindCommand->m_newDirection;
+    return true;
+}
+
+// Delete Wind
+DeleteWindUndoCommand::DeleteWindUndoCommand(WindModel* wind, int index, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_wind(wind),
+        m_index(index),
+        m_heading(m_wind->windAt(index)) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new deletewindundocommand" << std::endl;
+}
+
+DeleteWindUndoCommand::~DeleteWindUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end deletewindundocommand" << std::endl;
+}
+
+void DeleteWindUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo deletewindundocommand" << std::endl;
+    m_wind->deleteWind(m_index);
+}
+
+void DeleteWindUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo deletewindundocommand" << std::endl;
+    m_wind->addWind(m_heading, m_index);
+}
+
 // Move Model
 MoveModelUndoCommand::MoveModelUndoCommand(QList<PositionModel*> &modelList, const QPointF &deltaPosition, QUndoCommand *parent)
         : QUndoCommand(parent),
@@ -434,6 +542,46 @@ bool MoveModelUndoCommand::mergeWith(const QUndoCommand *command) {
         return false;
 
     m_deltaPosition += moveCommand->m_deltaPosition;
+    return true;
+}
+
+// Laylines Boat
+SetLaylinesUndoCommand::SetLaylinesUndoCommand(QList<PositionModel*> &modelList, bool laylines, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_modelList(modelList),
+        m_laylines(laylines) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new laylinesboatundocommand" << std::endl;
+    foreach (const PositionModel *model, modelList) {
+        m_laylinesList << model->laylines();
+    }
+}
+
+SetLaylinesUndoCommand::~SetLaylinesUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end laylinesboatundocommand" << std::endl;
+}
+
+void SetLaylinesUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo laylinesboatundocommand" << std::endl;
+    for(int i=0; i< m_modelList.size(); i++) {
+        PositionModel *model = m_modelList[i];
+        model->setLaylines(m_laylinesList[i]);
+    }
+}
+
+void SetLaylinesUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo laylinesboatundocommand" << std::endl;
+    for(int i=0; i< m_modelList.size(); i++) {
+        PositionModel *model = m_modelList[i];
+        model->setLaylines(m_laylines);
+    }
+}
+
+bool SetLaylinesUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetLaylinesUndoCommand *laylinesCommand = static_cast<const SetLaylinesUndoCommand*>(command);
+    if (m_modelList != laylinesCommand->m_modelList)
+        return false;
+
+    m_laylines = laylinesCommand->m_laylines;
     return true;
 }
 
@@ -664,6 +812,88 @@ bool SpinBoatUndoCommand::mergeWith(const QUndoCommand *command) {
         return false;
 
     m_spin = spinCommand->m_spin;
+    return true;
+}
+
+// Hidden Boat
+HiddenBoatUndoCommand::HiddenBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, bool hidden, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_boatList(boatList),
+        m_hidden(hidden) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new hiddenboatundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_hiddenList << boat->hidden();
+    }
+}
+
+HiddenBoatUndoCommand::~HiddenBoatUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end hiddenboatundocommand" << std::endl;
+}
+
+void HiddenBoatUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo hiddenboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setHidden(m_hiddenList[i]);
+    }
+}
+
+void HiddenBoatUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo hiddenboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setHidden(m_hidden);
+    }
+}
+
+bool HiddenBoatUndoCommand::mergeWith(const QUndoCommand *command) {
+    const HiddenBoatUndoCommand *hiddenCommand = static_cast<const HiddenBoatUndoCommand*>(command);
+    if (m_boatList != hiddenCommand->m_boatList)
+        return false;
+
+    m_hidden = hiddenCommand->m_hidden;
+    return true;
+}
+
+// Accelerate Boat
+AccelerateBoatUndoCommand::AccelerateBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, Boats::Acceleration acceleration, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_boatList(boatList),
+        m_acceleration(acceleration) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new accelerateboatundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_accelerationList << boat->acceleration();
+    }
+}
+
+AccelerateBoatUndoCommand::~AccelerateBoatUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end accelerateboatundocommand" << std::endl;
+}
+
+void AccelerateBoatUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo accelerateboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setAcceleration(m_accelerationList[i]);
+    }
+}
+
+void AccelerateBoatUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo accelerateboatundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *boat = m_boatList[i];
+        boat->setAcceleration(m_acceleration);
+    }
+}
+
+bool AccelerateBoatUndoCommand::mergeWith(const QUndoCommand *command) {
+    const AccelerateBoatUndoCommand *accelerationCommand = static_cast<const AccelerateBoatUndoCommand*>(command);
+    if (m_boatList != accelerationCommand->m_boatList)
+        return false;
+
+    m_acceleration = accelerationCommand->m_acceleration;
     return true;
 }
 

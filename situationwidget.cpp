@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 
 #include "situationwidget.h"
 #include "trackdelegate.h"
+#include "winddelegate.h"
 
 #include "situationmodel.h"
 
@@ -65,6 +66,10 @@ SituationWidget::SituationWidget(QWidget *parent)
     lengthSpinLabel = new QLabel(optionsGroup);
     optionsForm->addRow(lengthSpinLabel, lengthSpin);
 
+    windCheck = new QCheckBox(optionsGroup);
+    windCheckLabel = new QLabel(optionsGroup);
+    optionsForm->addRow(windCheckLabel, windCheck);
+
     // Track layout
     trackGroup = new QGroupBox(scenarioFrame);
     trackLayout = new QGridLayout(trackGroup);
@@ -78,9 +83,22 @@ SituationWidget::SituationWidget(QWidget *parent)
     trackTableView->horizontalHeader()->setClickable(false);
     trackLayout->addWidget(trackTableView);
 
+    // Wind layout
+    windGroup = new QGroupBox(scenarioFrame);
+    windLayout = new QGridLayout(windGroup);
+    windTableModel = new WindTableModel(&m_situation->wind());
+    windTableView = new QTableView(windGroup);
+    windTableView->setItemDelegate(new WindDelegate);
+    windTableView->verticalHeader()->hide();
+    windTableView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    windTableView->horizontalHeader()->setClickable(false);
+    windLayout->addWidget(windTableView);
+
+
     // last bricks
     scenarioLayout->addWidget(optionsGroup);
     scenarioLayout->addWidget(trackGroup);
+    scenarioLayout->addWidget(windGroup);
 
     addTab(scenarioFrame,tr("Scenario"));
 
@@ -124,10 +142,12 @@ void SituationWidget::changeEvent(QEvent *event) {
     if(event->type() == QEvent::LanguageChange) {
         optionsGroup->setTitle(tr("Options"));
         seriesLabel->setText(tr("Series"));
-        laylineCheckLabel->setText(tr("Show Laylines"));
-        laylineSpinLabel->setText(tr("Laylines"));
+        laylineCheckLabel->setText(tr("Show Grid"));
+        laylineSpinLabel->setText(tr("Layline Angle"));
         lengthSpinLabel->setText(tr("Zone Length"));
+        windCheckLabel->setText(tr("Show Wind"));
         trackGroup->setTitle(tr("Tracks"));
+        windGroup->setTitle(tr("Wind"));
         setTabText(0, tr("Scenario"));
 
         titleLabel->setText(tr("Title"));
@@ -149,6 +169,8 @@ void SituationWidget::update() {
         laylineCheck->setChecked(m_situation->showLayline());
         laylineSpin->setValue(m_situation->laylineAngle());
         lengthSpin->setValue(m_situation->situationLength());
+        windCheck->setChecked(m_situation->wind().visible());
+        windGroup->setVisible(m_situation->wind().visible());
         abstractEdit->setPlainText(m_situation->abstract());
         descriptionEdit->setPlainText(m_situation->description());
     }
@@ -161,13 +183,13 @@ void SituationWidget::setSituation(SituationModel *situation) {
         update();
 
         // Scenario Group
-        connect (titleEdit, SIGNAL(textEdited(QString)),
-                this, SLOT(setTitle(QString)));
+        connect (titleEdit, SIGNAL(editingFinished()),
+                this, SLOT(setTitle()));
         connect (situation, SIGNAL(titleChanged(QString)),
                 titleEdit, SLOT(setText(QString)));
 
-        connect (rulesEdit, SIGNAL(textEdited(QString)),
-                this, SLOT(setRules(QString)));
+        connect (rulesEdit, SIGNAL(editingFinished()),
+                this, SLOT(setRules()));
         connect (situation, SIGNAL(rulesChanged(QString)),
                 rulesEdit, SLOT(setText(QString)));
 
@@ -195,6 +217,14 @@ void SituationWidget::setSituation(SituationModel *situation) {
         connect (situation, SIGNAL(lengthChanged(const int)),
                 lengthSpin, SLOT(setValue(int)));
 
+        connect(windCheck, SIGNAL(toggled(bool)),
+                this, SLOT(setShowWind(bool)));
+        connect(&situation->wind(), SIGNAL(windVisibleChanged(bool)),
+                windCheck, SLOT(setChecked(bool)));
+
+        connect(windCheck, SIGNAL(toggled(bool)),
+                windGroup, SLOT(setVisible(bool)));
+
         connect(abstractEdit->document(), SIGNAL(contentsChanged()),
                 this, SLOT(setAbstract()));
         connect(situation, SIGNAL(abstractChanged(const QString)),
@@ -213,6 +243,11 @@ void SituationWidget::setSituation(SituationModel *situation) {
                 trackTableModel, SLOT(deleteTrack(TrackModel*)));
         trackTableView->setModel(trackTableModel);
 
+        // Wind group
+        windTableModel->setWind(&m_situation->wind());
+        connect(&m_situation->wind(), SIGNAL(windReset()),
+                windTableModel, SLOT(updateWind()));
+        windTableView->setModel(windTableModel);
     }
 }
 
@@ -242,6 +277,10 @@ void SituationWidget::unSetSituation() {
     disconnect(m_situation, 0, lengthSpin, 0);
     lengthSpin->setValue(3);
 
+    disconnect(windCheck, 0, 0, 0);
+    disconnect(&m_situation->wind(), 0, windCheck, 0);
+    windCheck->setChecked(false);
+
     disconnect(m_situation, 0, this, 0);
     disconnect(abstractEdit->document(), 0, 0, 0);
     abstractEdit->clear();
@@ -250,22 +289,23 @@ void SituationWidget::unSetSituation() {
 
     // Track Group
     disconnect(m_situation, 0, trackTableModel, 0);
+    disconnect(&m_situation->wind(), 0, windTableModel, 0);
 
     m_situation = 0;
 }
 
-void SituationWidget::setTitle(QString title) {
+void SituationWidget::setTitle() {
     if (m_situation) {
-        if (title != m_situation->title()) {
-            m_situation->undoStack()->push(new SetTitleUndoCommand(m_situation, title));
+        if (titleEdit->text() != m_situation->title()) {
+            m_situation->undoStack()->push(new SetTitleUndoCommand(m_situation, titleEdit->text()));
         }
     }
 }
 
-void SituationWidget::setRules(QString rules) {
+void SituationWidget::setRules() {
     if (m_situation) {
-        if (rules != m_situation->rules()) {
-            m_situation->undoStack()->push(new SetRulesUndoCommand(m_situation, rules));
+        if (rulesEdit->text() != m_situation->rules()) {
+            m_situation->undoStack()->push(new SetRulesUndoCommand(m_situation, rulesEdit->text()));
         }
     }
 }
@@ -293,6 +333,12 @@ void SituationWidget::setLength(int length) {
     }
 }
 
+void SituationWidget::setShowWind(bool show) {
+    if (m_situation) {
+        if (show != m_situation->wind().visible())
+            m_situation->undoStack()->push(new SetShowWindUndoCommand(&m_situation->wind()));
+    }
+}
 
 void SituationWidget::setSeries(int series) {
     if (m_situation) {

@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@ class XmlSituationReader : public QXmlStreamReader {
         void readMark(SituationModel *situation);
         void readPolyLine(SituationModel *situation);
         void readPoint(SituationModel *situation, PolyLineModel *polyLine);
+        void readWind(SituationModel *situation);
 
         Boats::Series series(const QString series);
 

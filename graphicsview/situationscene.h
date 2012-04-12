@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2010 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -34,7 +34,8 @@ class BoatModel;
 class MarkModel;
 class PolyLineModel;
 class PointModel;
-class BoatAnimation;
+class TrackAnimation;
+class ScenarioAnimation;
 
 /**
     \enum SceneState
@@ -74,7 +75,8 @@ typedef enum {
 enum {
     BOAT_TYPE = QGraphicsItem::UserType + 1,
     MARK_TYPE,
-    POINT_TYPE
+    POINT_TYPE,
+    ARROW_TYPE
 };
 
 /**
@@ -123,7 +125,11 @@ class SituationScene : public QGraphicsScene {
         QList< BoatModel * > selectedBoatModels() const { return m_selectedBoatModels; }
         QList< MarkModel * > selectedMarkModels() const { return m_selectedMarkModels; }
         QList< PointModel * > selectedPointModels() const { return m_selectedPointModels; }
-        void setActionMenu(QMenu *theValue) { m_actionMenu = theValue; }
+        void setDefaultPopup(QMenu *theValue) { m_defaultPopup = theValue; }
+        void setBoatPopup(QMenu *theValue) { m_boatPopup = theValue; }
+        void setMarkPopup(QMenu *theValue) { m_markPopup = theValue; }
+        void setPointPopup(QMenu *theValue) { m_pointPopup = theValue; }
+        ScenarioAnimation *animation() const { return m_scenarioAnimation; }
 
     signals:
         void itemMoved(QList<BoatModel*> movedItems, const QPointF &movedFromPosition);
@@ -141,9 +147,10 @@ class SituationScene : public QGraphicsScene {
         void addPolyLine(PolyLineModel *polyline);
         void addPoint(PointModel *point);
         void setLaylines(const int angle);
+        void setWind(bool visible);
 
         // Slots for animation signals
-        void setAnimation(QTimeLine *timer);
+        void setAnimation();
         void unSetAnimation();
 
     protected:
@@ -181,9 +188,16 @@ class SituationScene : public QGraphicsScene {
         /// \a m_selectedPointModels holds the list of selected PointModel
         QList<PointModel*> m_selectedPointModels;
 
-        /// \a m_animationItems holds the list of BoatAnimation items
+        /// \a m_windAnimation holds the animation for wind
+        QAnimationGroup *m_windAnimation;
+
+        /// \a m_animationItems holds the list of TrackAnimation items
         /// created for animation mode
-        QList<BoatAnimation*> m_animationItems;
+        QList<TrackAnimation*> m_animationItems;
+
+        /// \a m_scenarioAnimation holds the general AnimationGroup
+        /// manipulated during animation mode
+        ScenarioAnimation* m_scenarioAnimation;
 
         /// \a m_modelPressed holds the BoatModel being pressed
         BoatModel* m_modelPressed;
@@ -218,7 +232,10 @@ class SituationScene : public QGraphicsScene {
             NONE
         } m_clickState;
 
-        QMenu *m_actionMenu;
+        QMenu *m_defaultPopup;
+        QMenu *m_boatPopup;
+        QMenu *m_markPopup;
+        QMenu *m_pointPopup;
 };
 
 #endif

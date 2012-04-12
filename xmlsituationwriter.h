@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2009 Thibaut GRIDEL
+// Copyright (c) 2008-2011 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ class BoatModel;
 class MarkModel;
 class PolyLineModel;
 class PointModel;
+class WindModel;
 
 class XmlSituationWriter : public QXmlStreamWriter {
     public:
@@ -47,6 +48,7 @@ class XmlSituationWriter : public QXmlStreamWriter {
         void writeMark(const MarkModel *mark);
         void writePolyLine(const PolyLineModel *polyLine);
         void writePoint(const PointModel *point);
+        void writeWind(const WindModel &wind);
         void writeUnknownElement(const QString &discarded);
 
         SituationModel *m_situation;
