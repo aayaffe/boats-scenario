@@ -66,6 +66,8 @@ SituationScene::SituationScene(SituationModel *situation)
         m_markPopup(0),
         m_pointPopup(0) {
 
+    setItemIndexMethod(NoIndex);
+
     // try to set a minimum scene rect
     QGraphicsItem *e1 = addEllipse(QRectF(-1000,-1000, 1, 1));
     QGraphicsItem *e2 = addEllipse(QRectF(1000, 1000, 1, 1));
