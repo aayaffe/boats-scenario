@@ -123,9 +123,7 @@ BoatGraphicsItem::~BoatGraphicsItem() {}
 
 void BoatGraphicsItem::setHeading(qreal value) {
     if (m_angle != value) {
-        prepareGeometryChange();
         m_angle = value;
-        update();
         QTransform rotation;
         rotation.rotate(m_angle),
         setTransform(rotation, false);
@@ -427,22 +425,10 @@ void BoatGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 QRectF BoatGraphicsItem::boundingRect() const {
-    switch (m_series) {
-    case Boats::keelboat:
-        return QRectF(-20, -50, 40, 100);
-    case Boats::laser:
-        return QRectF(-6.7, -20, 13.4, 40);
-    case Boats::optimist:
-        return QRectF(-5.6, -11.5, 11.2, 23);
-    case Boats::tornado:
-        return QRectF(-15.3, -30.5, 30.6, 61);
-    case Boats::startboat:
-        return QRectF(-30, -50, 60, 100);
-    case Boats::rib:
-        return QRectF(-12.4, -30, 24.8, 60);
-    default:
-        return QRectF(-50, -50, 100, 100);
-    }
+    if (m_hidden)
+        return QRectF(-3, -3, 6, 6);
+    else
+        return m_hullPath.boundingRect();
 }
 
 QPainterPath BoatGraphicsItem::shape() const {
