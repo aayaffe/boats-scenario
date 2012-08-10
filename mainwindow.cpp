@@ -98,6 +98,26 @@ MainWindow::MainWindow(QWidget *parent)
     newTab();
     setCentralWidget(tabWidget);
 
+    SituationView *view = viewList.at(viewList.size()-1);
+    QSlider *lookDirectionSlider = new QSlider(Qt::Horizontal);
+    lookDirectionSlider->setMaximum(360);
+    lookDirectionSlider->setSingleStep(15);
+    lookDirectionSlider->setTickInterval(15);
+    lookDirectionSlider->setTickPosition(QSlider::TicksBelow);
+    connect(lookDirectionSlider, SIGNAL(valueChanged(int)),
+            view, SLOT(setLookDirection(int)));
+    toolbar->addWidget(lookDirectionSlider);
+
+    QSlider *tiltSlider = new QSlider(Qt::Horizontal);
+    tiltSlider->setMinimum(0);
+    tiltSlider->setMaximum(90);
+    tiltSlider->setSingleStep(15);
+    tiltSlider->setTickInterval(15);
+    tiltSlider->setTickPosition(QSlider::TicksBelow);
+    connect(tiltSlider, SIGNAL(valueChanged(int)),
+            view, SLOT(setTilt(int)));
+    toolbar->addWidget(tiltSlider);
+
     readSettings();
 
     // Locale and translation setup
@@ -708,8 +728,7 @@ void MainWindow::createMenus() {
     toolbar->addAction(zoomOutAction);
     toolbar->addAction(zoomFitAction);
     toolbar->addAction(zoomInAction);
-
-
+    toolbar->addSeparator();
     animationSlider = new QSlider(Qt::Horizontal, this);
     animationSlider->setTickInterval(2000);
     animationSlider->setTickPosition(QSlider::TicksBelow);
