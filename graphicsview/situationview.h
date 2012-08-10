@@ -55,12 +55,18 @@ class SituationView : public QGraphicsView {
         void zoomIn();
         void zoomOut();
         void zoomFit();
+        void setLookDirection(int value);
+        void setTilt(int value);
 
     private:
         void setScale(bool in);
+        void transformView();
 
         /// \a scaleValue holds the value for the viewing scale
         qreal scaleValue;
+
+        int lookDirectionValue;
+        int tiltValue;
 };
 
 #endif

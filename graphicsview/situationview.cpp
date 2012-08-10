@@ -36,7 +36,9 @@ SituationView::SituationView(QWidget *parent)
 
 SituationView::SituationView(QGraphicsScene *scene, QWidget *parent)
     : QGraphicsView(scene, parent),
-    scaleValue(1) {
+    scaleValue(1),
+    lookDirectionValue(0),
+    tiltValue(0) {
     setRenderHints( QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
     setResizeAnchor(QGraphicsView::AnchorViewCenter);
@@ -96,6 +98,16 @@ void SituationView::zoomFit() {
     setMatrix(m);
 }
 
+void SituationView::setLookDirection(int value) {
+    lookDirectionValue = value;
+    transformView();
+}
+
+void SituationView::setTilt(int value) {
+    tiltValue = value;
+    transformView();
+}
+
 /**
     Zoom in if \a in otherwise zoom out by .05 increments between
     0.1 and 10
@@ -109,10 +121,16 @@ void SituationView::setScale(bool in) {
     } else if (scaleValue > 0.1) {
         scaleValue -= .05;
     }
-    QMatrix old = matrix();
-    QMatrix m(scaleValue, old.m21(), old.m21(), scaleValue, old.dx(), old.dy());
-    setMatrix(m);
-    if (debugLevel & 1 << VIEW) std::cout << "new scale values "
-        << " horizontal: " << m.m11()
-        << " vertical: " << m.m22() << std::endl;
+    if (debugLevel & 1 << VIEW)
+        std::cout << "new scale values " << scaleValue << std::endl;
+    transformView();
+}
+
+void SituationView::transformView() {
+
+    QTransform transform;
+    transform.rotate(tiltValue, Qt::XAxis);
+    transform.rotate(lookDirectionValue, Qt::ZAxis);
+    transform.scale(scaleValue, scaleValue);
+    setTransform(transform, false);
 }
