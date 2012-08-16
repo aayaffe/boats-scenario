@@ -222,6 +222,7 @@ void SituationScene::setAnimation() {
         addItem(boatItem);
         boatItem->boat()->setOrder(0);
         boatItem->setPosition(boat->position());
+        boatItem->setHeading(boat->heading());
         boatItem->boat()->setWind(m_situation->wind().windAt(0));
         boatItem->boat()->setLaylines(boat->laylines());
         connect(&track->situation()->wind(), SIGNAL(directionChanged(qreal)),
