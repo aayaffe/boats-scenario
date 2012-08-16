@@ -153,6 +153,8 @@ class MainWindow : public QMainWindow {
         QTabWidget *tabWidget;
         QPushButton *newTabButton;
         QPushButton *removeTabButton;
+        QSlider *lookDirectionSlider;
+        QSlider *tiltSlider;
         QToolBar *animationBar;
         QDockWidget *situationDock;
         SituationWidget *situationWidget;

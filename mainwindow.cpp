@@ -98,26 +98,6 @@ MainWindow::MainWindow(QWidget *parent)
     newTab();
     setCentralWidget(tabWidget);
 
-    SituationView *view = viewList.at(viewList.size()-1);
-    QSlider *lookDirectionSlider = new QSlider(Qt::Horizontal);
-    lookDirectionSlider->setMaximum(360);
-    lookDirectionSlider->setSingleStep(15);
-    lookDirectionSlider->setTickInterval(15);
-    lookDirectionSlider->setTickPosition(QSlider::TicksBelow);
-    connect(lookDirectionSlider, SIGNAL(valueChanged(int)),
-            view, SLOT(setLookDirection(int)));
-    toolbar->addWidget(lookDirectionSlider);
-
-    QSlider *tiltSlider = new QSlider(Qt::Horizontal);
-    tiltSlider->setMinimum(0);
-    tiltSlider->setMaximum(90);
-    tiltSlider->setSingleStep(15);
-    tiltSlider->setTickInterval(15);
-    tiltSlider->setTickPosition(QSlider::TicksBelow);
-    connect(tiltSlider, SIGNAL(valueChanged(int)),
-            view, SLOT(setTilt(int)));
-    toolbar->addWidget(tiltSlider);
-
     readSettings();
 
     // Locale and translation setup
@@ -729,6 +709,22 @@ void MainWindow::createMenus() {
     toolbar->addAction(zoomFitAction);
     toolbar->addAction(zoomInAction);
     toolbar->addSeparator();
+
+    lookDirectionSlider = new QSlider(Qt::Horizontal);
+    lookDirectionSlider->setMaximum(360);
+    lookDirectionSlider->setSingleStep(15);
+    lookDirectionSlider->setTickInterval(15);
+    lookDirectionSlider->setTickPosition(QSlider::TicksBelow);
+    toolbar->addWidget(lookDirectionSlider);
+
+    tiltSlider = new QSlider(Qt::Horizontal);
+    tiltSlider->setMinimum(0);
+    tiltSlider->setMaximum(90);
+    tiltSlider->setSingleStep(15);
+    tiltSlider->setTickInterval(15);
+    tiltSlider->setTickPosition(QSlider::TicksBelow);
+    toolbar->addWidget(tiltSlider);
+
     animationSlider = new QSlider(Qt::Horizontal, this);
     animationSlider->setTickInterval(2000);
     animationSlider->setTickPosition(QSlider::TicksBelow);
@@ -797,6 +793,8 @@ void MainWindow::unsetTab() {
     disconnect(zoomInAction, 0, 0, 0);
     disconnect(zoomOutAction, 0, 0, 0);
     disconnect(zoomFitAction, 0, 0, 0);
+    disconnect(lookDirectionSlider, 0, 0, 0);
+    disconnect(tiltSlider, 0, 0, 0);
 
     situationWidget->unSetSituation();
 }
@@ -831,6 +829,13 @@ void MainWindow::setTab(int index) {
             view, SLOT(zoomOut()));
     connect(zoomFitAction, SIGNAL(triggered()),
             view, SLOT(zoomFit()));
+
+    connect(lookDirectionSlider, SIGNAL(valueChanged(int)),
+            view, SLOT(setLookDirection(int)));
+    lookDirectionSlider->setValue(view->lookDirection());
+    connect(tiltSlider, SIGNAL(valueChanged(int)),
+            view, SLOT(setTilt(int)));
+    tiltSlider->setValue(view->tilt());
 
     situationWidget->setSituation(situation);
     connect(scene, SIGNAL(stateChanged(SceneState)),

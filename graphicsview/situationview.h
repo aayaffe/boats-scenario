@@ -47,6 +47,8 @@ class SituationView : public QGraphicsView {
         SituationView(QGraphicsScene *scene, QWidget *parent = 0);
         ~SituationView();
         QPixmap screenShot();
+        int lookDirection() { return lookDirectionValue; }
+        int tilt() { return tiltValue; }
 
     protected:
         void wheelEvent(QWheelEvent *event);
