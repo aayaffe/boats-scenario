@@ -42,6 +42,8 @@ SituationView::SituationView(QGraphicsScene *scene, QWidget *parent)
     setRenderHints( QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
     setResizeAnchor(QGraphicsView::AnchorViewCenter);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 SituationView::~SituationView() {
@@ -69,6 +71,17 @@ QPixmap SituationView::screenShot() {
 void SituationView::wheelEvent(QWheelEvent *event) {
     if (debugLevel & 1 << VIEW) std::cout << "wheel event " << event->delta() << std::endl;
     setScale(event->delta() > 0);
+}
+
+
+void SituationView::mousePressEvent(QMouseEvent *event) {
+    setDragMode(QGraphicsView::ScrollHandDrag);
+    QGraphicsView::mousePressEvent(event);
+}
+
+void SituationView::mouseReleaseEvent(QMouseEvent *event) {
+    QGraphicsView::mouseReleaseEvent(event);
+    setDragMode(QGraphicsView::NoDrag);
 }
 
 void SituationView::zoomIn() {

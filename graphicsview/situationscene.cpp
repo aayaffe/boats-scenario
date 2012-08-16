@@ -68,12 +68,8 @@ SituationScene::SituationScene(SituationModel *situation)
 
     setItemIndexMethod(NoIndex);
 
-    // try to set a minimum scene rect
-    QGraphicsItem *e1 = addEllipse(QRectF(-1000,-1000, 1, 1));
-    QGraphicsItem *e2 = addEllipse(QRectF(1000, 1000, 1, 1));
-    sceneRect();
-    delete e1;
-    delete e2;
+    // set a minimum scene rect
+    setSceneRect(-10000, -10000, 20000, 20000);
 
     // react to self change of selection
     connect(this, SIGNAL(selectionChanged()),

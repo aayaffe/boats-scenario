@@ -50,6 +50,8 @@ class SituationView : public QGraphicsView {
 
     protected:
         void wheelEvent(QWheelEvent *event);
+        void mousePressEvent(QMouseEvent *event);
+        void mouseReleaseEvent(QMouseEvent *event);
 
     public slots:
         void zoomIn();
