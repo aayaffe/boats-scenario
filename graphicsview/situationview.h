@@ -61,6 +61,7 @@ class SituationView : public QGraphicsView {
         void zoomFit();
         void setLookDirection(int value);
         void setTilt(int value);
+        void setCenter(QPointF position);
 
     private:
         void setScale(bool in);

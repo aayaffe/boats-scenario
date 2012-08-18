@@ -236,6 +236,11 @@ void SituationScene::setAnimation() {
         TrackAnimation *animation = new TrackAnimation(track, boatItem->boat(), m_scenarioAnimation);
         m_scenarioAnimation->addAnimation(animation);
         m_animationItems.push_back(animation);
+
+        if(track->followTrack()) {
+            connect(boatItem->boat(), SIGNAL(positionChanged(QPointF)),
+                     this, SIGNAL(centerChanged(QPointF)));
+        }
     }
 
     foreach (MarkModel *mark, m_situation->marks()) {

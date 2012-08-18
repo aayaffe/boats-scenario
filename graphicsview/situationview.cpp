@@ -44,6 +44,8 @@ SituationView::SituationView(QGraphicsScene *scene, QWidget *parent)
     setResizeAnchor(QGraphicsView::AnchorViewCenter);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    connect( scene, SIGNAL(centerChanged(QPointF)),
+             this, SLOT(setCenter(QPointF)));
 }
 
 SituationView::~SituationView() {
@@ -119,6 +121,10 @@ void SituationView::setLookDirection(int value) {
 void SituationView::setTilt(int value) {
     tiltValue = value;
     transformView();
+}
+
+void SituationView::setCenter(QPointF position) {
+    centerOn(position);
 }
 
 /**
