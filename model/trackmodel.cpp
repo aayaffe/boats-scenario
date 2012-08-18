@@ -38,6 +38,7 @@ TrackModel::TrackModel(SituationModel *situation, QObject *parent)
         m_color(),
         m_series(Boats::unknown),
         m_showPath(true),
+        m_followTrack(false),
         m_situation(situation),
         m_length(0) {
     m_order = situation->size();
@@ -75,6 +76,20 @@ void TrackModel::setShowPath(const bool theValue) {
     if (theValue != m_showPath) {
         m_showPath = theValue;
         emit showPathChanged(m_showPath);
+    }
+}
+
+void TrackModel::setFollowTrack(bool theValue) {
+    if (theValue != m_followTrack) {
+        m_followTrack = theValue;
+        emit followTrackChanged(m_followTrack);
+    }
+    if (m_followTrack && m_situation) {
+        foreach (TrackModel *model, m_situation->tracks()) {
+            if (model != this) {
+                model->setFollowTrack(false);
+            }
+        }
     }
 }
 

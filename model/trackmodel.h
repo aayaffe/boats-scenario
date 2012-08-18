@@ -76,6 +76,9 @@ class TrackModel : public QObject {
         bool showPath() const { return m_showPath;}
         void setShowPath(const bool theValue);
 
+        bool followTrack() const { return m_followTrack; }
+        void setFollowTrack(bool theValue);
+
         int size() const { return m_boats.size();}
         const QList<BoatModel*> boats() const { return m_boats; }
 
@@ -99,6 +102,7 @@ class TrackModel : public QObject {
         void colorChanged(QColor color);
         void seriesChanged(Boats::Series series);
         void showPathChanged(bool showPath);
+        void followTrackChanged(bool followTrack);
         void trackChanged(TrackModel *track);
 
     private:
@@ -117,6 +121,10 @@ class TrackModel : public QObject {
 
         /// \a m_showPath holds whether the track path will be displayed
         bool m_showPath;
+
+        /// \a m_followTrack holds whether this track will be followed
+        /// during the animation
+        bool m_followTrack;
 
         // Non model Data
         /// \a m_situation keeps a pointer to the SituationModel to which
