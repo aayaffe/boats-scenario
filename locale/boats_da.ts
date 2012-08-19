@@ -593,6 +593,10 @@ Vil du overskrive den?</translation>
         <source>Series</source>
         <translation>Bådtype</translation>
     </message>
+    <message>
+        <source>Follow</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WindTableModel</name>

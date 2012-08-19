@@ -592,6 +592,10 @@ Wilt u het vervangen?</translation>
         <source>Series</source>
         <translation>Serie</translation>
     </message>
+    <message>
+        <source>Follow</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WindTableModel</name>

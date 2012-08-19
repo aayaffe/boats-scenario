@@ -591,6 +591,10 @@ Voulez-vous le remplacer?</translation>
         <source>Path</source>
         <translation>Chemin</translation>
     </message>
+    <message>
+        <source>Follow</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WindTableModel</name>

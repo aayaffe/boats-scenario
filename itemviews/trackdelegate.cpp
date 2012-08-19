@@ -71,6 +71,10 @@ void TrackDelegate::paint(QPainter *painter,
             drawDisplay(painter, option, option.rect, ENUM_NAME(Boats, Series, series));
             }
             break;
+        case TRACK_FOLLOW: {
+            QItemDelegate::paint(painter, option, index);
+            }
+            break;
         default:
             QItemDelegate::paint(painter, option, index);
             break;
@@ -116,6 +120,16 @@ QWidget * TrackDelegate::createEditor(QWidget *parent,
             return editor;
             }
             break;
+        case TRACK_FOLLOW: {
+            QComboBox *editor = new QComboBox(parent);
+            QStringList list;
+            list << tr("false") << tr("true");
+            editor->addItems(list);
+            connect(editor, SIGNAL(activated(int)),
+                    this, SLOT(commitAndCloseCombo()));
+            return editor;
+            }
+            break;
         default:
             return QItemDelegate::createEditor(parent, option, index);
             break;
@@ -143,6 +157,12 @@ void TrackDelegate::setEditorData(QWidget *editor,
             QComboBox *seriesEditor = getComboEditor(editor);
             int series = qVariantValue<int>(index.data());
             seriesEditor->setCurrentIndex(series);
+            }
+            break;
+        case TRACK_FOLLOW: {
+            QComboBox *followEditor = getComboEditor(editor);
+            bool followPath = qVariantValue<bool>(index.data());
+            followEditor->setCurrentIndex(followPath);
             }
             break;
         default:
@@ -173,6 +193,12 @@ void TrackDelegate::setModelData(QWidget *editor,
             QComboBox *seriesEditor = getComboEditor(editor);
             int series = seriesEditor->currentIndex();
             model->setData(index, qVariantFromValue(series));
+            }
+            break;
+        case TRACK_FOLLOW: {
+            QComboBox *followEditor = getComboEditor(editor);
+            bool followPath = followEditor->currentIndex();
+            model->setData(index, qVariantFromValue(followPath));
             }
             break;
         default:

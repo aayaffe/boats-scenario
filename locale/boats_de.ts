@@ -591,6 +591,10 @@ Möchten Sie die Datei ersetzen?</translation>
         <source>Series</source>
         <translation>Reihe</translation>
     </message>
+    <message>
+        <source>Follow</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WindTableModel</name>

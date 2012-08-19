@@ -587,6 +587,10 @@ Do you want to replace it?</source>
         <source>Series</source>
         <translation>艇種</translation>
     </message>
+    <message>
+        <source>Follow</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WindTableModel</name>

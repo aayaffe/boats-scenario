@@ -591,6 +591,10 @@ Ali jo zelite zamenjati?</translation>
         <source>Series</source>
         <translation>Serija</translation>
     </message>
+    <message>
+        <source>Follow</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WindTableModel</name>

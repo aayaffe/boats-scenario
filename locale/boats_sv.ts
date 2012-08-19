@@ -593,6 +593,10 @@ Vill du ersätta den?</translation>
         <source>Path</source>
         <translation>Spår</translation>
     </message>
+    <message>
+        <source>Follow</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WindTableModel</name>

@@ -588,6 +588,10 @@ Do you want to replace it?</source>
         <source>Series</source>
         <translation>Serie</translation>
     </message>
+    <message>
+        <source>Follow</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WindTableModel</name>
