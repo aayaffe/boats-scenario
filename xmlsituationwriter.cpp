@@ -96,6 +96,9 @@ void XmlSituationWriter::writeTrack(const TrackModel *track) {
     if (!track->showPath()) {
         writeTextElement("path",QString::number(track->showPath()));
     }
+    if (track->followTrack()) {
+        writeTextElement("follow_track",QString::number(track->followTrack()));
+    }
     foreach (const QString discarded, track->discardedXml())
         writeUnknownElement(discarded);
     foreach (const BoatModel *boat, track->boats())
