@@ -395,9 +395,41 @@ bool SetShowPathUndoCommand::mergeWith(const QUndoCommand *command) {
     const SetShowPathUndoCommand *showPathCommand = static_cast<const SetShowPathUndoCommand*>(command);
     if (m_track != showPathCommand->m_track)
         return false;
-    undo();
+//    undo();
     m_track->situation()->undoStack()->setIndex(m_track->situation()->undoStack()->index()-1);
     return true;
+}
+
+// Follow Track
+SetFollowTrackUndoCommand::SetFollowTrackUndoCommand(SituationModel* situation, TrackModel *track, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_track(track) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new followtrackundocommand" << std::endl;
+    foreach (TrackModel *tracks, situation->tracks()) {
+        m_followTrackList.append(tracks->followTrack());
+    }
+}
+
+SetFollowTrackUndoCommand::~SetFollowTrackUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end followtrackundocommand" << std::endl;
+}
+
+void SetFollowTrackUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo followtrackundocommand" << std::endl;
+    for (int i=0; i<m_situation->size(); ++i) {
+        TrackModel *tracks = m_situation->tracks()[i];
+        tracks->setFollowTrack(m_followTrackList.at(i));
+    }
+}
+
+void SetFollowTrackUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo followtrackundocommand" << std::endl;
+    m_track->setFollowTrack(!m_track->followTrack());
+}
+
+bool SetFollowTrackUndoCommand::mergeWith(const QUndoCommand *command) {
+    return false;
 }
 
 // Show Wind

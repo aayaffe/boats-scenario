@@ -50,6 +50,7 @@ enum {
     SET_SERIES,
     SET_COLOR,
     SET_SHOWPATH,
+    SET_FOLLOWTRACK,
     SET_SHOWWIND,
     SET_WIND,
     MOVE_MODEL,
@@ -248,6 +249,22 @@ class SetShowPathUndoCommand : public QUndoCommand {
 
     private:
         TrackModel *m_track;
+};
+
+class SetFollowTrackUndoCommand : public QUndoCommand {
+
+    public:
+        SetFollowTrackUndoCommand(SituationModel* situation, TrackModel* track, QUndoCommand *parent = 0);
+        ~SetFollowTrackUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_FOLLOWTRACK; }
+
+    private:
+        SituationModel *m_situation;
+        TrackModel *m_track;
+        QList<bool> m_followTrackList;
 };
 
 class SetShowWindUndoCommand : public QUndoCommand {
