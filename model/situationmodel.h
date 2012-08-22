@@ -88,6 +88,9 @@ class SituationModel : public QObject {
         QString description() const { return m_description; }
         void setDescription(const QString theValue);
 
+        int lookDirection() const { return m_lookDirection; }
+        int tilt() const { return m_tilt; }
+
         int size() const { return m_tracks.size();}
         const QList<TrackModel*> tracks() const { return m_tracks; }
 
@@ -133,6 +136,8 @@ class SituationModel : public QObject {
         void lengthChanged(const int length);
         void abstractChanged(const QString abstract);
         void descriptionChanged(const QString description);
+        void lookDirectionChanged( const int lookDirection);
+        void tiltChanged( const int tilt);
 
         // Signals for Marks
         void markAdded(MarkModel *mark);
@@ -162,6 +167,9 @@ class SituationModel : public QObject {
         // Slot for Wind
         void resetWind();
 
+        void setLookDirection(int theValue);
+        void setTilt(int theValue);
+
     private:
         // Model Data
         /// \a m_title holds the Title of the Scenario
@@ -188,6 +196,12 @@ class SituationModel : public QObject {
         /// \a m_situationLength holds the size of the Zone at Marks of
         /// the Scenario
         int m_situationLength;
+
+        /// \a m_lookDirection holds the direction of the view
+        int m_lookDirection;
+
+        /// \a m_tilt holds the tilt of the view
+        int m_tilt;
 
         /// \a m_wind holds the WindModel of the Scenario
         WindModel m_wind;
