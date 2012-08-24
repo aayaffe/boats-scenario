@@ -46,6 +46,10 @@ SituationView::SituationView(QGraphicsScene *scene, QWidget *parent)
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     connect( scene, SIGNAL(centerChanged(QPointF)),
              this, SLOT(setCenter(QPointF)));
+    connect( scene, SIGNAL(lookDirectionChanged(int)),
+             this, SLOT(setLookDirection(int)));
+    connect( scene, SIGNAL(tiltChanged(int)),
+             this, SLOT(setTilt(int)));
 }
 
 SituationView::~SituationView() {

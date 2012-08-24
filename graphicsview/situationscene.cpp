@@ -102,6 +102,11 @@ SituationScene::SituationScene(SituationModel *situation)
     connect(&situation->wind(), SIGNAL(windVisibleChanged(bool)),
             this, SLOT(setWind(bool)));
 
+    connect(situation, SIGNAL(lookDirectionChanged(int)),
+             this, SIGNAL(lookDirectionChanged(int)));
+    connect(situation, SIGNAL(tiltChanged(int)),
+            this, SIGNAL(tiltChanged(int)));
+
     setLaylines(situation->laylineAngle());
 
 }

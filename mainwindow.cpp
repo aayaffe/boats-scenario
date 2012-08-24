@@ -831,11 +831,11 @@ void MainWindow::setTab(int index) {
             view, SLOT(zoomFit()));
 
     connect(lookDirectionSlider, SIGNAL(valueChanged(int)),
-            view, SLOT(setLookDirection(int)));
-    lookDirectionSlider->setValue(view->lookDirection());
+            situation, SLOT(setLookDirection(int)));
+    lookDirectionSlider->setValue(situation->lookDirection());
     connect(tiltSlider, SIGNAL(valueChanged(int)),
-            view, SLOT(setTilt(int)));
-    tiltSlider->setValue(view->tilt());
+            situation, SLOT(setTilt(int)));
+    tiltSlider->setValue(situation->tilt());
 
     situationWidget->setSituation(situation);
     connect(scene, SIGNAL(stateChanged(SceneState)),
