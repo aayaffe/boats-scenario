@@ -46,10 +46,10 @@ SituationView::SituationView(QGraphicsScene *scene, QWidget *parent)
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     connect( scene, SIGNAL(centerChanged(QPointF)),
              this, SLOT(setCenter(QPointF)));
-    connect( scene, SIGNAL(lookDirectionChanged(int)),
-             this, SLOT(setLookDirection(int)));
-    connect( scene, SIGNAL(tiltChanged(int)),
-             this, SLOT(setTilt(int)));
+    connect( scene, SIGNAL(lookDirectionChanged(qreal)),
+             this, SLOT(setLookDirection(qreal)));
+    connect( scene, SIGNAL(tiltChanged(qreal)),
+             this, SLOT(setTilt(qreal)));
 }
 
 SituationView::~SituationView() {
@@ -117,12 +117,12 @@ void SituationView::zoomFit() {
     setMatrix(m);
 }
 
-void SituationView::setLookDirection(int value) {
+void SituationView::setLookDirection(qreal value) {
     lookDirectionValue = value;
     transformView();
 }
 
-void SituationView::setTilt(int value) {
+void SituationView::setTilt(qreal value) {
     tiltValue = value;
     transformView();
 }
@@ -153,7 +153,7 @@ void SituationView::transformView() {
 
     QTransform transform;
     transform.rotate(tiltValue, Qt::XAxis);
-    transform.rotate(lookDirectionValue, Qt::ZAxis);
+    transform.rotate(-lookDirectionValue, Qt::ZAxis);
     transform.scale(scaleValue, scaleValue);
     setTransform(transform, false);
 }

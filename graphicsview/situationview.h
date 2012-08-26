@@ -47,8 +47,6 @@ class SituationView : public QGraphicsView {
         SituationView(QGraphicsScene *scene, QWidget *parent = 0);
         ~SituationView();
         QPixmap screenShot();
-        int lookDirection() { return lookDirectionValue; }
-        int tilt() { return tiltValue; }
 
     protected:
         void wheelEvent(QWheelEvent *event);
@@ -59,8 +57,8 @@ class SituationView : public QGraphicsView {
         void zoomIn();
         void zoomOut();
         void zoomFit();
-        void setLookDirection(int value);
-        void setTilt(int value);
+        void setLookDirection(qreal value);
+        void setTilt(qreal value);
         void setCenter(QPointF position);
 
     private:
@@ -70,8 +68,8 @@ class SituationView : public QGraphicsView {
         /// \a scaleValue holds the value for the viewing scale
         qreal scaleValue;
 
-        int lookDirectionValue;
-        int tiltValue;
+        qreal lookDirectionValue;
+        qreal tiltValue;
 };
 
 #endif

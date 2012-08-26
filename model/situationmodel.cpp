@@ -151,7 +151,7 @@ void SituationModel::setDescription(const QString theValue) {
     }
 }
 
-void SituationModel::setLookDirection(int theValue) {
+void SituationModel::setLookDirection(qreal theValue) {
     if (theValue != m_lookDirection) {
         if (debugLevel & 1 << MODEL) std::cout << "Setting lookDirection " << theValue << std::endl;
         m_lookDirection = theValue;
@@ -159,7 +159,7 @@ void SituationModel::setLookDirection(int theValue) {
     }
 }
 
-void SituationModel::setTilt(int theValue) {
+void SituationModel::setTilt(qreal theValue) {
     if (theValue != m_tilt) {
         if (debugLevel & 1 << MODEL) std::cout << "Setting tilt " << theValue << std::endl;
         m_tilt = theValue;

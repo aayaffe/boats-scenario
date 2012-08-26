@@ -136,8 +136,8 @@ class SituationScene : public QGraphicsScene {
         void stateChanged(SceneState newState);
         void selectedModelsChanged();
         void centerChanged(QPointF position);
-        void lookDirectionChanged( const int lookDirection);
-        void tiltChanged( const int tilt);
+        void lookDirectionChanged( const qreal lookDirection);
+        void tiltChanged( const qreal tilt);
 
     public slots:
         // Slot for selection mechanism

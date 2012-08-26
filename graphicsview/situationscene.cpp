@@ -102,10 +102,10 @@ SituationScene::SituationScene(SituationModel *situation)
     connect(&situation->wind(), SIGNAL(windVisibleChanged(bool)),
             this, SLOT(setWind(bool)));
 
-    connect(situation, SIGNAL(lookDirectionChanged(int)),
-             this, SIGNAL(lookDirectionChanged(int)));
-    connect(situation, SIGNAL(tiltChanged(int)),
-            this, SIGNAL(tiltChanged(int)));
+    connect(situation, SIGNAL(lookDirectionChanged(qreal)),
+             this, SIGNAL(lookDirectionChanged(qreal)));
+    connect(situation, SIGNAL(tiltChanged(qreal)),
+            this, SIGNAL(tiltChanged(qreal)));
 
     setLaylines(situation->laylineAngle());
 
@@ -244,7 +244,9 @@ void SituationScene::setAnimation() {
 
         if(track->followTrack()) {
             connect(boatItem->boat(), SIGNAL(positionChanged(QPointF)),
-                     this, SIGNAL(centerChanged(QPointF)));
+                    this, SIGNAL(centerChanged(QPointF)));
+            connect(boatItem->boat(), SIGNAL(headingChanged(qreal)),
+                    this, SIGNAL(lookDirectionChanged(qreal)));
         }
     }
 
