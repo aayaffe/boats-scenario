@@ -432,6 +432,42 @@ bool SetFollowTrackUndoCommand::mergeWith(const QUndoCommand *command) {
     return false;
 }
 
+// Lookat
+SetLookAtUndoCommand::SetLookAtUndoCommand(SituationModel* situation, int lookDirection, int tilt, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_oldLookDirection(situation->lookDirection()),
+        m_newLookDirection(lookDirection),
+        m_oldTilt(situation->tilt()),
+        m_newTilt(tilt) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new lookatundocommand" << std::endl;
+}
+
+SetLookAtUndoCommand::~SetLookAtUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end lookatundocommand" << std::endl;
+}
+
+void SetLookAtUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo lookatundocommand" << std::endl;
+    m_situation->setLookDirection(m_oldLookDirection);
+    m_situation->setTilt(m_oldTilt);
+}
+
+void SetLookAtUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo lookatundocommand" << std::endl;
+    m_situation->setLookDirection(m_newLookDirection);
+    m_situation->setTilt(m_newTilt);
+}
+
+bool SetLookAtUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetLookAtUndoCommand *lookatCommand = static_cast<const SetLookAtUndoCommand*>(command);
+    if (m_situation != lookatCommand->m_situation)
+        return false;
+    m_newLookDirection = lookatCommand->m_newLookDirection;
+    m_newTilt = lookatCommand->m_newTilt;
+    return true;
+}
+
 // Show Wind
 SetShowWindUndoCommand::SetShowWindUndoCommand(WindModel *wind, QUndoCommand *parent)
         : QUndoCommand(parent),

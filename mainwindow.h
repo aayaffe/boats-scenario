@@ -101,6 +101,7 @@ class MainWindow : public QMainWindow {
         void toggleLaylines();
         void deleteTrack();
         void deleteModels();
+        void setLookAt();
 
         // Animation actions
         void animate(bool state, bool interactive=true);

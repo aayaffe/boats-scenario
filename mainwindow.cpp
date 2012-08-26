@@ -831,10 +831,10 @@ void MainWindow::setTab(int index) {
             view, SLOT(zoomFit()));
 
     connect(lookDirectionSlider, SIGNAL(valueChanged(int)),
-            situation, SLOT(setLookDirection(int)));
+            this, SLOT(setLookAt()));
     lookDirectionSlider->setValue(situation->lookDirection());
     connect(tiltSlider, SIGNAL(valueChanged(int)),
-            situation, SLOT(setTilt(int)));
+            this, SLOT(setLookAt()));
     tiltSlider->setValue(situation->tilt());
 
     situationWidget->setSituation(situation);
@@ -1700,6 +1700,11 @@ void MainWindow::toggleLaylines() {
     if (! modelList.isEmpty()) {
         situation->undoStack()->push(new SetLaylinesUndoCommand(modelList, !modelList.first()->laylines()));
     }
+}
+
+void MainWindow::setLookAt() {
+    SituationModel *situation = situationList.at(currentSituation);
+    situation->undoStack()->push(new SetLookAtUndoCommand(situation, lookDirectionSlider->value(), tiltSlider->value()));
 }
 
 void MainWindow::toggleLang() {
