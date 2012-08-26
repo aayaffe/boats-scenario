@@ -69,6 +69,8 @@ bool XmlSituationWriter::writeFile(QIODevice *device) {
     writeTextElement("showlayline",QString::number(m_situation->showLayline()));
     writeTextElement("layline",QString::number(m_situation->laylineAngle()));
     writeTextElement("length",QString::number(m_situation->situationLength()));
+    writeTextElement("look_direction",QString::number(m_situation->lookDirection()));
+    writeTextElement("tilt",QString::number(m_situation->tilt()));
     writeWind(m_situation->wind());
     foreach (const QString discarded, m_situation->discardedXml())
         writeUnknownElement(discarded);

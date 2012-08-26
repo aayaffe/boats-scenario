@@ -123,6 +123,12 @@ void XmlSituationReader::readSituation() {
             } else if (name() == "length") {
                 m_situation->setSituationLength(readElementText().toInt());
 
+            } else if (name() == "look_direction") {
+                m_situation->setLookDirection(readElementText().toFloat());
+
+            } else if (name() == "tilt") {
+                m_situation->setTilt(readElementText().toFloat());
+
             } else if (name() == "mark") {
                 readMark(m_situation);
 
