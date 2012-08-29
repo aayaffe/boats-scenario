@@ -63,14 +63,27 @@ QVariant TrackTableModel::data(const QModelIndex &index, int role) const {
             case TRACK_COLOR:
                 return m_situation->tracks()[index.row()]->color();
                 break;
-            case TRACK_PATH:
-                return m_situation->tracks()[index.row()]->showPath();
-                break;
             case TRACK_SERIES:
                 return m_situation->tracks()[index.row()]->series();
                 break;
+            default:
+                return QVariant();
+                break;
+        }
+    }
+    else if (role == Qt::CheckStateRole) {
+        switch (index.column()) {
+            case TRACK_PATH:
+                if (m_situation->tracks()[index.row()]->showPath()) {
+                    return Qt::Checked;
+                }
+                return Qt::Unchecked;
+                break;
             case TRACK_FOLLOW:
-                return m_situation->tracks()[index.row()]->followTrack();
+                if (m_situation->tracks()[index.row()]->followTrack()) {
+                    return Qt::Checked;
+                }
+                return Qt::Unchecked;
                 break;
             default:
                 return QVariant();
@@ -107,7 +120,7 @@ QVariant TrackTableModel::headerData(int section, Qt::Orientation orientation, i
 
 Qt::ItemFlags TrackTableModel::flags(const QModelIndex &index) const {
     Q_UNUSED(index);
-    return Qt::ItemIsEnabled|Qt::ItemIsEditable;
+    return Qt::ItemIsEnabled|Qt::ItemIsEditable|Qt::ItemIsUserCheckable;
 }
 
 bool TrackTableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
@@ -130,8 +143,8 @@ bool TrackTableModel::setData(const QModelIndex &index, const QVariant &value, i
             }
             break;
         case TRACK_PATH:
-            if (qVariantCanConvert<bool>(value)) {
-                int newValue = qVariantValue<bool>(value);
+            if (value.isValid()) {
+                bool newValue = (static_cast<Qt::CheckState>(value.toInt()) == Qt::Checked);
                 TrackModel *track = m_situation->tracks()[index.row()];
                 if (newValue != track->showPath()) {
                         m_situation->undoStack()->push(new SetShowPathUndoCommand(track));
@@ -153,8 +166,8 @@ bool TrackTableModel::setData(const QModelIndex &index, const QVariant &value, i
             }
             break;
         case TRACK_FOLLOW:
-            if (qVariantCanConvert<bool>(value)) {
-                int newValue = qVariantValue<bool>(value);
+            if (value.isValid()) {
+                bool newValue = (static_cast<Qt::CheckState>(value.toInt()) == Qt::Checked);
                 TrackModel *track = m_situation->tracks()[index.row()];
                 if (newValue != track->followTrack()) {
                     m_situation->undoStack()->push(new SetFollowTrackUndoCommand(track->situation(), track));

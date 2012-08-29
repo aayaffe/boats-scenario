@@ -569,17 +569,6 @@ Vill du ersätta den?</translation>
     </message>
 </context>
 <context>
-    <name>TrackDelegate</name>
-    <message>
-        <source>false</source>
-        <translation>falskt</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>sannt</translation>
-    </message>
-</context>
-<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>

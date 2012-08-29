@@ -567,17 +567,6 @@ Ali jo zelite zamenjati?</translation>
     </message>
 </context>
 <context>
-    <name>TrackDelegate</name>
-    <message>
-        <source>false</source>
-        <translation>napacno</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>resnicno</translation>
-    </message>
-</context>
-<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>

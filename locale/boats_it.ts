@@ -564,17 +564,6 @@ Do you want to replace it?</source>
     </message>
 </context>
 <context>
-    <name>TrackDelegate</name>
-    <message>
-        <source>false</source>
-        <translation>falso</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>vero</translation>
-    </message>
-</context>
-<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>

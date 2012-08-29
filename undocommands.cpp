@@ -395,7 +395,7 @@ bool SetShowPathUndoCommand::mergeWith(const QUndoCommand *command) {
     const SetShowPathUndoCommand *showPathCommand = static_cast<const SetShowPathUndoCommand*>(command);
     if (m_track != showPathCommand->m_track)
         return false;
-//    undo();
+    undo();
     m_track->situation()->undoStack()->setIndex(m_track->situation()->undoStack()->index()-1);
     return true;
 }

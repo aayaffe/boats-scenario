@@ -563,17 +563,6 @@ Do you want to replace it?</source>
     </message>
 </context>
 <context>
-    <name>TrackDelegate</name>
-    <message>
-        <source>false</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>

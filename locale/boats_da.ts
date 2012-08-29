@@ -569,17 +569,6 @@ Vil du overskrive den?</translation>
     </message>
 </context>
 <context>
-    <name>TrackDelegate</name>
-    <message>
-        <source>false</source>
-        <translation>falsk</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>sand</translation>
-    </message>
-</context>
-<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>

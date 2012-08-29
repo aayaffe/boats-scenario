@@ -76,6 +76,7 @@ SituationWidget::SituationWidget(QWidget *parent)
     trackTableModel = new TrackTableModel(m_situation);
     trackTableView = new QTableView(trackGroup);
     trackTableView->setItemDelegate(new TrackDelegate);
+    trackTableView->setEditTriggers(QAbstractItemView::CurrentChanged);
     trackTableView->verticalHeader()->hide();
     trackTableView->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
     trackTableView->horizontalHeader()->setDefaultSectionSize(60);
@@ -89,6 +90,7 @@ SituationWidget::SituationWidget(QWidget *parent)
     windTableModel = new WindTableModel(&m_situation->wind());
     windTableView = new QTableView(windGroup);
     windTableView->setItemDelegate(new WindDelegate);
+    windTableView->setEditTriggers(QAbstractItemView::CurrentChanged);
     windTableView->verticalHeader()->hide();
     windTableView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     windTableView->horizontalHeader()->setClickable(false);

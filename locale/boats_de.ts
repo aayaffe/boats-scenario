@@ -567,17 +567,6 @@ Möchten Sie die Datei ersetzen?</translation>
     </message>
 </context>
 <context>
-    <name>TrackDelegate</name>
-    <message>
-        <source>false</source>
-        <translation>falsch</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>richtig</translation>
-    </message>
-</context>
-<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>

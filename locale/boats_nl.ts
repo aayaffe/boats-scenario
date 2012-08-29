@@ -568,17 +568,6 @@ Wilt u het vervangen?</translation>
     </message>
 </context>
 <context>
-    <name>TrackDelegate</name>
-    <message>
-        <source>false</source>
-        <translation>Vals</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>Waar</translation>
-    </message>
-</context>
-<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>
