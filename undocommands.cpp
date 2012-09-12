@@ -1111,6 +1111,46 @@ bool ZoneMarkUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Color Mark
+ColorMarkUndoCommand::ColorMarkUndoCommand(SituationModel *situation, const QList<MarkModel*> &markList, const QColor &color, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_markList(markList),
+        m_newColor(color) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new colormarkundocommand" << std::endl;
+    foreach( MarkModel *mark, markList) {
+        m_oldColors.append(mark->color());
+    }
+}
+
+ColorMarkUndoCommand::~ColorMarkUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end colormarkundocommand" << std::endl;
+}
+
+void ColorMarkUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo colormarkundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setColor(m_oldColors[i]);
+    }
+}
+
+void ColorMarkUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo colormarkundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setColor(m_newColor);
+    }
+}
+
+bool ColorMarkUndoCommand::mergeWith(const QUndoCommand *command) {
+    const ColorMarkUndoCommand *colorCommand = static_cast<const ColorMarkUndoCommand*>(command);
+    if (m_markList != colorCommand->m_markList)
+        return false;
+    m_newColor = colorCommand->m_newColor;
+    return true;
+}
+
 // Set Length
 LengthMarkUndoCommand::LengthMarkUndoCommand(SituationModel* situation, const int length, QUndoCommand *parent)
         : QUndoCommand(parent),

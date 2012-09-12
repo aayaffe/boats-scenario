@@ -66,6 +66,7 @@ enum {
     SET_TEXT,
     MOVE_TEXT,
     ZONE_MARK,
+    COLOR_MARK,
     LENGTH_MARK
 };
 
@@ -570,6 +571,23 @@ class ZoneMarkUndoCommand : public QUndoCommand {
     private:
         SituationModel *m_situation;
         QList<MarkModel*> m_markList;
+};
+
+class ColorMarkUndoCommand : public QUndoCommand {
+
+    public:
+        ColorMarkUndoCommand(SituationModel* situation, const QList<MarkModel*> &markList, const QColor &color, QUndoCommand *parent = 0);
+        ~ColorMarkUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return COLOR_MARK; }
+
+    private:
+        SituationModel *m_situation;
+        QList<MarkModel*> m_markList;
+        QList<QColor> m_oldColors;
+        QColor m_newColor;
 };
 
 class LengthMarkUndoCommand : public QUndoCommand {
