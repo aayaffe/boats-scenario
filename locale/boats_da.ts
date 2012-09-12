@@ -498,6 +498,14 @@ Vil du overskrive den?</translation>
         <source>Alt+L</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Set Mark &amp;Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt+C</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

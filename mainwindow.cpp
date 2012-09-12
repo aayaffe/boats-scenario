@@ -34,6 +34,7 @@
 #include "situationmodel.h"
 #include "trackmodel.h"
 #include "boatmodel.h"
+#include "markmodel.h"
 #include "polylinemodel.h"
 #include "pointmodel.h"
 
@@ -46,6 +47,7 @@
 #include "situationwidget.h"
 #include "situationscene.h"
 #include "situationview.h"
+#include "colorpickerwidget.h"
 
 #ifdef GIF_EXPORT
 #include "gifwriter.h"
@@ -262,6 +264,11 @@ void MainWindow::createActions() {
     connect(toggleMarkZoneAction, SIGNAL(triggered()),
             this, SLOT(toggleMarkZone()));
 
+    setMarkColorAction = new QAction(this);
+    setMarkColorAction->setIcon(QIcon());
+    connect(setMarkColorAction, SIGNAL(triggered()),
+            this, SLOT(setMarkColor()));
+
     toggleLaylinesAction = new QAction(this);
     toggleLaylinesAction->setIcon(QIcon(":/images/laylines.png"));
     toggleLaylinesAction->setCheckable(true);
@@ -354,6 +361,7 @@ void MainWindow::updateActions() {
     bool selectedItems = !scene->selectedItems().isEmpty();
     bool selectedBoats = !scene->selectedBoatModels().isEmpty();
     bool selectedPoints = !scene->selectedPointModels().isEmpty();
+    bool selectedMarks = !scene->selectedMarkModels().isEmpty();
 
     addBoatAction->setEnabled(selectedBoats || scene->state() == CREATE_BOAT);
     addPointAction->setEnabled(selectedPoints || scene->state() == CREATE_POINT);
@@ -364,6 +372,7 @@ void MainWindow::updateActions() {
     toggleStarboardOverlapAction->setEnabled(selectedBoats);
     toggleHiddenAction->setEnabled(selectedBoats);
     toggleTextAction->setEnabled(selectedItems);
+    setMarkColorAction->setEnabled(selectedMarks);
     flagMenu->setEnabled(selectedBoats);
     accelerationMenu->setEnabled(selectedBoats);
     deleteTrackAction->setEnabled(selectedBoats);
@@ -590,6 +599,7 @@ void MainWindow::createMenus() {
     trackMenu->addMenu(accelerationMenu);
     trackMenu->addAction(toggleSpinAction);
     trackMenu->addAction(toggleMarkZoneAction);
+    trackMenu->addAction(setMarkColorAction);
     trackMenu->addAction(toggleLaylinesAction);
     trackMenu->addSeparator();
     trackMenu->addAction(deleteTrackAction);
@@ -622,6 +632,7 @@ void MainWindow::createMenus() {
     markPopup->addAction(toggleTextAction);
     markPopup->addAction(toggleMarkZoneAction);
     markPopup->addAction(toggleLaylinesAction);
+    markPopup->addAction(setMarkColorAction);
     markPopup->addSeparator();
     markPopup->addAction(deleteAction);
 
@@ -1056,6 +1067,9 @@ void MainWindow::changeEvent(QEvent *event) {
 
         toggleMarkZoneAction->setText(tr("Toggle Mark &Zone"));
         toggleMarkZoneAction->setShortcut(tr("Alt+Z"));
+
+        setMarkColorAction->setText(tr("Set Mark &Color"));
+        setMarkColorAction->setShortcut(tr("Alt+C"));
 
         toggleLaylinesAction->setText(tr("Toggle &Laylines"));
         toggleLaylinesAction->setShortcut(tr("Alt+L"));
@@ -1687,6 +1701,18 @@ void MainWindow::toggleMarkZone() {
         situation->undoStack()->push(new ZoneMarkUndoCommand(situation, markList));
     } else {
         situation->undoStack()->push(new ZoneMarkUndoCommand(situation, situation->marks()));
+    }
+}
+
+void MainWindow::setMarkColor() {
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
+
+    QList<MarkModel *> markList = scene->selectedMarkModels();
+    if (! markList.isEmpty()) {
+        ColorPickerWidget colorEditor;
+        colorEditor.setColor( markList.first()->color());
+        situation->undoStack()->push(new ColorMarkUndoCommand(situation, markList, colorEditor.color()));
     }
 }
 

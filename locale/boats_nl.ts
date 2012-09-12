@@ -497,6 +497,14 @@ Wilt u het vervangen?</translation>
         <source>Alt+L</source>
         <translation>Alt+L</translation>
     </message>
+    <message>
+        <source>Set Mark &amp;Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt+C</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

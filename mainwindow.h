@@ -98,6 +98,7 @@ class MainWindow : public QMainWindow {
         void toggleText();
         void toggleSpin();
         void toggleMarkZone();
+        void setMarkColor();
         void toggleLaylines();
         void deleteTrack();
         void deleteModels();
@@ -195,6 +196,7 @@ class MainWindow : public QMainWindow {
         QAction *toggleTextAction;
         QAction *toggleSpinAction;
         QAction *toggleMarkZoneAction;
+        QAction *setMarkColorAction;
         QAction *toggleLaylinesAction;
         QAction *deleteTrackAction;
         QAction *deleteAction;
