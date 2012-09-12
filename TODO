@@ -1,7 +1,5 @@
 Important:
 - fix laylines on boats
-- integrate lookat
-- animate lookat
 - fix printing document
 - statechart
 - jib
@@ -9,12 +7,10 @@ Important:
 
 Normal:
 - toggle number display
-- select colour for marks
 - arrows
 - clean selection before output
 - translate boat types in popup
 - more boat shapes
-- one line for config options and their toggle
 - open in new tab
 - more flags
 
