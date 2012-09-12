@@ -777,7 +777,6 @@ void MainWindow::unsetTab() {
         return;
     }
 
-    std::cout << "unsetTab" << std::endl;
     SituationModel *situation = situationList.at(currentSituation);
     SituationScene *scene = sceneList.at(currentSituation);
     if (scene->state() == ANIMATE) {
@@ -800,7 +799,6 @@ void MainWindow::unsetTab() {
 }
 
 void MainWindow::setTab(int index) {
-    std::cout << "setTab " << index << std::endl;
     unsetTab();
     currentSituation = index;
     SituationModel *situation = situationList.at(index);
