@@ -1304,6 +1304,7 @@ bool MainWindow::saveAs() {
 
 void MainWindow::print() {
     SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
     SituationView *view = viewList.at(currentSituation);
     QPrinter printer(QPrinter::HighResolution);
 
@@ -1313,6 +1314,7 @@ void MainWindow::print() {
         return;
     }
 
+    scene->clearSelection();
     SituationPrint printSituation(situation, view);
     printSituation.render(printer.paperRect(QPrinter::Millimeter).adjusted(20, 20, -20, -20));
     printSituation.print(&printer);
@@ -1320,7 +1322,10 @@ void MainWindow::print() {
 
 void MainWindow::printPreview() {
     SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
     SituationView *view = viewList.at(currentSituation);
+
+    scene->clearSelection();
     SituationPrint printSituation(situation, view);
     QPrinter printer(QPrinter::HighResolution);
     QPrintPreviewDialog dialog(&printer);
@@ -1333,6 +1338,7 @@ void MainWindow::printPreview() {
 
 void MainWindow::exportPdf() {
     SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
     SituationView *view = viewList.at(currentSituation);
 
     QString defaultName(situation->fileName());
@@ -1347,6 +1353,7 @@ void MainWindow::exportPdf() {
     QPrinter printer(QPrinter::HighResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(fileName);
+    scene->clearSelection();
     SituationPrint printSituation(situation, view);
     printSituation.render(printer.paperRect(QPrinter::Millimeter).adjusted(20, 20, -20, -20));
     printSituation.print(&printer);
@@ -1354,6 +1361,7 @@ void MainWindow::exportPdf() {
 
 void MainWindow::exportImage() {
     SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
     SituationView *view = viewList.at(currentSituation);
 
     QString defaultName(situation->fileName());
@@ -1385,6 +1393,7 @@ void MainWindow::exportImage() {
 #endif
     }
 
+    scene->clearSelection();
     QPixmap pixmap = view->screenShot();
     QFile file(fileName);
     if (!file.open(QFile::WriteOnly | QFile::Text)) {
@@ -1749,6 +1758,7 @@ void MainWindow::animate(bool state, bool interactive) {
     if (state) {
         if (scene->state() != ANIMATE) {
             scene->setState(ANIMATE);
+            scene->clearSelection();
             scene->setAnimation();
 
             connect(scene->animation(), SIGNAL(stateChanged(QAbstractAnimation::State, QAbstractAnimation::State)),
