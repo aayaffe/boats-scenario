@@ -61,6 +61,10 @@ class SituationView : public QGraphicsView {
         void setTilt(qreal value);
         void setCenter(QPointF position);
 
+    signals:
+        void lookDirectionChanged( const int lookDirection);
+        void tiltChanged( const int tilt);
+
     private:
         void setScale(bool in);
         void transformView();

@@ -119,11 +119,13 @@ void SituationView::zoomFit() {
 
 void SituationView::setLookDirection(qreal value) {
     lookDirectionValue = value;
+    emit lookDirectionChanged(qRound(lookDirectionValue));
     transformView();
 }
 
 void SituationView::setTilt(qreal value) {
     tiltValue = value;
+    emit tiltChanged(qRound(tiltValue));
     transformView();
 }
 

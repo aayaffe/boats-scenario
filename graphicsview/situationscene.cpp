@@ -245,6 +245,7 @@ void SituationScene::setAnimation() {
         if(track->followTrack()) {
             connect(boatItem->boat(), SIGNAL(positionChanged(QPointF)),
                     this, SIGNAL(centerChanged(QPointF)));
+            disconnect(m_situation, SIGNAL(lookDirectionChanged(qreal)));
             connect(boatItem->boat(), SIGNAL(headingChanged(qreal)),
                     this, SIGNAL(lookDirectionChanged(qreal)));
         }

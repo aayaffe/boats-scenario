@@ -804,7 +804,9 @@ void MainWindow::unsetTab() {
     disconnect(zoomOutAction, 0, 0, 0);
     disconnect(zoomFitAction, 0, 0, 0);
     disconnect(lookDirectionSlider, 0, 0, 0);
+    disconnect(lookDirectionSlider);
     disconnect(tiltSlider, 0, 0, 0);
+    disconnect(tiltSlider);
 
     situationWidget->unSetSituation();
 }
@@ -839,12 +841,16 @@ void MainWindow::setTab(int index) {
     connect(zoomFitAction, SIGNAL(triggered()),
             view, SLOT(zoomFit()));
 
+    connect(view, SIGNAL(lookDirectionChanged(int)),
+            lookDirectionSlider, SLOT(setValue(int)));
+    connect(view, SIGNAL(tiltChanged(int)),
+            tiltSlider, SLOT(setValue(int)));
+    lookDirectionSlider->setValue(situation->lookDirection());
+    tiltSlider->setValue(situation->tilt());
     connect(lookDirectionSlider, SIGNAL(valueChanged(int)),
             this, SLOT(setLookAt()));
-    lookDirectionSlider->setValue(situation->lookDirection());
     connect(tiltSlider, SIGNAL(valueChanged(int)),
             this, SLOT(setLookAt()));
-    tiltSlider->setValue(situation->tilt());
 
     situationWidget->setSituation(situation);
     connect(scene, SIGNAL(stateChanged(SceneState)),
