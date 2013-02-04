@@ -408,20 +408,34 @@ void BoatGraphicsItem::deleteItem(BoatModel *boat) {
 
 void BoatGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     static_cast<SituationScene*>(scene())->setModelPressed(m_boat);
-    bool multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
-    if (!multiSelect) {
-        scene()->clearSelection();
+    m_multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
+    if (!isSelected()) {
+        if (!m_multiSelect) {
+            scene()->clearSelection();
+        }
+        setSelected(true);
+        m_actOnMouseRelease=false;
+    } else {
+        m_actOnMouseRelease=true;
     }
-    setSelected(true);
     update();
 }
 
 void BoatGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
+    m_actOnMouseRelease=false;
 }
 
 void BoatGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
+    if (m_actOnMouseRelease) {
+        if (!m_multiSelect) {
+            scene()->clearSelection();
+            setSelected(true);
+        } else {
+            setSelected(false);
+        }
+    }
 }
 
 QRectF BoatGraphicsItem::boundingRect() const {
