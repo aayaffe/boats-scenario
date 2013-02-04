@@ -116,6 +116,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
             this, SLOT(setSeries(Boats::Series)));
     connect(boat->situation(), SIGNAL(boatRemoved(BoatModel*)),
             this, SLOT(deleteItem(BoatModel*)));
+    connect(boat->track(), SIGNAL(trackSelected(bool)),
+            this, SLOT(setSelected(bool)));
 }
 
 
@@ -409,14 +411,26 @@ void BoatGraphicsItem::deleteItem(BoatModel *boat) {
 void BoatGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     static_cast<SituationScene*>(scene())->setModelPressed(m_boat);
     m_multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
+    m_trackSelect = (event->modifiers() & Qt::ShiftModifier) != 0;
     if (!isSelected()) {
         if (!m_multiSelect) {
             scene()->clearSelection();
         }
-        setSelected(true);
+        if (!m_trackSelect) {
+            setSelected(true);
+        } else {
+            m_boat->track()->setSelected(true);
+        }
         m_actOnMouseRelease=false;
     } else {
         m_actOnMouseRelease=true;
+        if (m_trackSelect) {
+            if (!m_multiSelect) {
+                scene()->clearSelection();
+                m_actOnMouseRelease=false;
+            }
+            m_boat->track()->setSelected(true); // NB In this case do NOT set m_actOnMouseRelease to false as mouse click should deselect all boats on track
+        }
     }
     update();
 }
@@ -431,11 +445,23 @@ void BoatGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     if (m_actOnMouseRelease) {
         if (!m_multiSelect) {
             scene()->clearSelection();
-            setSelected(true);
+            if (!m_trackSelect) {
+                setSelected(true);
+            } else {
+                m_boat->track()->setSelected(true);
+            }
         } else {
-            setSelected(false);
+            if(!m_trackSelect) {
+                setSelected(false);
+            } else {
+                m_boat->track()->setSelected(false);
+            }
         }
     }
+}
+
+void BoatGraphicsItem::setSelected(bool selected) {
+    QGraphicsItem::setSelected(selected);
 }
 
 QRectF BoatGraphicsItem::boundingRect() const {

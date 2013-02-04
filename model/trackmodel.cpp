@@ -215,3 +215,7 @@ void TrackModel::changingTrack(TrackModel *track) {
     m_path = wholePath;
     emit trackChanged(track);
 }
+
+void TrackModel::setSelected(bool selected) {
+    emit trackSelected(selected);
+}

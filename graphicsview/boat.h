@@ -83,6 +83,7 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void setVisible(bool value);
         void setSeries(Boats::Series value);
         void deleteItem(BoatModel *boat);
+        void setSelected(bool selected);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -148,6 +149,10 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a if m_actOnMouseRelease is true then need to do something when mouse button is released
         bool m_actOnMouseRelease;
+
+        /// \a m_trackSelect is true if mousePressEvent is Shift-modified
+        /// Need to save this state until receive mouseReleaseEvent to determine what to do
+        bool m_trackSelect;
 };
 
 #endif

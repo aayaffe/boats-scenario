@@ -96,6 +96,8 @@ class TrackModel : public QObject {
 
         void changingTrack(TrackModel *track);
 
+        void setSelected(bool selected);
+
     signals:
         // Signals for TrackModel parameters
         void orderChanged(int order);
@@ -104,6 +106,7 @@ class TrackModel : public QObject {
         void showPathChanged(bool showPath);
         void followTrackChanged(bool followTrack);
         void trackChanged(TrackModel *track);
+        void trackSelected(bool selected);
 
     private:
         // Model Data
