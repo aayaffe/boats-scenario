@@ -57,7 +57,8 @@ void BoatModel::setHeading(const qreal& theValue) {
     if (theValue != m_heading) {
         if (debugLevel & 1 << MODEL) std::cout
                 << "heading = " << theValue  << std::endl;
-        m_heading = fmod(theValue+360.0,360.0);
+        m_heading = fmod(theValue,360.0); // This is always between -360 and +360
+        if (m_heading < 0) m_heading += 360.0; // This ensures it is between 0 and +360
         emit headingChanged(m_heading);
         setTrimmedSailAngle(trimmedSailAngle());
         if (m_spin) {
