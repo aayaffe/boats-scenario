@@ -56,7 +56,7 @@ enum {
     SET_WIND,
     MOVE_MODEL,
     SET_LAYLINES,
-    HEADING_BOAT,
+    ROTATE_BOATS,
     OVERLAP_BOAT,
     FLAG_BOAT,
     TRIM_BOAT,
@@ -391,19 +391,19 @@ class AddBoatUndoCommand : public QUndoCommand {
         BoatModel *m_boat;
 };
 
-class HeadingBoatUndoCommand : public QUndoCommand {
+class RotateBoatsUndoCommand : public QUndoCommand {
 
     public:
-        HeadingBoatUndoCommand(QList<BoatModel*> &boatList, const qreal &heading, QUndoCommand *parent = 0);
-        ~HeadingBoatUndoCommand();
+        RotateBoatsUndoCommand(QList<BoatModel*> &boatList, const qreal &angle, QUndoCommand *parent = 0);
+        ~RotateBoatsUndoCommand();
         void undo();
         void redo();
         bool mergeWith(const QUndoCommand *command);
-        int id() const { return HEADING_BOAT; }
+        int id() const { return ROTATE_BOATS; }
     private:
         QList<BoatModel*> m_boatList;
         QList<qreal> m_headingList;
-        qreal m_heading;
+        qreal m_angle;
 };
 
 class OverlapBoatUndoCommand : public QUndoCommand {

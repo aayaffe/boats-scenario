@@ -309,12 +309,10 @@ void SituationScene::keyPressEvent(QKeyEvent *event) {
 
     if (!m_selectedBoatModels.isEmpty()) {
         if (event->key() == Qt::Key_Plus) {
-            qreal theta = fmod(m_selectedBoatModels[0]->heading() + 5 + 360.0, 360.0);
-            m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
+            m_situation->undoStack()->push(new RotateBoatsUndoCommand(m_selectedBoatModels, 5.0));
 
         } else if (event->key() == Qt::Key_Minus) {
-            qreal theta = fmod(m_selectedBoatModels[0]->heading() - 5 + 360.0, 360.0);
-            m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
+            m_situation->undoStack()->push(new RotateBoatsUndoCommand(m_selectedBoatModels, -5.0));
         }
     }
 
@@ -591,7 +589,7 @@ void SituationScene::headingBoat(QPointF pos) {
         } else if (fabs(delta - (360-snap)) <=5) {
             theta = fmod(wind + 360 - snap, 360);
         }
-        m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
+        m_situation->undoStack()->push(new RotateBoatsUndoCommand(m_selectedBoatModels, theta-m_modelPressed->heading()));
     }
 }
 

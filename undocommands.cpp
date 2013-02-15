@@ -678,43 +678,43 @@ void AddBoatUndoCommand::undo() {
     m_track->deleteBoat(m_boat);
 }
 
-// Heading Boat
-HeadingBoatUndoCommand::HeadingBoatUndoCommand(QList<BoatModel*> &boatList, const qreal &heading, QUndoCommand *parent)
+// Rotate Boats
+RotateBoatsUndoCommand::RotateBoatsUndoCommand(QList<BoatModel*> &boatList, const qreal &angle, QUndoCommand *parent)
         : QUndoCommand(parent),
         m_boatList(boatList),
-        m_heading(heading) {
-    if (debugLevel & 1 << COMMAND) std::cout << "new headingboatundocommand" << std::endl;
+        m_angle(angle) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new rotateboatsundocommand" << std::endl;
     foreach (const BoatModel *boat, boatList) {
         m_headingList << boat->heading();
     }
 }
 
-HeadingBoatUndoCommand::~HeadingBoatUndoCommand() {
-    if (debugLevel & 1 << COMMAND) std::cout << "end headingboatundocommand" << std::endl;
+RotateBoatsUndoCommand::~RotateBoatsUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end rotateboatsundocommand" << std::endl;
 }
 
-void HeadingBoatUndoCommand::undo() {
-    if (debugLevel & 1 << COMMAND) std::cout << "undo headingboatundocommand" << std::endl;
+void RotateBoatsUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo rotateboatsundocommand" << std::endl;
     for(int i=0; i< m_boatList.size(); i++) {
         BoatModel *boat = m_boatList[i];
         boat->setHeading(m_headingList[i]);
     }
 }
 
-void HeadingBoatUndoCommand::redo() {
-    if (debugLevel & 1 << COMMAND) std::cout << "redo headingboatundocommand" << std::endl;
+void RotateBoatsUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo rotateboatsundocommand" << std::endl;
     for(int i=0; i< m_boatList.size(); i++) {
         BoatModel *boat = m_boatList[i];
-        boat->setHeading(m_heading);
+        boat->setHeading(boat->heading() + m_angle);
     }
 }
 
-bool HeadingBoatUndoCommand::mergeWith(const QUndoCommand *command) {
-    const HeadingBoatUndoCommand *headingCommand = static_cast<const HeadingBoatUndoCommand*>(command);
+bool RotateBoatsUndoCommand::mergeWith(const QUndoCommand *command) {
+    const RotateBoatsUndoCommand *headingCommand = static_cast<const RotateBoatsUndoCommand*>(command);
     if (m_boatList != headingCommand->m_boatList)
         return false;
 
-    m_heading = headingCommand->m_heading;
+    m_angle += headingCommand->m_angle;
     return true;
 }
 
