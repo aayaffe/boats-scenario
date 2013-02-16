@@ -391,17 +391,17 @@ class AddBoatUndoCommand : public QUndoCommand {
         BoatModel *m_boat;
 };
 
-class RotateBoatsUndoCommand : public QUndoCommand {
+class RotateModelsUndoCommand : public QUndoCommand {
 
     public:
-        RotateBoatsUndoCommand(QList<BoatModel*> &boatList, const qreal &angle, QUndoCommand *parent = 0);
-        ~RotateBoatsUndoCommand();
+        RotateModelsUndoCommand(QList<PositionModel*> &modelList, const qreal &angle, QUndoCommand *parent = 0);
+        ~RotateModelsUndoCommand();
         void undo();
         void redo();
         bool mergeWith(const QUndoCommand *command);
         int id() const { return ROTATE_BOATS; }
     private:
-        QList<BoatModel*> m_boatList;
+        QList<PositionModel*> m_modelList;
         QList<qreal> m_headingList;
         qreal m_angle;
 };

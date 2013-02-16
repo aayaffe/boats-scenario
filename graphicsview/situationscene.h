@@ -119,7 +119,7 @@ class SituationScene : public QGraphicsScene {
         ~SituationScene() {}
 
         void setState(const SceneState& theValue, bool commit = false);
-        void setModelPressed(BoatModel *theValue) {m_modelPressed = theValue; }
+        void setModelPressed(PositionModel *theValue) {m_modelPressed = theValue; }
         SceneState state() const { return m_state; }
         QList< PositionModel * > selectedModels() const { return m_selectedModels; }
         QList< BoatModel * > selectedBoatModels() const { return m_selectedBoatModels; }
@@ -170,7 +170,7 @@ class SituationScene : public QGraphicsScene {
         void mouseSelectEvent(QGraphicsSceneMouseEvent *event);
         void createTrack(QPointF pos);
         void moveModel(QPointF pos);
-        void headingBoat(QPointF pos);
+        void headingModel(QPointF pos);
         void createBoat(QPointF pos);
         void createMark(QPointF pos);
         void createLine(QPointF pos);
@@ -203,7 +203,7 @@ class SituationScene : public QGraphicsScene {
         ScenarioAnimation* m_scenarioAnimation;
 
         /// \a m_modelPressed holds the BoatModel being pressed
-        BoatModel* m_modelPressed;
+        PositionModel* m_modelPressed;
 
         /// \a m_trackCreated holds the last selected TrackModel
         TrackModel *m_trackCreated;

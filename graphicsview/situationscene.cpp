@@ -307,15 +307,6 @@ void SituationScene::unSetAnimation() {
 
 void SituationScene::keyPressEvent(QKeyEvent *event) {
 
-    if (!m_selectedBoatModels.isEmpty()) {
-        if (event->key() == Qt::Key_Plus) {
-            m_situation->undoStack()->push(new RotateBoatsUndoCommand(m_selectedBoatModels, 5.0));
-
-        } else if (event->key() == Qt::Key_Minus) {
-            m_situation->undoStack()->push(new RotateBoatsUndoCommand(m_selectedBoatModels, -5.0));
-        }
-    }
-
     if (!m_selectedModels.isEmpty()) {
         if (event->key() == Qt::Key_Left) {
             QPointF pos(-5,0);
@@ -332,6 +323,13 @@ void SituationScene::keyPressEvent(QKeyEvent *event) {
         } else if (event->key() == Qt::Key_Down) {
             QPointF pos(0,5);
             m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels, pos));
+
+        } else if (event->key() == Qt::Key_Plus) {
+            m_situation->undoStack()->push(new RotateModelsUndoCommand(m_selectedModels, 5.0));
+
+        } else if (event->key() == Qt::Key_Minus) {
+            m_situation->undoStack()->push(new RotateModelsUndoCommand(m_selectedModels, -5.0));
+
         } else {
             QGraphicsScene::keyPressEvent(event);
         }
@@ -397,7 +395,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
             if (event->buttons() == Qt::RightButton
                 || (event->buttons() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                headingBoat(event->scenePos());
+                headingModel(event->scenePos());
             }
         break;
         case CREATE_TRACK:
@@ -407,7 +405,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
             if (event->buttons() == Qt::RightButton
                 || (event->buttons() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                headingBoat(event->scenePos());
+                headingModel(event->scenePos());
             }
             break;
         case CREATE_BOAT:
@@ -420,7 +418,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
             if (event->buttons() == Qt::RightButton
                 || (event->buttons() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                headingBoat(event->scenePos());
+                headingModel(event->scenePos());
             }
             break;
         case CREATE_MARK:
@@ -499,7 +497,7 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
             if (event->button() == Qt::RightButton
                 || (event->button() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                headingBoat(event->scenePos());
+                headingModel(event->scenePos());
             }
             break;
         case CREATE_TRACK:
@@ -518,7 +516,7 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
             if (event->button() == Qt::RightButton
                 || (event->button() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                headingBoat(event->scenePos());
+                headingModel(event->scenePos());
             }
             break;
         case CREATE_MARK:
@@ -563,8 +561,8 @@ void SituationScene::moveModel(QPointF pos) {
     }
 }
 
-void SituationScene::headingBoat(QPointF pos) {
-    if (!m_selectedBoatModels.isEmpty() && pos != m_modelPressed->position()) {
+void SituationScene::headingModel(QPointF pos) {
+    if (!m_selectedModels.isEmpty() && pos != m_modelPressed->position()) {
         QPointF point = pos - m_modelPressed->position();
         qreal wind = m_modelPressed->wind();
         qreal theta = fmod((atan2 (point.x(), -point.y()) * 180 / M_PI) + 360.0, 360.0);
@@ -589,7 +587,7 @@ void SituationScene::headingBoat(QPointF pos) {
         } else if (fabs(delta - (360-snap)) <=5) {
             theta = fmod(wind + 360 - snap, 360);
         }
-        m_situation->undoStack()->push(new RotateBoatsUndoCommand(m_selectedBoatModels, theta-m_modelPressed->heading()));
+        m_situation->undoStack()->push(new RotateModelsUndoCommand(m_selectedModels, theta-m_modelPressed->heading()));
     }
 }
 
