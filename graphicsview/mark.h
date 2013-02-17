@@ -75,6 +75,9 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
         void setLength(int length);
         void setSeries(int value);
         void deleteItem(MarkModel *mark);
+        void setHeading(qreal heading);
+        void setArrowVisible(bool visible);
+        void setLeaveToPort(bool leaveToPort);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -108,6 +111,15 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_laylines holds the laylines for the mark
         LaylinesGraphicsItem *m_laylines;
+
+        /// \a m_heading holds the orientation of the arrow
+        qreal m_heading;
+
+        /// \a m_arrowVisible holds wether the mark arrow is visible
+        bool m_arrowVisible;
+
+        /// \a m_leaveToPort holds the orientation of the arrow
+        bool m_leaveToPort;
 };
 
 #endif

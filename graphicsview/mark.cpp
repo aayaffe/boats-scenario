@@ -47,7 +47,10 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
         m_bubble(new BubbleGraphicsItem(m_mark, this)),
         m_selected(false),
         m_order(mark->order()),
-        m_laylines(new LaylinesGraphicsItem(m_mark, this)) {
+        m_laylines(new LaylinesGraphicsItem(m_mark, this)),
+        m_heading(mark->heading()),
+        m_arrowVisible(mark->arrowVisible()),
+        m_leaveToPort(mark->leaveToPort()) {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
@@ -70,6 +73,12 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
             this, SLOT(setSeries(int)));
     connect(mark->situation(), SIGNAL(markRemoved(MarkModel*)),
             this, SLOT(deleteItem(MarkModel*)));
+    connect(mark, SIGNAL(headingChanged(qreal)),
+            this, SLOT(setHeading(qreal)));
+    connect(mark, SIGNAL(arrowVisibilityChanged(bool)),
+            this, SLOT(setArrowVisible(bool)));
+    connect(mark, SIGNAL(leaveToPortChanged(bool)),
+            this, SLOT(setLeaveToPort(bool)));
 }
 
 
@@ -147,6 +156,27 @@ void MarkGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
 }
 
+void MarkGraphicsItem::setHeading(qreal heading) {
+    if (m_heading != heading) {
+        m_heading = heading;
+        update();
+    }
+}
+
+void MarkGraphicsItem::setArrowVisible(bool visible) {
+    if (m_arrowVisible != visible) {
+        m_arrowVisible = visible;
+        update();
+    }
+}
+
+void MarkGraphicsItem::setLeaveToPort(bool leaveToPort) {
+    if (m_leaveToPort != leaveToPort) {
+        m_leaveToPort = leaveToPort;
+        update();
+    }
+}
+
 QRectF MarkGraphicsItem::boundingRect() const {
     int r = m_length * m_boatLength;
     return QRectF(-r, -r, 2*r, 2*r);
@@ -154,7 +184,8 @@ QRectF MarkGraphicsItem::boundingRect() const {
 
 QPainterPath MarkGraphicsItem::shape() const {
     QPainterPath path;
-    path.addEllipse(QPointF(0,0),10,10);
+// Need to increase size of shape to include mark arrow so that can click on it to rotate
+    path.addEllipse(QPointF(0,0),35,35);
     return path;
 }
 
@@ -177,6 +208,41 @@ void MarkGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         painter->setPen(Qt::DashLine);
         int r = m_length * m_boatLength;
         painter->drawEllipse(point, r, r);
+    }
+//  Additional code to draw mark rounding arrow
+    if (m_arrowVisible) {
+        QPainterPath port_path, stbd_path;
+
+        port_path.moveTo(-25,0);
+        port_path.lineTo(-20,0);
+        port_path.lineTo(-30,10);
+        port_path.lineTo(-40,0);
+        port_path.lineTo(-35,0);
+        port_path.arcTo(-35,-35,70,70,180,-90);
+        port_path.arcTo(-25,-25,50,50,90,90);
+
+        stbd_path.moveTo(0,-25);
+        stbd_path.lineTo(0,-20);
+        stbd_path.lineTo(10,-30);
+        stbd_path.lineTo(0,-40);
+        stbd_path.lineTo(0,-35);
+        stbd_path.arcTo(-35,-35,70,70,90,90);
+        stbd_path.arcTo(-25,-25,50,50,180,-90);
+
+        QPen arrowpen;
+        arrowpen.setWidth(2);
+        arrowpen.setColor(Qt::lightGray);
+        painter->setPen(arrowpen);
+        painter->setBrush(Qt::NoBrush);
+
+        painter->rotate(m_heading+45.0); // add 45 degrees so that arrow is centred on heading
+
+        if (m_leaveToPort) {
+            painter->drawPath(port_path);
+        }
+        else {
+            painter->drawPath(stbd_path);
+        }
     }
 }
 
