@@ -606,6 +606,30 @@ class LengthMarkUndoCommand : public QUndoCommand {
         int m_newLength;
 };
 
+class ToggleMarkSideUndoCommand : public QUndoCommand {
+
+    public:
+        ToggleMarkSideUndoCommand(const QList<MarkModel *> &markList, QUndoCommand *parent = 0);
+        ~ToggleMarkSideUndoCommand();
+        void undo();
+        void redo();
+
+    private:
+        QList<MarkModel*> m_markList;
+};
+
+class ToggleMarkArrowUndoCommand : public QUndoCommand {
+
+    public:
+        ToggleMarkArrowUndoCommand(const QList<MarkModel *> &markList, QUndoCommand *parent = 0);
+        ~ToggleMarkArrowUndoCommand();
+        void undo();
+        void redo();
+
+    private:
+        QList<MarkModel*> m_markList;
+};
+
 class DeleteMarkUndoCommand : public QUndoCommand {
 
     public:

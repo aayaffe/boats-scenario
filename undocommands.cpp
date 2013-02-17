@@ -1183,6 +1183,60 @@ bool LengthMarkUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Toggle Mark Side
+ToggleMarkSideUndoCommand::ToggleMarkSideUndoCommand(const QList<MarkModel*> &markList, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_markList(markList) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new togglemarksideundocommand" << std::endl;
+}
+
+ToggleMarkSideUndoCommand::~ToggleMarkSideUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end togglemarksideundocommand" << std::endl;
+}
+
+void ToggleMarkSideUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo togglemarksideundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setLeaveToPort(!mark->leaveToPort());
+    }
+}
+
+void ToggleMarkSideUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo togglemarksideundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setLeaveToPort(!mark->leaveToPort());
+    }
+}
+
+// Toggle Mark Arrow
+ToggleMarkArrowUndoCommand::ToggleMarkArrowUndoCommand(const QList<MarkModel*> &markList, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_markList(markList) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new togglemarkarrowundocommand" << std::endl;
+}
+
+ToggleMarkArrowUndoCommand::~ToggleMarkArrowUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end togglemarkarrowundocommand" << std::endl;
+}
+
+void ToggleMarkArrowUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo togglemarkarrowundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setArrowVisible(!mark->arrowVisible());
+    }
+}
+
+void ToggleMarkArrowUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo togglemarkarrowundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setArrowVisible(!mark->arrowVisible());
+    }
+}
+
 // Delete Mark
 DeleteMarkUndoCommand::DeleteMarkUndoCommand(SituationModel* situation, MarkModel* mark, QUndoCommand *parent)
         : QUndoCommand(parent),
