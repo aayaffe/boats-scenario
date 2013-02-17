@@ -258,6 +258,9 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     QPointF textPos(10,10);
     QString text;
     bool laylines = 0;
+    qreal heading;
+    bool arrowVisible;
+    bool leaveToPort;
     QStringList discarded;
     while (!atEnd()) {
         readNext();
@@ -282,6 +285,12 @@ void XmlSituationReader::readMark(SituationModel *situation) {
                 text = readElementText();
             else if (name() == "laylines")
                 laylines = (readElementText() == "1");
+            else if (name() == "heading")
+                heading = (readElementText().toFloat());
+            else if (name() == "arrowVisible")
+                arrowVisible = (readElementText() == "1");
+            else if (name() == "leaveToPort")
+                leaveToPort = (readElementText() == "1");
             else
                 discarded.append(readUnknownElement());
         }
@@ -297,6 +306,9 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     mark->setTextPosition(textPos);
     mark->setText(text);
     mark->setLaylines(laylines);
+    mark->setHeading(heading);
+    mark->setArrowVisible(arrowVisible);
+    mark->setLeaveToPort(leaveToPort);
     foreach (const QString elem, discarded) {
         mark->appendDiscardedXml(elem);
     }
