@@ -150,6 +150,9 @@ void MarkGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     } else {
         m_actOnMouseRelease=true;
     }
+    if ((event->button() & Qt::RightButton) != 0) {
+        m_actOnMouseRelease = false;
+    }
     update();
 }
 

@@ -432,6 +432,9 @@ void BoatGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
             m_boat->track()->setSelected(true); // NB In this case do NOT set m_actOnMouseRelease to false as mouse click should deselect all boats on track
         }
     }
+    if ((event->button() & Qt::RightButton) != 0) {
+        m_actOnMouseRelease = false;
+    }
     update();
 }
 
