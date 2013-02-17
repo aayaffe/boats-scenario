@@ -140,20 +140,34 @@ void MarkGraphicsItem::deleteItem(MarkModel *mark) {
 
 void MarkGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     static_cast<SituationScene*>(scene())->setModelPressed(m_mark);
-    bool multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
-    if (!multiSelect) {
-        scene()->clearSelection();
+    m_multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
+    if (!isSelected()) {
+        if (!m_multiSelect) {
+            scene()->clearSelection();
+        }
+        setSelected(true);
+        m_actOnMouseRelease=false;
+    } else {
+        m_actOnMouseRelease=true;
     }
-    setSelected(true);
     update();
 }
 
 void MarkGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
+    m_actOnMouseRelease=false;
 }
 
 void MarkGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
+    if (m_actOnMouseRelease) {
+        if (!m_multiSelect) {
+            scene()->clearSelection();
+            setSelected(true);
+        } else {
+            setSelected(false);
+        }
+    }
 }
 
 void MarkGraphicsItem::setHeading(qreal heading) {

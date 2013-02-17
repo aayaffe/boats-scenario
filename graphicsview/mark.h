@@ -120,6 +120,13 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_leaveToPort holds the orientation of the arrow
         bool m_leaveToPort;
+
+        /// \a m_multiSelect is true if Ctrl-modified was in effect when mousePressEvent happened
+        /// Need to save this state until receive mouseReleaseEvent to determine what to do
+        bool m_multiSelect;
+
+        /// \a if m_actOnMouseRelease is true then need to do something when mouse button is released
+        bool m_actOnMouseRelease;
 };
 
 #endif
