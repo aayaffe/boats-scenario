@@ -50,7 +50,9 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
         m_laylines(new LaylinesGraphicsItem(m_mark, this)),
         m_heading(mark->heading()),
         m_arrowVisible(mark->arrowVisible()),
-        m_leaveToPort(mark->leaveToPort()) {
+        m_leaveToPort(mark->leaveToPort()),
+        m_labelVisible(mark->labelVisible()),
+        m_labelText(mark->labelText()) {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
@@ -79,6 +81,10 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
             this, SLOT(setArrowVisible(bool)));
     connect(mark, SIGNAL(leaveToPortChanged(bool)),
             this, SLOT(setLeaveToPort(bool)));
+    connect(mark, SIGNAL(labelVisibilityChanged(bool)),
+            this, SLOT(setLabelVisible(bool)));
+    connect(mark, SIGNAL(labelTextChanged(QString)),
+            this, SLOT(setLabelText(QString)));
 }
 
 
@@ -194,6 +200,20 @@ void MarkGraphicsItem::setLeaveToPort(bool leaveToPort) {
     }
 }
 
+void MarkGraphicsItem::setLabelVisible(bool visible) {
+    if (m_labelVisible != visible) {
+        m_labelVisible = visible;
+        update();
+    }
+}
+
+void MarkGraphicsItem::setLabelText(QString text) {
+    if (m_labelText != text) {
+        m_labelText = text;
+        update();
+    }
+}
+
 QRectF MarkGraphicsItem::boundingRect() const {
     int r = m_length * m_boatLength;
     return QRectF(-r, -r, 2*r, 2*r);
@@ -219,7 +239,9 @@ void MarkGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setBrush(m_color);
     QPointF point(0, 0);
     painter->drawEllipse(point,10,10);
-    painter->drawText(QRectF(-10,-10,20,20),Qt::AlignCenter,QString::number(m_order));
+    if (m_labelVisible) {
+        painter->drawText(QRectF(-35,-35,70,70),Qt::AlignCenter,m_labelText);
+    }
     if (m_zone) {
         painter->setBrush(Qt::NoBrush);
         painter->setPen(Qt::DashLine);

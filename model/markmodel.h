@@ -65,6 +65,12 @@ class MarkModel : public PositionModel {
         bool leaveToPort() const { return m_leaveToPort; }
         void setLeaveToPort(const bool theValue);
 
+        bool labelVisible() const { return m_labelVisible; }
+        void setLabelVisible(const bool theValue);
+
+        QString labelText() const { return m_labelText; }
+        void setLabelText(const QString theValue);
+
         // Setters and Getters for Non model Data
         int length() const { return m_length; }
         void setLength(const int theValue);
@@ -75,6 +81,8 @@ class MarkModel : public PositionModel {
         void lengthChanged(int length);
         void arrowVisibilityChanged(bool visible);
         void leaveToPortChanged(bool leaveToPort);
+        void labelVisibilityChanged(bool visible);
+        void labelTextChanged(QString text);
 
     private:
         // Model Data
@@ -89,6 +97,12 @@ class MarkModel : public PositionModel {
 
         /// \a m_leaveToPort is true if the mark should be left to port
         bool m_leaveToPort;
+
+        /// \a m_labelVisible is true if the mark label should be visible
+        bool m_labelVisible;
+
+        /// \a m_labelText holds the text to use for the label
+        QString m_labelText;
 
         // Non model Data
         /// \a m_length keeps the length of Main Series of the Scenario

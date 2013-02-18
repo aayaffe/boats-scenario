@@ -261,6 +261,8 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     qreal heading;
     bool arrowVisible;
     bool leaveToPort;
+    bool labelVisible;
+    QString labelText;
     QStringList discarded;
     while (!atEnd()) {
         readNext();
@@ -291,6 +293,10 @@ void XmlSituationReader::readMark(SituationModel *situation) {
                 arrowVisible = (readElementText() == "1");
             else if (name() == "leaveToPort")
                 leaveToPort = (readElementText() == "1");
+            else if (name() == "labelVisible")
+                labelVisible = (readElementText() == "1");
+            else if (name() == "labelText")
+                labelText = (readElementText());
             else
                 discarded.append(readUnknownElement());
         }
@@ -309,6 +315,8 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     mark->setHeading(heading);
     mark->setArrowVisible(arrowVisible);
     mark->setLeaveToPort(leaveToPort);
+    mark->setLabelVisible(labelVisible);
+    mark->setLabelText(labelText);
     foreach (const QString elem, discarded) {
         mark->appendDiscardedXml(elem);
     }

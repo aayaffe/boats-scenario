@@ -67,7 +67,8 @@ enum {
     MOVE_TEXT,
     ZONE_MARK,
     COLOR_MARK,
-    LENGTH_MARK
+    LENGTH_MARK,
+    LABEL_MARK
 };
 
 class SetTitleUndoCommand : public QUndoCommand {
@@ -628,6 +629,34 @@ class ToggleMarkArrowUndoCommand : public QUndoCommand {
 
     private:
         QList<MarkModel*> m_markList;
+};
+
+class ToggleMarkLabelUndoCommand : public QUndoCommand {
+
+    public:
+        ToggleMarkLabelUndoCommand(const QList<MarkModel*> &markList, QUndoCommand *parent = 0);
+        ~ToggleMarkLabelUndoCommand();
+        void undo();
+        void redo();
+
+    private:
+        QList<MarkModel*> m_markList;
+};
+
+class SetMarkLabelUndoCommand : public QUndoCommand {
+
+    public:
+        SetMarkLabelUndoCommand(MarkModel* mark, QString text, QUndoCommand *parent = 0);
+        ~SetMarkLabelUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return LABEL_MARK; }
+
+    private:
+        MarkModel* m_mark;
+        QString m_oldText;
+        QString m_newText;
 };
 
 class DeleteMarkUndoCommand : public QUndoCommand {

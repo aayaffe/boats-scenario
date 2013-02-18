@@ -78,6 +78,8 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
         void setHeading(qreal heading);
         void setArrowVisible(bool visible);
         void setLeaveToPort(bool leaveToPort);
+        void setLabelVisible(bool visible);
+        void setLabelText(QString text);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -127,6 +129,9 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a if m_actOnMouseRelease is true then need to do something when mouse button is released
         bool m_actOnMouseRelease;
+
+        bool m_labelVisible;
+        QString m_labelText;
 };
 
 #endif

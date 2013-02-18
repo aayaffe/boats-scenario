@@ -283,6 +283,14 @@ void MainWindow::createActions() {
     connect(toggleLaylinesAction, SIGNAL(triggered()),
             this, SLOT(toggleLaylines()));
 
+    toggleMarkLabelAction = new QAction(this);
+    connect(toggleMarkLabelAction, SIGNAL(triggered()),
+            this, SLOT(toggleMarkLabel()));
+
+    editMarkLabelAction = new QAction(this);
+    connect(editMarkLabelAction, SIGNAL(triggered()),
+            this, SLOT(editMarkLabel()));
+
     deleteTrackAction = new QAction(this);
     connect(deleteTrackAction, SIGNAL(triggered()),
             this, SLOT(deleteTrack()));
@@ -384,6 +392,7 @@ void MainWindow::updateActions() {
     flagMenu->setEnabled(selectedBoats);
     accelerationMenu->setEnabled(selectedBoats);
     toggleMarkSideAction->setEnabled(selectedMarks);
+    editMarkLabelAction->setEnabled(selectedMarks);
     deleteTrackAction->setEnabled(selectedBoats);
     deleteAction->setEnabled(selectedItems);
 
@@ -613,6 +622,8 @@ void MainWindow::createMenus() {
     trackMenu->addAction(toggleMarkZoneAction);
     trackMenu->addAction(setMarkColorAction);
     trackMenu->addAction(toggleLaylinesAction);
+    trackMenu->addAction(toggleMarkLabelAction);
+    trackMenu->addAction(editMarkLabelAction);
     trackMenu->addSeparator();
     trackMenu->addAction(deleteTrackAction);
     trackMenu->addAction(deleteAction);
@@ -647,6 +658,8 @@ void MainWindow::createMenus() {
     markPopup->addAction(toggleMarkZoneAction);
     markPopup->addAction(toggleLaylinesAction);
     markPopup->addAction(setMarkColorAction);
+    markPopup->addAction(toggleMarkLabelAction);
+    markPopup->addAction(editMarkLabelAction);
     markPopup->addSeparator();
     markPopup->addAction(deleteAction);
 
@@ -1099,6 +1112,12 @@ void MainWindow::changeEvent(QEvent *event) {
 
         toggleLaylinesAction->setText(tr("Toggle &Laylines"));
         toggleLaylinesAction->setShortcut(tr("Alt+L"));
+
+        toggleMarkLabelAction->setText(tr("Toggle Mark &Label"));
+        toggleMarkLabelAction->setShortcut(tr("Alt+L"));
+
+        editMarkLabelAction->setText(tr("&Edit Mark Label"));
+        editMarkLabelAction->setShortcut(tr("Alt+E"));
 
         deleteTrackAction->setText(tr("Delete Track"));
         deleteTrackAction->setShortcut(tr("Ctrl+Del"));
@@ -1772,6 +1791,33 @@ void MainWindow::setMarkColor() {
         ColorPickerWidget colorEditor;
         colorEditor.setColor( markList.first()->color());
         situation->undoStack()->push(new ColorMarkUndoCommand(situation, markList, colorEditor.color()));
+    }
+}
+
+void MainWindow::toggleMarkLabel() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QList<MarkModel *> markList = scene->selectedMarkModels();
+    if (! markList.isEmpty()) {
+        situation->undoStack()->push(new ToggleMarkLabelUndoCommand(markList));
+    } else {
+        situation->undoStack()->push(new ToggleMarkLabelUndoCommand(situation->marks()));
+    }
+}
+
+void MainWindow::editMarkLabel() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    QList<MarkModel *> markList = scene->selectedMarkModels();
+
+    if (! markList.isEmpty()) {
+        QString oldText = markList.first()->labelText();
+        bool ok;
+        QString newText = QInputDialog::getText(this, tr("Edit mark label"), tr("Label text:"), QLineEdit::Normal, oldText, &ok);
+        if (ok) {
+            situation->undoStack()->push(new SetMarkLabelUndoCommand(markList.first(), newText));
+        }
     }
 }
 

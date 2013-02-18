@@ -1237,6 +1237,65 @@ void ToggleMarkArrowUndoCommand::redo() {
     }
 }
 
+// Toggle Mark Label
+ToggleMarkLabelUndoCommand::ToggleMarkLabelUndoCommand(const QList<MarkModel*> &markList, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_markList(markList) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new togglemarklabelundocommand" << std::endl;
+}
+
+ToggleMarkLabelUndoCommand::~ToggleMarkLabelUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end togglemarklabelundocommand" << std::endl;
+}
+
+void ToggleMarkLabelUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo togglemarklabelundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setLabelVisible(!mark->labelVisible());
+    }
+}
+
+void ToggleMarkLabelUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo togglemarklabelundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setLabelVisible(!mark->labelVisible());
+    }
+}
+
+// Set Mark Text
+SetMarkLabelUndoCommand::SetMarkLabelUndoCommand(MarkModel* mark, QString text, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_mark(mark),
+        m_oldText(mark->labelText()),
+        m_newText(text) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new setmarklabelundocommand" << std::endl;
+}
+
+SetMarkLabelUndoCommand::~SetMarkLabelUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end setmarklabelundocommand" << std::endl;
+}
+
+void SetMarkLabelUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo setmarklabelundocommand"<< std::endl;
+    m_mark->setLabelText(m_oldText);
+}
+
+void SetMarkLabelUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo setmarklabelundocommand" << std::endl;
+    m_mark->setLabelText(m_newText);
+}
+
+bool SetMarkLabelUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetMarkLabelUndoCommand *setMarkLabelCommand = static_cast<const SetMarkLabelUndoCommand*>(command);
+    if (m_mark != setMarkLabelCommand->m_mark)
+        return false;
+
+    m_newText = setMarkLabelCommand->m_newText;
+    return true;
+}
+
 // Delete Mark
 DeleteMarkUndoCommand::DeleteMarkUndoCommand(SituationModel* situation, MarkModel* mark, QUndoCommand *parent)
         : QUndoCommand(parent),

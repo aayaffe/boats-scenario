@@ -102,6 +102,8 @@ class MainWindow : public QMainWindow {
         void toggleMarkZone();
         void setMarkColor();
         void toggleLaylines();
+        void toggleMarkLabel();
+        void editMarkLabel();
         void deleteTrack();
         void deleteModels();
         void setLookAt();
@@ -202,6 +204,8 @@ class MainWindow : public QMainWindow {
         QAction *toggleMarkZoneAction;
         QAction *setMarkColorAction;
         QAction *toggleLaylinesAction;
+        QAction *toggleMarkLabelAction;
+        QAction *editMarkLabelAction;
         QAction *deleteTrackAction;
         QAction *deleteAction;
 

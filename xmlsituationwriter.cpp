@@ -161,6 +161,8 @@ void XmlSituationWriter::writeMark(const MarkModel *mark) {
         std::cout << " heading=" << mark->heading() << std::endl;
         std::cout << " arrowVisible=" << mark->arrowVisible() << std::endl;
         std::cout << " leaveToPort=" << mark->leaveToPort() << std::endl;
+        std::cout << " labelVisible=" << mark->labelVisible() << std::endl;
+        std::cout << " labelText=" << mark->labelText().toStdString() << std::endl;
     }
     writeStartElement("mark");
     writeTextElement("x",QString::number(mark->position().x()));
@@ -183,6 +185,8 @@ void XmlSituationWriter::writeMark(const MarkModel *mark) {
     writeTextElement("heading",QString::number(mark->heading()));
     writeTextElement("arrowVisible",QString::number(mark->arrowVisible()));
     writeTextElement("leaveToPort",QString::number(mark->leaveToPort()));
+    writeTextElement("labelVisible",QString::number(mark->labelVisible()));
+    writeTextElement("labelText",mark->labelText());
     foreach (const QString discarded, mark->discardedXml())
         writeUnknownElement(discarded);
     writeEndElement();

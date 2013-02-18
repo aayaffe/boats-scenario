@@ -37,9 +37,11 @@ MarkModel::MarkModel(SituationModel* situation, QObject *parent)
         m_zone(false),
         m_arrowVisible(true),
         m_leaveToPort(true),
+        m_labelVisible(true),
         m_length(situation->situationLength()) {
     if (debugLevel & 1 << MODEL) std::cout << "new Mark " << this << std::endl;
     setOrder(situation->markSize()+1);
+    setLabelText(QString::number(order()));
 }
 
 MarkModel::~MarkModel() {
@@ -86,5 +88,23 @@ void MarkModel::setLeaveToPort(const bool theValue) {
         << " leaveToPort " << theValue << std::endl;
         m_leaveToPort = theValue;
         emit leaveToPortChanged(m_leaveToPort);
+    }
+}
+
+void MarkModel::setLabelVisible(const bool theValue) {
+    if (theValue != m_labelVisible) {
+        if (debugLevel & 1 << MODEL) std::cout << "Mark " << this
+        << " labelVisible " << theValue << std::endl;
+        m_labelVisible = theValue;
+        emit labelVisibilityChanged(m_labelVisible);
+    }
+}
+
+void MarkModel::setLabelText(const QString theValue) {
+    if (theValue != m_labelText) {
+        if (debugLevel & 1 << MODEL) std::cout << "Mark " << this
+        << " labelText " << theValue.toStdString() << std::endl;
+        m_labelText = theValue;
+        emit labelTextChanged(m_labelText);
     }
 }

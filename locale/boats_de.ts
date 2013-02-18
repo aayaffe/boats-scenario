@@ -520,6 +520,26 @@ Möchten Sie die Datei ersetzen?</translation>
         <source>Alt+W</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Toggle Mark &amp;Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Edit Mark Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt+E</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit mark label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Label text:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
