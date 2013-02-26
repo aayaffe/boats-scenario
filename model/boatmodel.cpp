@@ -35,7 +35,6 @@ extern int debugLevel;
 
 BoatModel::BoatModel(TrackModel* track, QObject *parent)
         : PositionModel(track->situation(), parent),
-        m_heading(0),
         m_trim(0),
         m_spin(false),
         m_spinTrim(0),

@@ -74,7 +74,6 @@ class BoatModel : public PositionModel {
         // Setters and Getters for Model Data
         virtual void setPosition(const QPointF& theValue);
 
-        qreal heading() const { return m_heading; }
         void setHeading(const qreal& theValue);
 
         qreal trim() const { return m_trim; }
@@ -117,7 +116,6 @@ class BoatModel : public PositionModel {
         const QPainterPath path() const { return m_path; }
 
     signals:
-        void headingChanged(qreal heading);
         void trimChanged(qreal trim);
         void trimmedSailAngleChanged(qreal sailAngle);
         void spinChanged(bool spin);
@@ -130,9 +128,6 @@ class BoatModel : public PositionModel {
 
     private:
         // Model Data
-        /// \a m_heading holds the heading of a Boat
-        qreal  m_heading;
-
         /// \a m_trim holds the sailing trim of a Boat
         qreal m_trim;
 
