@@ -504,6 +504,22 @@ Ali jo zelite zamenjati?</translation>
         <source>Alt+C</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Toggle &amp;Mark Side</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt+M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle Mark Arro&amp;w</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt+W</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

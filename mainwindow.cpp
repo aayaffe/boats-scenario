@@ -259,6 +259,14 @@ void MainWindow::createActions() {
     connect(toggleSpinAction, SIGNAL(triggered()),
             this, SLOT(toggleSpin()));
 
+    toggleMarkSideAction = new QAction(this);
+    connect(toggleMarkSideAction, SIGNAL(triggered()),
+            this, SLOT(toggleMarkSide()));
+
+    toggleMarkArrowAction = new QAction(this);
+    connect(toggleMarkArrowAction, SIGNAL(triggered()),
+            this, SLOT(toggleMarkArrow()));
+
     toggleMarkZoneAction = new QAction(this);
     toggleMarkZoneAction->setIcon(QIcon(":/images/zone.png"));
     connect(toggleMarkZoneAction, SIGNAL(triggered()),
@@ -375,6 +383,7 @@ void MainWindow::updateActions() {
     setMarkColorAction->setEnabled(selectedMarks);
     flagMenu->setEnabled(selectedBoats);
     accelerationMenu->setEnabled(selectedBoats);
+    toggleMarkSideAction->setEnabled(selectedMarks);
     deleteTrackAction->setEnabled(selectedBoats);
     deleteAction->setEnabled(selectedItems);
 
@@ -598,6 +607,9 @@ void MainWindow::createMenus() {
     }
     trackMenu->addMenu(accelerationMenu);
     trackMenu->addAction(toggleSpinAction);
+    trackMenu->addSeparator();
+    trackMenu->addAction(toggleMarkSideAction);
+    trackMenu->addAction(toggleMarkArrowAction);
     trackMenu->addAction(toggleMarkZoneAction);
     trackMenu->addAction(setMarkColorAction);
     trackMenu->addAction(toggleLaylinesAction);
@@ -630,6 +642,8 @@ void MainWindow::createMenus() {
 
     markPopup = new QMenu(this);
     markPopup->addAction(toggleTextAction);
+    markPopup->addAction(toggleMarkSideAction);
+    markPopup->addAction(toggleMarkArrowAction);
     markPopup->addAction(toggleMarkZoneAction);
     markPopup->addAction(toggleLaylinesAction);
     markPopup->addAction(setMarkColorAction);
@@ -1070,6 +1084,12 @@ void MainWindow::changeEvent(QEvent *event) {
 
         toggleSpinAction->setText(tr("Toggle &Spinnaker"));
         toggleSpinAction->setShortcut(tr("Alt+S"));
+
+        toggleMarkSideAction->setText(tr("Toggle &Mark Side"));
+        toggleMarkSideAction->setShortcut(tr("Alt+M"));
+
+        toggleMarkArrowAction->setText(tr("Toggle Mark Arro&w"));
+        toggleMarkArrowAction->setShortcut(tr("Alt+W"));
 
         toggleMarkZoneAction->setText(tr("Toggle Mark &Zone"));
         toggleMarkZoneAction->setShortcut(tr("Alt+Z"));
@@ -1704,6 +1724,30 @@ void MainWindow::toggleSpin() {
     QList<BoatModel *> boatList = scene->selectedBoatModels();
     if (! boatList.isEmpty()) {
         situation->undoStack()->push(new SpinBoatUndoCommand(situation, boatList, !boatList.first()->spin()));
+    }
+}
+
+void MainWindow::toggleMarkSide() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QList<MarkModel *> markList = scene->selectedMarkModels();
+    if (! markList.isEmpty()) {
+        situation->undoStack()->push(new ToggleMarkSideUndoCommand(markList));
+    } else {
+        situation->undoStack()->push(new ToggleMarkSideUndoCommand(situation->marks()));
+    }
+}
+
+void MainWindow::toggleMarkArrow() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QList<MarkModel *> markList = scene->selectedMarkModels();
+    if (! markList.isEmpty()) {
+        situation->undoStack()->push(new ToggleMarkArrowUndoCommand(markList));
+    } else {
+        situation->undoStack()->push(new ToggleMarkArrowUndoCommand(situation->marks()));
     }
 }
 

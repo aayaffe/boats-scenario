@@ -97,6 +97,8 @@ class MainWindow : public QMainWindow {
         void toggleHidden();
         void toggleText();
         void toggleSpin();
+        void toggleMarkSide();
+        void toggleMarkArrow();
         void toggleMarkZone();
         void setMarkColor();
         void toggleLaylines();
@@ -195,6 +197,8 @@ class MainWindow : public QMainWindow {
         QAction *toggleHiddenAction;
         QAction *toggleTextAction;
         QAction *toggleSpinAction;
+        QAction *toggleMarkSideAction;
+        QAction *toggleMarkArrowAction;
         QAction *toggleMarkZoneAction;
         QAction *setMarkColorAction;
         QAction *toggleLaylinesAction;
