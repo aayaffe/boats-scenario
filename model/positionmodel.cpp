@@ -33,6 +33,7 @@ extern int debugLevel;
 PositionModel::PositionModel(SituationModel* situation, QObject *parent)
         : QObject(parent),
         m_position(),
+        m_heading(0),
         m_textPosition(10,10),
         m_laylines(false),
         m_situation(situation),
@@ -60,6 +61,15 @@ void PositionModel::setOrder(const int theValue) {
         << " order " << theValue << std::endl;
         m_order = theValue;
         emit orderChanged(m_order);
+    }
+}
+
+void PositionModel::setHeading(const qreal& theValue) {
+    if (theValue != m_heading) {
+        if (debugLevel & 1 << MODEL) std::cout << "Heading " << this
+        << " heading " << theValue << std::endl;
+        m_heading = theValue;
+        emit headingChanged(m_heading);
     }
 }
 

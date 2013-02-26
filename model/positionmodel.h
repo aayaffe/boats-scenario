@@ -57,6 +57,9 @@ class PositionModel : public QObject {
         int order() const { return m_order; }
         void setOrder(const int theValue);
 
+        qreal heading() const { return m_heading; }
+        virtual void setHeading(const qreal& theValue);
+
         QString text() const {return m_text; }
         void setText(const QString theValue);
 
@@ -80,6 +83,8 @@ class PositionModel : public QObject {
     signals:
         void positionChanged(QPointF position);
         void orderChanged(int order);
+        void headingChanged(qreal heading);
+
         void textChanged(QString text);
         void textPositionChanged(QPointF textPosition);
         void windChanged(qreal wind);
@@ -92,6 +97,9 @@ class PositionModel : public QObject {
 
         /// \a m_order holds the stacking order of the object. It starts at 1 for track boat
         int m_order;
+
+        /// \a m_heading holds the heading of the object
+        qreal m_heading;
 
         /// \a m_text holds the text to display
         QString m_text;
