@@ -43,6 +43,7 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         m_hidden(false),
         m_acceleration(Boats::constant),
         m_track(track),
+        m_hasSpin(false),
         m_dim(255) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
     setOrder(track->size()+1);
@@ -87,6 +88,12 @@ void BoatModel::setTrim(const qreal& theValue) {
 
 void BoatModel::setTrimmedSailAngle(qreal theValue) {
     emit trimmedSailAngleChanged(theValue);
+}
+
+void BoatModel::setHasSpin(const bool theValue) {
+    if (theValue != m_hasSpin) {
+        m_hasSpin = theValue;
+    }
 }
 
 void BoatModel::setSpin(const bool theValue) {

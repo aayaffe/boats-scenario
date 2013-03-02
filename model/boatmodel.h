@@ -82,6 +82,9 @@ class BoatModel : public PositionModel {
         qreal trimmedSailAngle() const { return sailAngle() + m_trim; }
         void setTrimmedSailAngle(qreal theValue);
 
+        bool hasSpin() const {return m_hasSpin; }
+        void setHasSpin(const bool theValue);
+
         bool spin() const { return m_spin; }
         void setSpin(const bool theValue);
 
@@ -153,6 +156,9 @@ class BoatModel : public PositionModel {
         /// \a m_track keeps a pointer to the TrackModel to which
         /// it belongs
         TrackModel *m_track;
+
+        /// \a m_hasSpin holds whether this type of boat has a spinnaker
+        bool m_hasSpin;
 
         int m_dim;
 

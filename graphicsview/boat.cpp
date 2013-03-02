@@ -400,8 +400,10 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             m_spin->setSailSize(spinSize);
             m_spin->setPosition(mast);
             m_spin->setVisible(m_boat->spin());
+            m_boat->setHasSpin(true);
         } else {
             m_spin->setVisible(false);
+            m_boat->setHasSpin(false);
         }
 
         setOverlapLine();

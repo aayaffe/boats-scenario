@@ -399,7 +399,7 @@ void MainWindow::updateActions() {
     bool allPortSet = 1;
     bool allStarboardSet = 1;
     bool allHiddenSet = 1;
-    bool allKeelboat = 1;
+    bool allSpinBoat = 1;
     bool allSpinSet = 1;
     bool allTextSet = 1;
     bool allLaylinesSet = 1;
@@ -417,8 +417,8 @@ void MainWindow::updateActions() {
         allPortSet = allPortSet && (boat->overlap() & Boats::port);
         allStarboardSet = allStarboardSet && (boat->overlap() & Boats::starboard);
         allHiddenSet = allHiddenSet && boat->hidden();
-        allKeelboat = allKeelboat && (boat->track()->series() == Boats::keelboat);
-        allSpinSet = allSpinSet && (boat->spin());
+        allSpinBoat = allSpinBoat && (boat->hasSpin());
+        allSpinSet = allSpinSet && (boat->hasSpin()) && (boat->spin());
         for (int i = 0; i < flagSize; i++) {
             allFlagSet[i] = allFlagSet[i] && (boat->flag() == i);
         }
@@ -430,7 +430,7 @@ void MainWindow::updateActions() {
     toggleStarboardOverlapAction->setChecked(selectedBoats && allStarboardSet);
     toggleHiddenAction->setChecked(selectedBoats && allHiddenSet);
     toggleSpinAction->setChecked(selectedBoats && allSpinSet);
-    toggleSpinAction->setEnabled(selectedBoats && allKeelboat);
+    toggleSpinAction->setEnabled(selectedBoats && allSpinBoat);
 
     foreach(PositionModel *position, scene->selectedModels()) {
         allTextSet = allTextSet && (!position->text().isEmpty());
