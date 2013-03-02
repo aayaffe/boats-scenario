@@ -105,6 +105,9 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_sail holds the sail that will be drawn
         SailGraphicsItem *m_sail;
 
+        /// \a m_jib holds the jib
+        SailGraphicsItem *m_jib;
+
         /// \a m_spin holds the spinnaker
         SpinnakerGraphicsItem *m_spin;
 

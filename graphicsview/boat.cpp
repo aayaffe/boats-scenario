@@ -43,6 +43,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         m_boat(boat),
         m_angle(0),
         m_sail(new SailGraphicsItem(boat, this)),
+        m_jib(new SailGraphicsItem(boat, this)),
         m_spin(new SpinnakerGraphicsItem(boat, this)),
         m_overlap(Boats::none),
         m_overlapLine(new QGraphicsLineItem(this)),
@@ -64,8 +65,9 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     m_numberPath->setZValue(1);
     m_flagRect->setZValue(2);
     m_sail->setZValue(3);
-    m_spin->setZValue(4);
-    m_bubble->setZValue(5);
+    m_jib->setZValue(4);
+    m_spin->setZValue(5);
+    m_bubble->setZValue(6);
 
     m_numberPath->setBrush(QBrush(Qt::black));
 
@@ -80,7 +82,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     setPos(boat->position());
     setOrder(boat->order());
     setDim(boat->dim());
-    m_sail->setSailAngle(m_boat->trimmedSailAngle());
+    m_sail->setSailAngle(m_boat->sailAngle() + m_boat->trim());
+    m_jib->setSailAngle(m_boat->sailAngle() + m_boat->trim()); // For time being use mainsail angle and trim for jib
     m_spin->setHeading(m_boat->heading());
     m_spin->setSailAngle(m_boat->spinAngle() + m_boat->spinTrim());
     setSpin(boat->spin());
@@ -96,6 +99,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
             this, SLOT(setPosition(QPointF)));
     connect(boat, SIGNAL(trimmedSailAngleChanged(qreal)),
             m_sail, SLOT(setSailAngle(qreal)));
+    connect(boat, SIGNAL(trimmedSailAngleChanged(qreal)), // For time being respond to mainsail signal
+            m_jib, SLOT(setSailAngle(qreal)));
     connect(boat, SIGNAL(spinChanged(bool)),
             this, SLOT(setSpin(bool)));
     connect(boat, SIGNAL(trimmedSpinAngleChanged(qreal)),
@@ -286,6 +291,8 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         QRectF flagRect;
         QPointF mast;
         qreal sailSize = 0;
+        QPointF jibTackPos;
+        qreal jibSize = 0;
         qreal spinSize = 0;
         QPainterPath path;
 
@@ -296,6 +303,8 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             flagRect = QRectF(-7.5, 30 , 15, 10);
             mast = QPointF(0, -8.7);
             sailSize = 41.5;
+            jibTackPos = QPointF(0,-50);
+            jibSize = 40;
             spinSize = 1.1 * sailSize;
             path.moveTo(0,-50);
             path.cubicTo(20, 0, 18, 13, 10, 50);
@@ -394,6 +403,14 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             m_sail->setVisible(true);
         } else {
             m_sail->setVisible(false);
+        }
+
+        if (jibSize) {
+            m_jib->setPosition(jibTackPos);
+            m_jib->setSailSize(jibSize);
+            m_jib->setVisible(true);
+        } else {
+            m_jib->setVisible(false);
         }
 
         if (spinSize) {
