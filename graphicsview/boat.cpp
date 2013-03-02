@@ -286,6 +286,7 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         QRectF flagRect;
         QPointF mast;
         qreal sailSize = 0;
+        qreal spinSize = 0;
         QPainterPath path;
 
         switch (m_series) {
@@ -295,6 +296,7 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             flagRect = QRectF(-7.5, 30 , 15, 10);
             mast = QPointF(0, -8.7);
             sailSize = 41.5;
+            spinSize = 1.1 * sailSize;
             path.moveTo(0,-50);
             path.cubicTo(20, 0, 18, 13, 10, 50);
             path.lineTo(-10, 50);
@@ -386,14 +388,22 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
 
         m_flagRect->setRect(flagRect);
 
-        m_sail->setPosition(mast);
-        m_sail->setSailSize(sailSize);
-        if (m_series == Boats::keelboat) {
-            m_spin->setSailSize(1.1*sailSize);
-            m_spin->setPosition(mast);
+        if (sailSize) {
+            m_sail->setPosition(mast);
+            m_sail->setSailSize(sailSize);
+            m_sail->setVisible(true);
         } else {
-            m_spin->setSailSize(0);
+            m_sail->setVisible(false);
         }
+
+        if (spinSize) {
+            m_spin->setSailSize(spinSize);
+            m_spin->setPosition(mast);
+            m_spin->setVisible(m_boat->spin());
+        } else {
+            m_spin->setVisible(false);
+        }
+
         setOverlapLine();
         setOrder(m_order);
         update();
