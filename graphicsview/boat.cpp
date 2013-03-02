@@ -83,7 +83,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     setOrder(boat->order());
     setDim(boat->dim());
     m_sail->setSailAngle(m_boat->sailAngle() + m_boat->trim());
-    m_jib->setSailAngle(m_boat->sailAngle() + m_boat->trim()); // For time being use mainsail angle and trim for jib
+    m_jib->setSailAngle(m_boat->jibAngle() + m_boat->trim()); // For time being use mainsail trim
     m_spin->setHeading(m_boat->heading());
     m_spin->setSailAngle(m_boat->spinAngle() + m_boat->spinTrim());
     setSpin(boat->spin());
@@ -99,7 +99,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
             this, SLOT(setPosition(QPointF)));
     connect(boat, SIGNAL(trimmedSailAngleChanged(qreal)),
             m_sail, SLOT(setSailAngle(qreal)));
-    connect(boat, SIGNAL(trimmedSailAngleChanged(qreal)), // For time being respond to mainsail signal
+    connect(boat, SIGNAL(trimmedJibAngleChanged(qreal)),
             m_jib, SLOT(setSailAngle(qreal)));
     connect(boat, SIGNAL(spinChanged(bool)),
             this, SLOT(setSpin(bool)));

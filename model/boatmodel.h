@@ -108,6 +108,10 @@ class BoatModel : public PositionModel {
 
         qreal sailAngle(qreal heading = -1) const;
 
+// [GML] Add separate jibAngle() - March 2013
+        qreal jibAngle(qreal heading = -1) const;
+// [GML] End
+
         qreal spinAngle(qreal heading = -1) const;
 
         void setWind(qreal wind);
@@ -121,6 +125,9 @@ class BoatModel : public PositionModel {
     signals:
         void trimChanged(qreal trim);
         void trimmedSailAngleChanged(qreal sailAngle);
+// [GML] Add separate jibAngle() - March 2013
+        void trimmedJibAngleChanged(qreal jibAngle);
+// [GML] End
         void spinChanged(bool spin);
         void spinTrimChanged(qreal spinTrim);
         void trimmedSpinAngleChanged(qreal spinAngle);

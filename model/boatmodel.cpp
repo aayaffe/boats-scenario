@@ -60,10 +60,9 @@ void BoatModel::setHeading(const qreal& theValue) {
         m_heading = fmod(theValue,360.0); // This is always between -360 and +360
         if (m_heading < 0) m_heading += 360.0; // This ensures it is between 0 and +360
         emit headingChanged(m_heading);
-        setTrimmedSailAngle(trimmedSailAngle());
-        if (m_spin) {
-            emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
-        }
+        emit trimmedSailAngleChanged(sailAngle()+ m_trim);
+        emit trimmedJibAngleChanged(jibAngle() + m_trim);
+        emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
         m_track->changingTrack(m_track);
     }
 }
@@ -74,7 +73,7 @@ void BoatModel::setPosition(const QPointF& theValue) {
 }
 
 void BoatModel::setTrim(const qreal& theValue) {
-    qreal newAngle = sailAngle() + theValue;
+    qreal newAngle = sailAngle() + theValue; // This is only checking the mainsail angle, but live with it for now
     if (theValue != m_trim
         && newAngle < 180
         && newAngle > -180) {
@@ -82,7 +81,8 @@ void BoatModel::setTrim(const qreal& theValue) {
         if (debugLevel & 1 << MODEL) std::cout
                 << "trim = " << theValue  << std::endl;
         emit trimChanged(m_trim);
-        setTrimmedSailAngle(trimmedSailAngle());
+        emit trimmedSailAngleChanged(sailAngle()+ m_trim);
+        emit trimmedJibAngleChanged(jibAngle() + m_trim);
     }
 }
 
@@ -192,6 +192,37 @@ qreal BoatModel::sailAngle(qreal heading) const {
     if (debugLevel & 1 << MODEL) std::cout
             << "heading = " << heading
             << " sail = " << sailAngle
+            << std::endl;
+    return sailAngle;
+}
+
+qreal BoatModel::jibAngle(qreal heading) const {
+    qreal layline = situation()->laylineAngle();
+    qreal sailAngle;
+
+    if (heading == -1) {
+        heading = m_heading;
+    }
+    // within 10° inside layline angle, the sail is headed
+    if (heading < layline-10) {
+        sailAngle =  heading;
+    } else if (heading > 360 - (layline-10)) {
+        sailAngle =  heading - 360;
+    } else {
+        // linear incidence variation
+        // incidence is 20° at layline angle and 90° downwind
+        qreal a = (180 - layline) / 70;
+        qreal b = layline / a - 20;
+        if (heading<180) {
+            sailAngle = heading/a - b;
+        } else {
+            sailAngle = heading/a - b - 180;
+        }
+    }
+
+    if (debugLevel & 1 << MODEL) std::cout
+            << "heading = " << heading
+            << " jib = " << sailAngle
             << std::endl;
     return sailAngle;
 }
