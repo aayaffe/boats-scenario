@@ -305,6 +305,10 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         QPointF gennTackPos;
         qreal gennPoleLength = 0;
         qreal gennSize = 0;
+        qreal maxNormalSailAngle = 90;
+        qreal maxNormalJibAngle = 90;
+        qreal maxWithSpinSailAngle = 40;
+        qreal maxWithSpinJibAngle = 35;
         QPainterPath path;
 
         switch (m_series) {
@@ -360,6 +364,7 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             flagRect = QRectF(-4.5, 17.5 , 9, 6);
             mast = QPointF(0,0);
             sailSize = 25.5;
+            maxNormalSailAngle = 20;
             path.moveTo(0,0);
             path.lineTo(10.7, 0);
             path.cubicTo(11.2, -11.7, 12.2, -19.8, 13.2, -30.5);
@@ -411,6 +416,8 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         m_flagRect->setRect(flagRect);
 
         if (sailSize) {
+            m_boat->setMaxNormalSailAngle(maxNormalSailAngle);
+            m_boat->setMaxWithSpinSailAngle(maxWithSpinSailAngle);
             m_sail->setPosition(mast);
             m_sail->setSailSize(sailSize);
             m_sail->setVisible(true);
@@ -419,6 +426,8 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         }
 
         if (jibSize) {
+            m_boat->setMaxNormalJibAngle(maxNormalJibAngle);
+            m_boat->setMaxWithSpinJibAngle(maxWithSpinJibAngle);
             m_jib->setPosition(jibTackPos);
             m_jib->setSailSize(jibSize);
             m_jib->setVisible(true);

@@ -118,6 +118,15 @@ class BoatModel : public PositionModel {
 
         qreal gennAngle(qreal heading = -1) const;
 
+        qreal maxNormalSailAngle() const {return m_maxNormalSailAngle; }
+        void setMaxNormalSailAngle(const qreal& theValue) { m_maxNormalSailAngle = theValue; }
+        qreal maxNormalJibAngle() const {return m_maxNormalJibAngle; }
+        void setMaxNormalJibAngle(const qreal& theValue) { m_maxNormalJibAngle = theValue; }
+        qreal maxWithSpinSailAngle() const {return m_maxWithSpinSailAngle; }
+        void setMaxWithSpinSailAngle(const qreal& theValue) { m_maxWithSpinSailAngle = theValue; }
+        qreal maxWithSpinJibAngle() const {return m_maxWithSpinJibAngle; }
+        void setMaxWithSpinJibAngle(const qreal& theValue) { m_maxWithSpinJibAngle = theValue; }
+
         void setDim(int dim);
         int dim() const { return m_dim; }
 
@@ -171,6 +180,18 @@ class BoatModel : public PositionModel {
 
         /// \a m_hasSpin holds whether this type of boat has a spinnaker (or gennaker)
         bool m_hasSpin;
+
+        /// \a m_maxNormalSailAngle holds the max sail angle to use when sailing without a spinnaker
+        qreal m_maxNormalSailAngle;
+
+        /// \a m_maxNormalJibAngle holds the max jib angle to use when sailing without a spinnaker
+        qreal m_maxNormalJibAngle;
+
+        /// \a m_maxWithSpinSailAngle holds the max sail angle to use when sailing with a spinnaker
+        qreal m_maxWithSpinSailAngle;
+
+        /// \a m_maxWithSpinJibAngle holds the max jib angle to use when sailing with a spinnaker
+        qreal m_maxWithSpinJibAngle;
 
         int m_dim;
 

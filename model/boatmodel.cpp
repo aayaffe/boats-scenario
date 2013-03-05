@@ -45,6 +45,10 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         m_acceleration(Boats::constant),
         m_track(track),
         m_hasSpin(false),
+        m_maxNormalSailAngle(90),
+        m_maxNormalJibAngle(90),
+        m_maxWithSpinSailAngle(40),
+        m_maxWithSpinJibAngle(35),
         m_dim(255) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
     setOrder(track->size()+1);
@@ -115,6 +119,8 @@ void BoatModel::setSpin(const bool theValue) {
     if (theValue != m_spin) {
         m_spin = theValue;
         emit spinChanged(m_spin);
+        emit trimmedSailAngleChanged(sailAngle()+ m_trim);
+        emit trimmedJibAngleChanged(jibAngle() + m_jibTrim);
     }
 }
 
@@ -181,27 +187,21 @@ qreal BoatModel::sailAngle(qreal heading) const {
     } else if (heading > 360 - (layline-10)) {
         sailAngle =  fmax(-(layline-20),heading - 360);
     } else {
+        qreal maxSailAngle;
+        if (m_hasSpin && m_spin) {
+            maxSailAngle = m_maxWithSpinSailAngle;
+        } else {
+            maxSailAngle = m_maxNormalSailAngle;
+        }
 
-        switch (m_track->series()) {
-            // tornado has fixed 20° incidence
-        case Boats::tornado:
-            if (heading<180) {
-                sailAngle = 20;
-            } else {
-                sailAngle = - 20;
-            }
-            break;
-        default:
-            // linear incidence variation
-            // incidence is 15° at layline angle and 90° downwind
-            qreal a = (180 - layline) / 75;
-            qreal b = layline / a - 15;
-            if (heading<180) {
-                sailAngle = heading/a - b;
-            } else {
-                sailAngle = heading/a - b - 180;
-            }
-            break;
+        // linear incidence variation
+        // incidence is 15° at layline angle and maxWithSpinSailAngle downwind
+        qreal a = (180 - layline) / (maxSailAngle - 15);
+        qreal b = layline / a - 15;
+        if (heading<180) {
+            sailAngle = heading/a - b;
+        } else {
+            sailAngle = heading/a - b - 2*maxSailAngle;
         }
     }
 
@@ -225,14 +225,20 @@ qreal BoatModel::jibAngle(qreal heading) const {
     } else if (heading > 360 - (layline-10)) {
         sailAngle =  fmax(-(layline-20),heading - 360);
     } else {
+        qreal maxJibAngle;
+        if (m_hasSpin && m_spin) {
+            maxJibAngle = m_maxWithSpinJibAngle;
+        } else {
+            maxJibAngle = m_maxNormalJibAngle;
+        }
         // linear incidence variation
-        // incidence is 20° at layline angle and 90° downwind
-        qreal a = (180 - layline) / 70;
+        // incidence is 20° at layline angle and maxWithSpinJibAngle downwind
+        qreal a = (180 - layline) / (maxJibAngle - 20);
         qreal b = layline / a - 20;
         if (heading<180) {
             sailAngle = heading/a - b;
         } else {
-            sailAngle = heading/a - b - 180;
+            sailAngle = heading/a - b - 2*maxJibAngle;
         }
     }
 
@@ -277,14 +283,18 @@ qreal BoatModel::gennAngle(qreal heading) const {
     }
     // within 10° above downwind angle, the sail is headed
     if (heading < 80) {
-        sailAngle = heading / 80 * 25;
+        sailAngle = heading / 80 * 20;
     } else if (heading > 360 - 80) {
-        sailAngle = - (360 - heading) / 80 * 25;
+        sailAngle = - (360 - heading) / 80 * 20;
     } else {
+        // linear incidence variation
+        // incidence is 20° at 80° heading and 30° downwind
+        qreal a = (180 - 80) / (30 - 20);
+        qreal b = 80 / a - 20;
         if (heading<180) {
-            sailAngle = 25;
+            sailAngle = heading/a - b;
         } else {
-            sailAngle = -25;
+            sailAngle = heading/a - b - 2*30;
         }
     }
 
