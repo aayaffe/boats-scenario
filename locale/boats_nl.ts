@@ -549,10 +549,6 @@ Wilt u het vervangen?</translation>
         <translation>Dit is geen xmlscenario versie 1.0 bestand.</translation>
     </message>
     <message>
-        <source>Keelboat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Laser</source>
         <translation type="unfinished"></translation>
     </message>
@@ -570,6 +566,14 @@ Wilt u het vervangen?</translation>
     </message>
     <message>
         <source>RIB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spin Keelboat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gennaker Keelboat</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

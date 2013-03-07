@@ -548,10 +548,6 @@ Möchten Sie die Datei ersetzen?</translation>
         <translation>Diese Datei ist keine xml-Scenario-Datei Version 1.0.</translation>
     </message>
     <message>
-        <source>Keelboat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Laser</source>
         <translation type="unfinished"></translation>
     </message>
@@ -569,6 +565,14 @@ Möchten Sie die Datei ersetzen?</translation>
     </message>
     <message>
         <source>RIB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spin Keelboat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gennaker Keelboat</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

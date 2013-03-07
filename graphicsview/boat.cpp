@@ -286,14 +286,15 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         qreal gennSize = 0;
         qreal maxNormalSailAngle = 90;
         qreal maxNormalJibAngle = 90;
-        qreal maxWithSpinSailAngle = 40;
-        qreal maxWithSpinJibAngle = 35;
+        qreal maxWithSpinSailAngle = 65;
+        qreal maxWithSpinJibAngle = 60;
         QPainterPath path;
         QRectF boundingRect = QRectF(-50, -50, 100, 100);
         qreal border = 0;
 
         switch (m_series) {
         case Boats::keelboat:
+        case Boats::keelboatwithgenn:
             m_numberSize = 12;
             posY = 25;
             flagRect = QRectF(-7.5, 30 , 15, 10);
@@ -301,9 +302,20 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             sailSize = 41.5;
             jibTackPos = QPointF(0,-50);
             jibSize = 40;
-            gennTackPos = QPointF(0,-80);
-            gennPoleLength = 30;
-            gennSize = 70;
+            if (m_series == Boats::keelboat) {
+                spinSize = 1.1 * sailSize;
+            } else {
+                spinSize = 0;
+            }
+            if (m_series == Boats::keelboatwithgenn) {
+                gennTackPos = QPointF(0,-80);
+                gennPoleLength = 30;
+                gennSize = 70;
+                maxWithSpinSailAngle = 40;
+                maxWithSpinJibAngle = 35;
+            } else {
+                gennSize = 0;
+            }
             path.moveTo(0,-50);
             path.cubicTo(20, 0, 18, 13, 10, 50);
             path.lineTo(-10, 50);

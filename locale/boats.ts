@@ -544,10 +544,6 @@ Do you want to replace it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Keelboat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Laser</source>
         <translation type="unfinished"></translation>
     </message>
@@ -565,6 +561,14 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>RIB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spin Keelboat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gennaker Keelboat</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -43,6 +43,7 @@ class Boats {
 public:
     enum Series {
         keelboat,
+        keelboatwithgenn,
         laser,
         optimist,
         tornado,
