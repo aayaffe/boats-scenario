@@ -125,7 +125,8 @@ void BoatModel::setSpin(const bool theValue) {
 }
 
 void BoatModel::setSpinTrim(const qreal& theValue) {
-    qreal sailAngle = spinAngle();
+// Spinnaker graphics code doesn't actually respect spin trim so use this for gennaker trimming
+    qreal sailAngle = gennAngle(); // spinAngle();
     qreal newAngle = sailAngle + theValue;
     if (theValue != m_spinTrim
         && newAngle < 180

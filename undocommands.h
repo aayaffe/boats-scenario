@@ -61,6 +61,7 @@ enum {
     FLAG_BOAT,
     TRIM_BOAT,
     TRIM_JIB,
+    TRIM_SPIN,
     SPIN_BOAT,
     HIDE_BOAT,
     ACCELERATE_BOAT,
@@ -464,6 +465,21 @@ class TrimJibUndoCommand : public QUndoCommand {
         void redo();
         bool mergeWith(const QUndoCommand *command);
         int id() const { return TRIM_JIB; }
+    private:
+        QList<BoatModel*> m_boatList;
+        QList<qreal> m_trimList;
+        qreal m_trim;
+};
+
+class TrimSpinUndoCommand : public QUndoCommand {
+
+    public:
+        TrimSpinUndoCommand(QList<BoatModel*> &boatList, const qreal &trim, QUndoCommand *parent = 0);
+        ~TrimSpinUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return TRIM_SPIN; }
     private:
         QList<BoatModel*> m_boatList;
         QList<qreal> m_trimList;

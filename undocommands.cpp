@@ -885,6 +885,46 @@ bool TrimJibUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Trim Spin
+TrimSpinUndoCommand::TrimSpinUndoCommand(QList<BoatModel*> &boatList, const qreal &trim, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_boatList(boatList),
+        m_trim(trim) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new trimspinundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_trimList << boat->spinTrim();
+    }
+}
+
+TrimSpinUndoCommand::~TrimSpinUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end trimspinundocommand" << std::endl;
+}
+
+void TrimSpinUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo trimspinundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *model = m_boatList[i];
+        model->setSpinTrim(m_trimList[i]);
+    }
+}
+
+void TrimSpinUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo trimspinundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *model = m_boatList[i];
+        model->setSpinTrim(m_trim);
+    }
+}
+
+bool TrimSpinUndoCommand::mergeWith(const QUndoCommand *command) {
+    const TrimSpinUndoCommand *trimCommand = static_cast<const TrimSpinUndoCommand*>(command);
+    if (m_boatList != trimCommand->m_boatList)
+        return false;
+
+    m_trim += trimCommand->m_trim;
+    return true;
+}
+
 // Spin Boat
 SpinBoatUndoCommand::SpinBoatUndoCommand(SituationModel* situation, QList<BoatModel*> &boatList, bool spin, QUndoCommand *parent)
         : QUndoCommand(parent),

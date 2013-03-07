@@ -309,10 +309,16 @@ void SituationScene::keyPressEvent(QKeyEvent *event) {
 
     if (!m_selectedBoatModels.isEmpty()) {
 // Trim just the jib when ',' or '.' is pressed (TrimJibUndoCommand only trims the jib)
-        if (event->key() == Qt::Key_Comma) {
+// But not when Ctrl is pressed - reserve that for spinTrim
+        if (event->key() == Qt::Key_Comma && !(event->modifiers() & Qt::ControlModifier)) {
             m_situation->undoStack()->push(new TrimJibUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->jibTrim() - 5));
-        } else if (event->key() == Qt::Key_Period) {
+        } else if (event->key() == Qt::Key_Period && !(event->modifiers() & Qt::ControlModifier)) {
             m_situation->undoStack()->push(new TrimJibUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->jibTrim() + 5));
+// Trim the spin when Ctrl+',' or Ctrl+'.' is pressed
+        }else if (event->key() == Qt::Key_Comma && (event->modifiers() & Qt::ControlModifier)) {
+            m_situation->undoStack()->push(new TrimSpinUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->spinTrim() - 5));
+        } else if (event->key() == Qt::Key_Period && (event->modifiers() & Qt::ControlModifier)) {
+            m_situation->undoStack()->push(new TrimSpinUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->spinTrim() + 5));
         }
     }
 
