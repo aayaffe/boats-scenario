@@ -184,38 +184,17 @@ void BoatGraphicsItem::setOverlap(Boats::Overlaps value) {
 
 void BoatGraphicsItem::setOverlapLine() {
     qreal size = Boats::seriesSizeList()[m_series];
-    qreal border;
-    switch(m_series) {
-        case Boats::keelboat:
-            border = 10;
-            break;
-        case Boats::laser:
-            border = 5;
-            break;
-        case Boats::optimist:
-            border = 4.6;
-            break;
-        case Boats::tornado:
-            border = 14.7;
-            break;
-        case Boats::startboat:
-            border = 17;
-            break;
-        default:
-            border = 0;
-            break;
-    }
     QLineF line;
-    line.setP1(QPointF(border, size/2));
-    line.setP2(QPointF(-border, size/2));
+    line.setP1(QPointF(m_border, size/2));
+    line.setP2(QPointF(-m_border, size/2));
     if (m_overlap == Boats::none) {
         m_overlapLine->setVisible(false);
     } else {
         if (m_overlap & Boats::starboard) {
-            line.setP2(QPointF(border + size, size/2));
+            line.setP2(QPointF(m_border + size, size/2));
         }
         if (m_overlap & Boats::port) {
-            line.setP1(QPointF(-border - size, size/2));
+            line.setP1(QPointF(-m_border - size, size/2));
         }
         m_overlapLine->setVisible(!m_hidden && true);
         m_overlapLine->setLine(line);
@@ -310,6 +289,8 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         qreal maxWithSpinSailAngle = 40;
         qreal maxWithSpinJibAngle = 35;
         QPainterPath path;
+        QRectF boundingRect = QRectF(-50, -50, 100, 100);
+        qreal border = 0;
 
         switch (m_series) {
         case Boats::keelboat:
@@ -327,6 +308,8 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             path.cubicTo(20, 0, 18, 13, 10, 50);
             path.lineTo(-10, 50);
             path.cubicTo(-18, 13, -20, 0, 0, -50);
+            boundingRect = QRectF(-20, -50, 40, 100);
+            border = 10;
             break;
         case Boats::laser:
             m_numberSize = 7;
@@ -342,6 +325,8 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             path.cubicTo(-6.7, 14.3, -6.7, 11.0, -6.7, 4.7);
             path.cubicTo(-6.7, -3.3, -3.3, -14.3, -0.7, -19.7);
             path.cubicTo(-0.3, -20.0, -0.3, -19.7, 0, -20);
+            boundingRect = QRectF(-6.7, -20, 13.4, 40);
+            border = 5;
             break;
         case Boats::optimist:
             m_numberSize = 6;
@@ -357,6 +342,8 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             path.cubicTo(-5.0, 9.0, -5.6, 5.4, -5.6, 1.5);
             path.cubicTo(-5.6, -4.0, -3.6, -9.4, -2.9, -11.1);
             path.cubicTo(-1.7, -11.3, -1.5, -11.5, 0, -11.5);
+            boundingRect = QRectF(-5.6, -11.5, 11.2, 23);
+            border = 4.6;
             break;
         case Boats::tornado:
             m_numberSize = 10;
@@ -382,6 +369,8 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             path.cubicTo(-15.3, -6.1, -14.7, -20.3, -13.2, -30.5);
             path.cubicTo(-12.2, -19.8, -11.2, -11.7, -10.7, 0);
             path.lineTo(0, 0);
+            boundingRect = QRectF(-15.3, -30.5, 30.6, 61);
+            border = 14.7;
             break;
         case Boats::startboat:
             m_numberSize = 0;
@@ -391,6 +380,8 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             path.lineTo(-17, 50);
             path.cubicTo(-20, 30, -30, -20, 0, -50);
             path.addEllipse(-1, -10, 2, 2);
+            boundingRect = QRectF(-30, -50, 60, 100);
+            border = 17;
             break;
         case Boats::rib:
             m_numberSize = 10;
@@ -406,11 +397,15 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             path.lineTo(-12.4, 23.5);
             path.lineTo(-12.4, -10.3);
             path.cubicTo(-12.1, -22.9, -6, -26, 0, -30);
+            boundingRect = QRectF(-12.4, -30, 24.8, 60);
+            border = 8.9;
         default:
             break;
         }
 
         m_hullPath = path;
+        m_boundingRect = boundingRect;
+
         m_numberPath->setPos(0, posY);
 
         m_flagRect->setRect(flagRect);
@@ -459,6 +454,7 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
 
         m_boat->setHasSpin(m_hasSpin || m_hasGenn); // set setHasSpin true irrespective of type of spinnaker (is just used to control whether Toggle Spinnaker menu item is active)
 
+        m_border = border;
         setOverlapLine();
         setOrder(m_order);
         update();
@@ -536,7 +532,7 @@ QRectF BoatGraphicsItem::boundingRect() const {
     if (m_hidden)
         return QRectF(-3, -3, 6, 6);
     else
-        return m_hullPath.boundingRect();
+        return m_boundingRect;
 }
 
 QPainterPath BoatGraphicsItem::shape() const {
