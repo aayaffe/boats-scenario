@@ -45,6 +45,9 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         m_sail(new SailGraphicsItem(boat, this)),
         m_jib(new SailGraphicsItem(boat, this)),
         m_spin(new SpinnakerGraphicsItem(boat, this)),
+        m_genn(new GennakerGraphicsItem(boat, this)),
+        m_hasSpin(false),
+        m_hasGenn(false),
         m_overlap(Boats::none),
         m_overlapLine(new QGraphicsLineItem(this)),
         m_color(boat->track()->color()),
@@ -67,6 +70,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     m_sail->setZValue(3);
     m_jib->setZValue(4);
     m_spin->setZValue(5);
+    m_genn->setZValue(5); // Make this same as for spinnaker on basis that a boat will have one or other of these, not both
     m_bubble->setZValue(6);
 
     m_numberPath->setBrush(QBrush(Qt::black));
@@ -86,6 +90,7 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     m_jib->setSailAngle(m_boat->jibAngle() + m_boat->jibTrim());
     m_spin->setHeading(m_boat->heading());
     m_spin->setSailAngle(m_boat->spinAngle() + m_boat->spinTrim());
+    m_genn->setSailAngle(m_boat->gennAngle() + m_boat->spinTrim()); // Use spinTrim() for both spinnaker and gennaker
     setSpin(boat->spin());
     setOverlap(boat->overlap());
     setDisplayFlag(boat->flag());
@@ -105,6 +110,8 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
             this, SLOT(setSpin(bool)));
     connect(boat, SIGNAL(trimmedSpinAngleChanged(qreal)),
             m_spin, SLOT(setSailAngle(qreal)));
+    connect(boat, SIGNAL(trimmedGennAngleChanged(qreal)),
+            m_genn, SLOT(setSailAngle(qreal)));
     connect(boat, SIGNAL(orderChanged(int)),
             this, SLOT(setOrder(int)));
     connect(boat, SIGNAL(overlapChanged(Boats::Overlaps)),
@@ -145,7 +152,8 @@ void BoatGraphicsItem::setPosition(QPointF position) {
 }
 
 void BoatGraphicsItem::setSpin(bool value) {
-    m_spin->setVisible(!m_hidden && value);
+    m_spin->setVisible(m_hasSpin && value);
+    m_genn->setVisible(m_hasGenn && value);
 }
 
 void BoatGraphicsItem::setOrder(int value) {
@@ -294,6 +302,9 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         QPointF jibTackPos;
         qreal jibSize = 0;
         qreal spinSize = 0;
+        QPointF gennTackPos;
+        qreal gennPoleLength = 0;
+        qreal gennSize = 0;
         QPainterPath path;
 
         switch (m_series) {
@@ -305,7 +316,9 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             sailSize = 41.5;
             jibTackPos = QPointF(0,-50);
             jibSize = 40;
-            spinSize = 1.1 * sailSize;
+            gennTackPos = QPointF(0,-80);
+            gennPoleLength = 30;
+            gennSize = 70;
             path.moveTo(0,-50);
             path.cubicTo(20, 0, 18, 13, 10, 50);
             path.lineTo(-10, 50);
@@ -413,15 +426,29 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             m_jib->setVisible(false);
         }
 
+        m_hasSpin = false;
+        m_hasGenn = false;
+
         if (spinSize) {
-            m_spin->setSailSize(spinSize);
+            m_hasSpin = true;
             m_spin->setPosition(mast);
+            m_spin->setSailSize(spinSize);
             m_spin->setVisible(m_boat->spin());
-            m_boat->setHasSpin(true);
         } else {
             m_spin->setVisible(false);
-            m_boat->setHasSpin(false);
         }
+
+        if (gennSize) {
+            m_hasGenn = true;
+            m_genn->setPosition(gennTackPos);
+            m_genn->setPoleLength(gennPoleLength);
+            m_genn->setSailSize(gennSize);
+            m_genn->setVisible(m_boat->spin());
+        } else {
+            m_genn->setVisible(false);
+        }
+
+        m_boat->setHasSpin(m_hasSpin || m_hasGenn); // set setHasSpin true irrespective of type of spinnaker (is just used to control whether Toggle Spinnaker menu item is active)
 
         setOverlapLine();
         setOrder(m_order);

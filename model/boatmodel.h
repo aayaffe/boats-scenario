@@ -116,6 +116,8 @@ class BoatModel : public PositionModel {
 
         void setWind(qreal wind);
 
+        qreal gennAngle(qreal heading = -1) const;
+
         void setDim(int dim);
         int dim() const { return m_dim; }
 
@@ -130,6 +132,7 @@ class BoatModel : public PositionModel {
         void spinChanged(bool spin);
         void spinTrimChanged(qreal spinTrim);
         void trimmedSpinAngleChanged(qreal spinAngle);
+        void trimmedGennAngleChanged(qreal gennAngle);
         void overlapChanged(Boats::Overlaps overlap);
         void flagChanged(Boats::Flag flag);
         void hiddenChanged(bool hidden);
@@ -143,10 +146,10 @@ class BoatModel : public PositionModel {
         /// \a m_jibTrim holds the jib trim
         qreal m_jibTrim;
 
-        /// \a m_spin holds whether a spinnaker is used
+        /// \a m_spin holds whether a spinnaker (or gennaker) is used
         bool m_spin;
 
-        /// \a m_spinTrim holds the spinnaker trim
+        /// \a m_spinTrim holds the spinnaker (or gennaker) trim
         qreal m_spinTrim;
 
         /// \a m_overlap holds whether an overlap line should be displayed
@@ -166,7 +169,7 @@ class BoatModel : public PositionModel {
         /// it belongs
         TrackModel *m_track;
 
-        /// \a m_hasSpin holds whether this type of boat has a spinnaker
+        /// \a m_hasSpin holds whether this type of boat has a spinnaker (or gennaker)
         bool m_hasSpin;
 
         int m_dim;

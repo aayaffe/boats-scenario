@@ -64,6 +64,7 @@ void BoatModel::setHeading(const qreal& theValue) {
         emit trimmedSailAngleChanged(sailAngle()+ m_trim);
         emit trimmedJibAngleChanged(jibAngle() + m_jibTrim);
         emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
+        emit trimmedGennAngleChanged(gennAngle() + m_spinTrim);
         m_track->changingTrack(m_track);
     }
 }
@@ -128,6 +129,7 @@ void BoatModel::setSpinTrim(const qreal& theValue) {
                 << "spinTrim = " << theValue  << std::endl;
         emit spinTrimChanged(m_spinTrim);
         emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
+        emit trimmedGennAngleChanged(gennAngle() + m_spinTrim);
     }
 }
 
@@ -263,6 +265,32 @@ qreal BoatModel::spinAngle(qreal heading) const {
     if (debugLevel & 1 << MODEL) std::cout
             << "heading = " << heading
             << " spin = " << sailAngle
+            << std::endl;
+    return sailAngle;
+}
+
+qreal BoatModel::gennAngle(qreal heading) const {
+    qreal sailAngle;
+
+    if (heading == -1) {
+        heading = m_heading;
+    }
+    // within 10° above downwind angle, the sail is headed
+    if (heading < 80) {
+        sailAngle = heading / 80 * 25;
+    } else if (heading > 360 - 80) {
+        sailAngle = - (360 - heading) / 80 * 25;
+    } else {
+        if (heading<180) {
+            sailAngle = 25;
+        } else {
+            sailAngle = -25;
+        }
+    }
+
+    if (debugLevel & 1 << MODEL) std::cout
+            << "heading = " << heading
+            << " genn = " << sailAngle
             << std::endl;
     return sailAngle;
 }

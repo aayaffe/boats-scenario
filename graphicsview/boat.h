@@ -32,6 +32,7 @@
 #include "boats.h"
 #include "sail.h"
 #include "spinnaker.h"
+#include "gennaker.h"
 #include "flag.h"
 #include "bubble.h"
 #include "laylines.h"
@@ -110,6 +111,15 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_spin holds the spinnaker
         SpinnakerGraphicsItem *m_spin;
+
+        /// \a m_genn holds the gennaker
+        GennakerGraphicsItem *m_genn;
+
+        /// \a m_hasSpin is true if boat has a spinnaker
+        bool m_hasSpin;
+
+        /// \a m_hasGenn is true if boat has a gennaker
+        bool m_hasGenn;
 
         /// \a m_overlap holds whether an overlap line should be displayed
         Boats::Overlaps m_overlap;
