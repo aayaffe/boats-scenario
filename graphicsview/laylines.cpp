@@ -38,7 +38,7 @@ LaylinesGraphicsItem::LaylinesGraphicsItem(PositionModel *model, QGraphicsItem *
         : QGraphicsPathItem(parent),
         m_model(model),
         m_length(model->situation()->situationLength()),
-        m_boatLength(model->situation()->sizeForSeries(model->situation()->situationSeries())),
+        m_boatLength(Boats::seriesSizeList()[model->situation()->situationSeries()]),
         m_laylineAngle(model->situation()->laylineAngle()) {
     setFlag(QGraphicsItem::ItemIgnoresTransformations);
     setFlag(QGraphicsItem::ItemStacksBehindParent);
@@ -72,7 +72,7 @@ void LaylinesGraphicsItem::setLength(int value) {
 }
 
 void LaylinesGraphicsItem::setSeries(int value) {
-    int boatLength = m_model->situation()->sizeForSeries((Boats::Series)value);
+    int boatLength = Boats::seriesSizeList()[value];
     if (m_boatLength != boatLength) {
         m_boatLength = boatLength;
         updatePath();

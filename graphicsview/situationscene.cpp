@@ -685,7 +685,7 @@ void SituationScene::setLaylines(const int angle) {
     }
     if (debugLevel & 1 << VIEW) std::cout << "creating layline Background for " << angle << std::endl;
     qreal theta = angle * M_PI /180;
-    int length = m_situation->sizeForSeries(m_situation->situationSeries());
+    int length = Boats::seriesSizeList()[m_situation->situationSeries()];
 
     // draw 4 times as big, then use transform to scale back the brush
     // gives better precision grid

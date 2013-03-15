@@ -43,7 +43,7 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
         m_color(mark->color()),
         m_zone(mark->zone()),
         m_length(mark->length()),
-        m_boatLength(m_mark->situation()->sizeForSeries(m_mark->situation()->situationSeries())),
+        m_boatLength(Boats::seriesSizeList()[m_mark->situation()->situationSeries()]),
         m_bubble(new BubbleGraphicsItem(m_mark, this)),
         m_selected(false),
         m_order(mark->order()),
@@ -128,7 +128,7 @@ void MarkGraphicsItem::setLength(int value) {
 }
 
 void MarkGraphicsItem::setSeries(int value) {
-    int boatLength = m_mark->situation()->sizeForSeries((Boats::Series)value);
+    int boatLength = Boats::seriesSizeList()[value];
     if (m_boatLength != boatLength) {
         prepareGeometryChange();
         m_boatLength = boatLength;

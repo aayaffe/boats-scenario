@@ -96,7 +96,7 @@ void TrackModel::setFollowTrack(bool theValue) {
 void TrackModel::setSeries(const Boats::Series theValue) {
     if (theValue != m_series) {
         m_series = theValue;
-        m_length = m_situation->sizeForSeries(m_series);
+        m_length = Boats::seriesSizeList()[m_series];
         emit seriesChanged(m_series);
     }
 }

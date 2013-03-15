@@ -43,3 +43,19 @@ QList<QString> Boats::seriesList() {
     }
     return m_seriesList;
 }
+
+QList<int> Boats::m_seriesSizeList;
+
+QList<int> Boats::seriesSizeList() {
+    if (!m_seriesSizeList.size()) {
+        for (int i=0; i< ENUM_SIZE(Boats, Series)-1; i++) {
+            m_seriesSizeList << 100; // default size of 100
+        }
+        m_seriesSizeList[keelboat] = 100;
+        m_seriesSizeList[laser] = 40;
+        m_seriesSizeList[optimist] = 23;
+        m_seriesSizeList[tornado] = 61;
+        m_seriesSizeList[rib] = 60;
+    }
+    return m_seriesSizeList;
+}

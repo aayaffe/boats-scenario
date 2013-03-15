@@ -170,7 +170,7 @@ void BoatGraphicsItem::setOverlap(Boats::Overlaps value) {
 }
 
 void BoatGraphicsItem::setOverlapLine() {
-    qreal size = m_boat->situation()->sizeForSeries(m_series);
+    qreal size = Boats::seriesSizeList()[m_series];
     qreal border;
     switch(m_series) {
         case Boats::keelboat:

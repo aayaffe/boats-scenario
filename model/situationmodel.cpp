@@ -54,31 +54,6 @@ SituationModel::~SituationModel() {
     if (debugLevel & 1 << MODEL) std::cout << "end situation " << this << std::endl;
 }
 
-int SituationModel::sizeForSeries(const Boats::Series series) {
-    int size;
-    switch (series) {
-        case Boats::keelboat:
-            size = 100;
-            break;
-        case Boats::laser:
-            size = 40;
-            break;
-        case Boats::optimist:
-            size = 23;
-            break;
-        case Boats::tornado:
-            size = 61;
-            break;
-	case Boats::rib:
-	    size = 60;
-	    break;
-        default:
-            size = 100;
-            break;
-    }
-    return size;
-}
-
 void SituationModel::setTitle(const QString theValue) {
     if (theValue != m_title) {
         if (debugLevel & 1 << MODEL) std::cout << "Setting Title " << theValue.toStdString() << std::endl;

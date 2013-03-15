@@ -61,8 +61,6 @@ class SituationModel : public QObject {
         SituationModel(QObject *parent = 0);
         ~SituationModel();
 
-        int sizeForSeries(const Boats::Series series);
-
         // Setters and Getters for Model Data
         QString title() const { return m_title; }
         void setTitle(const QString theValue);
