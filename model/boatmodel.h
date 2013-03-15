@@ -81,6 +81,8 @@ class BoatModel : public PositionModel {
 
         qreal trimmedSailAngle() const { return sailAngle() + m_trim; }
         void setTrimmedSailAngle(qreal theValue);
+        qreal jibTrim() const { return m_jibTrim; }
+        void setJibTrim(const qreal& theValue);
 
         bool hasSpin() const {return m_hasSpin; }
         void setHasSpin(const bool theValue);
@@ -108,9 +110,7 @@ class BoatModel : public PositionModel {
 
         qreal sailAngle(qreal heading = -1) const;
 
-// [GML] Add separate jibAngle() - March 2013
         qreal jibAngle(qreal heading = -1) const;
-// [GML] End
 
         qreal spinAngle(qreal heading = -1) const;
 
@@ -125,9 +125,8 @@ class BoatModel : public PositionModel {
     signals:
         void trimChanged(qreal trim);
         void trimmedSailAngleChanged(qreal sailAngle);
-// [GML] Add separate jibAngle() - March 2013
+        void jibTrimChanged(qreal jibTrim);
         void trimmedJibAngleChanged(qreal jibAngle);
-// [GML] End
         void spinChanged(bool spin);
         void spinTrimChanged(qreal spinTrim);
         void trimmedSpinAngleChanged(qreal spinAngle);
@@ -140,6 +139,9 @@ class BoatModel : public PositionModel {
         // Model Data
         /// \a m_trim holds the sailing trim of a Boat
         qreal m_trim;
+
+        /// \a m_jibTrim holds the jib trim
+        qreal m_jibTrim;
 
         /// \a m_spin holds whether a spinnaker is used
         bool m_spin;

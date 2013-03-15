@@ -36,6 +36,7 @@ extern int debugLevel;
 BoatModel::BoatModel(TrackModel* track, QObject *parent)
         : PositionModel(track->situation(), parent),
         m_trim(0),
+        m_jibTrim(0),
         m_spin(false),
         m_spinTrim(0),
         m_overlap(Boats::none),
@@ -61,7 +62,7 @@ void BoatModel::setHeading(const qreal& theValue) {
         if (m_heading < 0) m_heading += 360.0; // This ensures it is between 0 and +360
         emit headingChanged(m_heading);
         emit trimmedSailAngleChanged(sailAngle()+ m_trim);
-        emit trimmedJibAngleChanged(jibAngle() + m_trim);
+        emit trimmedJibAngleChanged(jibAngle() + m_jibTrim);
         emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
         m_track->changingTrack(m_track);
     }
@@ -73,7 +74,7 @@ void BoatModel::setPosition(const QPointF& theValue) {
 }
 
 void BoatModel::setTrim(const qreal& theValue) {
-    qreal newAngle = sailAngle() + theValue; // This is only checking the mainsail angle, but live with it for now
+    qreal newAngle = sailAngle() + theValue;
     if (theValue != m_trim
         && newAngle < 180
         && newAngle > -180) {
@@ -88,6 +89,19 @@ void BoatModel::setTrim(const qreal& theValue) {
 
 void BoatModel::setTrimmedSailAngle(qreal theValue) {
     emit trimmedSailAngleChanged(theValue);
+}
+
+void BoatModel::setJibTrim(const qreal& theValue) {
+    qreal newAngle = jibAngle() + theValue;
+    if (theValue != m_jibTrim
+        && newAngle < 180
+        && newAngle > -180) {
+        m_jibTrim = theValue;
+        if (debugLevel & 1 << MODEL) std::cout
+                << "jibtrim = " << theValue  << std::endl;
+        emit jibTrimChanged(m_jibTrim);
+        emit trimmedJibAngleChanged(jibAngle() + m_jibTrim);
+    }
 }
 
 void BoatModel::setHasSpin(const bool theValue) {

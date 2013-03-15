@@ -810,6 +810,7 @@ TrimBoatUndoCommand::TrimBoatUndoCommand(QList<BoatModel*> &boatList, const qrea
     if (debugLevel & 1 << COMMAND) std::cout << "new trimboatundocommand" << std::endl;
     foreach (const BoatModel *boat, boatList) {
         m_trimList << boat->trim();
+        m_jibTrimList << boat->jibTrim();
     }
 }
 
@@ -822,6 +823,7 @@ void TrimBoatUndoCommand::undo() {
     for(int i=0; i< m_boatList.size(); i++) {
         BoatModel *model = m_boatList[i];
         model->setTrim(m_trimList[i]);
+        model->setJibTrim(m_jibTrimList[i]);
     }
 }
 
@@ -830,15 +832,56 @@ void TrimBoatUndoCommand::redo() {
     for(int i=0; i< m_boatList.size(); i++) {
         BoatModel *model = m_boatList[i];
         model->setTrim(m_trim);
+        model->setJibTrim(m_trim);
     }
 }
 
 bool TrimBoatUndoCommand::mergeWith(const QUndoCommand *command) {
-    const TrimBoatUndoCommand *moveCommand = static_cast<const TrimBoatUndoCommand*>(command);
-    if (m_boatList != moveCommand->m_boatList)
+    const TrimBoatUndoCommand *trimCommand = static_cast<const TrimBoatUndoCommand*>(command);
+    if (m_boatList != trimCommand->m_boatList)
         return false;
 
-    m_trim = moveCommand->m_trim;
+    m_trim = trimCommand->m_trim;
+    return true;
+}
+
+// Trim Jib
+TrimJibUndoCommand::TrimJibUndoCommand(QList<BoatModel*> &boatList, const qreal &trim, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_boatList(boatList),
+        m_trim(trim) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new trimjibundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_trimList << boat->jibTrim();
+    }
+}
+
+TrimJibUndoCommand::~TrimJibUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end trimjibundocommand" << std::endl;
+}
+
+void TrimJibUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo trimjibundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *model = m_boatList[i];
+        model->setJibTrim(m_trimList[i]);
+    }
+}
+
+void TrimJibUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo trimjibundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *model = m_boatList[i];
+        model->setJibTrim(m_trim);
+    }
+}
+
+bool TrimJibUndoCommand::mergeWith(const QUndoCommand *command) {
+    const TrimJibUndoCommand *trimCommand = static_cast<const TrimJibUndoCommand*>(command);
+    if (m_boatList != trimCommand->m_boatList)
+        return false;
+
+    m_trim = trimCommand->m_trim;
     return true;
 }
 

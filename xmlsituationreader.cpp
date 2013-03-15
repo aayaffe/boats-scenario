@@ -177,6 +177,7 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     QPointF pos;
     qreal heading = 0;
     qreal trim = 0;
+    qreal jibTrim = 0;
     bool spin = false;
     Boats::Overlaps overlap = Boats::none;
     Boats::Flag flag = Boats::noFlag;
@@ -199,6 +200,8 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
                 heading = readElementText().toFloat();
             else if (name() == "trim")
                 trim = readElementText().toFloat();
+            else if (name() == "jibtrim")
+                jibTrim = readElementText().toFloat();
             else if (name() == "spin")
                 spin = (readElementText() == "1");
             else if (name() == "overlap") {
@@ -237,6 +240,7 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
         boat = command->boat();
     }
     boat->setTrim(trim);
+    boat->setJibTrim(jibTrim);
     boat->setSpin(spin);
     boat->setOverlap(overlap);
     boat->setFlag(flag);

@@ -122,6 +122,9 @@ void XmlSituationWriter::writeBoat(const BoatModel *boat) {
     if (boat->trim() != 0) {
         writeTextElement("trim",QString::number(boat->trim()));
     }
+    if (boat->jibTrim() != 0) {
+        writeTextElement("jibtrim",QString::number(boat->jibTrim()));
+    }
     if (boat->spin()) {
         writeTextElement("spin",QString::number(boat->spin()));
     }

@@ -60,6 +60,7 @@ enum {
     OVERLAP_BOAT,
     FLAG_BOAT,
     TRIM_BOAT,
+    TRIM_JIB,
     SPIN_BOAT,
     HIDE_BOAT,
     ACCELERATE_BOAT,
@@ -447,6 +448,22 @@ class TrimBoatUndoCommand : public QUndoCommand {
         void redo();
         bool mergeWith(const QUndoCommand *command);
         int id() const { return TRIM_BOAT; }
+    private:
+        QList<BoatModel*> m_boatList;
+        QList<qreal> m_trimList;
+        QList<qreal> m_jibTrimList;
+        qreal m_trim;
+};
+
+class TrimJibUndoCommand : public QUndoCommand {
+
+    public:
+        TrimJibUndoCommand(QList<BoatModel*> &boatList, const qreal &trim, QUndoCommand *parent = 0);
+        ~TrimJibUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return TRIM_JIB; }
     private:
         QList<BoatModel*> m_boatList;
         QList<qreal> m_trimList;

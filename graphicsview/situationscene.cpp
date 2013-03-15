@@ -307,6 +307,15 @@ void SituationScene::unSetAnimation() {
 
 void SituationScene::keyPressEvent(QKeyEvent *event) {
 
+    if (!m_selectedBoatModels.isEmpty()) {
+// Trim just the jib when ',' or '.' is pressed (TrimJibUndoCommand only trims the jib)
+        if (event->key() == Qt::Key_Comma) {
+            m_situation->undoStack()->push(new TrimJibUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->jibTrim() - 5));
+        } else if (event->key() == Qt::Key_Period) {
+            m_situation->undoStack()->push(new TrimJibUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->jibTrim() + 5));
+        }
+    }
+
     if (!m_selectedModels.isEmpty()) {
         if (event->key() == Qt::Key_Left) {
             QPointF pos(-5,0);
