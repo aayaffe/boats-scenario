@@ -585,6 +585,10 @@ Vil du overskrive den?</translation>
         <source>Firefly</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>29er</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SituationPrint</name>

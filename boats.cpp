@@ -36,6 +36,7 @@ QList<QString> Boats::seriesList() {
 // By doing it this way guarantee that labels align correctly with enum tags irrespective of order
         m_seriesList[keelboat] = QObject::tr("Spin Keelboat");
         m_seriesList[keelboatwithgenn] = QObject::tr("Gennaker Keelboat");
+        m_seriesList[int29er] = QObject::tr("29er");
         m_seriesList[laser] = QObject::tr("Laser");
         m_seriesList[firefly] = QObject::tr("Firefly");
         m_seriesList[topper] = QObject::tr("Topper");
@@ -56,6 +57,7 @@ QList<int> Boats::seriesSizeList() {
         }
         m_seriesSizeList[keelboat] = 100;
         m_seriesSizeList[keelboatwithgenn] = 100;
+        m_seriesSizeList[int29er] = 41;
         m_seriesSizeList[laser] = 40;
         m_seriesSizeList[firefly] = 36.6;
         m_seriesSizeList[topper] = 34;

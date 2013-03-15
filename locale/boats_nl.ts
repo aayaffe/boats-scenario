@@ -584,6 +584,10 @@ Wilt u het vervangen?</translation>
         <source>Firefly</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>29er</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SituationPrint</name>

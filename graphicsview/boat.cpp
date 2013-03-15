@@ -323,6 +323,32 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             boundingRect = QRectF(-20, -50, 40, 100);
             border = 10;
             break;
+        case Boats::int29er:
+            m_numberSize = 7;
+            posY = 9;
+            flagRect = QRectF(-3, 13, 6, 4);
+            mast = QPointF(0, -3.4);
+            sailSize = 20.5;
+            jibTackPos = QPointF(0,-20.5);
+            jibSize = 17.0;
+            gennTackPos = QPointF(0,-34.2);
+            gennPoleLength = 13.7;
+            gennSize = 30.8;
+            maxWithSpinSailAngle = 40;
+            maxWithSpinJibAngle = 35;
+            path.moveTo(0,-20.5);
+            path.lineTo(-0.5,-20.5);
+            path.cubicTo(-3.5,-10.25,-6.6,-1.1,-8.3,-0.5);
+            path.lineTo(-8.8,18);
+            path.lineTo(-4.4,20.5);
+            path.lineTo(4.4,20.5);
+            path.lineTo(8.8,18);
+            path.lineTo(8.3,-0.5);
+            path.cubicTo(6.6,-1.1,3.5,-10.25,0.5,-20.5);
+            path.lineTo(0,-20.5);
+            boundingRect = QRectF(-8.8, -20.5, 17.6, 41.0);
+            border = 4.4;
+            break;
         case Boats::laser:
             m_numberSize = 7;
             posY = 10;
