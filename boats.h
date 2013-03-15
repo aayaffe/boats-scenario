@@ -45,6 +45,7 @@ public:
         keelboat,
         keelboatwithgenn,
         laser,
+        topper,
         optimist,
         tornado,
         startboat,

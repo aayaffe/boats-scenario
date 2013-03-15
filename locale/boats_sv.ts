@@ -577,6 +577,10 @@ Vill du ersätta den?</translation>
         <source>Gennaker Keelboat</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Topper</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SituationPrint</name>
