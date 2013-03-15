@@ -340,6 +340,23 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             boundingRect = QRectF(-6.7, -20, 13.4, 40);
             border = 5;
             break;
+        case Boats::firefly:
+            m_numberSize = 7;
+            posY = 10;
+            flagRect = QRectF(-3, 12 , 6, 4);
+            mast = QPointF(0, -6.5);
+            sailSize = 21.8;
+            jibTackPos = QPointF(0, -18.3);
+            jibSize = 14;
+            path.moveTo(0,-18.3);
+            path.cubicTo(3.7, -14.0, 7.6, -8.0, 7.6, 1.8);
+            path.cubicTo(7.6, 4.2, 7.6, 9.2, 4.9, 18.3);
+            path.lineTo(-4.9, 18.3);
+            path.cubicTo(-7.6, 9.2, -7.6, 4.2, -7.6, 1.8);
+            path.cubicTo(-7.6, -8.0, -3.7, -14.0, 0, -18.3);
+            boundingRect = QRectF(-7.6, -18.3, 15.2, 36.6);
+            border = 4.9;
+            break;
         case Boats::topper:
             m_numberSize = 7;
             posY = 8;
