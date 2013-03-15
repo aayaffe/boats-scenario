@@ -35,7 +35,7 @@ MarkModel::MarkModel(SituationModel* situation, QObject *parent)
         : PositionModel(situation, parent),
         m_color(Qt::gray),
         m_zone(false),
-        m_arrowVisible(true),
+        m_arrowVisible(false),
         m_leaveToPort(true),
         m_labelVisible(true),
         m_length(situation->situationLength()) {
