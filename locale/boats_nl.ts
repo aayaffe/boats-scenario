@@ -592,6 +592,10 @@ Wilt u het vervangen?</translation>
         <source>49er</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>420</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SituationPrint</name>

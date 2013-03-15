@@ -359,6 +359,25 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             boundingRect = QRectF(-14.0, -24.0, 28.0, 48.0);
             border = 14.5;
             break;
+        case Boats::int420:
+            m_numberSize = 7;
+            posY = 9;
+            flagRect = QRectF(-3, 13, 6, 4);
+            mast = QPointF(0, -7.1);
+            sailSize = 24.0;
+            jibTackPos = QPointF(0,-21);
+            jibSize = 0.6*sailSize;
+            spinSize = 17.5;
+            path.moveTo(0,-21);
+            path.cubicTo(1.5, -21, 8.15, -12.5, 8.15, 3.3);
+            path.quadTo(8.15, 11.5, 5.7, 20);
+            path.quadTo(2.8, 21, 0, 21);
+            path.quadTo(-2.8, 21, -5.7, 20);
+            path.quadTo(-8.15, 11.5, -8.15, 3.3);
+            path.cubicTo(-8.15, -12.5, -1.5, -21, 0, -21);
+            boundingRect = QRectF(-8.15,-21,16.3,42);
+            border = 5.7;
+            break;
         case Boats::int29er:
             m_numberSize = 7;
             posY = 9;

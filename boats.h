@@ -45,6 +45,7 @@ public:
         keelboat,
         keelboatwithgenn,
         int49er,
+        int420,
         int29er,
         laser,
         firefly,
