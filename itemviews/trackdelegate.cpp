@@ -55,7 +55,7 @@ void TrackDelegate::paint(QPainter *painter,
             break;
         case TRACK_SERIES: {
             int series = qVariantValue<int>(index.data());
-            drawDisplay(painter, option, option.rect, ENUM_NAME(Boats, Series, series));
+            drawDisplay(painter, option, option.rect, Boats::seriesList().at(series));
             }
             break;
         default:

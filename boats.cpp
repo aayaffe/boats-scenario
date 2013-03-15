@@ -33,6 +33,13 @@ QList<QString> Boats::seriesList() {
         for (int i=0; i< ENUM_SIZE(Boats, Series)-1; i++) {
             m_seriesList << ENUM_NAME(Boats, Series, i);
         }
+// By doing it this way guarantee that labels align correctly with enum tags irrespective of order
+        m_seriesList[keelboat] = QObject::tr("Keelboat");
+        m_seriesList[laser] = QObject::tr("Laser");
+        m_seriesList[optimist] = QObject::tr("Optimist");
+        m_seriesList[tornado] = QObject::tr("Tornado");
+        m_seriesList[startboat] = QObject::tr("Committee boat");
+        m_seriesList[rib] = QObject::tr("RIB");
     }
     return m_seriesList;
 }

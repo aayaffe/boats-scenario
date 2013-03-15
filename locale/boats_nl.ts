@@ -548,6 +548,30 @@ Wilt u het vervangen?</translation>
         <source>The file is not an xmlscenario version 1.0 file.</source>
         <translation>Dit is geen xmlscenario versie 1.0 bestand.</translation>
     </message>
+    <message>
+        <source>Keelboat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Laser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Optimist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tornado</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Committee boat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RIB</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SituationPrint</name>
