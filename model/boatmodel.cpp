@@ -161,9 +161,9 @@ qreal BoatModel::sailAngle(qreal heading) const {
     }
     // within 10° inside layline angle, the sail is headed
     if (heading < layline-10) {
-        sailAngle =  heading;
+        sailAngle =  fmin(layline-20,heading); // layline-20 so that sail is at stall angle of 10 degrees when heading = layline-10
     } else if (heading > 360 - (layline-10)) {
-        sailAngle =  heading - 360;
+        sailAngle =  fmax(-(layline-20),heading - 360);
     } else {
 
         switch (m_track->series()) {
@@ -205,9 +205,9 @@ qreal BoatModel::jibAngle(qreal heading) const {
     }
     // within 10° inside layline angle, the sail is headed
     if (heading < layline-10) {
-        sailAngle =  heading;
+        sailAngle =  fmin(layline-20,heading); // layline-20 so that sail is at stall angle of 10 degrees when heading = layline-10
     } else if (heading > 360 - (layline-10)) {
-        sailAngle =  heading - 360;
+        sailAngle =  fmax(-(layline-20),heading - 360);
     } else {
         // linear incidence variation
         // incidence is 20° at layline angle and 90° downwind
