@@ -588,6 +588,10 @@ Wilt u het vervangen?</translation>
         <source>29er</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>49er</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SituationPrint</name>

@@ -44,6 +44,7 @@ public:
     enum Series {
         keelboat,
         keelboatwithgenn,
+        int49er,
         int29er,
         laser,
         firefly,
