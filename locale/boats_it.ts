@@ -592,6 +592,10 @@ Do you want to replace it?</source>
         <source>420</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>470</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SituationPrint</name>
