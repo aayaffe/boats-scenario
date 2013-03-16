@@ -264,11 +264,13 @@ void MainWindow::createActions() {
             this, SLOT(toggleMarkSide()));
 
     toggleMarkArrowAction = new QAction(this);
+    toggleMarkArrowAction->setCheckable(true);
     connect(toggleMarkArrowAction, SIGNAL(triggered()),
             this, SLOT(toggleMarkArrow()));
 
     toggleMarkZoneAction = new QAction(this);
     toggleMarkZoneAction->setIcon(QIcon(":/images/zone.png"));
+    toggleMarkZoneAction->setCheckable(true);
     connect(toggleMarkZoneAction, SIGNAL(triggered()),
             this, SLOT(toggleMarkZone()));
 
@@ -284,6 +286,7 @@ void MainWindow::createActions() {
             this, SLOT(toggleLaylines()));
 
     toggleMarkLabelAction = new QAction(this);
+    toggleMarkLabelAction->setCheckable(true);
     connect(toggleMarkLabelAction, SIGNAL(triggered()),
             this, SLOT(toggleMarkLabel()));
 
