@@ -94,7 +94,8 @@ void GennakerGraphicsItem::setVisible(bool visibility) {
 /// calculate a sail incidence angle, corrected with user trimming
 void GennakerGraphicsItem::setSailAngle(qreal value) {
     m_sailAngle = value;
-    qreal angle = fmod(m_boat->heading() - m_sailAngle +360, 360);
+    qreal angle = fmod(m_boat->heading() - m_boat->wind() - m_sailAngle +360, 360);
+    if(angle < 0) angle +=360;
 
     if ((angle < 55 || angle > 305 || (angle > 170 && angle < 190)) && path() != m_sailPathStalled) {
         setPath(m_sailPathStalled);

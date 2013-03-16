@@ -1626,6 +1626,7 @@ void MainWindow::trimSail() {
     if (! boatList.isEmpty()) {
         qreal trim = boatList[0]->trim();
         qreal heading = fmod(boatList[0]->heading() - boatList[0]->wind() + 360, 360);
+        if(heading < 0) heading +=360;
         if (heading < 180) {
             trim -= 5;
         } else {
@@ -1653,6 +1654,7 @@ void MainWindow::untrimSail() {
     if (! boatList.isEmpty()) {
         qreal trim = boatList[0]->trim();
         qreal heading = fmod(boatList[0]->heading() - boatList[0]->wind() + 360, 360);
+        if(heading < 0) heading +=360;
         if (heading < 180) {
             trim += 5;
         } else {
