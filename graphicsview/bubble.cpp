@@ -98,7 +98,7 @@ void BubbleGraphicsItem::setPosition(QPointF position) {
 
 void BubbleGraphicsItem::setTail() {
     double a = 0;
-    if (BoatModel *boat = static_cast<BoatModel*> (m_model)) {
+    if (BoatModel *boat = dynamic_cast<BoatModel*> (m_model)) {
         a = -boat->heading() * M_PI / 180;
         // set the transform to have horizontal text
         setTransform(QTransform().rotateRadians(a));
