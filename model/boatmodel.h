@@ -128,12 +128,9 @@ class BoatModel : public PositionModel {
         const QPainterPath path() const { return m_path; }
 
     signals:
-        void trimChanged(qreal trim);
         void trimmedSailAngleChanged(qreal sailAngle);
-        void jibTrimChanged(qreal jibTrim);
         void trimmedJibAngleChanged(qreal jibAngle);
         void spinChanged(bool spin);
-        void spinTrimChanged(qreal spinTrim);
         void trimmedSpinAngleChanged(qreal spinAngle);
         void trimmedGennAngleChanged(qreal gennAngle);
         void overlapChanged(Boats::Overlaps overlap);

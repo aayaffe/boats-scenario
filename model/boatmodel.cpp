@@ -86,7 +86,6 @@ void BoatModel::setTrim(const qreal& theValue) {
         m_trim = theValue;
         if (debugLevel & 1 << MODEL) std::cout
                 << "trim = " << theValue  << std::endl;
-        emit trimChanged(m_trim);
         emit trimmedSailAngleChanged(sailAngle()+ m_trim);
     }
 }
@@ -103,7 +102,6 @@ void BoatModel::setJibTrim(const qreal& theValue) {
         m_jibTrim = theValue;
         if (debugLevel & 1 << MODEL) std::cout
                 << "jibtrim = " << theValue  << std::endl;
-        emit jibTrimChanged(m_jibTrim);
         emit trimmedJibAngleChanged(jibAngle() + m_jibTrim);
     }
 }
@@ -133,7 +131,6 @@ void BoatModel::setSpinTrim(const qreal& theValue) {
         m_spinTrim = theValue;
         if (debugLevel & 1 << MODEL) std::cout
                 << "spinTrim = " << theValue  << std::endl;
-        emit spinTrimChanged(m_spinTrim);
         emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
         emit trimmedGennAngleChanged(gennAngle() + m_spinTrim);
     }
