@@ -86,11 +86,11 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
     setPos(boat->position());
     setOrder(boat->order());
     setDim(boat->dim());
-    m_sail->setSailAngle(m_boat->sailAngle() + m_boat->trim());
-    m_jib->setSailAngle(m_boat->jibAngle() + m_boat->jibTrim());
+    m_sail->setSailAngle(m_boat->trimmedSailAngle());
+    m_jib->setSailAngle(m_boat->trimmedJibAngle());
     m_spin->setHeading(m_boat->heading());
-    m_spin->setSailAngle(m_boat->spinAngle() + m_boat->spinTrim());
-    m_genn->setSailAngle(m_boat->gennAngle() + m_boat->spinTrim()); // Use spinTrim() for both spinnaker and gennaker
+    m_spin->setSailAngle(m_boat->trimmedSpinAngle());
+    m_genn->setSailAngle(m_boat->trimmedGennAngle()); // Use spinTrim() for both spinnaker and gennaker
     setSpin(boat->spin());
     setOverlap(boat->overlap());
     setDisplayFlag(boat->flag());
