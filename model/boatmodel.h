@@ -55,14 +55,8 @@ class TrackModel;
 
 class BoatModel : public PositionModel {
         Q_OBJECT
-        Q_PROPERTY(QPointF pos READ position WRITE setPosition)
-        Q_PROPERTY(bool laylines READ laylines() WRITE setLaylines)
-        Q_PROPERTY(qreal heading READ heading WRITE setHeading)
-        Q_PROPERTY(qreal wind READ wind WRITE setWind)
         Q_PROPERTY(qreal trimSailAngle READ trimmedSailAngle WRITE setTrimmedSailAngle)
         Q_PROPERTY(bool spin READ spin WRITE setSpin)
-        Q_PROPERTY(QString text READ text WRITE setText)
-        Q_PROPERTY(QPointF textPos READ textPosition WRITE setTextPosition)
         Q_PROPERTY(Boats::Overlaps overlap READ overlap WRITE setOverlap)
         Q_PROPERTY(Boats::Flag flag READ flag WRITE setFlag)
         Q_PROPERTY(int dim READ dim WRITE setDim)
