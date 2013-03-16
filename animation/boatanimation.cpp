@@ -107,11 +107,29 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatModel *boat, int index, QObj
     sailAngleAnimation->setStartValue(model->trimmedSailAngle());
     addAnimation(sailAngleAnimation);
 
+    // jib angle
+    AngleAnimation *jibAngleAnimation = new AngleAnimation(boat, "trimJibAngle");
+    jibAngleAnimation->setDuration(2000);
+    jibAngleAnimation->setStartValue(model->trimmedJibAngle());
+    addAnimation(jibAngleAnimation);
+
     // spin
     PropertyAnimation *spinAnimation = new PropertyAnimation(boat, "spin");
     spinAnimation->setDuration(2000);
     spinAnimation->setStartValue(model->spin());
     addAnimation(spinAnimation);
+
+    // spin angle
+    AngleAnimation *spinAngleAnimation = new AngleAnimation(boat, "trimSpinAngle");
+    spinAngleAnimation->setDuration(2000);
+    spinAngleAnimation->setStartValue(model->trimmedSpinAngle());
+    addAnimation(spinAngleAnimation);
+
+    // gen angle
+    AngleAnimation *genAngleAnimation = new AngleAnimation(boat, "trimGennAngle");
+    genAngleAnimation->setDuration(2000);
+    genAngleAnimation->setStartValue(model->trimmedGennAngle());
+    addAnimation(genAngleAnimation);
 
     // overlap
     PropertyAnimation *overlapAnimation = new PropertyAnimation(boat, "overlap");
@@ -144,7 +162,10 @@ BoatAnimation::BoatAnimation(TrackModel *track, BoatModel *boat, int index, QObj
     headingAnimation->setEndValue(model->heading());
     windAnimation->setEndValue(model->wind());
     sailAngleAnimation->setEndValue(model->trimmedSailAngle());
+    jibAngleAnimation->setEndValue(model->trimmedJibAngle());
     spinAnimation->setEndValue(model->spin());
+    spinAngleAnimation->setEndValue(model->trimmedSpinAngle());
+    genAngleAnimation->setEndValue(model->trimmedGennAngle());
 }
 
 BoatAnimation::~BoatAnimation() {
