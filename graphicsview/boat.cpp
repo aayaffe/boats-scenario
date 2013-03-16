@@ -285,9 +285,9 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
         qreal gennPoleLength = 0;
         qreal gennSize = 0;
         qreal maxNormalSailAngle = 90;
-        qreal maxNormalJibAngle = 90;
+        qreal maxNormalJibAngle = 45;
         qreal maxWithSpinSailAngle = 65;
-        qreal maxWithSpinJibAngle = 60;
+        qreal maxWithSpinJibAngle = 35;
         QPainterPath path;
         QRectF boundingRect = QRectF(-50, -50, 100, 100);
         qreal border = 0;

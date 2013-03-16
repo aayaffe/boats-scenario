@@ -45,10 +45,10 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         m_acceleration(Boats::constant),
         m_track(track),
         m_hasSpin(false),
-        m_maxNormalSailAngle(90),
-        m_maxNormalJibAngle(90),
-        m_maxWithSpinSailAngle(40),
-        m_maxWithSpinJibAngle(35),
+        m_maxNormalSailAngle(0),
+        m_maxNormalJibAngle(0),
+        m_maxWithSpinSailAngle(0),
+        m_maxWithSpinJibAngle(0),
         m_dim(255) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
     setOrder(track->size()+1);
