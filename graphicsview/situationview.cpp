@@ -141,10 +141,10 @@ void SituationView::setCenter(QPointF position) {
 void SituationView::setScale(bool in) {
     if (in) {
         if (scaleValue < 10.0) {
-            scaleValue += .05;
+            scaleValue *= 1.1;
         }
     } else if (scaleValue > 0.1) {
-        scaleValue -= .05;
+        scaleValue /= 1.1;
     }
     if (debugLevel & 1 << VIEW)
         std::cout << "new scale values " << scaleValue << std::endl;
