@@ -61,6 +61,7 @@ class LaylinesGraphicsItem : public QObject, public QGraphicsPathItem {
         void setLength(int length);
         void setSeries(int value);
         void setLaylineAngle(int value);
+        void setHeading(qreal value);
         void setWind(qreal value);
         void setVisible(bool visible);
 
@@ -76,6 +77,8 @@ class LaylinesGraphicsItem : public QObject, public QGraphicsPathItem {
 
         /// \a m_laylineAngle holds the layline angle
         int m_laylineAngle;
+
+        qreal m_heading;
 
         qreal m_wind;
 
