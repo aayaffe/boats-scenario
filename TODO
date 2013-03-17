@@ -1,18 +1,18 @@
 Important:
-- fix laylines on boats
 - fix printing document
 - statechart
-- jib
-- bowsprit
 
 Normal:
 - toggle number display
 - arrows
-- clean selection before output
-- translate boat types in popup
 - more boat shapes
 - open in new tab
 - more flags
+- fix shortcut clashes
+- save default series
+- save default mark color
+- spin trim
+
 
 Wishlist:
 - gpx import
@@ -20,3 +20,5 @@ Wishlist:
 - insert between boats
 - starting a boat at a later number
 - timing for the start boat
+- animate spin hoist and drop
+- create track in a series different from scenario
