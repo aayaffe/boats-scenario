@@ -497,6 +497,10 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             mast = QPointF(0,0);
             sailSize = 25.5;
             maxNormalSailAngle = 20;
+            gennTackPos = QPointF(0,-40);
+            gennPoleLength = 40;
+            gennSize = 42;
+            maxWithSpinSailAngle = 20;
             path.moveTo(0,0);
             path.lineTo(10.7, 0);
             path.cubicTo(11.2, -11.7, 12.2, -19.8, 13.2, -30.5);
