@@ -61,7 +61,7 @@
     </message>
     <message>
         <source>&amp;Export Pdf...</source>
-        <translation>&amp;Izvozi pdf...</translation>
+        <translation>&amp;Izvozi PDF...</translation>
     </message>
     <message>
         <source>Ctrl+E</source>
@@ -93,7 +93,7 @@
     </message>
     <message>
         <source>Create &amp;Track</source>
-        <translation>Ustvari &amp;sled</translation>
+        <translation>Dodaj &amp;sled</translation>
     </message>
     <message>
         <source>Ctrl+Ins</source>
@@ -101,7 +101,7 @@
     </message>
     <message>
         <source>Create &amp;Boat</source>
-        <translation>Ustvari &amp;plovilo</translation>
+        <translation>Dodaj &amp;plovilo</translation>
     </message>
     <message>
         <source>Ins</source>
@@ -109,7 +109,7 @@
     </message>
     <message>
         <source>Create &amp;Mark</source>
-        <translation>Ustvari &amp;oznako</translation>
+        <translation>Dodaj &amp;oznako</translation>
     </message>
     <message>
         <source>Alt+Ins</source>
@@ -117,7 +117,7 @@
     </message>
     <message>
         <source>&amp;Port Overlap</source>
-        <translation>&amp;Levo prekrivanje</translation>
+        <translation>Prekrivanje na &amp;levi</translation>
     </message>
     <message>
         <source>Alt+&lt;</source>
@@ -125,7 +125,7 @@
     </message>
     <message>
         <source>&amp;Starboard Overlap</source>
-        <translation>&amp;Desno prekrivanje</translation>
+        <translation>Prekrivanje na &amp;desni</translation>
     </message>
     <message>
         <source>Alt+&gt;</source>
@@ -141,11 +141,11 @@
     </message>
     <message>
         <source>Toggle Mark &amp;Zone</source>
-        <translation>Izberi oznaki &amp;cono</translation>
+        <translation>Prikaži/skrij &amp;cono oznake</translation>
     </message>
     <message>
         <source>Delete Track</source>
-        <translation>Izbrisi sled</translation>
+        <translation>Izbriši sled</translation>
     </message>
     <message>
         <source>Ctrl+Del</source>
@@ -153,7 +153,7 @@
     </message>
     <message>
         <source>&amp;Delete Selection</source>
-        <translation>&amp;Izbrisi izbrano</translation>
+        <translation>&amp;Izbriši izbrano</translation>
     </message>
     <message>
         <source>Del</source>
@@ -161,7 +161,7 @@
     </message>
     <message>
         <source>&amp;Animate</source>
-        <translation>&amp;Animiraj</translation>
+        <translation>&amp;Animacija</translation>
     </message>
     <message>
         <source>Ctrl+A</source>
@@ -193,7 +193,7 @@
     </message>
     <message>
         <source>&amp;Loop</source>
-        <translation>&amp;Zanka</translation>
+        <translation>&amp;Neprekinjeno predvajanje</translation>
     </message>
     <message>
         <source>L</source>
@@ -221,7 +221,7 @@
     </message>
     <message>
         <source>Zoom &amp;In</source>
-        <translation>Zoom &amp;plus</translation>
+        <translation>Po&amp;ečaj</translation>
     </message>
     <message>
         <source>Ctrl++</source>
@@ -229,7 +229,7 @@
     </message>
     <message>
         <source>Zoom &amp;Out</source>
-        <translation>Zoom &amp;minus</translation>
+        <translation>Po&amp;manjšaj</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
@@ -237,7 +237,7 @@
     </message>
     <message>
         <source>Zoom &amp;Fit</source>
-        <translation>Zoom &amp;do prileganja</translation>
+        <translation>&amp;Prikaži vse</translation>
     </message>
     <message>
         <source>Ctrl+F</source>
@@ -257,7 +257,7 @@
     </message>
     <message>
         <source>&amp;About</source>
-        <translation>&amp;O</translation>
+        <translation>&amp;Vizitka</translation>
     </message>
     <message>
         <source>Create Track</source>
@@ -281,11 +281,11 @@
     </message>
     <message>
         <source>Boat Scenario</source>
-        <translation>Scenarij plovil</translation>
+        <translation>Boat Scenario</translation>
     </message>
     <message>
         <source>&amp;Recent</source>
-        <translation>&amp;Zadnje</translation>
+        <translation>&amp;Nazadnje urejano</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -305,7 +305,7 @@
     </message>
     <message>
         <source>&amp;Zoom</source>
-        <translation></translation>
+        <translation>Povečava</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -319,7 +319,7 @@
         <source>The document %1 has been modified.
 Do you want to save your changes?</source>
         <translation>Datoteka %1 je bila spremenjena.
-Ali zelite shraniti spremembe?</translation>
+Ali želite shraniti spremembe?</translation>
     </message>
     <message>
         <source>Ctrl+P</source>
@@ -335,7 +335,7 @@ Ali zelite shraniti spremembe?</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;Pomoc</translation>
+        <translation>&amp;Pomoč</translation>
     </message>
     <message>
         <source>Choose &amp;Language</source>
@@ -343,11 +343,11 @@ Ali zelite shraniti spremembe?</translation>
     </message>
     <message>
         <source>Open Scenario File</source>
-        <translation>Odpri datoteko scenarija</translation>
+        <translation>Odpri datoteko s scenarijem</translation>
     </message>
     <message>
         <source>xmlscenario Files (*.xbs)</source>
-        <translation>xmlscenarijske datoteke (*.xbs)</translation>
+        <translation>Datoteke xmlscenario (*.xbs)</translation>
     </message>
     <message>
         <source>Cannot read file %1:
@@ -357,16 +357,17 @@ Ali zelite shraniti spremembe?</translation>
     </message>
     <message>
         <source>Open Scenario file</source>
-        <translation>Odpri datoteko scenarija</translation>
+        <translation>Odpri datoteko s scenarijem</translation>
     </message>
     <message>
         <source>Parse error in file %1 at line %2, column %3:
 %4</source>
-        <translation></translation>
+        <translation>Napaka pri prebiranju datoteke %1 v vrstici %2, kolona %3:
+%4</translation>
     </message>
     <message>
         <source>File loaded</source>
-        <translation>Nalozena datoteka</translation>
+        <translation>Datoteka je naložena</translation>
     </message>
     <message>
         <source>Save Scenario</source>
@@ -375,13 +376,13 @@ Ali zelite shraniti spremembe?</translation>
     <message>
         <source>%1 already exists.
 Do you want to replace it?</source>
-        <translation>%1 ze obstaja.
-Ali jo zelite zamenjati?</translation>
+        <translation>Datoteka %1 že obstaja.
+Ali jo želite prepisati?</translation>
     </message>
     <message>
         <source>Cannot write file %1:
 %2.</source>
-        <translation>Ne morem zapisati v datoteko %1:
+        <translation>Ne morem shraniti datoteke %1:
 %2.</translation>
     </message>
     <message>
@@ -402,7 +403,7 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Exporting Animation...</source>
-        <translation>Izvazam animacijo...</translation>
+        <translation>Izvažam animacijo...</translation>
     </message>
     <message>
         <source>Abort</source>
@@ -414,7 +415,7 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>About Boat Scenario</source>
-        <translation>O scenariju plovila</translation>
+        <translation>O programu Boat Scenario</translation>
     </message>
     <message>
         <source>Print P&amp;review...</source>
@@ -426,11 +427,11 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Create Line</source>
-        <translation>Ustvari crto</translation>
+        <translation>Ustvari črto</translation>
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
-        <translation>Ustvari &amp;veccrtje</translation>
+        <translation>Ustvari &amp;črto</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Ins</source>
@@ -438,11 +439,11 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Create Poin&amp;t</source>
-        <translation>Ustvari &amp;tocko</translation>
+        <translation>Ustvari &amp;točko</translation>
     </message>
     <message>
         <source>Toggle &amp;Spinnaker</source>
-        <translation>Narisi &amp;spinaker</translation>
+        <translation>Prikaži/skrij &amp;špinaker</translation>
     </message>
     <message>
         <source>Alt+S</source>
@@ -454,55 +455,47 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>&amp;Hide</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Skrij</translation>
     </message>
     <message>
         <source>Alt+D</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Trim Sail</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavi trim jadra</translation>
     </message>
     <message>
         <source>&lt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;</translation>
     </message>
     <message>
         <source>Auto Trim</source>
-        <translation type="unfinished"></translation>
+        <translation>Samodejno nastavljanje trima</translation>
     </message>
     <message>
         <source>=</source>
-        <translation type="unfinished"></translation>
+        <translation>=</translation>
     </message>
     <message>
         <source>Untrim Sail</source>
-        <translation type="unfinished"></translation>
+        <translation>Odstrani ročni trim jadra</translation>
     </message>
     <message>
         <source>&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&gt;</translation>
     </message>
     <message>
         <source>&amp;Acceleration</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Pospešek</translation>
     </message>
     <message>
         <source>Toggle &amp;Laylines</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži/skrij layline</translation>
     </message>
     <message>
         <source>Alt+L</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Set Mark &amp;Color</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Alt+C</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle &amp;Mark Side</source>
@@ -518,6 +511,14 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Alt+W</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Mark &amp;Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt+C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -545,10 +546,42 @@ Ali jo zelite zamenjati?</translation>
     <name>QObject</name>
     <message>
         <source>The file is not an xmlscenario version 1.0 file.</source>
-        <translation>Datoteka ni xmlscenarij verzije 1.0.</translation>
+        <translation>Datoteka ni tipa xmlscenario različice 1.0.</translation>
+    </message>
+    <message>
+        <source>Spin Keelboat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gennaker Keelboat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>49er</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>470</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>420</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>29er</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Laser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Firefly</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Topper</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -567,38 +600,6 @@ Ali jo zelite zamenjati?</translation>
         <source>RIB</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Spin Keelboat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Gennaker Keelboat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Topper</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Firefly</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>29er</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>49er</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>420</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>470</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>SituationPrint</name>
@@ -611,15 +612,15 @@ Ali jo zelite zamenjati?</translation>
     <name>SituationWidget</name>
     <message>
         <source>Options</source>
-        <translation>Moznosti</translation>
+        <translation>Možnosti</translation>
     </message>
     <message>
         <source>Series</source>
-        <translation>Serija</translation>
+        <translation>Razred</translation>
     </message>
     <message>
         <source>Zone Length</source>
-        <translation>Dolzina cone</translation>
+        <translation>Velikost cone</translation>
     </message>
     <message>
         <source>Tracks</source>
@@ -647,19 +648,19 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>Veter</translation>
     </message>
     <message>
         <source>Show Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži smer vetra</translation>
     </message>
     <message>
         <source>Show Grid</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži mrežo</translation>
     </message>
     <message>
         <source>Layline Angle</source>
-        <translation type="unfinished"></translation>
+        <translation>Kot za layline</translation>
     </message>
 </context>
 <context>
@@ -670,11 +671,11 @@ Ali jo zelite zamenjati?</translation>
     </message>
     <message>
         <source>Path</source>
-        <translation>Pot</translation>
+        <translation>Sled</translation>
     </message>
     <message>
         <source>Series</source>
-        <translation>Serija</translation>
+        <translation>Razred</translation>
     </message>
     <message>
         <source>Follow</source>
@@ -685,15 +686,15 @@ Ali jo zelite zamenjati?</translation>
     <name>WindTableModel</name>
     <message>
         <source>Index</source>
-        <translation type="unfinished"></translation>
+        <translation>Položaj</translation>
     </message>
     <message>
         <source>Direction</source>
-        <translation type="unfinished"></translation>
+        <translation>Smer</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Izbriši</translation>
     </message>
 </context>
 </TS>
