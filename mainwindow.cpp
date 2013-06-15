@@ -391,10 +391,12 @@ void MainWindow::updateActions() {
     toggleStarboardOverlapAction->setEnabled(selectedBoats);
     toggleHiddenAction->setEnabled(selectedBoats);
     toggleTextAction->setEnabled(selectedItems);
-    setMarkColorAction->setEnabled(selectedMarks);
     flagMenu->setEnabled(selectedBoats);
     accelerationMenu->setEnabled(selectedBoats);
     toggleMarkSideAction->setEnabled(selectedMarks);
+    toggleMarkArrowAction->setEnabled(selectedMarks);
+    toggleMarkLabelAction->setEnabled(selectedMarks);
+    setMarkColorAction->setEnabled(selectedMarks);
     editMarkLabelAction->setEnabled(selectedMarks);
     deleteTrackAction->setEnabled(selectedBoats);
     deleteAction->setEnabled(selectedItems);
@@ -406,6 +408,8 @@ void MainWindow::updateActions() {
     bool allSpinSet = 1;
     bool allTextSet = 1;
     bool allLaylinesSet = 1;
+    bool allMarkArrowSet = 1;
+    bool allMarkLabelSet = 1;
     int flagSize = ENUM_SIZE(Boats,Flag);
     bool allFlagSet[flagSize];
     for(int i=0; i < flagSize; i++) {
@@ -451,6 +455,13 @@ void MainWindow::updateActions() {
     }
     toggleLaylinesAction->setChecked(selectedItems && allLaylinesSet);
     toggleLaylinesAction->setEnabled(selectedItems);
+
+    foreach(MarkModel *mark, scene->selectedMarkModels()) {
+        allMarkArrowSet = allMarkArrowSet && mark->arrowVisible();
+        allMarkLabelSet = allMarkLabelSet && mark->labelVisible();
+    }
+    toggleMarkArrowAction->setChecked(allMarkArrowSet);
+    toggleMarkLabelAction->setChecked(allMarkLabelSet);
 }
 
 void MainWindow::changeState(SceneState newState) {
