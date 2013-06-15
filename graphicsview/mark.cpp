@@ -182,7 +182,9 @@ void MarkGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 void MarkGraphicsItem::setHeading(qreal heading) {
     if (m_heading != heading) {
         m_heading = heading;
-        update();
+        QTransform rotation;
+        rotation.rotate(m_heading),
+        setTransform(rotation, false);
     }
 }
 
@@ -240,7 +242,9 @@ void MarkGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     QPointF point(0, 0);
     painter->drawEllipse(point,10,10);
     if (m_labelVisible) {
+        painter->rotate(-m_heading);
         painter->drawText(QRectF(-35,-35,70,70),Qt::AlignCenter,m_labelText);
+        painter->rotate(m_heading);
     }
     if (m_zone) {
         painter->setBrush(Qt::NoBrush);
@@ -274,8 +278,7 @@ void MarkGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         painter->setPen(arrowpen);
         painter->setBrush(Qt::NoBrush);
 
-        painter->rotate(m_heading+45.0); // add 45 degrees so that arrow is centred on heading
-
+        painter->rotate(45.0);
         if (m_leaveToPort) {
             painter->drawPath(port_path);
         }
