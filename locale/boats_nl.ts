@@ -499,47 +499,47 @@ Wilt u het vervangen?</translation>
     </message>
     <message>
         <source>Set Mark &amp;Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Set Merkteken &amp;Kleur</translation>
     </message>
     <message>
         <source>Alt+C</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+C</translation>
     </message>
     <message>
         <source>Toggle &amp;Mark Side</source>
-        <translation type="unfinished"></translation>
+        <translation>Toggle &amp;Merkteken Kant</translation>
     </message>
     <message>
         <source>Alt+M</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+M</translation>
     </message>
     <message>
         <source>Toggle Mark Arro&amp;w</source>
-        <translation type="unfinished"></translation>
+        <translation>Toggle Merkteken Pij&amp;l</translation>
     </message>
     <message>
         <source>Alt+W</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+L</translation>
     </message>
     <message>
         <source>Toggle Mark &amp;Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Toggle Merkteken &amp;Label</translation>
     </message>
     <message>
         <source>&amp;Edit Mark Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Bewerk Merkteken Label</translation>
     </message>
     <message>
         <source>Alt+E</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+B</translation>
     </message>
     <message>
         <source>Edit mark label</source>
-        <translation type="unfinished"></translation>
+        <translation>Bewerk merkteken label</translation>
     </message>
     <message>
         <source>Label text:</source>
-        <translation type="unfinished"></translation>
+        <translation>Label tekst:</translation>
     </message>
 </context>
 <context>
@@ -550,55 +550,55 @@ Wilt u het vervangen?</translation>
     </message>
     <message>
         <source>Laser</source>
-        <translation type="unfinished"></translation>
+        <translation>Laser</translation>
     </message>
     <message>
         <source>Optimist</source>
-        <translation type="unfinished"></translation>
+        <translation>Optimist</translation>
     </message>
     <message>
         <source>Tornado</source>
-        <translation type="unfinished"></translation>
+        <translation>Tornado</translation>
     </message>
     <message>
         <source>Committee boat</source>
-        <translation type="unfinished"></translation>
+        <translation>Comit\cf1\f1\&apos;e9boot\cf0\f0 </translation>
     </message>
     <message>
         <source>RIB</source>
-        <translation type="unfinished"></translation>
+        <translation>Rubberboot</translation>
     </message>
     <message>
         <source>Spin Keelboat</source>
-        <translation type="unfinished"></translation>
+        <translation>Spin Kielboot</translation>
     </message>
     <message>
         <source>Gennaker Keelboat</source>
-        <translation type="unfinished"></translation>
+        <translation>Gennaker Kielboot</translation>
     </message>
     <message>
         <source>Topper</source>
-        <translation type="unfinished"></translation>
+        <translation>Topper</translation>
     </message>
     <message>
         <source>Firefly</source>
-        <translation type="unfinished"></translation>
+        <translation>Firefly</translation>
     </message>
     <message>
         <source>29er</source>
-        <translation type="unfinished"></translation>
+        <translation>29er</translation>
     </message>
     <message>
         <source>49er</source>
-        <translation type="unfinished"></translation>
+        <translation>49er</translation>
     </message>
     <message>
         <source>420</source>
-        <translation type="unfinished"></translation>
+        <translation>420</translation>
     </message>
     <message>
         <source>470</source>
-        <translation type="unfinished"></translation>
+        <translation>470</translation>
     </message>
 </context>
 <context>
@@ -679,7 +679,7 @@ Wilt u het vervangen?</translation>
     </message>
     <message>
         <source>Follow</source>
-        <translation type="unfinished"></translation>
+        <translation>Volg</translation>
     </message>
 </context>
 <context>
