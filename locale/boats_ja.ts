@@ -494,47 +494,47 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Set Mark &amp;Color</source>
-        <translation type="unfinished"></translation>
+        <translation>マーク：色(&amp;C)</translation>
     </message>
     <message>
         <source>Alt+C</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle &amp;Mark Side</source>
-        <translation type="unfinished"></translation>
+        <translation>マーク：ポート/スターボ側(&amp;M)</translation>
     </message>
     <message>
         <source>Alt+M</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle Mark Arro&amp;w</source>
-        <translation type="unfinished"></translation>
+        <translation>次のマーク(&amp;W)</translation>
     </message>
     <message>
         <source>Alt+W</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle Mark &amp;Label</source>
-        <translation type="unfinished"></translation>
+        <translation>マーク名表示/非表示(&amp;L)</translation>
     </message>
     <message>
         <source>&amp;Edit Mark Label</source>
-        <translation type="unfinished"></translation>
+        <translation>マーク名編集(&amp;E)</translation>
     </message>
     <message>
         <source>Alt+E</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Edit mark label</source>
-        <translation type="unfinished"></translation>
+        <translation>マーク名編集</translation>
     </message>
     <message>
         <source>Label text:</source>
-        <translation type="unfinished"></translation>
+        <translation>マーク名：</translation>
     </message>
 </context>
 <context>
@@ -545,55 +545,55 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Laser</source>
-        <translation type="unfinished"></translation>
+        <translation>レーザー</translation>
     </message>
     <message>
         <source>Optimist</source>
-        <translation type="unfinished"></translation>
+        <translation>OP</translation>
     </message>
     <message>
         <source>Tornado</source>
-        <translation type="unfinished"></translation>
+        <translation>トーネード</translation>
     </message>
     <message>
         <source>Committee boat</source>
-        <translation type="unfinished"></translation>
+        <translation>運営艇</translation>
     </message>
     <message>
         <source>RIB</source>
-        <translation type="unfinished"></translation>
+        <translation>ゴムボート</translation>
     </message>
     <message>
         <source>Spin Keelboat</source>
-        <translation type="unfinished"></translation>
+        <translation>キールボート（スピン）</translation>
     </message>
     <message>
         <source>Gennaker Keelboat</source>
-        <translation type="unfinished"></translation>
+        <translation>キールボート（ジェネカー）</translation>
     </message>
     <message>
         <source>Topper</source>
-        <translation type="unfinished"></translation>
+        <translation>トッパー</translation>
     </message>
     <message>
         <source>Firefly</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイヤーフライ</translation>
     </message>
     <message>
         <source>29er</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>49er</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>420</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>470</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -674,7 +674,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Follow</source>
-        <translation type="unfinished"></translation>
+        <translation>追跡視点</translation>
     </message>
 </context>
 <context>
