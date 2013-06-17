@@ -217,7 +217,9 @@ void BoatGraphicsItem::setHidden(bool value) {
     m_hidden = value;
     if (m_hidden) {
         m_sail->setVisible(false);
+        m_jib->setVisible(false);
         m_spin->setVisible(false);
+        m_genn->setVisible(false);
         m_overlapLine->setVisible(false);
         m_flagRect->setVisible(false);
         m_bubble->setVisible(false);
@@ -225,7 +227,9 @@ void BoatGraphicsItem::setHidden(bool value) {
         m_laylines->setVisible(false);
     } else {
         m_sail->setVisible(true);
+        m_jib->setVisible(true);
         m_spin->setVisible(boat()->spin());
+        m_genn->setVisible(boat()->spin());
         m_overlapLine->setVisible(m_overlap != Boats::none);
         m_flagRect->setVisible(m_flag != Boats::noFlag);
         m_bubble->setVisible(!boat()->text().isEmpty());
