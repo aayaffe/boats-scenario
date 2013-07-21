@@ -498,47 +498,47 @@ Möchten Sie die Datei ersetzen?</translation>
     </message>
     <message>
         <source>Set Mark &amp;Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Bahnmarkenfarbe setzen</translation>
     </message>
     <message>
         <source>Alt+C</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle &amp;Mark Side</source>
-        <translation type="unfinished"></translation>
+        <translation>Bahnmarkenseite anzeigen</translation>
     </message>
     <message>
         <source>Alt+M</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle Mark Arro&amp;w</source>
-        <translation type="unfinished"></translation>
+        <translation>Bahnmarkenpfeil anzeigen</translation>
     </message>
     <message>
         <source>Alt+W</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle Mark &amp;Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Bahnmarkenschriftung anzeigen</translation>
     </message>
     <message>
         <source>&amp;Edit Mark Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Bahnmarkenschriftung bearbeiten</translation>
     </message>
     <message>
         <source>Alt+E</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Edit mark label</source>
-        <translation type="unfinished"></translation>
+        <translation>Bahnmarkenschriftung bearbeiten</translation>
     </message>
     <message>
         <source>Label text:</source>
-        <translation type="unfinished"></translation>
+        <translation>Beschriftungstext</translation>
     </message>
 </context>
 <context>
@@ -549,55 +549,55 @@ Möchten Sie die Datei ersetzen?</translation>
     </message>
     <message>
         <source>Laser</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Optimist</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Tornado</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Committee boat</source>
-        <translation type="unfinished"></translation>
+        <translation>WFL Boot</translation>
     </message>
     <message>
         <source>RIB</source>
-        <translation type="unfinished"></translation>
+        <translation>Schlauchboot</translation>
     </message>
     <message>
         <source>Spin Keelboat</source>
-        <translation type="unfinished"></translation>
+        <translation>Drehung Kielboot</translation>
     </message>
     <message>
         <source>Gennaker Keelboat</source>
-        <translation type="unfinished"></translation>
+        <translation>Gennacker Kielboot</translation>
     </message>
     <message>
         <source>Topper</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Firefly</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>29er</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>49er</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>420</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>470</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -678,7 +678,7 @@ Möchten Sie die Datei ersetzen?</translation>
     </message>
     <message>
         <source>Follow</source>
-        <translation type="unfinished"></translation>
+        <translation>Folge</translation>
     </message>
 </context>
 <context>
