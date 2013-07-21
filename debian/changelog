@@ -3,6 +3,7 @@ boats (201307-1) unstable; urgency=low
   * New upstream release.
   * Updating debhelper and using dh.
   * Fixing Description.
+  * Adding Vcs-Git. Closes: #638466.
 
  -- Thibaut Gridel <tgridel@free.fr>  Sun, 21 Jul 2013 17:05:24 +0200
 
