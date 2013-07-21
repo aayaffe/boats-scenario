@@ -566,11 +566,11 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Spin Keelboat</source>
-        <translation type="unfinished"></translation>
+        <translation>Barca con Spi simétrico</translation>
     </message>
     <message>
         <source>Gennaker Keelboat</source>
-        <translation type="unfinished"></translation>
+        <translation>Barca con Spi assimétrico</translation>
     </message>
     <message>
         <source>Topper</source>
