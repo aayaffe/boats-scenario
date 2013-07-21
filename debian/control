@@ -10,7 +10,7 @@ Homepage: http://boats.sf.net
 Package: boats
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: a race scenario drawing tool 
+Description: race scenario drawing tool 
  Boat Scenario is a drawing tool. It is your ideal companion for training
  sessions, rule learning, strategy explanations and more. It lets you make
  a presentation of a situation, describing the facts as you represent the
