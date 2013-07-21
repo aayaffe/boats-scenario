@@ -144,6 +144,10 @@ void SituationWidget::changeEvent(QEvent *event) {
     if(event->type() == QEvent::LanguageChange) {
         optionsGroup->setTitle(tr("Options"));
         seriesLabel->setText(tr("Series"));
+        QStringList seriesList = Boats::seriesList();
+        for (int i=0; i<seriesList.size(); ++i) {
+            seriesCombo->setItemText(i, seriesList[i]);
+        }
         laylineCheckLabel->setText(tr("Show Grid"));
         laylineSpinLabel->setText(tr("Layline Angle"));
         lengthSpinLabel->setText(tr("Zone Length"));

@@ -33,21 +33,21 @@ QList<QString> Boats::seriesList() {
         for (int i=0; i< ENUM_SIZE(Boats, Series)-1; i++) {
             m_seriesList << ENUM_NAME(Boats, Series, i);
         }
-// By doing it this way guarantee that labels align correctly with enum tags irrespective of order
-        m_seriesList[keelboat] = QObject::tr("Spin Keelboat");
-        m_seriesList[keelboatwithgenn] = QObject::tr("Gennaker Keelboat");
-        m_seriesList[int49er] = QObject::tr("49er");
-        m_seriesList[int470] = QObject::tr("470");
-        m_seriesList[int420] = QObject::tr("420");
-        m_seriesList[int29er] = QObject::tr("29er");
-        m_seriesList[laser] = QObject::tr("Laser");
-        m_seriesList[firefly] = QObject::tr("Firefly");
-        m_seriesList[topper] = QObject::tr("Topper");
-        m_seriesList[optimist] = QObject::tr("Optimist");
-        m_seriesList[tornado] = QObject::tr("Tornado");
-        m_seriesList[startboat] = QObject::tr("Committee boat");
-        m_seriesList[rib] = QObject::tr("RIB");
     }
+// By doing it this way guarantee that labels align correctly with enum tags irrespective of order
+    m_seriesList[keelboat] = QObject::tr("Spin Keelboat");
+    m_seriesList[keelboatwithgenn] = QObject::tr("Gennaker Keelboat");
+    m_seriesList[int49er] = QObject::tr("49er");
+    m_seriesList[int470] = QObject::tr("470");
+    m_seriesList[int420] = QObject::tr("420");
+    m_seriesList[int29er] = QObject::tr("29er");
+    m_seriesList[laser] = QObject::tr("Laser");
+    m_seriesList[firefly] = QObject::tr("Firefly");
+    m_seriesList[topper] = QObject::tr("Topper");
+    m_seriesList[optimist] = QObject::tr("Optimist");
+    m_seriesList[tornado] = QObject::tr("Tornado");
+    m_seriesList[startboat] = QObject::tr("Committee boat");
+    m_seriesList[rib] = QObject::tr("RIB");
     return m_seriesList;
 }
 
