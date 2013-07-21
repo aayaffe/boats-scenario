@@ -34,6 +34,7 @@
 #include "situationmodel.h"
 #include "trackmodel.h"
 #include "boatmodel.h"
+#include "markmodel.h"
 #include "polylinemodel.h"
 #include "pointmodel.h"
 
@@ -46,12 +47,13 @@
 #include "situationwidget.h"
 #include "situationscene.h"
 #include "situationview.h"
+#include "colorpickerwidget.h"
 
 #ifdef GIF_EXPORT
 #include "gifwriter.h"
 #endif
 
-#define VERSION "201204"
+#define VERSION "201307"
 
 extern int debugLevel;
 
@@ -257,16 +259,40 @@ void MainWindow::createActions() {
     connect(toggleSpinAction, SIGNAL(triggered()),
             this, SLOT(toggleSpin()));
 
+    toggleMarkSideAction = new QAction(this);
+    connect(toggleMarkSideAction, SIGNAL(triggered()),
+            this, SLOT(toggleMarkSide()));
+
+    toggleMarkArrowAction = new QAction(this);
+    toggleMarkArrowAction->setCheckable(true);
+    connect(toggleMarkArrowAction, SIGNAL(triggered()),
+            this, SLOT(toggleMarkArrow()));
+
     toggleMarkZoneAction = new QAction(this);
     toggleMarkZoneAction->setIcon(QIcon(":/images/zone.png"));
+    toggleMarkZoneAction->setCheckable(true);
     connect(toggleMarkZoneAction, SIGNAL(triggered()),
             this, SLOT(toggleMarkZone()));
+
+    setMarkColorAction = new QAction(this);
+    setMarkColorAction->setIcon(QIcon());
+    connect(setMarkColorAction, SIGNAL(triggered()),
+            this, SLOT(setMarkColor()));
 
     toggleLaylinesAction = new QAction(this);
     toggleLaylinesAction->setIcon(QIcon(":/images/laylines.png"));
     toggleLaylinesAction->setCheckable(true);
     connect(toggleLaylinesAction, SIGNAL(triggered()),
             this, SLOT(toggleLaylines()));
+
+    toggleMarkLabelAction = new QAction(this);
+    toggleMarkLabelAction->setCheckable(true);
+    connect(toggleMarkLabelAction, SIGNAL(triggered()),
+            this, SLOT(toggleMarkLabel()));
+
+    editMarkLabelAction = new QAction(this);
+    connect(editMarkLabelAction, SIGNAL(triggered()),
+            this, SLOT(editMarkLabel()));
 
     deleteTrackAction = new QAction(this);
     connect(deleteTrackAction, SIGNAL(triggered()),
@@ -354,6 +380,7 @@ void MainWindow::updateActions() {
     bool selectedItems = !scene->selectedItems().isEmpty();
     bool selectedBoats = !scene->selectedBoatModels().isEmpty();
     bool selectedPoints = !scene->selectedPointModels().isEmpty();
+    bool selectedMarks = !scene->selectedMarkModels().isEmpty();
 
     addBoatAction->setEnabled(selectedBoats || scene->state() == CREATE_BOAT);
     addPointAction->setEnabled(selectedPoints || scene->state() == CREATE_POINT);
@@ -366,16 +393,23 @@ void MainWindow::updateActions() {
     toggleTextAction->setEnabled(selectedItems);
     flagMenu->setEnabled(selectedBoats);
     accelerationMenu->setEnabled(selectedBoats);
+    toggleMarkSideAction->setEnabled(selectedMarks);
+    toggleMarkArrowAction->setEnabled(selectedMarks);
+    toggleMarkLabelAction->setEnabled(selectedMarks);
+    setMarkColorAction->setEnabled(selectedMarks);
+    editMarkLabelAction->setEnabled(selectedMarks);
     deleteTrackAction->setEnabled(selectedBoats);
     deleteAction->setEnabled(selectedItems);
 
     bool allPortSet = 1;
     bool allStarboardSet = 1;
     bool allHiddenSet = 1;
-    bool allKeelboat = 1;
+    bool allSpinBoat = 1;
     bool allSpinSet = 1;
     bool allTextSet = 1;
     bool allLaylinesSet = 1;
+    bool allMarkArrowSet = 1;
+    bool allMarkLabelSet = 1;
     int flagSize = ENUM_SIZE(Boats,Flag);
     bool allFlagSet[flagSize];
     for(int i=0; i < flagSize; i++) {
@@ -390,8 +424,8 @@ void MainWindow::updateActions() {
         allPortSet = allPortSet && (boat->overlap() & Boats::port);
         allStarboardSet = allStarboardSet && (boat->overlap() & Boats::starboard);
         allHiddenSet = allHiddenSet && boat->hidden();
-        allKeelboat = allKeelboat && (boat->track()->series() == Boats::keelboat);
-        allSpinSet = allSpinSet && (boat->spin());
+        allSpinBoat = allSpinBoat && (boat->hasSpin());
+        allSpinSet = allSpinSet && (boat->hasSpin()) && (boat->spin());
         for (int i = 0; i < flagSize; i++) {
             allFlagSet[i] = allFlagSet[i] && (boat->flag() == i);
         }
@@ -403,7 +437,7 @@ void MainWindow::updateActions() {
     toggleStarboardOverlapAction->setChecked(selectedBoats && allStarboardSet);
     toggleHiddenAction->setChecked(selectedBoats && allHiddenSet);
     toggleSpinAction->setChecked(selectedBoats && allSpinSet);
-    toggleSpinAction->setEnabled(selectedBoats && allKeelboat);
+    toggleSpinAction->setEnabled(selectedBoats && allSpinBoat);
 
     foreach(PositionModel *position, scene->selectedModels()) {
         allTextSet = allTextSet && (!position->text().isEmpty());
@@ -421,6 +455,13 @@ void MainWindow::updateActions() {
     }
     toggleLaylinesAction->setChecked(selectedItems && allLaylinesSet);
     toggleLaylinesAction->setEnabled(selectedItems);
+
+    foreach(MarkModel *mark, scene->selectedMarkModels()) {
+        allMarkArrowSet = allMarkArrowSet && mark->arrowVisible();
+        allMarkLabelSet = allMarkLabelSet && mark->labelVisible();
+    }
+    toggleMarkArrowAction->setChecked(allMarkArrowSet);
+    toggleMarkLabelAction->setChecked(allMarkLabelSet);
 }
 
 void MainWindow::changeState(SceneState newState) {
@@ -589,8 +630,14 @@ void MainWindow::createMenus() {
     }
     trackMenu->addMenu(accelerationMenu);
     trackMenu->addAction(toggleSpinAction);
+    trackMenu->addSeparator();
+    trackMenu->addAction(toggleMarkSideAction);
+    trackMenu->addAction(toggleMarkArrowAction);
     trackMenu->addAction(toggleMarkZoneAction);
+    trackMenu->addAction(setMarkColorAction);
     trackMenu->addAction(toggleLaylinesAction);
+    trackMenu->addAction(toggleMarkLabelAction);
+    trackMenu->addAction(editMarkLabelAction);
     trackMenu->addSeparator();
     trackMenu->addAction(deleteTrackAction);
     trackMenu->addAction(deleteAction);
@@ -620,8 +667,13 @@ void MainWindow::createMenus() {
 
     markPopup = new QMenu(this);
     markPopup->addAction(toggleTextAction);
+    markPopup->addAction(toggleMarkSideAction);
+    markPopup->addAction(toggleMarkArrowAction);
     markPopup->addAction(toggleMarkZoneAction);
     markPopup->addAction(toggleLaylinesAction);
+    markPopup->addAction(setMarkColorAction);
+    markPopup->addAction(toggleMarkLabelAction);
+    markPopup->addAction(editMarkLabelAction);
     markPopup->addSeparator();
     markPopup->addAction(deleteAction);
 
@@ -708,7 +760,22 @@ void MainWindow::createMenus() {
     toolbar->addAction(zoomOutAction);
     toolbar->addAction(zoomFitAction);
     toolbar->addAction(zoomInAction);
+    toolbar->addSeparator();
 
+    lookDirectionSlider = new QSlider(Qt::Horizontal);
+    lookDirectionSlider->setMaximum(360);
+    lookDirectionSlider->setSingleStep(15);
+    lookDirectionSlider->setTickInterval(15);
+    lookDirectionSlider->setTickPosition(QSlider::TicksBelow);
+    toolbar->addWidget(lookDirectionSlider);
+
+    tiltSlider = new QSlider(Qt::Horizontal);
+    tiltSlider->setMinimum(0);
+    tiltSlider->setMaximum(90);
+    tiltSlider->setSingleStep(15);
+    tiltSlider->setTickInterval(15);
+    tiltSlider->setTickPosition(QSlider::TicksBelow);
+    toolbar->addWidget(tiltSlider);
 
     animationSlider = new QSlider(Qt::Horizontal, this);
     animationSlider->setTickInterval(2000);
@@ -762,7 +829,6 @@ void MainWindow::unsetTab() {
         return;
     }
 
-    std::cout << "unsetTab" << std::endl;
     SituationModel *situation = situationList.at(currentSituation);
     SituationScene *scene = sceneList.at(currentSituation);
     if (scene->state() == ANIMATE) {
@@ -778,12 +844,15 @@ void MainWindow::unsetTab() {
     disconnect(zoomInAction, 0, 0, 0);
     disconnect(zoomOutAction, 0, 0, 0);
     disconnect(zoomFitAction, 0, 0, 0);
+    disconnect(lookDirectionSlider, 0, 0, 0);
+    disconnect(lookDirectionSlider);
+    disconnect(tiltSlider, 0, 0, 0);
+    disconnect(tiltSlider);
 
     situationWidget->unSetSituation();
 }
 
 void MainWindow::setTab(int index) {
-    std::cout << "setTab " << index << std::endl;
     unsetTab();
     currentSituation = index;
     SituationModel *situation = situationList.at(index);
@@ -812,6 +881,17 @@ void MainWindow::setTab(int index) {
             view, SLOT(zoomOut()));
     connect(zoomFitAction, SIGNAL(triggered()),
             view, SLOT(zoomFit()));
+
+    connect(view, SIGNAL(lookDirectionChanged(int)),
+            lookDirectionSlider, SLOT(setValue(int)));
+    connect(view, SIGNAL(tiltChanged(int)),
+            tiltSlider, SLOT(setValue(int)));
+    lookDirectionSlider->setValue(situation->lookDirection());
+    tiltSlider->setValue(situation->tilt());
+    connect(lookDirectionSlider, SIGNAL(valueChanged(int)),
+            this, SLOT(setLookAt()));
+    connect(tiltSlider, SIGNAL(valueChanged(int)),
+            this, SLOT(setLookAt()));
 
     situationWidget->setSituation(situation);
     connect(scene, SIGNAL(stateChanged(SceneState)),
@@ -1032,11 +1112,26 @@ void MainWindow::changeEvent(QEvent *event) {
         toggleSpinAction->setText(tr("Toggle &Spinnaker"));
         toggleSpinAction->setShortcut(tr("Alt+S"));
 
+        toggleMarkSideAction->setText(tr("Toggle &Mark Side"));
+        toggleMarkSideAction->setShortcut(tr("Alt+M"));
+
+        toggleMarkArrowAction->setText(tr("Toggle Mark Arro&w"));
+        toggleMarkArrowAction->setShortcut(tr("Alt+W"));
+
         toggleMarkZoneAction->setText(tr("Toggle Mark &Zone"));
         toggleMarkZoneAction->setShortcut(tr("Alt+Z"));
 
+        setMarkColorAction->setText(tr("Set Mark &Color"));
+        setMarkColorAction->setShortcut(tr("Alt+C"));
+
         toggleLaylinesAction->setText(tr("Toggle &Laylines"));
         toggleLaylinesAction->setShortcut(tr("Alt+L"));
+
+        toggleMarkLabelAction->setText(tr("Toggle Mark &Label"));
+        toggleMarkLabelAction->setShortcut(tr("Alt+L"));
+
+        editMarkLabelAction->setText(tr("&Edit Mark Label"));
+        editMarkLabelAction->setShortcut(tr("Alt+E"));
 
         deleteTrackAction->setText(tr("Delete Track"));
         deleteTrackAction->setShortcut(tr("Ctrl+Del"));
@@ -1268,6 +1363,7 @@ bool MainWindow::saveAs() {
 
 void MainWindow::print() {
     SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
     SituationView *view = viewList.at(currentSituation);
     QPrinter printer(QPrinter::HighResolution);
 
@@ -1277,6 +1373,7 @@ void MainWindow::print() {
         return;
     }
 
+    scene->clearSelection();
     SituationPrint printSituation(situation, view);
     printSituation.render(printer.paperRect(QPrinter::Millimeter).adjusted(20, 20, -20, -20));
     printSituation.print(&printer);
@@ -1284,7 +1381,10 @@ void MainWindow::print() {
 
 void MainWindow::printPreview() {
     SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
     SituationView *view = viewList.at(currentSituation);
+
+    scene->clearSelection();
     SituationPrint printSituation(situation, view);
     QPrinter printer(QPrinter::HighResolution);
     QPrintPreviewDialog dialog(&printer);
@@ -1297,6 +1397,7 @@ void MainWindow::printPreview() {
 
 void MainWindow::exportPdf() {
     SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
     SituationView *view = viewList.at(currentSituation);
 
     QString defaultName(situation->fileName());
@@ -1311,6 +1412,7 @@ void MainWindow::exportPdf() {
     QPrinter printer(QPrinter::HighResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(fileName);
+    scene->clearSelection();
     SituationPrint printSituation(situation, view);
     printSituation.render(printer.paperRect(QPrinter::Millimeter).adjusted(20, 20, -20, -20));
     printSituation.print(&printer);
@@ -1318,6 +1420,7 @@ void MainWindow::exportPdf() {
 
 void MainWindow::exportImage() {
     SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
     SituationView *view = viewList.at(currentSituation);
 
     QString defaultName(situation->fileName());
@@ -1349,6 +1452,7 @@ void MainWindow::exportImage() {
 #endif
     }
 
+    scene->clearSelection();
     QPixmap pixmap = view->screenShot();
     QFile file(fileName);
     if (!file.open(QFile::WriteOnly | QFile::Text)) {
@@ -1536,6 +1640,7 @@ void MainWindow::trimSail() {
     if (! boatList.isEmpty()) {
         qreal trim = boatList[0]->trim();
         qreal heading = fmod(boatList[0]->heading() - boatList[0]->wind() + 360, 360);
+        if(heading < 0) heading +=360;
         if (heading < 180) {
             trim -= 5;
         } else {
@@ -1563,6 +1668,7 @@ void MainWindow::untrimSail() {
     if (! boatList.isEmpty()) {
         qreal trim = boatList[0]->trim();
         qreal heading = fmod(boatList[0]->heading() - boatList[0]->wind() + 360, 360);
+        if(heading < 0) heading +=360;
         if (heading < 180) {
             trim += 5;
         } else {
@@ -1656,6 +1762,30 @@ void MainWindow::toggleSpin() {
     }
 }
 
+void MainWindow::toggleMarkSide() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QList<MarkModel *> markList = scene->selectedMarkModels();
+    if (! markList.isEmpty()) {
+        situation->undoStack()->push(new ToggleMarkSideUndoCommand(markList));
+    } else {
+        situation->undoStack()->push(new ToggleMarkSideUndoCommand(situation->marks()));
+    }
+}
+
+void MainWindow::toggleMarkArrow() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QList<MarkModel *> markList = scene->selectedMarkModels();
+    if (! markList.isEmpty()) {
+        situation->undoStack()->push(new ToggleMarkArrowUndoCommand(markList));
+    } else {
+        situation->undoStack()->push(new ToggleMarkArrowUndoCommand(situation->marks()));
+    }
+}
+
 void MainWindow::toggleMarkZone() {
     SituationModel *situation = situationList.at(currentSituation);
     SituationScene *scene = sceneList.at(currentSituation);
@@ -1668,6 +1798,45 @@ void MainWindow::toggleMarkZone() {
     }
 }
 
+void MainWindow::setMarkColor() {
+    SituationModel *situation = situationList.at(currentSituation);
+    SituationScene *scene = sceneList.at(currentSituation);
+
+    QList<MarkModel *> markList = scene->selectedMarkModels();
+    if (! markList.isEmpty()) {
+        ColorPickerWidget colorEditor;
+        colorEditor.setColor( markList.first()->color());
+        situation->undoStack()->push(new ColorMarkUndoCommand(situation, markList, colorEditor.color()));
+    }
+}
+
+void MainWindow::toggleMarkLabel() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+
+    QList<MarkModel *> markList = scene->selectedMarkModels();
+    if (! markList.isEmpty()) {
+        situation->undoStack()->push(new ToggleMarkLabelUndoCommand(markList));
+    } else {
+        situation->undoStack()->push(new ToggleMarkLabelUndoCommand(situation->marks()));
+    }
+}
+
+void MainWindow::editMarkLabel() {
+    SituationModel *situation = situationList.at(tabWidget->currentIndex());
+    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
+    QList<MarkModel *> markList = scene->selectedMarkModels();
+
+    if (! markList.isEmpty()) {
+        QString oldText = markList.first()->labelText();
+        bool ok;
+        QString newText = QInputDialog::getText(this, tr("Edit mark label"), tr("Label text:"), QLineEdit::Normal, oldText, &ok);
+        if (ok) {
+            situation->undoStack()->push(new SetMarkLabelUndoCommand(markList.first(), newText));
+        }
+    }
+}
+
 void MainWindow::toggleLaylines() {
     SituationModel *situation = situationList.at(currentSituation);
     SituationScene *scene = sceneList.at(currentSituation);
@@ -1676,6 +1845,11 @@ void MainWindow::toggleLaylines() {
     if (! modelList.isEmpty()) {
         situation->undoStack()->push(new SetLaylinesUndoCommand(modelList, !modelList.first()->laylines()));
     }
+}
+
+void MainWindow::setLookAt() {
+    SituationModel *situation = situationList.at(currentSituation);
+    situation->undoStack()->push(new SetLookAtUndoCommand(situation, lookDirectionSlider->value(), tiltSlider->value()));
 }
 
 void MainWindow::toggleLang() {
@@ -1696,6 +1870,7 @@ void MainWindow::animate(bool state, bool interactive) {
     if (state) {
         if (scene->state() != ANIMATE) {
             scene->setState(ANIMATE);
+            scene->clearSelection();
             scene->setAnimation();
 
             connect(scene->animation(), SIGNAL(stateChanged(QAbstractAnimation::State, QAbstractAnimation::State)),

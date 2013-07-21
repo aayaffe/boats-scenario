@@ -1,12 +1,12 @@
 //
-// C++ Implementation: SailGraphicsItem
+// C++ Implementation: GennakerGraphicsItem
 //
 // Description:
 //
 //
-// Author: Thibaut GRIDEL <tgridel@free.fr>
+// Author: Graham Louth <boatscenario@louths.org.uk>
 //
-// Copyright (c) 2008-2011 Thibaut GRIDEL
+// Copyright (c) 2013 Graham Louth
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,12 +22,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
+
 #include <iostream>
 
 #include <QPainter>
 #include <QGraphicsScene>
 
-#include "sail.h"
+#include "gennaker.h"
 
 #include "commontypes.h"
 #include "situationmodel.h"
@@ -36,25 +37,14 @@
 
 extern int debugLevel;
 
-SailGraphicsItem::SailGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
-        : QGraphicsPathItem(parent),
-        m_boat(boat),
-        m_sailAngle(0) {
-    setZValue(0);
-    setBrush(QBrush(Qt::white));
+GennakerGraphicsItem::GennakerGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
+        : SailGraphicsItem(boat, parent),
+        m_pole(new QGraphicsLineItem(parent)) { //NB boat as parent to avoid need to offset sail rotatation for pole
 }
 
+GennakerGraphicsItem::~GennakerGraphicsItem() {}
 
-SailGraphicsItem::~SailGraphicsItem() {}
-
-void SailGraphicsItem::setPosition(QPointF position) {
-    if (pos() != position) {
-        setPos(position);
-        update();
-    }
-}
-
-void SailGraphicsItem::setSailSize(qreal sailSize) {
+void GennakerGraphicsItem::setSailSize(qreal sailSize) {
     m_sailSize = sailSize;
         QPainterPath sailPathStalled;
         sailPathStalled.cubicTo(.1 * sailSize, .2 * sailSize, .1 * sailSize, .2 * sailSize, 0, .3 * sailSize);
@@ -64,34 +54,56 @@ void SailGraphicsItem::setSailSize(qreal sailSize) {
         sailPathStalled.lineTo(0, 0);
         m_sailPathStalled = sailPathStalled;
 
-
         QPainterPath sailPathStarboard;
-        sailPathStarboard.cubicTo(.1 * sailSize, .4 * sailSize, .1 * sailSize, .6 * sailSize, 0, sailSize);
-        sailPathStarboard.lineTo(0, 0);
+        sailPathStarboard.cubicTo(.35 * sailSize, .3 * sailSize, .28 * sailSize, .6 * sailSize, 0, sailSize);
+        sailPathStarboard.cubicTo(.2 * sailSize, .6 * sailSize, .25 * sailSize, .3 * sailSize, 0, 0);
         m_sailPathStarboard = sailPathStarboard;
 
         QPainterPath sailPathPort;
-        sailPathPort.cubicTo(-.1 * sailSize, .4 * sailSize, -.1 * sailSize, .6 * sailSize, 0, sailSize);
-        sailPathPort.lineTo(0, 0);
+        sailPathPort.cubicTo(-.35 * sailSize, .3 * sailSize, -.28 * sailSize, .6 * sailSize, 0, sailSize);
+        sailPathPort.cubicTo(-.2 * sailSize, .6 * sailSize, -.25 * sailSize, .3 * sailSize, 0, 0);
         m_sailPathPort = sailPathPort;
 
-        setSailAngle(m_sailAngle); // Need to call setSailAngle() to update path, but don't want this to be sail specific. But not looking to change sail angle per se, so no need to use anything other than m_sailAngle.
+        setSailAngle(m_sailAngle);
+}
+
+void GennakerGraphicsItem::setPoleLength(qreal length) {
+    m_pole->setLine(0,0,0,length);
+    QPen polePen;
+    polePen.setWidthF(0.5);
+    polePen.setCapStyle(Qt::FlatCap);
+    m_pole->setPen(polePen);
+}
+
+void GennakerGraphicsItem::setPosition(QPointF position) {
+    if (pos() != position) {
+        setPos(position);
+        m_pole->setPos(position);
+        update();
+    }
+}
+
+void GennakerGraphicsItem::setVisible(bool visibility) {
+    if (isVisible() != visibility) {
+        SailGraphicsItem::setVisible(visibility);
+        m_pole->setVisible(visibility);
+        update();
+    }
 }
 
 /// calculate a sail incidence angle, corrected with user trimming
-void SailGraphicsItem::setSailAngle(qreal value) {
+void GennakerGraphicsItem::setSailAngle(qreal value) {
     m_sailAngle = value;
     qreal angle = fmod(m_boat->heading() - m_boat->wind() - m_sailAngle +360, 360);
     if(angle < 0) angle +=360;
 
-    if ((angle < 10 || angle > 350 || (angle > 170 && angle < 190)) && path() != m_sailPathStalled) {
+    if ((angle < 55 || angle > 305 || (angle > 170 && angle < 190)) && path() != m_sailPathStalled) {
         setPath(m_sailPathStalled);
-    } else if (angle >= 10 && angle <= 170 && path() != m_sailPathStarboard) {
+    } else if (angle >= 55 && angle <= 170 && path() != m_sailPathStarboard) {
         setPath(m_sailPathStarboard);
-    } else if (angle >= 190 && angle <= 350 && path() != m_sailPathPort) {
+    } else if (angle >= 190 && angle <= 305 && path() != m_sailPathPort) {
         setPath(m_sailPathPort);
     }
-
     QTransform transform;
     transform.rotate(- m_sailAngle);
     setTransform(transform, false);

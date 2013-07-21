@@ -43,11 +43,16 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
         m_color(mark->color()),
         m_zone(mark->zone()),
         m_length(mark->length()),
-        m_boatLength(m_mark->situation()->sizeForSeries(m_mark->situation()->situationSeries())),
+        m_boatLength(Boats::seriesSizeList()[m_mark->situation()->situationSeries()]),
         m_bubble(new BubbleGraphicsItem(m_mark, this)),
         m_selected(false),
         m_order(mark->order()),
-        m_laylines(new LaylinesGraphicsItem(m_mark, this)) {
+        m_laylines(new LaylinesGraphicsItem(m_mark, this)),
+        m_heading(mark->heading()),
+        m_arrowVisible(mark->arrowVisible()),
+        m_leaveToPort(mark->leaveToPort()),
+        m_labelVisible(mark->labelVisible()),
+        m_labelText(mark->labelText()) {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
@@ -70,6 +75,16 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
             this, SLOT(setSeries(int)));
     connect(mark->situation(), SIGNAL(markRemoved(MarkModel*)),
             this, SLOT(deleteItem(MarkModel*)));
+    connect(mark, SIGNAL(headingChanged(qreal)),
+            this, SLOT(setHeading(qreal)));
+    connect(mark, SIGNAL(arrowVisibilityChanged(bool)),
+            this, SLOT(setArrowVisible(bool)));
+    connect(mark, SIGNAL(leaveToPortChanged(bool)),
+            this, SLOT(setLeaveToPort(bool)));
+    connect(mark, SIGNAL(labelVisibilityChanged(bool)),
+            this, SLOT(setLabelVisible(bool)));
+    connect(mark, SIGNAL(labelTextChanged(QString)),
+            this, SLOT(setLabelText(QString)));
 }
 
 
@@ -113,7 +128,7 @@ void MarkGraphicsItem::setLength(int value) {
 }
 
 void MarkGraphicsItem::setSeries(int value) {
-    int boatLength = m_mark->situation()->sizeForSeries((Boats::Series)value);
+    int boatLength = Boats::seriesSizeList()[value];
     if (m_boatLength != boatLength) {
         prepareGeometryChange();
         m_boatLength = boatLength;
@@ -130,20 +145,75 @@ void MarkGraphicsItem::deleteItem(MarkModel *mark) {
 }
 
 void MarkGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    bool multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
-    if (!multiSelect) {
-        scene()->clearSelection();
+    static_cast<SituationScene*>(scene())->setModelPressed(m_mark);
+    m_multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
+    if (!isSelected()) {
+        if (!m_multiSelect) {
+            scene()->clearSelection();
+        }
+        setSelected(true);
+        m_actOnMouseRelease=false;
+    } else {
+        m_actOnMouseRelease=true;
     }
-    setSelected(true);
+    if ((event->button() & Qt::RightButton) != 0) {
+        m_actOnMouseRelease = false;
+    }
     update();
 }
 
 void MarkGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
+    m_actOnMouseRelease=false;
 }
 
 void MarkGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
+    if (m_actOnMouseRelease) {
+        if (!m_multiSelect) {
+            scene()->clearSelection();
+            setSelected(true);
+        } else {
+            setSelected(false);
+        }
+    }
+}
+
+void MarkGraphicsItem::setHeading(qreal heading) {
+    if (m_heading != heading) {
+        m_heading = heading;
+        QTransform rotation;
+        rotation.rotate(m_heading),
+        setTransform(rotation, false);
+    }
+}
+
+void MarkGraphicsItem::setArrowVisible(bool visible) {
+    if (m_arrowVisible != visible) {
+        m_arrowVisible = visible;
+        update();
+    }
+}
+
+void MarkGraphicsItem::setLeaveToPort(bool leaveToPort) {
+    if (m_leaveToPort != leaveToPort) {
+        m_leaveToPort = leaveToPort;
+        update();
+    }
+}
+
+void MarkGraphicsItem::setLabelVisible(bool visible) {
+    if (m_labelVisible != visible) {
+        m_labelVisible = visible;
+        update();
+    }
+}
+
+void MarkGraphicsItem::setLabelText(QString text) {
+    if (m_labelText != text) {
+        m_labelText = text;
+        update();
+    }
 }
 
 QRectF MarkGraphicsItem::boundingRect() const {
@@ -153,7 +223,8 @@ QRectF MarkGraphicsItem::boundingRect() const {
 
 QPainterPath MarkGraphicsItem::shape() const {
     QPainterPath path;
-    path.addEllipse(QPointF(0,0),10,10);
+// Need to increase size of shape to include mark arrow so that can click on it to rotate
+    path.addEllipse(QPointF(0,0),35,35);
     return path;
 }
 
@@ -170,12 +241,50 @@ void MarkGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setBrush(m_color);
     QPointF point(0, 0);
     painter->drawEllipse(point,10,10);
-    painter->drawText(QRectF(-10,-10,20,20),Qt::AlignCenter,QString::number(m_order));
+    if (m_labelVisible) {
+        painter->rotate(-m_heading);
+        painter->drawText(QRectF(-35,-35,70,70),Qt::AlignCenter,m_labelText);
+        painter->rotate(m_heading);
+    }
     if (m_zone) {
         painter->setBrush(Qt::NoBrush);
         painter->setPen(Qt::DashLine);
         int r = m_length * m_boatLength;
         painter->drawEllipse(point, r, r);
+    }
+//  Additional code to draw mark rounding arrow
+    if (m_arrowVisible) {
+        QPainterPath port_path, stbd_path;
+
+        port_path.moveTo(-25,0);
+        port_path.lineTo(-20,0);
+        port_path.lineTo(-30,10);
+        port_path.lineTo(-40,0);
+        port_path.lineTo(-35,0);
+        port_path.arcTo(-35,-35,70,70,180,-90);
+        port_path.arcTo(-25,-25,50,50,90,90);
+
+        stbd_path.moveTo(0,-25);
+        stbd_path.lineTo(0,-20);
+        stbd_path.lineTo(10,-30);
+        stbd_path.lineTo(0,-40);
+        stbd_path.lineTo(0,-35);
+        stbd_path.arcTo(-35,-35,70,70,90,90);
+        stbd_path.arcTo(-25,-25,50,50,180,-90);
+
+        QPen arrowpen;
+        arrowpen.setWidth(2);
+        arrowpen.setColor(Qt::lightGray);
+        painter->setPen(arrowpen);
+        painter->setBrush(Qt::NoBrush);
+
+        painter->rotate(45.0);
+        if (m_leaveToPort) {
+            painter->drawPath(port_path);
+        }
+        else {
+            painter->drawPath(stbd_path);
+        }
     }
 }
 

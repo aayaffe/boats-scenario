@@ -35,8 +35,8 @@ extern int debugLevel;
 
 BoatModel::BoatModel(TrackModel* track, QObject *parent)
         : PositionModel(track->situation(), parent),
-        m_heading(0),
         m_trim(0),
+        m_jibTrim(0),
         m_spin(false),
         m_spinTrim(0),
         m_overlap(Boats::none),
@@ -44,6 +44,11 @@ BoatModel::BoatModel(TrackModel* track, QObject *parent)
         m_hidden(false),
         m_acceleration(Boats::constant),
         m_track(track),
+        m_hasSpin(false),
+        m_maxNormalSailAngle(0),
+        m_maxNormalJibAngle(0),
+        m_maxWithSpinSailAngle(0),
+        m_maxWithSpinJibAngle(0),
         m_dim(255) {
     if (debugLevel & 1 << MODEL) std::cout << "new Boat " << this << std::endl;
     setOrder(track->size()+1);
@@ -57,12 +62,13 @@ void BoatModel::setHeading(const qreal& theValue) {
     if (theValue != m_heading) {
         if (debugLevel & 1 << MODEL) std::cout
                 << "heading = " << theValue  << std::endl;
-        m_heading = fmod(theValue+360.0,360.0);
+        m_heading = fmod(theValue,360.0); // This is always between -360 and +360
+        if (m_heading < 0) m_heading += 360.0; // This ensures it is between 0 and +360
         emit headingChanged(m_heading);
         setTrimmedSailAngle(trimmedSailAngle());
-        if (m_spin) {
-            emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
-        }
+        setTrimmedJibAngle(trimmedJibAngle());
+        setTrimmedSpinAngle(trimmedSpinAngle());
+        setTrimmedGennAngle(trimmedGennAngle());
         m_track->changingTrack(m_track);
     }
 }
@@ -80,7 +86,6 @@ void BoatModel::setTrim(const qreal& theValue) {
         m_trim = theValue;
         if (debugLevel & 1 << MODEL) std::cout
                 << "trim = " << theValue  << std::endl;
-        emit trimChanged(m_trim);
         setTrimmedSailAngle(trimmedSailAngle());
     }
 }
@@ -89,15 +94,40 @@ void BoatModel::setTrimmedSailAngle(qreal theValue) {
     emit trimmedSailAngleChanged(theValue);
 }
 
+void BoatModel::setJibTrim(const qreal& theValue) {
+    qreal newAngle = jibAngle() + theValue;
+    if (theValue != m_jibTrim
+        && newAngle < 180
+        && newAngle > -180) {
+        m_jibTrim = theValue;
+        if (debugLevel & 1 << MODEL) std::cout
+                << "jibtrim = " << theValue  << std::endl;
+        setTrimmedJibAngle(trimmedJibAngle());
+    }
+}
+
+void BoatModel::setTrimmedJibAngle(qreal theValue) {
+    emit trimmedJibAngleChanged(theValue);
+}
+
+void BoatModel::setHasSpin(const bool theValue) {
+    if (theValue != m_hasSpin) {
+        m_hasSpin = theValue;
+    }
+}
+
 void BoatModel::setSpin(const bool theValue) {
     if (theValue != m_spin) {
         m_spin = theValue;
         emit spinChanged(m_spin);
+        setTrimmedSailAngle(trimmedSailAngle());
+        setTrimmedJibAngle(trimmedJibAngle());
     }
 }
 
 void BoatModel::setSpinTrim(const qreal& theValue) {
-    qreal sailAngle = spinAngle();
+// Spinnaker graphics code doesn't actually respect spin trim so use this for gennaker trimming
+    qreal sailAngle = gennAngle(); // spinAngle();
     qreal newAngle = sailAngle + theValue;
     if (theValue != m_spinTrim
         && newAngle < 180
@@ -105,9 +135,17 @@ void BoatModel::setSpinTrim(const qreal& theValue) {
         m_spinTrim = theValue;
         if (debugLevel & 1 << MODEL) std::cout
                 << "spinTrim = " << theValue  << std::endl;
-        emit spinTrimChanged(m_spinTrim);
-        emit trimmedSpinAngleChanged(spinAngle() + m_spinTrim);
+        setTrimmedSpinAngle(trimmedSpinAngle());
+        setTrimmedGennAngle(trimmedGennAngle());
     }
+}
+
+void BoatModel::setTrimmedSpinAngle(qreal theValue) {
+    emit trimmedSpinAngleChanged(theValue);
+}
+
+void BoatModel::setTrimmedGennAngle(qreal theValue) {
+    emit trimmedGennAngleChanged(theValue);
 }
 
 void BoatModel::setOverlap(const  Boats::Overlaps theValue) {
@@ -154,31 +192,25 @@ qreal BoatModel::sailAngle(qreal heading) const {
     }
     // within 10° inside layline angle, the sail is headed
     if (heading < layline-10) {
-        sailAngle =  heading;
+        sailAngle =  fmin(layline-20,heading); // layline-20 so that sail is at stall angle of 10 degrees when heading = layline-10
     } else if (heading > 360 - (layline-10)) {
-        sailAngle =  heading - 360;
+        sailAngle =  fmax(-(layline-20),heading - 360);
     } else {
+        qreal maxSailAngle;
+        if (m_hasSpin && m_spin) {
+            maxSailAngle = m_maxWithSpinSailAngle;
+        } else {
+            maxSailAngle = m_maxNormalSailAngle;
+        }
 
-        switch (m_track->series()) {
-            // tornado has fixed 20° incidence
-        case Boats::tornado:
-            if (heading<180) {
-                sailAngle = 20;
-            } else {
-                sailAngle = - 20;
-            }
-            break;
-        default:
-            // linear incidence variation
-            // incidence is 15° at layline angle and 90° downwind
-            qreal a = (180 - layline) / 75;
-            qreal b = layline / a - 15;
-            if (heading<180) {
-                sailAngle = heading/a - b;
-            } else {
-                sailAngle = heading/a - b - 180;
-            }
-            break;
+        // linear incidence variation
+        // incidence is 15° at layline angle and maxWithSpinSailAngle downwind
+        qreal a = (180 - layline) / (maxSailAngle - 15);
+        qreal b = layline / a - 15;
+        if (heading<180) {
+            sailAngle = heading/a - b;
+        } else {
+            sailAngle = heading/a - b - 2*maxSailAngle;
         }
     }
 
@@ -189,11 +221,48 @@ qreal BoatModel::sailAngle(qreal heading) const {
     return sailAngle;
 }
 
+qreal BoatModel::jibAngle(qreal heading) const {
+    qreal layline = situation()->laylineAngle();
+    qreal sailAngle;
+
+    if (heading == -1) {
+        heading = fmod(m_heading - wind() + 360, 360);
+    }
+    // within 10° inside layline angle, the sail is headed
+    if (heading < layline-10) {
+        sailAngle =  fmin(layline-20,heading); // layline-20 so that sail is at stall angle of 10 degrees when heading = layline-10
+    } else if (heading > 360 - (layline-10)) {
+        sailAngle =  fmax(-(layline-20),heading - 360);
+    } else {
+        qreal maxJibAngle;
+        if (m_hasSpin && m_spin) {
+            maxJibAngle = m_maxWithSpinJibAngle;
+        } else {
+            maxJibAngle = m_maxNormalJibAngle;
+        }
+        // linear incidence variation
+        // incidence is 20° at layline angle and maxWithSpinJibAngle downwind
+        qreal a = (180 - layline) / (maxJibAngle - 20);
+        qreal b = layline / a - 20;
+        if (heading<180) {
+            sailAngle = heading/a - b;
+        } else {
+            sailAngle = heading/a - b - 2*maxJibAngle;
+        }
+    }
+
+    if (debugLevel & 1 << MODEL) std::cout
+            << "heading = " << heading
+            << " jib = " << sailAngle
+            << std::endl;
+    return sailAngle;
+}
+
 qreal BoatModel::spinAngle(qreal heading) const {
     qreal sailAngle;
 
     if (heading == -1) {
-        heading = m_heading;
+        heading = fmod(m_heading - wind() + 360, 360);
     }
     // within 10° above downwind angle, the sail is headed
     if (heading < 80) {
@@ -215,9 +284,43 @@ qreal BoatModel::spinAngle(qreal heading) const {
     return sailAngle;
 }
 
+qreal BoatModel::gennAngle(qreal heading) const {
+    qreal sailAngle;
+
+    if (heading == -1) {
+        heading = fmod(m_heading - wind() + 360, 360);
+    }
+    // within 10° above downwind angle, the sail is headed
+    if (heading < 80) {
+        sailAngle = heading / 80 * 20;
+    } else if (heading > 360 - 80) {
+        sailAngle = - (360 - heading) / 80 * 20;
+    } else {
+        // linear incidence variation
+        // incidence is 20° at 80° heading and 30° downwind
+        qreal a = (180 - 80) / (30 - 20);
+        qreal b = 80 / a - 20;
+        if (heading<180) {
+            sailAngle = heading/a - b;
+        } else {
+            sailAngle = heading/a - b - 2*30;
+        }
+    }
+
+    if (debugLevel & 1 << MODEL) std::cout
+            << "heading = " << heading
+            << " genn = " << sailAngle
+            << std::endl;
+    return sailAngle;
+}
+
 void BoatModel::setWind(qreal wind) {
     PositionModel::setWind(wind);
+    emit headingChanged(m_heading);
     setTrimmedSailAngle(trimmedSailAngle());
+    setTrimmedJibAngle(trimmedJibAngle());
+    setTrimmedSpinAngle(trimmedSpinAngle());
+    setTrimmedGennAngle(trimmedGennAngle());
 }
 
 void BoatModel::setDim(int dim) {

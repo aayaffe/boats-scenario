@@ -32,6 +32,7 @@
 #include "boats.h"
 #include "sail.h"
 #include "spinnaker.h"
+#include "gennaker.h"
 #include "flag.h"
 #include "bubble.h"
 #include "laylines.h"
@@ -83,6 +84,7 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         void setVisible(bool value);
         void setSeries(Boats::Series value);
         void deleteItem(BoatModel *boat);
+        void setSelected(bool selected);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -98,18 +100,36 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_hullPath holds the path for the hull
         QPainterPath m_hullPath;
 
+        /// \a m_boundingRect holds the bounding rectangle for the boat
+        QRectF m_boundingRect;
+
         /// \a m_angle holds the heading of the boat
         qreal m_angle;
 
         /// \a m_sail holds the sail that will be drawn
         SailGraphicsItem *m_sail;
 
+        /// \a m_jib holds the jib
+        SailGraphicsItem *m_jib;
+
         /// \a m_spin holds the spinnaker
         SpinnakerGraphicsItem *m_spin;
+
+        /// \a m_genn holds the gennaker
+        GennakerGraphicsItem *m_genn;
+
+        /// \a m_hasSpin is true if boat has a spinnaker
+        bool m_hasSpin;
+
+        /// \a m_hasGenn is true if boat has a gennaker
+        bool m_hasGenn;
 
         /// \a m_overlap holds whether an overlap line should be displayed
         Boats::Overlaps m_overlap;
         QGraphicsLineItem *m_overlapLine;
+
+        /// \a m_border holds the half-width of the boat at the transom
+        qreal m_border;
 
         /// \a m_color holds the color of the TrackModel
         QColor m_color;
@@ -141,6 +161,17 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_laylines holds the laylines for the boat
         LaylinesGraphicsItem *m_laylines;
+
+        /// \a m_multiSelect is true if Ctrl-modified was in effect when mousePressEvent happened
+        /// Need to save this state until receive mouseReleaseEvent to determine what to do
+        bool m_multiSelect;
+
+        /// \a if m_actOnMouseRelease is true then need to do something when mouse button is released
+        bool m_actOnMouseRelease;
+
+        /// \a m_trackSelect is true if mousePressEvent is Shift-modified
+        /// Need to save this state until receive mouseReleaseEvent to determine what to do
+        bool m_trackSelect;
 };
 
 #endif

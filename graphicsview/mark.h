@@ -75,6 +75,11 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
         void setLength(int length);
         void setSeries(int value);
         void deleteItem(MarkModel *mark);
+        void setHeading(qreal heading);
+        void setArrowVisible(bool visible);
+        void setLeaveToPort(bool leaveToPort);
+        void setLabelVisible(bool visible);
+        void setLabelText(QString text);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -108,6 +113,25 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
 
         /// \a m_laylines holds the laylines for the mark
         LaylinesGraphicsItem *m_laylines;
+
+        /// \a m_heading holds the orientation of the arrow
+        qreal m_heading;
+
+        /// \a m_arrowVisible holds wether the mark arrow is visible
+        bool m_arrowVisible;
+
+        /// \a m_leaveToPort holds the orientation of the arrow
+        bool m_leaveToPort;
+
+        /// \a m_multiSelect is true if Ctrl-modified was in effect when mousePressEvent happened
+        /// Need to save this state until receive mouseReleaseEvent to determine what to do
+        bool m_multiSelect;
+
+        /// \a if m_actOnMouseRelease is true then need to do something when mouse button is released
+        bool m_actOnMouseRelease;
+
+        bool m_labelVisible;
+        QString m_labelText;
 };
 
 #endif

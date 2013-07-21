@@ -41,6 +41,8 @@ SituationModel::SituationModel(QObject *parent)
         m_laylineAngle(40),
         m_situationSeries(Boats::keelboat),
         m_situationLength(3),
+        m_lookDirection(0),
+        m_tilt(0),
         m_wind(this),
         m_undoStack(new QUndoStack(this)) {
     if (debugLevel & 1 << MODEL) std::cout << "new situation " << this << std::endl;
@@ -50,31 +52,6 @@ SituationModel::SituationModel(QObject *parent)
 
 SituationModel::~SituationModel() {
     if (debugLevel & 1 << MODEL) std::cout << "end situation " << this << std::endl;
-}
-
-int SituationModel::sizeForSeries(const Boats::Series series) {
-    int size;
-    switch (series) {
-        case Boats::keelboat:
-            size = 100;
-            break;
-        case Boats::laser:
-            size = 40;
-            break;
-        case Boats::optimist:
-            size = 23;
-            break;
-        case Boats::tornado:
-            size = 61;
-            break;
-	case Boats::rib:
-	    size = 60;
-	    break;
-        default:
-            size = 100;
-            break;
-    }
-    return size;
 }
 
 void SituationModel::setTitle(const QString theValue) {
@@ -146,6 +123,22 @@ void SituationModel::setDescription(const QString theValue) {
         if (debugLevel & 1 << MODEL) std::cout << "Setting Description " << theValue.toStdString() << std::endl;
         m_description = theValue;
         emit descriptionChanged(m_description);
+    }
+}
+
+void SituationModel::setLookDirection(qreal theValue) {
+    if (theValue != m_lookDirection) {
+        if (debugLevel & 1 << MODEL) std::cout << "Setting lookDirection " << theValue << std::endl;
+        m_lookDirection = theValue;
+        emit lookDirectionChanged(m_lookDirection);
+    }
+}
+
+void SituationModel::setTilt(qreal theValue) {
+    if (theValue != m_tilt) {
+        if (debugLevel & 1 << MODEL) std::cout << "Setting tilt " << theValue << std::endl;
+        m_tilt = theValue;
+        emit tiltChanged(m_tilt);
     }
 }
 

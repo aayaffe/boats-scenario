@@ -492,11 +492,107 @@ Do you want to replace it?</source>
         <source>Alt+L</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Set Mark &amp;Color</source>
+        <translation>マーク：色(&amp;C)</translation>
+    </message>
+    <message>
+        <source>Alt+C</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Mark Side</source>
+        <translation>マーク：ポート/スターボ側(&amp;M)</translation>
+    </message>
+    <message>
+        <source>Alt+M</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Toggle Mark Arro&amp;w</source>
+        <translation>次のマーク(&amp;W)</translation>
+    </message>
+    <message>
+        <source>Alt+W</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Toggle Mark &amp;Label</source>
+        <translation>マーク名表示/非表示(&amp;L)</translation>
+    </message>
+    <message>
+        <source>&amp;Edit Mark Label</source>
+        <translation>マーク名編集(&amp;E)</translation>
+    </message>
+    <message>
+        <source>Alt+E</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Edit mark label</source>
+        <translation>マーク名編集</translation>
+    </message>
+    <message>
+        <source>Label text:</source>
+        <translation>マーク名：</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>The file is not an xmlscenario version 1.0 file.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Laser</source>
+        <translation>レーザー</translation>
+    </message>
+    <message>
+        <source>Optimist</source>
+        <translation>OP</translation>
+    </message>
+    <message>
+        <source>Tornado</source>
+        <translation>トーネード</translation>
+    </message>
+    <message>
+        <source>Committee boat</source>
+        <translation>運営艇</translation>
+    </message>
+    <message>
+        <source>RIB</source>
+        <translation>ゴムボート</translation>
+    </message>
+    <message>
+        <source>Spin Keelboat</source>
+        <translation>キールボート（スピン）</translation>
+    </message>
+    <message>
+        <source>Gennaker Keelboat</source>
+        <translation>キールボート（ジェネカー）</translation>
+    </message>
+    <message>
+        <source>Topper</source>
+        <translation>トッパー</translation>
+    </message>
+    <message>
+        <source>Firefly</source>
+        <translation>ファイヤーフライ</translation>
+    </message>
+    <message>
+        <source>29er</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>49er</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>420</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>470</source>
         <translation></translation>
     </message>
 </context>
@@ -563,17 +659,6 @@ Do you want to replace it?</source>
     </message>
 </context>
 <context>
-    <name>TrackDelegate</name>
-    <message>
-        <source>false</source>
-        <translation>しない</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>する</translation>
-    </message>
-</context>
-<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>
@@ -586,6 +671,10 @@ Do you want to replace it?</source>
     <message>
         <source>Series</source>
         <translation>艇種</translation>
+    </message>
+    <message>
+        <source>Follow</source>
+        <translation>追跡視点</translation>
     </message>
 </context>
 <context>

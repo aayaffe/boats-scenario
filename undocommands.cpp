@@ -400,6 +400,74 @@ bool SetShowPathUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Follow Track
+SetFollowTrackUndoCommand::SetFollowTrackUndoCommand(SituationModel* situation, TrackModel *track, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_track(track) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new followtrackundocommand" << std::endl;
+    foreach (TrackModel *tracks, situation->tracks()) {
+        m_followTrackList.append(tracks->followTrack());
+    }
+}
+
+SetFollowTrackUndoCommand::~SetFollowTrackUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end followtrackundocommand" << std::endl;
+}
+
+void SetFollowTrackUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo followtrackundocommand" << std::endl;
+    for (int i=0; i<m_situation->size(); ++i) {
+        TrackModel *tracks = m_situation->tracks()[i];
+        tracks->setFollowTrack(m_followTrackList.at(i));
+    }
+}
+
+void SetFollowTrackUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo followtrackundocommand" << std::endl;
+    m_track->setFollowTrack(!m_track->followTrack());
+}
+
+bool SetFollowTrackUndoCommand::mergeWith(const QUndoCommand *command) {
+    return false;
+}
+
+// Lookat
+SetLookAtUndoCommand::SetLookAtUndoCommand(SituationModel* situation, int lookDirection, int tilt, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_oldLookDirection(situation->lookDirection()),
+        m_newLookDirection(lookDirection),
+        m_oldTilt(situation->tilt()),
+        m_newTilt(tilt) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new lookatundocommand" << std::endl;
+}
+
+SetLookAtUndoCommand::~SetLookAtUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end lookatundocommand" << std::endl;
+}
+
+void SetLookAtUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo lookatundocommand" << std::endl;
+    m_situation->setLookDirection(m_oldLookDirection);
+    m_situation->setTilt(m_oldTilt);
+}
+
+void SetLookAtUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo lookatundocommand" << std::endl;
+    m_situation->setLookDirection(m_newLookDirection);
+    m_situation->setTilt(m_newTilt);
+}
+
+bool SetLookAtUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetLookAtUndoCommand *lookatCommand = static_cast<const SetLookAtUndoCommand*>(command);
+    if (m_situation != lookatCommand->m_situation)
+        return false;
+    m_newLookDirection = lookatCommand->m_newLookDirection;
+    m_newTilt = lookatCommand->m_newTilt;
+    return true;
+}
+
 // Show Wind
 SetShowWindUndoCommand::SetShowWindUndoCommand(WindModel *wind, QUndoCommand *parent)
         : QUndoCommand(parent),
@@ -610,43 +678,43 @@ void AddBoatUndoCommand::undo() {
     m_track->deleteBoat(m_boat);
 }
 
-// Heading Boat
-HeadingBoatUndoCommand::HeadingBoatUndoCommand(QList<BoatModel*> &boatList, const qreal &heading, QUndoCommand *parent)
+// Rotate Models
+RotateModelsUndoCommand::RotateModelsUndoCommand(QList<PositionModel*> &modelList, const qreal &angle, QUndoCommand *parent)
         : QUndoCommand(parent),
-        m_boatList(boatList),
-        m_heading(heading) {
-    if (debugLevel & 1 << COMMAND) std::cout << "new headingboatundocommand" << std::endl;
-    foreach (const BoatModel *boat, boatList) {
-        m_headingList << boat->heading();
+        m_modelList(modelList),
+        m_angle(angle) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new rotatemodelsundocommand" << std::endl;
+    foreach (const PositionModel *model, modelList) {
+        m_headingList << model->heading();
     }
 }
 
-HeadingBoatUndoCommand::~HeadingBoatUndoCommand() {
-    if (debugLevel & 1 << COMMAND) std::cout << "end headingboatundocommand" << std::endl;
+RotateModelsUndoCommand::~RotateModelsUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end rotatemodelsundocommand" << std::endl;
 }
 
-void HeadingBoatUndoCommand::undo() {
-    if (debugLevel & 1 << COMMAND) std::cout << "undo headingboatundocommand" << std::endl;
-    for(int i=0; i< m_boatList.size(); i++) {
-        BoatModel *boat = m_boatList[i];
-        boat->setHeading(m_headingList[i]);
+void RotateModelsUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo rotatemodelsundocommand" << std::endl;
+    for(int i=0; i< m_modelList.size(); i++) {
+        PositionModel *model = m_modelList[i];
+        model->setHeading(m_headingList[i]);
     }
 }
 
-void HeadingBoatUndoCommand::redo() {
-    if (debugLevel & 1 << COMMAND) std::cout << "redo headingboatundocommand" << std::endl;
-    for(int i=0; i< m_boatList.size(); i++) {
-        BoatModel *boat = m_boatList[i];
-        boat->setHeading(m_heading);
+void RotateModelsUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo rotatemodelsundocommand" << std::endl;
+    for(int i=0; i< m_modelList.size(); i++) {
+        PositionModel *model = m_modelList[i];
+        model->setHeading(model->heading() + m_angle);
     }
 }
 
-bool HeadingBoatUndoCommand::mergeWith(const QUndoCommand *command) {
-    const HeadingBoatUndoCommand *headingCommand = static_cast<const HeadingBoatUndoCommand*>(command);
-    if (m_boatList != headingCommand->m_boatList)
+bool RotateModelsUndoCommand::mergeWith(const QUndoCommand *command) {
+    const RotateModelsUndoCommand *headingCommand = static_cast<const RotateModelsUndoCommand*>(command);
+    if (m_modelList != headingCommand->m_modelList)
         return false;
 
-    m_heading = headingCommand->m_heading;
+    m_angle += headingCommand->m_angle;
     return true;
 }
 
@@ -742,6 +810,7 @@ TrimBoatUndoCommand::TrimBoatUndoCommand(QList<BoatModel*> &boatList, const qrea
     if (debugLevel & 1 << COMMAND) std::cout << "new trimboatundocommand" << std::endl;
     foreach (const BoatModel *boat, boatList) {
         m_trimList << boat->trim();
+        m_jibTrimList << boat->jibTrim();
     }
 }
 
@@ -754,6 +823,7 @@ void TrimBoatUndoCommand::undo() {
     for(int i=0; i< m_boatList.size(); i++) {
         BoatModel *model = m_boatList[i];
         model->setTrim(m_trimList[i]);
+        model->setJibTrim(m_jibTrimList[i]);
     }
 }
 
@@ -762,15 +832,96 @@ void TrimBoatUndoCommand::redo() {
     for(int i=0; i< m_boatList.size(); i++) {
         BoatModel *model = m_boatList[i];
         model->setTrim(m_trim);
+        model->setJibTrim(m_trim);
     }
 }
 
 bool TrimBoatUndoCommand::mergeWith(const QUndoCommand *command) {
-    const TrimBoatUndoCommand *moveCommand = static_cast<const TrimBoatUndoCommand*>(command);
-    if (m_boatList != moveCommand->m_boatList)
+    const TrimBoatUndoCommand *trimCommand = static_cast<const TrimBoatUndoCommand*>(command);
+    if (m_boatList != trimCommand->m_boatList)
         return false;
 
-    m_trim = moveCommand->m_trim;
+    m_trim = trimCommand->m_trim;
+    return true;
+}
+
+// Trim Jib
+TrimJibUndoCommand::TrimJibUndoCommand(QList<BoatModel*> &boatList, const qreal &trim, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_boatList(boatList),
+        m_trim(trim) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new trimjibundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_trimList << boat->jibTrim();
+    }
+}
+
+TrimJibUndoCommand::~TrimJibUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end trimjibundocommand" << std::endl;
+}
+
+void TrimJibUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo trimjibundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *model = m_boatList[i];
+        model->setJibTrim(m_trimList[i]);
+    }
+}
+
+void TrimJibUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo trimjibundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *model = m_boatList[i];
+        model->setJibTrim(m_trim);
+    }
+}
+
+bool TrimJibUndoCommand::mergeWith(const QUndoCommand *command) {
+    const TrimJibUndoCommand *trimCommand = static_cast<const TrimJibUndoCommand*>(command);
+    if (m_boatList != trimCommand->m_boatList)
+        return false;
+
+    m_trim = trimCommand->m_trim;
+    return true;
+}
+
+// Trim Spin
+TrimSpinUndoCommand::TrimSpinUndoCommand(QList<BoatModel*> &boatList, const qreal &trim, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_boatList(boatList),
+        m_trim(trim) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new trimspinundocommand" << std::endl;
+    foreach (const BoatModel *boat, boatList) {
+        m_trimList << boat->spinTrim();
+    }
+}
+
+TrimSpinUndoCommand::~TrimSpinUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end trimspinundocommand" << std::endl;
+}
+
+void TrimSpinUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo trimspinundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *model = m_boatList[i];
+        model->setSpinTrim(m_trimList[i]);
+    }
+}
+
+void TrimSpinUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo trimspinundocommand" << std::endl;
+    for(int i=0; i< m_boatList.size(); i++) {
+        BoatModel *model = m_boatList[i];
+        model->setSpinTrim(m_trim);
+    }
+}
+
+bool TrimSpinUndoCommand::mergeWith(const QUndoCommand *command) {
+    const TrimSpinUndoCommand *trimCommand = static_cast<const TrimSpinUndoCommand*>(command);
+    if (m_boatList != trimCommand->m_boatList)
+        return false;
+
+    m_trim += trimCommand->m_trim;
     return true;
 }
 
@@ -1043,6 +1194,46 @@ bool ZoneMarkUndoCommand::mergeWith(const QUndoCommand *command) {
     return true;
 }
 
+// Color Mark
+ColorMarkUndoCommand::ColorMarkUndoCommand(SituationModel *situation, const QList<MarkModel*> &markList, const QColor &color, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_situation(situation),
+        m_markList(markList),
+        m_newColor(color) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new colormarkundocommand" << std::endl;
+    foreach( MarkModel *mark, markList) {
+        m_oldColors.append(mark->color());
+    }
+}
+
+ColorMarkUndoCommand::~ColorMarkUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end colormarkundocommand" << std::endl;
+}
+
+void ColorMarkUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo colormarkundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setColor(m_oldColors[i]);
+    }
+}
+
+void ColorMarkUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo colormarkundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setColor(m_newColor);
+    }
+}
+
+bool ColorMarkUndoCommand::mergeWith(const QUndoCommand *command) {
+    const ColorMarkUndoCommand *colorCommand = static_cast<const ColorMarkUndoCommand*>(command);
+    if (m_markList != colorCommand->m_markList)
+        return false;
+    m_newColor = colorCommand->m_newColor;
+    return true;
+}
+
 // Set Length
 LengthMarkUndoCommand::LengthMarkUndoCommand(SituationModel* situation, const int length, QUndoCommand *parent)
         : QUndoCommand(parent),
@@ -1072,6 +1263,119 @@ bool LengthMarkUndoCommand::mergeWith(const QUndoCommand *command) {
         return false;
 
     m_newLength = lengthmarkCommand->m_newLength;
+    return true;
+}
+
+// Toggle Mark Side
+ToggleMarkSideUndoCommand::ToggleMarkSideUndoCommand(const QList<MarkModel*> &markList, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_markList(markList) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new togglemarksideundocommand" << std::endl;
+}
+
+ToggleMarkSideUndoCommand::~ToggleMarkSideUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end togglemarksideundocommand" << std::endl;
+}
+
+void ToggleMarkSideUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo togglemarksideundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setLeaveToPort(!mark->leaveToPort());
+    }
+}
+
+void ToggleMarkSideUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo togglemarksideundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setLeaveToPort(!mark->leaveToPort());
+    }
+}
+
+// Toggle Mark Arrow
+ToggleMarkArrowUndoCommand::ToggleMarkArrowUndoCommand(const QList<MarkModel*> &markList, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_markList(markList) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new togglemarkarrowundocommand" << std::endl;
+}
+
+ToggleMarkArrowUndoCommand::~ToggleMarkArrowUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end togglemarkarrowundocommand" << std::endl;
+}
+
+void ToggleMarkArrowUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo togglemarkarrowundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setArrowVisible(!mark->arrowVisible());
+    }
+}
+
+void ToggleMarkArrowUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo togglemarkarrowundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setArrowVisible(!mark->arrowVisible());
+    }
+}
+
+// Toggle Mark Label
+ToggleMarkLabelUndoCommand::ToggleMarkLabelUndoCommand(const QList<MarkModel*> &markList, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_markList(markList) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new togglemarklabelundocommand" << std::endl;
+}
+
+ToggleMarkLabelUndoCommand::~ToggleMarkLabelUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end togglemarklabelundocommand" << std::endl;
+}
+
+void ToggleMarkLabelUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo togglemarklabelundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setLabelVisible(!mark->labelVisible());
+    }
+}
+
+void ToggleMarkLabelUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo togglemarklabelundocommand" << std::endl;
+    for(int i=0; i< m_markList.size(); i++) {
+        MarkModel *mark = m_markList[i];
+        mark->setLabelVisible(!mark->labelVisible());
+    }
+}
+
+// Set Mark Text
+SetMarkLabelUndoCommand::SetMarkLabelUndoCommand(MarkModel* mark, QString text, QUndoCommand *parent)
+        : QUndoCommand(parent),
+        m_mark(mark),
+        m_oldText(mark->labelText()),
+        m_newText(text) {
+    if (debugLevel & 1 << COMMAND) std::cout << "new setmarklabelundocommand" << std::endl;
+}
+
+SetMarkLabelUndoCommand::~SetMarkLabelUndoCommand() {
+    if (debugLevel & 1 << COMMAND) std::cout << "end setmarklabelundocommand" << std::endl;
+}
+
+void SetMarkLabelUndoCommand::undo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "undo setmarklabelundocommand"<< std::endl;
+    m_mark->setLabelText(m_oldText);
+}
+
+void SetMarkLabelUndoCommand::redo() {
+    if (debugLevel & 1 << COMMAND) std::cout << "redo setmarklabelundocommand" << std::endl;
+    m_mark->setLabelText(m_newText);
+}
+
+bool SetMarkLabelUndoCommand::mergeWith(const QUndoCommand *command) {
+    const SetMarkLabelUndoCommand *setMarkLabelCommand = static_cast<const SetMarkLabelUndoCommand*>(command);
+    if (m_mark != setMarkLabelCommand->m_mark)
+        return false;
+
+    m_newText = setMarkLabelCommand->m_newText;
     return true;
 }
 

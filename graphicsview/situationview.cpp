@@ -36,10 +36,20 @@ SituationView::SituationView(QWidget *parent)
 
 SituationView::SituationView(QGraphicsScene *scene, QWidget *parent)
     : QGraphicsView(scene, parent),
-    scaleValue(1) {
+    scaleValue(1),
+    lookDirectionValue(0),
+    tiltValue(0) {
     setRenderHints( QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
     setResizeAnchor(QGraphicsView::AnchorViewCenter);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    connect( scene, SIGNAL(centerChanged(QPointF)),
+             this, SLOT(setCenter(QPointF)));
+    connect( scene, SIGNAL(lookDirectionChanged(qreal)),
+             this, SLOT(setLookDirection(qreal)));
+    connect( scene, SIGNAL(tiltChanged(qreal)),
+             this, SLOT(setTilt(qreal)));
 }
 
 SituationView::~SituationView() {
@@ -69,6 +79,17 @@ void SituationView::wheelEvent(QWheelEvent *event) {
     setScale(event->delta() > 0);
 }
 
+
+void SituationView::mousePressEvent(QMouseEvent *event) {
+    setDragMode(QGraphicsView::ScrollHandDrag);
+    QGraphicsView::mousePressEvent(event);
+}
+
+void SituationView::mouseReleaseEvent(QMouseEvent *event) {
+    QGraphicsView::mouseReleaseEvent(event);
+    setDragMode(QGraphicsView::NoDrag);
+}
+
 void SituationView::zoomIn() {
     setScale(true);
 }
@@ -96,6 +117,22 @@ void SituationView::zoomFit() {
     setMatrix(m);
 }
 
+void SituationView::setLookDirection(qreal value) {
+    lookDirectionValue = value;
+    emit lookDirectionChanged(qRound(lookDirectionValue));
+    transformView();
+}
+
+void SituationView::setTilt(qreal value) {
+    tiltValue = value;
+    emit tiltChanged(qRound(tiltValue));
+    transformView();
+}
+
+void SituationView::setCenter(QPointF position) {
+    centerOn(position);
+}
+
 /**
     Zoom in if \a in otherwise zoom out by .05 increments between
     0.1 and 10
@@ -104,15 +141,21 @@ void SituationView::zoomFit() {
 void SituationView::setScale(bool in) {
     if (in) {
         if (scaleValue < 10.0) {
-            scaleValue += .05;
+            scaleValue *= 1.1;
         }
     } else if (scaleValue > 0.1) {
-        scaleValue -= .05;
+        scaleValue /= 1.1;
     }
-    QMatrix old = matrix();
-    QMatrix m(scaleValue, old.m21(), old.m21(), scaleValue, old.dx(), old.dy());
-    setMatrix(m);
-    if (debugLevel & 1 << VIEW) std::cout << "new scale values "
-        << " horizontal: " << m.m11()
-        << " vertical: " << m.m22() << std::endl;
+    if (debugLevel & 1 << VIEW)
+        std::cout << "new scale values " << scaleValue << std::endl;
+    transformView();
+}
+
+void SituationView::transformView() {
+
+    QTransform transform;
+    transform.rotate(tiltValue, Qt::XAxis);
+    transform.rotate(-lookDirectionValue, Qt::ZAxis);
+    transform.scale(scaleValue, scaleValue);
+    setTransform(transform, false);
 }

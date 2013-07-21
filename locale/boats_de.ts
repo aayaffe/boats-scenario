@@ -496,12 +496,108 @@ Möchten Sie die Datei ersetzen?</translation>
         <source>Alt+L</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Set Mark &amp;Color</source>
+        <translation>Bahnmarkenfarbe setzen</translation>
+    </message>
+    <message>
+        <source>Alt+C</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Mark Side</source>
+        <translation>Bahnmarkenseite anzeigen</translation>
+    </message>
+    <message>
+        <source>Alt+M</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Toggle Mark Arro&amp;w</source>
+        <translation>Bahnmarkenpfeil anzeigen</translation>
+    </message>
+    <message>
+        <source>Alt+W</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Toggle Mark &amp;Label</source>
+        <translation>Bahnmarkenschriftung anzeigen</translation>
+    </message>
+    <message>
+        <source>&amp;Edit Mark Label</source>
+        <translation>Bahnmarkenschriftung bearbeiten</translation>
+    </message>
+    <message>
+        <source>Alt+E</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Edit mark label</source>
+        <translation>Bahnmarkenschriftung bearbeiten</translation>
+    </message>
+    <message>
+        <source>Label text:</source>
+        <translation>Beschriftungstext</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>The file is not an xmlscenario version 1.0 file.</source>
         <translation>Diese Datei ist keine xml-Scenario-Datei Version 1.0.</translation>
+    </message>
+    <message>
+        <source>Laser</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Optimist</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Tornado</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Committee boat</source>
+        <translation>WFL Boot</translation>
+    </message>
+    <message>
+        <source>RIB</source>
+        <translation>Schlauchboot</translation>
+    </message>
+    <message>
+        <source>Spin Keelboat</source>
+        <translation>Drehung Kielboot</translation>
+    </message>
+    <message>
+        <source>Gennaker Keelboat</source>
+        <translation>Gennacker Kielboot</translation>
+    </message>
+    <message>
+        <source>Topper</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Firefly</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>29er</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>49er</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>420</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>470</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -567,17 +663,6 @@ Möchten Sie die Datei ersetzen?</translation>
     </message>
 </context>
 <context>
-    <name>TrackDelegate</name>
-    <message>
-        <source>false</source>
-        <translation>falsch</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>richtig</translation>
-    </message>
-</context>
-<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>
@@ -590,6 +675,10 @@ Möchten Sie die Datei ersetzen?</translation>
     <message>
         <source>Series</source>
         <translation>Reihe</translation>
+    </message>
+    <message>
+        <source>Follow</source>
+        <translation>Folge</translation>
     </message>
 </context>
 <context>

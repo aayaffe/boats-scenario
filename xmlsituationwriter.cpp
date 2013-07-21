@@ -69,6 +69,8 @@ bool XmlSituationWriter::writeFile(QIODevice *device) {
     writeTextElement("showlayline",QString::number(m_situation->showLayline()));
     writeTextElement("layline",QString::number(m_situation->laylineAngle()));
     writeTextElement("length",QString::number(m_situation->situationLength()));
+    writeTextElement("look_direction",QString::number(m_situation->lookDirection()));
+    writeTextElement("tilt",QString::number(m_situation->tilt()));
     writeWind(m_situation->wind());
     foreach (const QString discarded, m_situation->discardedXml())
         writeUnknownElement(discarded);
@@ -96,6 +98,9 @@ void XmlSituationWriter::writeTrack(const TrackModel *track) {
     if (!track->showPath()) {
         writeTextElement("path",QString::number(track->showPath()));
     }
+    if (track->followTrack()) {
+        writeTextElement("follow_track",QString::number(track->followTrack()));
+    }
     foreach (const QString discarded, track->discardedXml())
         writeUnknownElement(discarded);
     foreach (const BoatModel *boat, track->boats())
@@ -117,8 +122,14 @@ void XmlSituationWriter::writeBoat(const BoatModel *boat) {
     if (boat->trim() != 0) {
         writeTextElement("trim",QString::number(boat->trim()));
     }
+    if (boat->jibTrim() != 0) {
+        writeTextElement("jibtrim",QString::number(boat->jibTrim()));
+    }
     if (boat->spin()) {
         writeTextElement("spin",QString::number(boat->spin()));
+        if (boat->spinTrim() != 0) {
+            writeTextElement("spintrim",QString::number(boat->spinTrim()));
+            }
     }
     if (boat->overlap() != Boats::none) {
         writeTextElement("overlap", FLAG_NAME(Boats, Overlap, boat->overlap()));
@@ -153,6 +164,11 @@ void XmlSituationWriter::writeMark(const MarkModel *mark) {
         std::cout << " color=" << mark->color().name().toStdString() << std::endl;
         std::cout << " zone=" << mark->zone() << std::endl;
         std::cout << " length=" << mark->length() << std::endl;
+        std::cout << " heading=" << mark->heading() << std::endl;
+        std::cout << " arrowVisible=" << mark->arrowVisible() << std::endl;
+        std::cout << " leaveToPort=" << mark->leaveToPort() << std::endl;
+        std::cout << " labelVisible=" << mark->labelVisible() << std::endl;
+        std::cout << " labelText=" << mark->labelText().toStdString() << std::endl;
     }
     writeStartElement("mark");
     writeTextElement("x",QString::number(mark->position().x()));
@@ -172,6 +188,11 @@ void XmlSituationWriter::writeMark(const MarkModel *mark) {
     if (mark->laylines()) {
         writeTextElement("laylines", QString::number(mark->laylines()));
     }
+    writeTextElement("heading",QString::number(mark->heading()));
+    writeTextElement("arrowVisible",QString::number(mark->arrowVisible()));
+    writeTextElement("leaveToPort",QString::number(mark->leaveToPort()));
+    writeTextElement("labelVisible",QString::number(mark->labelVisible()));
+    writeTextElement("labelText",mark->labelText());
     foreach (const QString discarded, mark->discardedXml())
         writeUnknownElement(discarded);
     writeEndElement();

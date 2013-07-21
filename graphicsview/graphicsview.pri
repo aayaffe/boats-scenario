@@ -14,6 +14,7 @@ HEADERS += \
     $$PWD/situationscene.h \
     $$PWD/situationview.h \
     $$PWD/spinnaker.h \
+    $$PWD/gennaker.h \
     $$PWD/track.h
 
 SOURCES += \
@@ -29,4 +30,5 @@ SOURCES += \
     $$PWD/situationscene.cpp \
     $$PWD/situationview.cpp \
     $$PWD/spinnaker.cpp \
+    $$PWD/gennaker.cpp \
     $$PWD/track.cpp

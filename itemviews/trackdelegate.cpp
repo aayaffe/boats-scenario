@@ -41,15 +41,6 @@ void TrackDelegate::paint(QPainter *painter,
 
     drawBackground(painter, option, index);
 
-    QRect checkRect;
-    Qt::CheckState checkState = Qt::Unchecked;
-    QVariant value = index.data(Qt::CheckStateRole);
-    if (value.isValid()) {
-        checkState = static_cast<Qt::CheckState>(value.toInt());
-        checkRect = check(option, option.rect, value);
-    }
-    drawCheck(painter, option, checkRect, checkState);
-
     switch (index.column()) {
         case TRACK_COLOR: {
             QColor trackColor = qVariantValue<QColor>(index.data());
@@ -62,13 +53,9 @@ void TrackDelegate::paint(QPainter *painter,
             painter->drawRoundedRect(rect, width, height);
             }
             break;
-        case TRACK_PATH: {
-            QItemDelegate::paint(painter, option, index);
-            }
-            break;
         case TRACK_SERIES: {
             int series = qVariantValue<int>(index.data());
-            drawDisplay(painter, option, option.rect, ENUM_NAME(Boats, Series, series));
+            drawDisplay(painter, option, option.rect, Boats::seriesList().at(series));
             }
             break;
         default:
@@ -98,16 +85,6 @@ QWidget * TrackDelegate::createEditor(QWidget *parent,
             return editor;
             }
             break;
-        case TRACK_PATH: {
-            QComboBox *editor = new QComboBox(parent);
-            QStringList list;
-            list << tr("false") << tr("true");
-            editor->addItems(list);
-            connect(editor, SIGNAL(activated(int)),
-                    this, SLOT(commitAndCloseCombo()));
-            return editor;
-            }
-            break;
         case TRACK_SERIES: {
             QComboBox *editor = new QComboBox(parent);
             editor->addItems(Boats::seriesList());
@@ -117,7 +94,7 @@ QWidget * TrackDelegate::createEditor(QWidget *parent,
             }
             break;
         default:
-            return QItemDelegate::createEditor(parent, option, index);
+            return 0;
             break;
     }
 }
@@ -131,12 +108,6 @@ void TrackDelegate::setEditorData(QWidget *editor,
             ColorPickerWidget *colorEditor = getColorEditor(editor);
             QColor color = qVariantValue<QColor>(index.data());
             colorEditor->setColor(color);
-            }
-            break;
-        case TRACK_PATH: {
-            QComboBox *pathEditor = getComboEditor(editor);
-            bool showPath = qVariantValue<bool>(index.data());
-            pathEditor->setCurrentIndex(showPath);
             }
             break;
         case TRACK_SERIES: {
@@ -161,12 +132,6 @@ void TrackDelegate::setModelData(QWidget *editor,
             ColorPickerWidget *colorEditor = getColorEditor(editor);
             QColor color = colorEditor->color();
             model->setData(index, qVariantFromValue(color));
-            }
-            break;
-        case TRACK_PATH: {
-            QComboBox *pathEditor = getComboEditor(editor);
-            bool showPath = pathEditor->currentIndex();
-            model->setData(index, qVariantFromValue(showPath));
             }
             break;
         case TRACK_SERIES: {

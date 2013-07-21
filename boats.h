@@ -43,7 +43,14 @@ class Boats {
 public:
     enum Series {
         keelboat,
+        keelboatwithgenn,
+        int49er,
+        int470,
+        int420,
+        int29er,
         laser,
+        firefly,
+        topper,
         optimist,
         tornado,
         startboat,
@@ -53,6 +60,7 @@ public:
     Q_ENUMS (Series);
 
     static QList<QString> seriesList();
+    static QList<int> seriesSizeList();
 
     enum Overlap {
         none = 0x0,
@@ -81,7 +89,7 @@ public:
 
 private:
     static QList<QString> m_seriesList;
-
+    static QList<int> m_seriesSizeList;
 };
 
 Q_DECLARE_METATYPE(Boats::Overlaps)

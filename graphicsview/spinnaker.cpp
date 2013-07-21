@@ -70,7 +70,8 @@ void SpinnakerGraphicsItem::setSailSize(qreal sailSize) {
 /// calculate a sail incidence angle, corrected with user trimming
 void SpinnakerGraphicsItem::setSailAngle(qreal value) {
     m_sailAngle = value;
-    qreal angle = fmod(m_boat->heading() - m_sailAngle +360, 360);
+    qreal angle = fmod(m_boat->heading() - m_boat->wind() - m_sailAngle, 360);
+    if(angle < 0) angle += 360;
 
     if ((angle < 10 || angle > 350 || (angle > 170 && angle < 190)) && path() != m_sailPathStalled) {
         setPath(m_sailPathStalled);
@@ -82,7 +83,9 @@ void SpinnakerGraphicsItem::setSailAngle(qreal value) {
 }
 
 void SpinnakerGraphicsItem::setHeading(qreal value) {
-    qreal angle = value;
+    qreal angle = fmod(value - m_boat->wind(), 360);
+    if (angle < 0) angle += 360;
+
     QTransform rotation;
     rotation.rotate(-angle);
     setTransform(rotation, false);

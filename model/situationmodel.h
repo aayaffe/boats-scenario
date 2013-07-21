@@ -61,8 +61,6 @@ class SituationModel : public QObject {
         SituationModel(QObject *parent = 0);
         ~SituationModel();
 
-        int sizeForSeries(const Boats::Series series);
-
         // Setters and Getters for Model Data
         QString title() const { return m_title; }
         void setTitle(const QString theValue);
@@ -87,6 +85,9 @@ class SituationModel : public QObject {
 
         QString description() const { return m_description; }
         void setDescription(const QString theValue);
+
+        qreal lookDirection() const { return m_lookDirection; }
+        qreal tilt() const { return m_tilt; }
 
         int size() const { return m_tracks.size();}
         const QList<TrackModel*> tracks() const { return m_tracks; }
@@ -133,6 +134,8 @@ class SituationModel : public QObject {
         void lengthChanged(const int length);
         void abstractChanged(const QString abstract);
         void descriptionChanged(const QString description);
+        void lookDirectionChanged( const qreal lookDirection);
+        void tiltChanged( const qreal tilt);
 
         // Signals for Marks
         void markAdded(MarkModel *mark);
@@ -162,6 +165,9 @@ class SituationModel : public QObject {
         // Slot for Wind
         void resetWind();
 
+        void setLookDirection(qreal theValue);
+        void setTilt(qreal theValue);
+
     private:
         // Model Data
         /// \a m_title holds the Title of the Scenario
@@ -188,6 +194,12 @@ class SituationModel : public QObject {
         /// \a m_situationLength holds the size of the Zone at Marks of
         /// the Scenario
         int m_situationLength;
+
+        /// \a m_lookDirection holds the direction of the view
+        qreal m_lookDirection;
+
+        /// \a m_tilt holds the tilt of the view
+        qreal m_tilt;
 
         /// \a m_wind holds the WindModel of the Scenario
         WindModel m_wind;

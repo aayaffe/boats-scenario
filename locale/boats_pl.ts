@@ -493,12 +493,108 @@ Do you want to replace it?</source>
         <source>Alt+L</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Set Mark &amp;Color</source>
+        <translation>Ustaw &amp;Kolor znaku</translation>
+    </message>
+    <message>
+        <source>Alt+C</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Mark Side</source>
+        <translation>Przełącz &amp;Stronę znaku</translation>
+    </message>
+    <message>
+        <source>Alt+M</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Toggle Mark Arro&amp;w</source>
+        <translation>Przełącz &amp;Strzałkę znaku</translation>
+    </message>
+    <message>
+        <source>Alt+W</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Toggle Mark &amp;Label</source>
+        <translation>Przełącz &amp;Etykietę znaku</translation>
+    </message>
+    <message>
+        <source>&amp;Edit Mark Label</source>
+        <translation>&amp;Edytuj etykietę znaku</translation>
+    </message>
+    <message>
+        <source>Alt+E</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Edit mark label</source>
+        <translation>Edytuj etykietę znaku</translation>
+    </message>
+    <message>
+        <source>Label text:</source>
+        <translation>Tekst etykiety</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>The file is not an xmlscenario version 1.0 file.</source>
         <translation>Plik nie jest plikiem xmlscenario version 1.0.</translation>
+    </message>
+    <message>
+        <source>Laser</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Optimist</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Tornado</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Committee boat</source>
+        <translation>Tatek komisji</translation>
+    </message>
+    <message>
+        <source>RIB</source>
+        <translation>Ponton</translation>
+    </message>
+    <message>
+        <source>Spin Keelboat</source>
+        <translation>Jacht Kilowy ze Spinakerem</translation>
+    </message>
+    <message>
+        <source>Gennaker Keelboat</source>
+        <translation>Jacht Kilowy ze Genakerem</translation>
+    </message>
+    <message>
+        <source>Topper</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Firefly</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>29er</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>49er</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>420</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>470</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -564,17 +660,6 @@ Do you want to replace it?</source>
     </message>
 </context>
 <context>
-    <name>TrackDelegate</name>
-    <message>
-        <source>false</source>
-        <translation>falsz</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>prawda</translation>
-    </message>
-</context>
-<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>
@@ -587,6 +672,10 @@ Do you want to replace it?</source>
     <message>
         <source>Series</source>
         <translation>Serie</translation>
+    </message>
+    <message>
+        <source>Follow</source>
+        <translation>Podążaj</translation>
     </message>
 </context>
 <context>

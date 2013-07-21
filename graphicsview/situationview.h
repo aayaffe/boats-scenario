@@ -50,17 +50,30 @@ class SituationView : public QGraphicsView {
 
     protected:
         void wheelEvent(QWheelEvent *event);
+        void mousePressEvent(QMouseEvent *event);
+        void mouseReleaseEvent(QMouseEvent *event);
 
     public slots:
         void zoomIn();
         void zoomOut();
         void zoomFit();
+        void setLookDirection(qreal value);
+        void setTilt(qreal value);
+        void setCenter(QPointF position);
+
+    signals:
+        void lookDirectionChanged( const int lookDirection);
+        void tiltChanged( const int tilt);
 
     private:
         void setScale(bool in);
+        void transformView();
 
         /// \a scaleValue holds the value for the viewing scale
         qreal scaleValue;
+
+        qreal lookDirectionValue;
+        qreal tiltValue;
 };
 
 #endif

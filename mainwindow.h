@@ -97,10 +97,16 @@ class MainWindow : public QMainWindow {
         void toggleHidden();
         void toggleText();
         void toggleSpin();
+        void toggleMarkSide();
+        void toggleMarkArrow();
         void toggleMarkZone();
+        void setMarkColor();
         void toggleLaylines();
+        void toggleMarkLabel();
+        void editMarkLabel();
         void deleteTrack();
         void deleteModels();
+        void setLookAt();
 
         // Animation actions
         void animate(bool state, bool interactive=true);
@@ -153,6 +159,8 @@ class MainWindow : public QMainWindow {
         QTabWidget *tabWidget;
         QPushButton *newTabButton;
         QPushButton *removeTabButton;
+        QSlider *lookDirectionSlider;
+        QSlider *tiltSlider;
         QToolBar *animationBar;
         QDockWidget *situationDock;
         SituationWidget *situationWidget;
@@ -191,8 +199,13 @@ class MainWindow : public QMainWindow {
         QAction *toggleHiddenAction;
         QAction *toggleTextAction;
         QAction *toggleSpinAction;
+        QAction *toggleMarkSideAction;
+        QAction *toggleMarkArrowAction;
         QAction *toggleMarkZoneAction;
+        QAction *setMarkColorAction;
         QAction *toggleLaylinesAction;
+        QAction *toggleMarkLabelAction;
+        QAction *editMarkLabelAction;
         QAction *deleteTrackAction;
         QAction *deleteAction;
 

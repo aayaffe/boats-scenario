@@ -497,12 +497,108 @@ Wilt u het vervangen?</translation>
         <source>Alt+L</source>
         <translation>Alt+L</translation>
     </message>
+    <message>
+        <source>Set Mark &amp;Color</source>
+        <translation>Set Merkteken &amp;Kleur</translation>
+    </message>
+    <message>
+        <source>Alt+C</source>
+        <translation>Alt+C</translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Mark Side</source>
+        <translation>Toggle &amp;Merkteken Kant</translation>
+    </message>
+    <message>
+        <source>Alt+M</source>
+        <translation>Alt+M</translation>
+    </message>
+    <message>
+        <source>Toggle Mark Arro&amp;w</source>
+        <translation>Toggle Merkteken Pij&amp;l</translation>
+    </message>
+    <message>
+        <source>Alt+W</source>
+        <translation>Alt+L</translation>
+    </message>
+    <message>
+        <source>Toggle Mark &amp;Label</source>
+        <translation>Toggle Merkteken &amp;Label</translation>
+    </message>
+    <message>
+        <source>&amp;Edit Mark Label</source>
+        <translation>Bewerk Merkteken Label</translation>
+    </message>
+    <message>
+        <source>Alt+E</source>
+        <translation>Alt+B</translation>
+    </message>
+    <message>
+        <source>Edit mark label</source>
+        <translation>Bewerk merkteken label</translation>
+    </message>
+    <message>
+        <source>Label text:</source>
+        <translation>Label tekst:</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>The file is not an xmlscenario version 1.0 file.</source>
         <translation>Dit is geen xmlscenario versie 1.0 bestand.</translation>
+    </message>
+    <message>
+        <source>Laser</source>
+        <translation>Laser</translation>
+    </message>
+    <message>
+        <source>Optimist</source>
+        <translation>Optimist</translation>
+    </message>
+    <message>
+        <source>Tornado</source>
+        <translation>Tornado</translation>
+    </message>
+    <message>
+        <source>Committee boat</source>
+        <translation>Comit\cf1\f1\&apos;e9boot\cf0\f0 </translation>
+    </message>
+    <message>
+        <source>RIB</source>
+        <translation>Rubberboot</translation>
+    </message>
+    <message>
+        <source>Spin Keelboat</source>
+        <translation>Spin Kielboot</translation>
+    </message>
+    <message>
+        <source>Gennaker Keelboat</source>
+        <translation>Gennaker Kielboot</translation>
+    </message>
+    <message>
+        <source>Topper</source>
+        <translation>Topper</translation>
+    </message>
+    <message>
+        <source>Firefly</source>
+        <translation>Firefly</translation>
+    </message>
+    <message>
+        <source>29er</source>
+        <translation>29er</translation>
+    </message>
+    <message>
+        <source>49er</source>
+        <translation>49er</translation>
+    </message>
+    <message>
+        <source>420</source>
+        <translation>420</translation>
+    </message>
+    <message>
+        <source>470</source>
+        <translation>470</translation>
     </message>
 </context>
 <context>
@@ -568,17 +664,6 @@ Wilt u het vervangen?</translation>
     </message>
 </context>
 <context>
-    <name>TrackDelegate</name>
-    <message>
-        <source>false</source>
-        <translation>Vals</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>Waar</translation>
-    </message>
-</context>
-<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>
@@ -591,6 +676,10 @@ Wilt u het vervangen?</translation>
     <message>
         <source>Series</source>
         <translation>Serie</translation>
+    </message>
+    <message>
+        <source>Follow</source>
+        <translation>Volg</translation>
     </message>
 </context>
 <context>

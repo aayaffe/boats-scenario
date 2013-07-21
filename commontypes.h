@@ -38,7 +38,8 @@ enum DebugTraces {
 typedef enum {
     TRACK_COLOR,
     TRACK_PATH,
-    TRACK_SERIES
+    TRACK_SERIES,
+    TRACK_FOLLOW
 } TrackTableItem;
 
 typedef enum {

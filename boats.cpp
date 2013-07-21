@@ -34,5 +34,42 @@ QList<QString> Boats::seriesList() {
             m_seriesList << ENUM_NAME(Boats, Series, i);
         }
     }
+// By doing it this way guarantee that labels align correctly with enum tags irrespective of order
+    m_seriesList[keelboat] = QObject::tr("Spin Keelboat");
+    m_seriesList[keelboatwithgenn] = QObject::tr("Gennaker Keelboat");
+    m_seriesList[int49er] = QObject::tr("49er");
+    m_seriesList[int470] = QObject::tr("470");
+    m_seriesList[int420] = QObject::tr("420");
+    m_seriesList[int29er] = QObject::tr("29er");
+    m_seriesList[laser] = QObject::tr("Laser");
+    m_seriesList[firefly] = QObject::tr("Firefly");
+    m_seriesList[topper] = QObject::tr("Topper");
+    m_seriesList[optimist] = QObject::tr("Optimist");
+    m_seriesList[tornado] = QObject::tr("Tornado");
+    m_seriesList[startboat] = QObject::tr("Committee boat");
+    m_seriesList[rib] = QObject::tr("RIB");
     return m_seriesList;
+}
+
+QList<int> Boats::m_seriesSizeList;
+
+QList<int> Boats::seriesSizeList() {
+    if (!m_seriesSizeList.size()) {
+        for (int i=0; i< ENUM_SIZE(Boats, Series)-1; i++) {
+            m_seriesSizeList << 100; // default size of 100
+        }
+        m_seriesSizeList[keelboat] = 100;
+        m_seriesSizeList[keelboatwithgenn] = 100;
+        m_seriesSizeList[int49er] = 48;
+        m_seriesSizeList[int470] = 47;
+        m_seriesSizeList[int420] = 42;
+        m_seriesSizeList[int29er] = 41;
+        m_seriesSizeList[laser] = 40;
+        m_seriesSizeList[firefly] = 36.6;
+        m_seriesSizeList[topper] = 34;
+        m_seriesSizeList[optimist] = 23;
+        m_seriesSizeList[tornado] = 61;
+        m_seriesSizeList[rib] = 60;
+    }
+    return m_seriesSizeList;
 }

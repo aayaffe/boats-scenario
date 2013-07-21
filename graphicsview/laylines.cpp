@@ -38,9 +38,9 @@ LaylinesGraphicsItem::LaylinesGraphicsItem(PositionModel *model, QGraphicsItem *
         : QGraphicsPathItem(parent),
         m_model(model),
         m_length(model->situation()->situationLength()),
-        m_boatLength(model->situation()->sizeForSeries(model->situation()->situationSeries())),
-        m_laylineAngle(model->situation()->laylineAngle()) {
-    setFlag(QGraphicsItem::ItemIgnoresTransformations);
+        m_boatLength(Boats::seriesSizeList()[model->situation()->situationSeries()]),
+        m_laylineAngle(model->situation()->laylineAngle()),
+        m_heading(model->heading()) {
     setFlag(QGraphicsItem::ItemStacksBehindParent);
     setPen(Qt::DashLine);
 
@@ -50,6 +50,8 @@ LaylinesGraphicsItem::LaylinesGraphicsItem(PositionModel *model, QGraphicsItem *
 
     connect(m_model, SIGNAL(laylinesChanged(bool)),
             this, SLOT(setVisible(bool)));
+    connect(m_model, SIGNAL(headingChanged(qreal)),
+            this, SLOT(setHeading(qreal)));
     connect(m_model, SIGNAL(windChanged(qreal)),
             this, SLOT(setWind(qreal)));
     connect(m_model->situation(), SIGNAL(lengthChanged(int)),
@@ -72,7 +74,7 @@ void LaylinesGraphicsItem::setLength(int value) {
 }
 
 void LaylinesGraphicsItem::setSeries(int value) {
-    int boatLength = m_model->situation()->sizeForSeries((Boats::Series)value);
+    int boatLength = Boats::seriesSizeList()[value];
     if (m_boatLength != boatLength) {
         m_boatLength = boatLength;
         updatePath();
@@ -86,12 +88,22 @@ void LaylinesGraphicsItem::setLaylineAngle(int value) {
     }
 }
 
+void LaylinesGraphicsItem::setHeading(qreal value) {
+    if(m_heading != value) {
+        m_heading = value;
+
+        QTransform transform;
+        transform.rotate(m_wind - m_heading);
+        setTransform(transform, false);
+    }
+}
+
 void LaylinesGraphicsItem::setWind(qreal value) {
     if(m_wind != value) {
         m_wind = value;
 
         QTransform transform;
-        transform.rotate(m_wind);
+        transform.rotate(m_wind - m_heading);
         setTransform(transform, false);
     }
 }

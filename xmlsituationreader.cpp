@@ -123,6 +123,12 @@ void XmlSituationReader::readSituation() {
             } else if (name() == "length") {
                 m_situation->setSituationLength(readElementText().toInt());
 
+            } else if (name() == "look_direction") {
+                m_situation->setLookDirection(readElementText().toFloat());
+
+            } else if (name() == "tilt") {
+                m_situation->setTilt(readElementText().toFloat());
+
             } else if (name() == "mark") {
                 readMark(m_situation);
 
@@ -157,6 +163,8 @@ void XmlSituationReader::readTrack(SituationModel *situation) {
                 track->setSeries(series(readElementText()));
             else if (name() == "path")
                 track->setShowPath(readElementText() == "1");
+            else if (name() == "follow_track")
+                track->setFollowTrack(readElementText() == "1");
             else if (name() == "boat")
                 readBoat(situation, track);
             else
@@ -169,7 +177,10 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
     QPointF pos;
     qreal heading = 0;
     qreal trim = 0;
+    qreal jibTrim = 0;
     bool spin = false;
+    qreal spinTrim = 0;
+
     Boats::Overlaps overlap = Boats::none;
     Boats::Flag flag = Boats::noFlag;
     bool hidden = false;
@@ -191,8 +202,12 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
                 heading = readElementText().toFloat();
             else if (name() == "trim")
                 trim = readElementText().toFloat();
+            else if (name() == "jibtrim")
+                jibTrim = readElementText().toFloat();
             else if (name() == "spin")
                 spin = (readElementText() == "1");
+            else if (name() == "spintrim")
+                spinTrim = readElementText().toFloat();
             else if (name() == "overlap") {
                 overlap = (Boats::Overlaps)FLAG_VALUE(Boats, Overlap, readElementText().toStdString().c_str());
             }
@@ -229,7 +244,9 @@ void XmlSituationReader::readBoat(SituationModel *situation, TrackModel *track) 
         boat = command->boat();
     }
     boat->setTrim(trim);
+    boat->setJibTrim(jibTrim);
     boat->setSpin(spin);
+    boat->setSpinTrim(spinTrim);
     boat->setOverlap(overlap);
     boat->setFlag(flag);
     boat->setHidden(hidden);
@@ -250,6 +267,11 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     QPointF textPos(10,10);
     QString text;
     bool laylines = 0;
+    qreal heading;
+    bool arrowVisible;
+    bool leaveToPort;
+    bool labelVisible;
+    QString labelText;
     QStringList discarded;
     while (!atEnd()) {
         readNext();
@@ -274,6 +296,16 @@ void XmlSituationReader::readMark(SituationModel *situation) {
                 text = readElementText();
             else if (name() == "laylines")
                 laylines = (readElementText() == "1");
+            else if (name() == "heading")
+                heading = (readElementText().toFloat());
+            else if (name() == "arrowVisible")
+                arrowVisible = (readElementText() == "1");
+            else if (name() == "leaveToPort")
+                leaveToPort = (readElementText() == "1");
+            else if (name() == "labelVisible")
+                labelVisible = (readElementText() == "1");
+            else if (name() == "labelText")
+                labelText = (readElementText());
             else
                 discarded.append(readUnknownElement());
         }
@@ -289,6 +321,11 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     mark->setTextPosition(textPos);
     mark->setText(text);
     mark->setLaylines(laylines);
+    mark->setHeading(heading);
+    mark->setArrowVisible(arrowVisible);
+    mark->setLeaveToPort(leaveToPort);
+    mark->setLabelVisible(labelVisible);
+    mark->setLabelText(labelText);
     foreach (const QString elem, discarded) {
         mark->appendDiscardedXml(elem);
     }

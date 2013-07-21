@@ -50,21 +50,27 @@ enum {
     SET_SERIES,
     SET_COLOR,
     SET_SHOWPATH,
+    SET_FOLLOWTRACK,
+    SET_LOOKAT,
     SET_SHOWWIND,
     SET_WIND,
     MOVE_MODEL,
     SET_LAYLINES,
-    HEADING_BOAT,
+    ROTATE_BOATS,
     OVERLAP_BOAT,
     FLAG_BOAT,
     TRIM_BOAT,
+    TRIM_JIB,
+    TRIM_SPIN,
     SPIN_BOAT,
     HIDE_BOAT,
     ACCELERATE_BOAT,
     SET_TEXT,
     MOVE_TEXT,
     ZONE_MARK,
-    LENGTH_MARK
+    COLOR_MARK,
+    LENGTH_MARK,
+    LABEL_MARK
 };
 
 class SetTitleUndoCommand : public QUndoCommand {
@@ -250,6 +256,40 @@ class SetShowPathUndoCommand : public QUndoCommand {
         TrackModel *m_track;
 };
 
+class SetFollowTrackUndoCommand : public QUndoCommand {
+
+    public:
+        SetFollowTrackUndoCommand(SituationModel* situation, TrackModel* track, QUndoCommand *parent = 0);
+        ~SetFollowTrackUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_FOLLOWTRACK; }
+
+    private:
+        SituationModel *m_situation;
+        TrackModel *m_track;
+        QList<bool> m_followTrackList;
+};
+
+class SetLookAtUndoCommand : public QUndoCommand {
+
+    public:
+        SetLookAtUndoCommand(SituationModel* situation, int lookDirection, int tilt, QUndoCommand *parent = 0);
+        ~SetLookAtUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return SET_LOOKAT; }
+
+    private:
+        SituationModel *m_situation;
+        int m_oldLookDirection;
+        int m_newLookDirection;
+        int m_oldTilt;
+        int m_newTilt;
+};
+
 class SetShowWindUndoCommand : public QUndoCommand {
 
     public:
@@ -354,19 +394,19 @@ class AddBoatUndoCommand : public QUndoCommand {
         BoatModel *m_boat;
 };
 
-class HeadingBoatUndoCommand : public QUndoCommand {
+class RotateModelsUndoCommand : public QUndoCommand {
 
     public:
-        HeadingBoatUndoCommand(QList<BoatModel*> &boatList, const qreal &heading, QUndoCommand *parent = 0);
-        ~HeadingBoatUndoCommand();
+        RotateModelsUndoCommand(QList<PositionModel*> &modelList, const qreal &angle, QUndoCommand *parent = 0);
+        ~RotateModelsUndoCommand();
         void undo();
         void redo();
         bool mergeWith(const QUndoCommand *command);
-        int id() const { return HEADING_BOAT; }
+        int id() const { return ROTATE_BOATS; }
     private:
-        QList<BoatModel*> m_boatList;
+        QList<PositionModel*> m_modelList;
         QList<qreal> m_headingList;
-        qreal m_heading;
+        qreal m_angle;
 };
 
 class OverlapBoatUndoCommand : public QUndoCommand {
@@ -409,6 +449,37 @@ class TrimBoatUndoCommand : public QUndoCommand {
         void redo();
         bool mergeWith(const QUndoCommand *command);
         int id() const { return TRIM_BOAT; }
+    private:
+        QList<BoatModel*> m_boatList;
+        QList<qreal> m_trimList;
+        QList<qreal> m_jibTrimList;
+        qreal m_trim;
+};
+
+class TrimJibUndoCommand : public QUndoCommand {
+
+    public:
+        TrimJibUndoCommand(QList<BoatModel*> &boatList, const qreal &trim, QUndoCommand *parent = 0);
+        ~TrimJibUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return TRIM_JIB; }
+    private:
+        QList<BoatModel*> m_boatList;
+        QList<qreal> m_trimList;
+        qreal m_trim;
+};
+
+class TrimSpinUndoCommand : public QUndoCommand {
+
+    public:
+        TrimSpinUndoCommand(QList<BoatModel*> &boatList, const qreal &trim, QUndoCommand *parent = 0);
+        ~TrimSpinUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return TRIM_SPIN; }
     private:
         QList<BoatModel*> m_boatList;
         QList<qreal> m_trimList;
@@ -536,6 +607,23 @@ class ZoneMarkUndoCommand : public QUndoCommand {
         QList<MarkModel*> m_markList;
 };
 
+class ColorMarkUndoCommand : public QUndoCommand {
+
+    public:
+        ColorMarkUndoCommand(SituationModel* situation, const QList<MarkModel*> &markList, const QColor &color, QUndoCommand *parent = 0);
+        ~ColorMarkUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return COLOR_MARK; }
+
+    private:
+        SituationModel *m_situation;
+        QList<MarkModel*> m_markList;
+        QList<QColor> m_oldColors;
+        QColor m_newColor;
+};
+
 class LengthMarkUndoCommand : public QUndoCommand {
 
     public:
@@ -550,6 +638,58 @@ class LengthMarkUndoCommand : public QUndoCommand {
         SituationModel *m_situation;
         int m_oldLength;
         int m_newLength;
+};
+
+class ToggleMarkSideUndoCommand : public QUndoCommand {
+
+    public:
+        ToggleMarkSideUndoCommand(const QList<MarkModel *> &markList, QUndoCommand *parent = 0);
+        ~ToggleMarkSideUndoCommand();
+        void undo();
+        void redo();
+
+    private:
+        QList<MarkModel*> m_markList;
+};
+
+class ToggleMarkArrowUndoCommand : public QUndoCommand {
+
+    public:
+        ToggleMarkArrowUndoCommand(const QList<MarkModel *> &markList, QUndoCommand *parent = 0);
+        ~ToggleMarkArrowUndoCommand();
+        void undo();
+        void redo();
+
+    private:
+        QList<MarkModel*> m_markList;
+};
+
+class ToggleMarkLabelUndoCommand : public QUndoCommand {
+
+    public:
+        ToggleMarkLabelUndoCommand(const QList<MarkModel*> &markList, QUndoCommand *parent = 0);
+        ~ToggleMarkLabelUndoCommand();
+        void undo();
+        void redo();
+
+    private:
+        QList<MarkModel*> m_markList;
+};
+
+class SetMarkLabelUndoCommand : public QUndoCommand {
+
+    public:
+        SetMarkLabelUndoCommand(MarkModel* mark, QString text, QUndoCommand *parent = 0);
+        ~SetMarkLabelUndoCommand();
+        void undo();
+        void redo();
+        bool mergeWith(const QUndoCommand *command);
+        int id() const { return LABEL_MARK; }
+
+    private:
+        MarkModel* m_mark;
+        QString m_oldText;
+        QString m_newText;
 };
 
 class DeleteMarkUndoCommand : public QUndoCommand {

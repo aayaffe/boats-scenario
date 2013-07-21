@@ -66,12 +66,10 @@ SituationScene::SituationScene(SituationModel *situation)
         m_markPopup(0),
         m_pointPopup(0) {
 
-    // try to set a minimum scene rect
-    QGraphicsItem *e1 = addEllipse(QRectF(-1000,-1000, 1, 1));
-    QGraphicsItem *e2 = addEllipse(QRectF(1000, 1000, 1, 1));
-    sceneRect();
-    delete e1;
-    delete e2;
+    setItemIndexMethod(NoIndex);
+
+    // set a minimum scene rect
+    setSceneRect(-10000, -10000, 20000, 20000);
 
     // react to self change of selection
     connect(this, SIGNAL(selectionChanged()),
@@ -103,6 +101,11 @@ SituationScene::SituationScene(SituationModel *situation)
 
     connect(&situation->wind(), SIGNAL(windVisibleChanged(bool)),
             this, SLOT(setWind(bool)));
+
+    connect(situation, SIGNAL(lookDirectionChanged(qreal)),
+             this, SIGNAL(lookDirectionChanged(qreal)));
+    connect(situation, SIGNAL(tiltChanged(qreal)),
+            this, SIGNAL(tiltChanged(qreal)));
 
     setLaylines(situation->laylineAngle());
 
@@ -224,6 +227,7 @@ void SituationScene::setAnimation() {
         addItem(boatItem);
         boatItem->boat()->setOrder(0);
         boatItem->setPosition(boat->position());
+        boatItem->setHeading(boat->heading());
         boatItem->boat()->setWind(m_situation->wind().windAt(0));
         boatItem->boat()->setLaylines(boat->laylines());
         connect(&track->situation()->wind(), SIGNAL(directionChanged(qreal)),
@@ -237,6 +241,14 @@ void SituationScene::setAnimation() {
         TrackAnimation *animation = new TrackAnimation(track, boatItem->boat(), m_scenarioAnimation);
         m_scenarioAnimation->addAnimation(animation);
         m_animationItems.push_back(animation);
+
+        if(track->followTrack()) {
+            connect(boatItem->boat(), SIGNAL(positionChanged(QPointF)),
+                    this, SIGNAL(centerChanged(QPointF)));
+            disconnect(m_situation, SIGNAL(lookDirectionChanged(qreal)));
+            connect(boatItem->boat(), SIGNAL(headingChanged(qreal)),
+                    this, SIGNAL(lookDirectionChanged(qreal)));
+        }
     }
 
     foreach (MarkModel *mark, m_situation->marks()) {
@@ -296,13 +308,17 @@ void SituationScene::unSetAnimation() {
 void SituationScene::keyPressEvent(QKeyEvent *event) {
 
     if (!m_selectedBoatModels.isEmpty()) {
-        if (event->key() == Qt::Key_Plus) {
-            qreal theta = fmod(m_selectedBoatModels[0]->heading() + 5 + 360.0, 360.0);
-            m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
-
-        } else if (event->key() == Qt::Key_Minus) {
-            qreal theta = fmod(m_selectedBoatModels[0]->heading() - 5 + 360.0, 360.0);
-            m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
+// Trim just the jib when ',' or '.' is pressed (TrimJibUndoCommand only trims the jib)
+// But not when Ctrl is pressed - reserve that for spinTrim
+        if (event->key() == Qt::Key_Comma && !(event->modifiers() & Qt::ControlModifier)) {
+            m_situation->undoStack()->push(new TrimJibUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->jibTrim() - 5));
+        } else if (event->key() == Qt::Key_Period && !(event->modifiers() & Qt::ControlModifier)) {
+            m_situation->undoStack()->push(new TrimJibUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->jibTrim() + 5));
+// Trim the spin when Ctrl+',' or Ctrl+'.' is pressed
+        }else if (event->key() == Qt::Key_Comma && (event->modifiers() & Qt::ControlModifier)) {
+            m_situation->undoStack()->push(new TrimSpinUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->spinTrim() - 5));
+        } else if (event->key() == Qt::Key_Period && (event->modifiers() & Qt::ControlModifier)) {
+            m_situation->undoStack()->push(new TrimSpinUndoCommand(m_selectedBoatModels, m_selectedBoatModels[0]->spinTrim() + 5));
         }
     }
 
@@ -322,6 +338,13 @@ void SituationScene::keyPressEvent(QKeyEvent *event) {
         } else if (event->key() == Qt::Key_Down) {
             QPointF pos(0,5);
             m_situation->undoStack()->push(new MoveModelUndoCommand(m_selectedModels, pos));
+
+        } else if (event->key() == Qt::Key_Plus) {
+            m_situation->undoStack()->push(new RotateModelsUndoCommand(m_selectedModels, 5.0));
+
+        } else if (event->key() == Qt::Key_Minus) {
+            m_situation->undoStack()->push(new RotateModelsUndoCommand(m_selectedModels, -5.0));
+
         } else {
             QGraphicsScene::keyPressEvent(event);
         }
@@ -387,7 +410,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
             if (event->buttons() == Qt::RightButton
                 || (event->buttons() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                headingBoat(event->scenePos());
+                headingModel(event->scenePos());
             }
         break;
         case CREATE_TRACK:
@@ -397,7 +420,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
             if (event->buttons() == Qt::RightButton
                 || (event->buttons() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                headingBoat(event->scenePos());
+                headingModel(event->scenePos());
             }
             break;
         case CREATE_BOAT:
@@ -410,7 +433,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
             if (event->buttons() == Qt::RightButton
                 || (event->buttons() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                headingBoat(event->scenePos());
+                headingModel(event->scenePos());
             }
             break;
         case CREATE_MARK:
@@ -489,7 +512,7 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
             if (event->button() == Qt::RightButton
                 || (event->button() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                headingBoat(event->scenePos());
+                headingModel(event->scenePos());
             }
             break;
         case CREATE_TRACK:
@@ -508,7 +531,7 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
             if (event->button() == Qt::RightButton
                 || (event->button() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-                headingBoat(event->scenePos());
+                headingModel(event->scenePos());
             }
             break;
         case CREATE_MARK:
@@ -553,8 +576,8 @@ void SituationScene::moveModel(QPointF pos) {
     }
 }
 
-void SituationScene::headingBoat(QPointF pos) {
-    if (!m_selectedBoatModels.isEmpty() && pos != m_modelPressed->position()) {
+void SituationScene::headingModel(QPointF pos) {
+    if (!m_selectedModels.isEmpty() && pos != m_modelPressed->position()) {
         QPointF point = pos - m_modelPressed->position();
         qreal wind = m_modelPressed->wind();
         qreal theta = fmod((atan2 (point.x(), -point.y()) * 180 / M_PI) + 360.0, 360.0);
@@ -579,7 +602,7 @@ void SituationScene::headingBoat(QPointF pos) {
         } else if (fabs(delta - (360-snap)) <=5) {
             theta = fmod(wind + 360 - snap, 360);
         }
-        m_situation->undoStack()->push(new HeadingBoatUndoCommand(m_selectedBoatModels, theta));
+        m_situation->undoStack()->push(new RotateModelsUndoCommand(m_selectedModels, theta-m_modelPressed->heading()));
     }
 }
 
@@ -677,7 +700,7 @@ void SituationScene::setLaylines(const int angle) {
     }
     if (debugLevel & 1 << VIEW) std::cout << "creating layline Background for " << angle << std::endl;
     qreal theta = angle * M_PI /180;
-    int length = m_situation->sizeForSeries(m_situation->situationSeries());
+    int length = Boats::seriesSizeList()[m_situation->situationSeries()];
 
     // draw 4 times as big, then use transform to scale back the brush
     // gives better precision grid

@@ -496,12 +496,108 @@ Voulez-vous le remplacer?</translation>
         <source>Alt+L</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Set Mark &amp;Color</source>
+        <translation>Changer la &amp;Couleur de la Marque</translation>
+    </message>
+    <message>
+        <source>Alt+C</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Mark Side</source>
+        <translation>&amp;Sens de la Marque</translation>
+    </message>
+    <message>
+        <source>Alt+M</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Toggle Mark Arro&amp;w</source>
+        <translation>&amp;Fleche de la marque</translation>
+    </message>
+    <message>
+        <source>Alt+W</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Toggle Mark &amp;Label</source>
+        <translation>&amp;Nom de la Marque</translation>
+    </message>
+    <message>
+        <source>&amp;Edit Mark Label</source>
+        <translation>&amp;Editer la Marque</translation>
+    </message>
+    <message>
+        <source>Alt+E</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Edit mark label</source>
+        <translation>Editer la Marque</translation>
+    </message>
+    <message>
+        <source>Label text:</source>
+        <translation>Nom de la Marque</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>The file is not an xmlscenario version 1.0 file.</source>
         <translation>Le fichier n&apos;est pas un fichier xmlscenario version 1.0.</translation>
+    </message>
+    <message>
+        <source>Laser</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Optimist</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Tornado</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Committee boat</source>
+        <translation>Bateau Comité</translation>
+    </message>
+    <message>
+        <source>RIB</source>
+        <translation>Semi-Rigide</translation>
+    </message>
+    <message>
+        <source>Spin Keelboat</source>
+        <translation>Quillard avec Spi</translation>
+    </message>
+    <message>
+        <source>Gennaker Keelboat</source>
+        <translation>Quillard avec Gennaker</translation>
+    </message>
+    <message>
+        <source>Topper</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Firefly</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>29er</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>49er</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>420</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>470</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -567,17 +663,6 @@ Voulez-vous le remplacer?</translation>
     </message>
 </context>
 <context>
-    <name>TrackDelegate</name>
-    <message>
-        <source>false</source>
-        <translation>faux</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>vrai</translation>
-    </message>
-</context>
-<context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>
@@ -590,6 +675,10 @@ Voulez-vous le remplacer?</translation>
     <message>
         <source>Path</source>
         <translation>Chemin</translation>
+    </message>
+    <message>
+        <source>Follow</source>
+        <translation>Suivre</translation>
     </message>
 </context>
 <context>
