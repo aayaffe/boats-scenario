@@ -4,6 +4,7 @@ boats (201307-1) unstable; urgency=low
   * Updating debhelper and using dh.
   * Fixing Description.
   * Adding Vcs-Git. Closes: #638466.
+  * Bumping Standards to 3.9.4(no change).
 
  -- Thibaut Gridel <tgridel@free.fr>  Sun, 21 Jul 2013 17:05:24 +0200
 
