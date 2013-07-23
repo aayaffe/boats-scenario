@@ -2,7 +2,7 @@ Source: boats
 Section: x11
 Priority: extra
 Maintainer: Thibaut Gridel <tgridel@free.fr>
-Build-Depends: debhelper (>= 7), libqt4-dev, qt4-qmake, libgif-dev
+Build-Depends: debhelper (>= 9), libqt4-dev, qt4-qmake, libgif-dev
 Standards-Version: 3.9.3
 Vcs-Browser: https://sourceforge.net/p/boats/code/?branch=ref%2Fdebian
 Homepage: http://boats.sf.net

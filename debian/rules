@@ -1,81 +1,19 @@
 #!/usr/bin/make -f
-# -*- makefile -*-
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+export QMAKE_OPT=GIF_EXPORT=1 CONFIG+=unix_deploy
 
-export QMAKE_OPT=boats.pro GIF_EXPORT=1 PREFIX=/usr CONFIG+=unix_deploy
+%:
+	dh $@
 
+override_dh_auto_configure:
+	dh_auto_configure -- $(QMAKE_OPT)
 
-
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	# Add here commands to configure the package.
-	qmake $(QMAKE_OPT)
-	touch configure-stamp
-
-
-build: build-stamp
-
-build-indep:
-
-build-arch:
-
-build-stamp: configure-stamp
-	dh_testdir
-
-	# Add here commands to compile the package.
-	$(MAKE)
-
-	touch $@
-
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp configure-stamp
-
-	# Add here commands to clean up after the build process.
-	qmake $(QMAKE_OPT)
+override_dh_clean:
+	qmake boats.pro $(QMAKE_OPT)
 	$(MAKE) distclean
 
-	dh_clean
-
-install: build
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
-
-	# Add here commands to install the package into debian/boats.
-	$(MAKE) INSTALL_ROOT=$(CURDIR)/debian/boats install
+override_dh_install:
+	dh_install
 	rm $(CURDIR)/debian/boats/usr/share/mime/boats.xml
 	install -m644 $(CURDIR)/boats.xml \
 		$(CURDIR)/debian/boats.sharedmimeinfo
-
-
-# Build architecture-independent files here.
-binary-indep: build install
-# We have nothing to do by default.
-
-# Build architecture-dependent files here.
-binary-arch: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs
-	dh_installdocs
-#	dh_install
-	dh_installmime
-	dh_installman doc/boats.1
-	dh_link
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure
