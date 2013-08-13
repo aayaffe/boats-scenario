@@ -226,3 +226,8 @@ void SituationModel::resetWind() {
         mark->setWind(m_wind.windAt(0));
     }
 }
+
+void SituationModel::setState(const SceneState& theValue, bool commit) {
+    m_state = theValue;
+    emit stateChanged(m_state);
+}

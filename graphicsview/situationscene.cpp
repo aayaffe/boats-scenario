@@ -109,6 +109,9 @@ SituationScene::SituationScene(SituationModel *situation)
     connect(situation, SIGNAL(tiltChanged(qreal)),
             this, SIGNAL(tiltChanged(qreal)));
 
+    connect(situation, SIGNAL(stateChanged(SceneState)),
+            this, SLOT(setState(SceneState)));
+
     setLaylines(situation->laylineAngle());
 
 }

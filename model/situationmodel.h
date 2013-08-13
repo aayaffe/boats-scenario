@@ -38,6 +38,41 @@ class PolyLineModel;
 class PointModel;
 
 /**
+    \enum SceneState
+
+    This enum defines the different modal states of the edition. When
+    the user wants to input data to the scenario, he sets the current
+    edition mode.
+
+    \value NO_STATE No particular mode is set. In this mode item selection
+    and movement is allowed.
+
+    \value CREATE_TRACK The Create Track mode will create a new TrackModel
+    object in the scenario. This mode is then overriden to CREATE_BOAT as
+    a natural action is to append boat positions.
+
+    \value CREATE_BOAT The Create Boat will append a BoatModel to the
+    track of the lastly selected boat object.
+
+    \value CREATE_MARK The Create Mark will create a new MarkModel to
+    the scenario.
+
+    \value ANIMATE The Animation will be prepared, and no further input
+    will be allowed in this mode.
+
+*/
+
+typedef enum {
+    NO_STATE,
+    CREATE_TRACK,
+    CREATE_BOAT,
+    CREATE_MARK,
+    CREATE_LINE,
+    CREATE_POINT,
+    ANIMATE
+} SceneState;
+
+/**
     \class SituationModel
 
     \brief The main Model for a scenario
@@ -103,6 +138,8 @@ class SituationModel : public QObject {
         // Setters and Getters for Non model Data
         QUndoStack * undoStack() const { return m_undoStack;}
 
+        SceneState state(){ return m_state; }
+        void setState(const SceneState& theValue, bool commit = false);
         QStringList discardedXml() const { return m_discardedXml; }
         void appendDiscardedXml(const QString& theValue);
 
@@ -150,6 +187,7 @@ class SituationModel : public QObject {
         void pointAdded(PointModel *point);
         void pointRemoved(PointModel *point);
 
+        void stateChanged(SceneState newState);
     public slots:
         // Slots for Tracks
         void addTrack(TrackModel *track, int order = -1);
@@ -218,6 +256,9 @@ class SituationModel : public QObject {
         // Non model Data
         /// \a m_undoStack maintains the Undo Stack for the Scenario
         QUndoStack *m_undoStack;
+
+        /// \a m_state holds the SceneState for the current scenario
+        SceneState m_state;
 
         /// \a m_discardedXml keeps all unparsed xml tags
         QStringList m_discardedXml;

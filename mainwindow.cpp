@@ -387,6 +387,7 @@ void MainWindow::createActions() {
 }
 
 void MainWindow::updateActions() {
+    SituationModel *situation = situationList.at(currentSituation);
     SituationScene *scene = sceneList.at(currentSituation);
 
     bool selectedItems = !scene->selectedItems().isEmpty();
@@ -394,8 +395,8 @@ void MainWindow::updateActions() {
     bool selectedPoints = !scene->selectedPointModels().isEmpty();
     bool selectedMarks = !scene->selectedMarkModels().isEmpty();
 
-    addBoatAction->setEnabled(selectedBoats || scene->state() == CREATE_BOAT);
-    addPointAction->setEnabled(selectedPoints || scene->state() == CREATE_POINT);
+    addBoatAction->setEnabled(selectedBoats || situation->state() == CREATE_BOAT);
+    addPointAction->setEnabled(selectedPoints || situation->state() == CREATE_POINT);
     trimSailAction->setEnabled(selectedBoats);
     autotrimSailAction->setEnabled(selectedBoats);
     untrimSailAction->setEnabled(selectedBoats);
@@ -843,8 +844,8 @@ void MainWindow::unsetTab() {
 
     SituationModel *situation = situationList.at(currentSituation);
     SituationScene *scene = sceneList.at(currentSituation);
-    if (scene->state() == ANIMATE) {
-        scene->setState(NO_STATE);
+    if (situation->state() == ANIMATE) {
+        situation->setState(NO_STATE);
     }
 
     disconnect(situation->undoStack(), 0, 0, 0);
@@ -908,7 +909,7 @@ void MainWindow::setTab(int index) {
     situationWidget->setSituation(situation);
     connect(scene, SIGNAL(stateChanged(SceneState)),
             this, SLOT(changeState(SceneState)));
-    changeState(scene->state());
+    changeState(situation->state());
 
     connect(scene, SIGNAL(selectedModelsChanged()),
             this, SLOT(updateActions()));
@@ -1026,11 +1027,12 @@ bool MainWindow::maybeSave(SituationModel *situation) {
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
+    SituationModel *situation = situationList.at(currentSituation);
     SituationScene *scene = sceneList.at(currentSituation);
 
-    bool animated = (scene->state() == ANIMATE);
+    bool animated = (situation->state() == ANIMATE);
     if (animated) {
-        scene->setState(NO_STATE);
+        situation->setState(NO_STATE);
     }
     foreach(SituationModel *situation, situationList) {
         if (!maybeSave(situation)) {
@@ -1207,11 +1209,10 @@ void MainWindow::changeEvent(QEvent *event) {
 
 void MainWindow::newFile() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
     SituationView *view = viewList.at(currentSituation);
 
     if (maybeSave(situation)) {
-        scene->setState(NO_STATE);
+        situation->setState(NO_STATE);
         situation->undoStack()->setIndex(0);
         setCurrentFile(situation, "");
         situation->undoStack()->clear();
@@ -1345,11 +1346,10 @@ bool MainWindow::saveSituation(SituationModel *situation, QString fileName) {
 
 bool MainWindow::saveFile() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    bool animated = (scene->state() == ANIMATE);
+    bool animated = (situation->state() == ANIMATE);
     if (animated) {
-        scene->setState(NO_STATE);
+        situation->setState(NO_STATE);
     }
     bool saved = saveSituation(situation, situation->fileName());
     if (animated) {
@@ -1360,11 +1360,10 @@ bool MainWindow::saveFile() {
 
 bool MainWindow::saveAs() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    bool animated = (scene->state() == ANIMATE);
+    bool animated = (situation->state() == ANIMATE);
     if (animated) {
-        scene->setState(NO_STATE);
+        situation->setState(NO_STATE);
     }
     bool saved = saveSituation(situation, "");
     if (animated) {
@@ -1557,12 +1556,12 @@ void MainWindow::setCurrentFile(SituationModel *situation, const QString &fileNa
 }
 
 void MainWindow::addTrack() {
-    SituationScene *scene = sceneList.at(currentSituation);
+    SituationModel *situation = situationList.at(currentSituation);
 
-    if(scene->state() == CREATE_TRACK) {
-        scene->setState(NO_STATE);
+    if(situation->state() == CREATE_TRACK) {
+        situation->setState(NO_STATE);
     } else {
-        scene->setState(CREATE_TRACK);
+        situation->setState(CREATE_TRACK);
     }
 }
 
@@ -1579,12 +1578,12 @@ void MainWindow::deleteTrack() {
 }
 
 void MainWindow::addBoat() {
-    SituationScene *scene = sceneList.at(currentSituation);
+    SituationModel *situation = situationList.at(currentSituation);
 
-    if (scene->state() == CREATE_BOAT) {
-        scene->setState(NO_STATE);
+    if (situation->state() == CREATE_BOAT) {
+        situation->setState(NO_STATE);
     } else {
-        scene->setState(CREATE_BOAT);
+        situation->setState(CREATE_BOAT);
     }
 }
 
@@ -1615,32 +1614,32 @@ void MainWindow::deleteModels() {
 }
 
 void MainWindow::addMark() {
-    SituationScene *scene = sceneList.at(currentSituation);
+    SituationModel *situation = situationList.at(currentSituation);
 
-    if (scene->state() == CREATE_MARK) {
-        scene->setState(NO_STATE);
+    if (situation->state() == CREATE_MARK) {
+        situation->setState(NO_STATE);
     } else {
-        scene->setState(CREATE_MARK);
+        situation->setState(CREATE_MARK);
     }
 }
 
 void MainWindow::addPolyLine() {
-    SituationScene *scene = sceneList.at(currentSituation);
+    SituationModel *situation = situationList.at(currentSituation);
 
-    if (scene->state() == CREATE_LINE) {
-        scene->setState(NO_STATE);
+    if (situation->state() == CREATE_LINE) {
+        situation->setState(NO_STATE);
     } else {
-        scene->setState(CREATE_LINE);
+        situation->setState(CREATE_LINE);
     }
 }
 
 void MainWindow::addPoint() {
-    SituationScene *scene = sceneList.at(currentSituation);
+    SituationModel *situation = situationList.at(currentSituation);
 
-    if (scene->state() == CREATE_POINT) {
-        scene->setState(NO_STATE);
+    if (situation->state() == CREATE_POINT) {
+        situation->setState(NO_STATE);
     } else {
-        scene->setState(CREATE_POINT);
+        situation->setState(CREATE_POINT);
     }
 }
 
@@ -1877,11 +1876,12 @@ void MainWindow::toggleLang() {
 }
 
 void MainWindow::animate(bool state, bool interactive) {
+    SituationModel *situation = situationList.at(currentSituation);
     SituationScene *scene = sceneList.at(currentSituation);
 
     if (state) {
-        if (scene->state() != ANIMATE) {
-            scene->setState(ANIMATE);
+        if (situation->state() != ANIMATE) {
+            situation->setState(ANIMATE);
             scene->clearSelection();
             scene->setAnimation();
 
@@ -1904,8 +1904,8 @@ void MainWindow::animate(bool state, bool interactive) {
                 }
             }
     } else {
-        if (scene->state() == ANIMATE) {
-            scene->setState(NO_STATE);
+        if (situation->state() == ANIMATE) {
+            situation->setState(NO_STATE);
             scene->unSetAnimation();
             disconnect(this, SLOT(changeAnimationState(QAbstractAnimation::State,QAbstractAnimation::State)));
             disconnect(animationSlider, SLOT(setValue(int)));
