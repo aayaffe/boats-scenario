@@ -88,10 +88,6 @@ class SituationScene : public QGraphicsScene {
         ~SituationScene() {}
 
         void setModelPressed(PositionModel *theValue) {m_modelPressed = theValue; }
-        QList< PositionModel * > selectedModels() const { return m_selectedModels; }
-        QList< BoatModel * > selectedBoatModels() const { return m_selectedBoatModels; }
-        QList< MarkModel * > selectedMarkModels() const { return m_selectedMarkModels; }
-        QList< PointModel * > selectedPointModels() const { return m_selectedPointModels; }
         void setDefaultPopup(QMenu *theValue) { m_defaultPopup = theValue; }
         void setBoatPopup(QMenu *theValue) { m_boatPopup = theValue; }
         void setMarkPopup(QMenu *theValue) { m_markPopup = theValue; }
@@ -145,19 +141,6 @@ class SituationScene : public QGraphicsScene {
         void createPoint(QPointF pos);
 
         SituationModel *m_situation;
-
-        // Bookkeeping references to selected models
-        /// \a m_selectedModels holds the list of selected PositionModel
-        QList<PositionModel*> m_selectedModels;
-
-        /// \a m_selectedBoatsModels holds the list of selected BoatModel
-        QList<BoatModel*> m_selectedBoatModels;
-
-        /// \a m_selectedMarkModels holds the list of selected MarkModel
-        QList<MarkModel*> m_selectedMarkModels;
-
-        /// \a m_selectedPointModels holds the list of selected PointModel
-        QList<PointModel*> m_selectedPointModels;
 
         /// \a m_windAnimation holds the animation for wind
         QAnimationGroup *m_windAnimation;

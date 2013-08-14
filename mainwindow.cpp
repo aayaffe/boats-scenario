@@ -388,12 +388,11 @@ void MainWindow::createActions() {
 
 void MainWindow::updateActions() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    bool selectedItems = !scene->selectedItems().isEmpty();
-    bool selectedBoats = !scene->selectedBoatModels().isEmpty();
-    bool selectedPoints = !scene->selectedPointModels().isEmpty();
-    bool selectedMarks = !scene->selectedMarkModels().isEmpty();
+    bool selectedItems = !situation->selectedModels().isEmpty();
+    bool selectedBoats = !situation->selectedBoatModels().isEmpty();
+    bool selectedPoints = !situation->selectedPointModels().isEmpty();
+    bool selectedMarks = !situation->selectedMarkModels().isEmpty();
 
     addBoatAction->setEnabled(selectedBoats || situation->state() == CREATE_BOAT);
     addPointAction->setEnabled(selectedPoints || situation->state() == CREATE_POINT);
@@ -433,7 +432,7 @@ void MainWindow::updateActions() {
     for(int i=0; i<accelerationSize; i++) {
         allAccelerationSet[i] = 1;
     }
-    foreach(BoatModel *boat, scene->selectedBoatModels()) {
+    foreach(BoatModel *boat, situation->selectedBoatModels()) {
         allPortSet = allPortSet && (boat->overlap() & Boats::port);
         allStarboardSet = allStarboardSet && (boat->overlap() & Boats::starboard);
         allHiddenSet = allHiddenSet && boat->hidden();
@@ -452,11 +451,11 @@ void MainWindow::updateActions() {
     toggleSpinAction->setChecked(selectedBoats && allSpinSet);
     toggleSpinAction->setEnabled(selectedBoats && allSpinBoat);
 
-    foreach(PositionModel *position, scene->selectedModels()) {
+    foreach(PositionModel *position, situation->selectedModels()) {
         allTextSet = allTextSet && (!position->text().isEmpty());
         allLaylinesSet = allLaylinesSet && position->laylines();
     }
-    toggleTextAction->setEnabled(scene->selectedModels().size()==1);
+    toggleTextAction->setEnabled(situation->selectedModels().size()==1);
     toggleTextAction->setChecked(selectedItems && allTextSet);
     for (int i = 0; i < flagSize; i++) {
         QAction *flagAction = flagMenu->actions()[i];
@@ -469,7 +468,7 @@ void MainWindow::updateActions() {
     toggleLaylinesAction->setChecked(selectedItems && allLaylinesSet);
     toggleLaylinesAction->setEnabled(selectedItems);
 
-    foreach(MarkModel *mark, scene->selectedMarkModels()) {
+    foreach(MarkModel *mark, situation->selectedMarkModels()) {
         allMarkArrowSet = allMarkArrowSet && mark->arrowVisible();
         allMarkLabelSet = allMarkLabelSet && mark->labelVisible();
     }
@@ -1028,7 +1027,6 @@ bool MainWindow::maybeSave(SituationModel *situation) {
 
 void MainWindow::closeEvent(QCloseEvent *event) {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
     bool animated = (situation->state() == ANIMATE);
     if (animated) {
@@ -1567,11 +1565,10 @@ void MainWindow::addTrack() {
 
 void MainWindow::deleteTrack() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
     // TODO trick to delete first selected track
-    if (!scene->selectedBoatModels().isEmpty()) {
-        BoatModel *boat = scene->selectedBoatModels()[0];
+    if (!situation->selectedBoatModels().isEmpty()) {
+        BoatModel *boat = situation->selectedBoatModels()[0];
         TrackModel * track = boat->track();
         situation->undoStack()->push(new DeleteTrackUndoCommand(situation, track));
     }
@@ -1589,9 +1586,8 @@ void MainWindow::addBoat() {
 
 void MainWindow::deleteModels() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    foreach (BoatModel *boat, scene->selectedBoatModels()) {
+    foreach (BoatModel *boat, situation->selectedBoatModels()) {
         TrackModel* track = boat->track();
         if (track->size() > 1) {
             situation->undoStack()->push(new DeleteBoatUndoCommand(track, boat));
@@ -1599,11 +1595,11 @@ void MainWindow::deleteModels() {
             situation->undoStack()->push(new DeleteTrackUndoCommand(situation, track));
         }
     }
-    foreach (MarkModel *mark, scene->selectedMarkModels()) {
+    foreach (MarkModel *mark, situation->selectedMarkModels()) {
         situation->undoStack()->push(new DeleteMarkUndoCommand(situation, mark));
     }
 
-    foreach (PointModel *point, scene->selectedPointModels()) {
+    foreach (PointModel *point, situation->selectedPointModels()) {
         PolyLineModel *polyLine = point->polyLine();
         if (polyLine->size() > 1) {
             situation->undoStack()->push(new DeletePointUndoCommand(polyLine, point));
@@ -1645,9 +1641,8 @@ void MainWindow::addPoint() {
 
 void MainWindow::trimSail() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    QList<BoatModel *> boatList = situation->selectedBoatModels();
     if (! boatList.isEmpty()) {
         qreal trim = boatList[0]->trim();
         qreal heading = fmod(boatList[0]->heading() - boatList[0]->wind() + 360, 360);
@@ -1663,9 +1658,8 @@ void MainWindow::trimSail() {
 
 void MainWindow::autotrimSail() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    QList<BoatModel *> boatList = situation->selectedBoatModels();
     if (! boatList.isEmpty()) {
         situation->undoStack()->push(new TrimBoatUndoCommand(boatList, 0));
     }
@@ -1673,9 +1667,8 @@ void MainWindow::autotrimSail() {
 
 void MainWindow::untrimSail() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    QList<BoatModel *> boatList = situation->selectedBoatModels();
     if (! boatList.isEmpty()) {
         qreal trim = boatList[0]->trim();
         qreal heading = fmod(boatList[0]->heading() - boatList[0]->wind() + 360, 360);
@@ -1691,9 +1684,8 @@ void MainWindow::untrimSail() {
 
 void MainWindow::togglePortOverlap() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    QList<BoatModel *> boatList = situation->selectedBoatModels();
     if (! boatList.isEmpty()) {
         situation->undoStack()->push(new OverlapBoatUndoCommand(situation, boatList, Boats::port));
     }
@@ -1701,9 +1693,8 @@ void MainWindow::togglePortOverlap() {
 
 void MainWindow::toggleStarboardOverlap() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    QList<BoatModel *> boatList = situation->selectedBoatModels();
     if (! boatList.isEmpty()) {
         situation->undoStack()->push(new OverlapBoatUndoCommand(situation, boatList, Boats::starboard));
     }
@@ -1711,9 +1702,8 @@ void MainWindow::toggleStarboardOverlap() {
 
 void MainWindow::toggleHidden() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    QList<BoatModel *> boatList = situation->selectedBoatModels();
     if (! boatList.isEmpty()) {
         situation->undoStack()->push(new HiddenBoatUndoCommand(situation, boatList, !boatList.first()->hidden()));
     }
@@ -1721,9 +1711,8 @@ void MainWindow::toggleHidden() {
 
 void MainWindow::toggleText() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    QList<PositionModel *> modelList = scene->selectedModels();
+    QList<PositionModel *> modelList = situation->selectedModels();
     if (! modelList.isEmpty()) {
         QString text;
         if (modelList.first()->text().isEmpty()) {
@@ -1735,13 +1724,12 @@ void MainWindow::toggleText() {
 
 void MainWindow::toggleFlag() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
         Boats::Flag flag = (Boats::Flag)action->data().toInt();
 
-        QList<BoatModel *> boatList = scene->selectedBoatModels();
+        QList<BoatModel *> boatList = situation->selectedBoatModels();
         if (! boatList.isEmpty()) {
             situation->undoStack()->push(new FlagBoatUndoCommand(situation, boatList, flag));
         }
@@ -1750,13 +1738,12 @@ void MainWindow::toggleFlag() {
 
 void MainWindow::toggleAcceleration() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
         Boats::Acceleration acceleration = (Boats::Acceleration)action->data().toInt();
 
-        QList<BoatModel *> boatList = scene->selectedBoatModels();
+        QList<BoatModel *> boatList = situation->selectedBoatModels();
         if (! boatList.isEmpty()) {
             situation->undoStack()->push(new AccelerateBoatUndoCommand(situation, boatList, acceleration));
         }
@@ -1765,9 +1752,8 @@ void MainWindow::toggleAcceleration() {
 
 void MainWindow::toggleSpin() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
+    QList<BoatModel *> boatList = situation->selectedBoatModels();
     if (! boatList.isEmpty()) {
         situation->undoStack()->push(new SpinBoatUndoCommand(situation, boatList, !boatList.first()->spin()));
     }
@@ -1775,9 +1761,8 @@ void MainWindow::toggleSpin() {
 
 void MainWindow::toggleMarkSide() {
     SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
 
-    QList<MarkModel *> markList = scene->selectedMarkModels();
+    QList<MarkModel *> markList = situation->selectedMarkModels();
     if (! markList.isEmpty()) {
         situation->undoStack()->push(new ToggleMarkSideUndoCommand(markList));
     } else {
@@ -1787,9 +1772,8 @@ void MainWindow::toggleMarkSide() {
 
 void MainWindow::toggleMarkArrow() {
     SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
 
-    QList<MarkModel *> markList = scene->selectedMarkModels();
+    QList<MarkModel *> markList = situation->selectedMarkModels();
     if (! markList.isEmpty()) {
         situation->undoStack()->push(new ToggleMarkArrowUndoCommand(markList));
     } else {
@@ -1799,9 +1783,8 @@ void MainWindow::toggleMarkArrow() {
 
 void MainWindow::toggleMarkZone() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    QList<MarkModel *> markList = scene->selectedMarkModels();
+    QList<MarkModel *> markList = situation->selectedMarkModels();
     if (! markList.isEmpty()) {
         situation->undoStack()->push(new ZoneMarkUndoCommand(situation, markList));
     } else {
@@ -1811,9 +1794,8 @@ void MainWindow::toggleMarkZone() {
 
 void MainWindow::setMarkColor() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    QList<MarkModel *> markList = scene->selectedMarkModels();
+    QList<MarkModel *> markList = situation->selectedMarkModels();
     if (! markList.isEmpty()) {
         ColorPickerWidget colorEditor;
         colorEditor.setColor( markList.first()->color());
@@ -1823,9 +1805,8 @@ void MainWindow::setMarkColor() {
 
 void MainWindow::toggleMarkLabel() {
     SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
 
-    QList<MarkModel *> markList = scene->selectedMarkModels();
+    QList<MarkModel *> markList = situation->selectedMarkModels();
     if (! markList.isEmpty()) {
         situation->undoStack()->push(new ToggleMarkLabelUndoCommand(markList));
     } else {
@@ -1835,8 +1816,7 @@ void MainWindow::toggleMarkLabel() {
 
 void MainWindow::editMarkLabel() {
     SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
-    QList<MarkModel *> markList = scene->selectedMarkModels();
+    QList<MarkModel *> markList = situation->selectedMarkModels();
 
     if (! markList.isEmpty()) {
         QString oldText = markList.first()->labelText();
@@ -1850,9 +1830,8 @@ void MainWindow::editMarkLabel() {
 
 void MainWindow::toggleLaylines() {
     SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
 
-    QList<PositionModel *> modelList = scene->selectedModels();
+    QList<PositionModel *> modelList = situation->selectedModels();
     if (! modelList.isEmpty()) {
         situation->undoStack()->push(new SetLaylinesUndoCommand(modelList, !modelList.first()->laylines()));
     }

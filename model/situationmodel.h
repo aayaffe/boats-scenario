@@ -140,6 +140,11 @@ class SituationModel : public QObject {
 
         SceneState state(){ return m_state; }
         void setState(const SceneState& theValue, bool commit = false);
+        QList< PositionModel * > selectedModels() { return m_selectedModels; }
+        QList< BoatModel * > selectedBoatModels() { return m_selectedBoatModels; }
+        QList< MarkModel * > selectedMarkModels() { return m_selectedMarkModels; }
+        QList< PointModel * > selectedPointModels() { return m_selectedPointModels; }
+
         QStringList discardedXml() const { return m_discardedXml; }
         void appendDiscardedXml(const QString& theValue);
 
@@ -204,6 +209,13 @@ class SituationModel : public QObject {
         // Slot for Wind
         void resetWind();
 
+        // Slot for selection mechanism
+        void clearSelectedModels();
+        void addSelectedBoat(BoatModel *boat);
+        void addSelectedMark(MarkModel *mark);
+        void addSelectedPoint(PointModel *point);
+        void addSelectedModel(PositionModel *position);
+
         void setLookDirection(qreal theValue);
         void setTilt(qreal theValue);
 
@@ -252,13 +264,25 @@ class SituationModel : public QObject {
         /// \a m_lines holds the List of PolyLines of the Scenario
         QList<PolyLineModel*> m_lines;
 
-
         // Non model Data
         /// \a m_undoStack maintains the Undo Stack for the Scenario
         QUndoStack *m_undoStack;
 
         /// \a m_state holds the SceneState for the current scenario
         SceneState m_state;
+
+        // Bookkeeping references to selected models
+        /// \a m_selectedModels holds the list of selected PositionModel
+        QList<PositionModel*> m_selectedModels;
+
+        /// \a m_selectedBoatsModels holds the list of selected BoatModel
+        QList<BoatModel*> m_selectedBoatModels;
+
+        /// \a m_selectedMarkModels holds the list of selected MarkModel
+        QList<MarkModel*> m_selectedMarkModels;
+
+        /// \a m_selectedPointModels holds the list of selected PointModel
+        QList<PointModel*> m_selectedPointModels;
 
         /// \a m_discardedXml keeps all unparsed xml tags
         QStringList m_discardedXml;

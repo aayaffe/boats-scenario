@@ -32,6 +32,7 @@
 #include "boatmodel.h"
 #include "markmodel.h"
 #include "polylinemodel.h"
+#include "pointmodel.h"
 
 extern int debugLevel;
 
@@ -230,4 +231,29 @@ void SituationModel::resetWind() {
 void SituationModel::setState(const SceneState& theValue, bool commit) {
     m_state = theValue;
     emit stateChanged(m_state);
+}
+void SituationModel::clearSelectedModels() {
+    m_selectedModels.clear();
+    m_selectedBoatModels.clear();
+    m_selectedMarkModels.clear();
+    m_selectedPointModels.clear();
+}
+
+void SituationModel::addSelectedBoat(BoatModel *boat) {
+    m_selectedBoatModels << boat;
+    m_selectedModels << boat;
+}
+
+void SituationModel::addSelectedMark(MarkModel *mark) {
+    m_selectedMarkModels << mark;
+    m_selectedModels << mark;
+}
+
+void SituationModel::addSelectedPoint(PointModel *point) {
+    m_selectedPointModels << point;
+    m_selectedModels << point;
+}
+
+void SituationModel::addSelectedModel(PositionModel *position) {
+    m_selectedModels << position;
 }
