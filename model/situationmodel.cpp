@@ -33,6 +33,7 @@
 #include "markmodel.h"
 #include "polylinemodel.h"
 #include "pointmodel.h"
+#include "undocommands.h"
 
 extern int debugLevel;
 
@@ -232,6 +233,89 @@ void SituationModel::setState(const SceneState& theValue, bool commit) {
     m_state = theValue;
     emit stateChanged(m_state);
 }
+
+void SituationModel::moveModel(QPointF pos) {
+    if (!m_selectedModels.isEmpty() && pos != QPointF()) {
+        m_undoStack->push(new MoveModelUndoCommand(m_selectedModels,pos));
+    }
+}
+
+void SituationModel::headingModel(QPointF pos) {
+    if (!m_selectedModels.isEmpty() && pos != QPointF()) {
+        qreal wind = m_selectedModels.last()->wind();
+        qreal theta = fmod((atan2 (pos.x(), -pos.y()) * 180 / M_PI) + 360.0, 360.0);
+        qreal delta = fmod(theta - wind + 360, 360);
+        qreal snap = m_laylineAngle;
+        // face to wind
+        if (fabs(delta)<=5) {
+            theta = wind;
+        // port closehauled
+        } else if (fabs(delta - snap)<=5) {
+            theta = fmod(wind + snap, 360);
+        // port downwind
+        } else if (fabs(delta -(180-snap)) <=5) {
+            theta = fmod(wind + 180-snap, 360);
+        // deadwind
+        } else if (fabs(delta - 180)<=5) {
+            theta = fmod(wind - 180, 360);
+        // starboard downwind
+        } else if (fabs(delta - (180+snap)) <=5) {
+            theta = fmod(wind + 180 + snap, 360);
+        // starboard closehauled
+        } else if (fabs(delta - (360-snap)) <=5) {
+            theta = fmod(wind + 360 - snap, 360);
+        }
+        m_undoStack->push(new RotateModelsUndoCommand(m_selectedModels, theta-m_selectedModels.last()->heading()));
+    }
+}
+
+TrackModel *SituationModel::createTrack(QPointF pos) {
+    AddTrackUndoCommand *command = new AddTrackUndoCommand(this);
+    m_undoStack->push(command);
+    TrackModel *track = command->track();
+    BoatModel *boat = new BoatModel(track, track);
+    boat->setDim(64);
+    boat->setPosition(pos);
+    track->addBoat(boat);
+    return track;
+}
+
+BoatModel *SituationModel::createBoat(TrackModel *track, QPointF pos) {
+    m_undoStack->endMacro();
+    track->boats().last()->setDim(255);
+    qreal heading = track->boats().last()->heading();
+    AddBoatUndoCommand *command = new AddBoatUndoCommand(track, pos, heading);
+    command->boat()->setDim(64);
+    m_undoStack->beginMacro("");
+    m_undoStack->push(command);
+    return command->boat();
+}
+
+MarkModel *SituationModel::createMark(QPointF pos) {
+    m_undoStack->endMacro();
+    AddMarkUndoCommand *command = new AddMarkUndoCommand(this, pos);
+    m_undoStack->beginMacro("");
+    m_undoStack->push(command);
+    return command->mark();
+}
+
+PolyLineModel *SituationModel::createLine(QPointF pos) {
+    AddPolyLineUndoCommand *command = new AddPolyLineUndoCommand(this);
+    m_undoStack->push(command);
+    PointModel *point = new PointModel(command->polyLine());
+    point->setPosition(pos);
+    command->polyLine()->addPoint(point);
+    return command->polyLine();
+}
+
+PointModel *SituationModel::createPoint(PolyLineModel *poly, QPointF pos) {
+    m_undoStack->endMacro();
+    AddPointUndoCommand *command = new AddPointUndoCommand(poly, pos);
+    m_undoStack->beginMacro("");
+    m_undoStack->push(command);
+    return command->point();
+}
+
 void SituationModel::clearSelectedModels() {
     m_selectedModels.clear();
     m_selectedBoatModels.clear();

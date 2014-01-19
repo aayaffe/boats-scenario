@@ -132,13 +132,6 @@ class SituationScene : public QGraphicsScene {
     private:
         // Specialised Event methods
         void mouseSelectEvent(QGraphicsSceneMouseEvent *event);
-        void createTrack(QPointF pos);
-        void moveModel(QPointF pos);
-        void headingModel(QPointF pos);
-        void createBoat(QPointF pos);
-        void createMark(QPointF pos);
-        void createLine(QPointF pos);
-        void createPoint(QPointF pos);
 
         SituationModel *m_situation;
 

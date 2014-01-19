@@ -140,6 +140,14 @@ class SituationModel : public QObject {
 
         SceneState state(){ return m_state; }
         void setState(const SceneState& theValue, bool commit = false);
+        void moveModel(QPointF pos);
+        void headingModel(QPointF pos);
+        TrackModel *createTrack(QPointF pos);
+        BoatModel *createBoat(TrackModel *track, QPointF pos);
+        MarkModel *createMark(QPointF pos);
+        PolyLineModel *createLine(QPointF pos);
+        PointModel *createPoint(PolyLineModel *poly, QPointF pos);
+
         QList< PositionModel * > selectedModels() { return m_selectedModels; }
         QList< BoatModel * > selectedBoatModels() { return m_selectedBoatModels; }
         QList< MarkModel * > selectedMarkModels() { return m_selectedMarkModels; }
