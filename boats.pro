@@ -15,6 +15,7 @@ INCLUDEPATH += $$PWD
 HEADERS += \
     boatapplication.h \
     boats.h \
+    boatsengine.h \
     commontypes.h \
     mainwindow.h \
     situationprint.h \
@@ -27,6 +28,7 @@ HEADERS += \
 SOURCES += \
     boatapplication.cpp \
     boats.cpp \
+    boatsengine.cpp \
     main.cpp \
     mainwindow.cpp \
     situationprint.cpp \

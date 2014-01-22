@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2011 Thibaut GRIDEL
+// Copyright (c) 2008-2014 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -133,20 +133,13 @@ class SituationModel : public QObject {
 
         const QList<PolyLineModel*> polyLines() const { return m_lines; }
 
-        WindModel& wind() { return m_wind; };
+        WindModel& wind() { return m_wind; }
 
         // Setters and Getters for Non model Data
         QUndoStack * undoStack() const { return m_undoStack;}
 
         SceneState state(){ return m_state; }
         void setState(const SceneState& theValue, bool commit = false);
-        void moveModel(QPointF pos);
-        void headingModel(QPointF pos);
-        TrackModel *createTrack(QPointF pos);
-        BoatModel *createBoat(TrackModel *track, QPointF pos);
-        MarkModel *createMark(QPointF pos);
-        PolyLineModel *createLine(QPointF pos);
-        PointModel *createPoint(PolyLineModel *poly, QPointF pos);
 
         QList< PositionModel * > selectedModels() { return m_selectedModels; }
         QList< BoatModel * > selectedBoatModels() { return m_selectedBoatModels; }
@@ -166,6 +159,61 @@ class SituationModel : public QObject {
         // Helper to remotely trigger point signals from elsewhere
         void addingPoint(PointModel *point) {emit pointAdded(point);}
         void removingPoint(PointModel *point) {emit pointRemoved(point);}
+
+        // UndoCommand actions
+        void moveModel(QPointF pos);
+        void headingModel(QPointF pos);
+        void deleteModels();
+        TrackModel *createTrack(QPointF pos);
+        void deleteTrack();
+        BoatModel *createBoat(TrackModel *track, QPointF pos);
+        MarkModel *createMark(QPointF pos);
+        PolyLineModel *createLine(QPointF pos);
+        PointModel *createPoint(PolyLineModel *poly, QPointF pos);
+
+        void trimSail();
+        void autotrimSail();
+        void untrimSail();
+        void togglePortOverlap();
+        void toggleStarboardOverlap();
+        void toggleFlag(Boats::Flag flag);
+        void toggleAcceleration(Boats::Acceleration acceleration);
+        void toggleHidden();
+        void toggleText();
+        void toggleSpin();
+        void toggleMarkSide();
+        void toggleMarkArrow();
+        void toggleMarkZone();
+        void setMarkColor(QColor color);
+        void toggleMarkLabel();
+        void editMarkLabel(QString text);
+        void toggleLaylines();
+        void setLookAt(int direction, int tilt);
+
+        // Tracks
+        void addTrack(TrackModel *track, int order = -1);
+        void deleteTrack(TrackModel *track);
+
+        // Marks
+        void addMark(MarkModel *mark, int order = -1);
+        int deleteMark(MarkModel *mark);
+
+        // Lines
+        void addPolyLine(PolyLineModel *polyline, int order = -1);
+        void deletePolyLine(PolyLineModel *polyline);
+
+        // Wind
+        void resetWind();
+
+        // selection mechanism
+        void clearSelectedModels();
+        void addSelectedBoat(BoatModel *boat);
+        void addSelectedMark(MarkModel *mark);
+        void addSelectedPoint(PointModel *point);
+        void addSelectedModel(PositionModel *position);
+
+        void setLookDirection(qreal theValue);
+        void setTilt(qreal theValue);
 
     signals:
         // Signals for Track
@@ -201,31 +249,6 @@ class SituationModel : public QObject {
         void pointRemoved(PointModel *point);
 
         void stateChanged(SceneState newState);
-    public slots:
-        // Slots for Tracks
-        void addTrack(TrackModel *track, int order = -1);
-        void deleteTrack(TrackModel *track);
-
-        // Slots for Marks
-        void addMark(MarkModel *mark, int order = -1);
-        int deleteMark(MarkModel *mark);
-
-        // Slots for Lines
-        void addPolyLine(PolyLineModel *polyline, int order = -1);
-        void deletePolyLine(PolyLineModel *polyline);
-
-        // Slot for Wind
-        void resetWind();
-
-        // Slot for selection mechanism
-        void clearSelectedModels();
-        void addSelectedBoat(BoatModel *boat);
-        void addSelectedMark(MarkModel *mark);
-        void addSelectedPoint(PointModel *point);
-        void addSelectedModel(PositionModel *position);
-
-        void setLookDirection(qreal theValue);
-        void setTilt(qreal theValue);
 
     private:
         // Model Data

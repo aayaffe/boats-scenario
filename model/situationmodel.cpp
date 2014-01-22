@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2011 Thibaut GRIDEL
+// Copyright (c) 2008-2014 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -269,6 +269,29 @@ void SituationModel::headingModel(QPointF pos) {
     }
 }
 
+void SituationModel::deleteModels() {
+    foreach (BoatModel *boat, m_selectedBoatModels) {
+        TrackModel* track = boat->track();
+        if (track->size() > 1) {
+            m_undoStack->push(new DeleteBoatUndoCommand(track, boat));
+        } else {
+            m_undoStack->push(new DeleteTrackUndoCommand(this, track));
+        }
+    }
+    foreach (MarkModel *mark, m_selectedMarkModels) {
+        m_undoStack->push(new DeleteMarkUndoCommand(this, mark));
+    }
+
+    foreach (PointModel *point, m_selectedPointModels) {
+        PolyLineModel *polyLine = point->polyLine();
+        if (polyLine->size() > 1) {
+            m_undoStack->push(new DeletePointUndoCommand(polyLine, point));
+        } else {
+            m_undoStack->push(new DeletePolyLineUndoCommand(this, polyLine));
+        }
+    }
+}
+
 TrackModel *SituationModel::createTrack(QPointF pos) {
     AddTrackUndoCommand *command = new AddTrackUndoCommand(this);
     m_undoStack->push(command);
@@ -289,6 +312,15 @@ BoatModel *SituationModel::createBoat(TrackModel *track, QPointF pos) {
     m_undoStack->beginMacro("");
     m_undoStack->push(command);
     return command->boat();
+}
+
+void SituationModel::deleteTrack() {
+    // TODO trick to delete first selected track
+    if (!selectedBoatModels().isEmpty()) {
+        BoatModel *boat = selectedBoatModels()[0];
+        TrackModel * track = boat->track();
+        m_undoStack->push(new DeleteTrackUndoCommand(this, track));
+    }
 }
 
 MarkModel *SituationModel::createMark(QPointF pos) {
@@ -314,6 +346,140 @@ PointModel *SituationModel::createPoint(PolyLineModel *poly, QPointF pos) {
     m_undoStack->beginMacro("");
     m_undoStack->push(command);
     return command->point();
+}
+
+void SituationModel::trimSail() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        qreal trim = m_selectedBoatModels[0]->trim();
+        qreal heading = fmod(m_selectedBoatModels[0]->heading() - m_selectedBoatModels[0]->wind() + 360, 360);
+        if(heading < 0) heading +=360;
+        if (heading < 180) {
+            trim -= 5;
+        } else {
+            trim += 5;
+        }
+        m_undoStack->push(new TrimBoatUndoCommand(m_selectedBoatModels, trim));
+    }
+}
+
+void SituationModel::autotrimSail() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        m_undoStack->push(new TrimBoatUndoCommand(m_selectedBoatModels, 0));
+    }
+}
+
+void SituationModel::untrimSail() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        qreal trim = m_selectedBoatModels[0]->trim();
+        qreal heading = fmod(m_selectedBoatModels[0]->heading() - m_selectedBoatModels[0]->wind() + 360, 360);
+        if(heading < 0) heading +=360;
+        if (heading < 180) {
+            trim += 5;
+        } else {
+            trim -= 5;
+        }
+        m_undoStack->push(new TrimBoatUndoCommand(m_selectedBoatModels, trim));
+    }
+}
+
+void SituationModel::togglePortOverlap() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        m_undoStack->push(new OverlapBoatUndoCommand(this, m_selectedBoatModels, Boats::port));
+    }
+}
+
+void SituationModel::toggleStarboardOverlap() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        m_undoStack->push(new OverlapBoatUndoCommand(this, m_selectedBoatModels, Boats::starboard));
+    }
+}
+
+void SituationModel::toggleHidden() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        m_undoStack->push(new HiddenBoatUndoCommand(this, m_selectedBoatModels, !m_selectedBoatModels.first()->hidden()));
+    }
+}
+
+void SituationModel::toggleText() {
+    if (! m_selectedModels.isEmpty()) {
+        QString text;
+        if (m_selectedModels.first()->text().isEmpty()) {
+            text = tr("Protest!");
+        }
+        m_undoStack->push(new SetTextUndoCommand(m_selectedModels.first(), text));
+    }
+}
+
+void SituationModel::toggleFlag(Boats::Flag flag) {
+    if (! m_selectedBoatModels.isEmpty()) {
+        m_undoStack->push(new FlagBoatUndoCommand(this, m_selectedBoatModels, flag));
+    }
+}
+
+void SituationModel::toggleAcceleration(Boats::Acceleration acceleration) {
+    if (! m_selectedBoatModels.isEmpty()) {
+        m_undoStack->push(new AccelerateBoatUndoCommand(this, m_selectedBoatModels, acceleration));
+    }
+}
+
+void SituationModel::toggleSpin() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        m_undoStack->push(new SpinBoatUndoCommand(this, m_selectedBoatModels, !m_selectedBoatModels.first()->spin()));
+    }
+}
+
+void SituationModel::toggleMarkSide() {
+    if (! m_selectedMarkModels.isEmpty()) {
+        m_undoStack->push(new ToggleMarkSideUndoCommand(m_selectedMarkModels));
+    } else {
+        m_undoStack->push(new ToggleMarkSideUndoCommand(m_marks));
+    }
+}
+
+void SituationModel::toggleMarkArrow() {
+    if (! m_selectedMarkModels.isEmpty()) {
+        m_undoStack->push(new ToggleMarkArrowUndoCommand(m_selectedMarkModels));
+    } else {
+        m_undoStack->push(new ToggleMarkArrowUndoCommand(m_marks));
+    }
+}
+
+void SituationModel::toggleMarkZone() {
+    if (! m_selectedMarkModels.isEmpty()) {
+        m_undoStack->push(new ZoneMarkUndoCommand(this, m_selectedMarkModels));
+    } else {
+        m_undoStack->push(new ZoneMarkUndoCommand(this, m_marks));
+    }
+}
+
+void SituationModel::setMarkColor(QColor color) {
+    if (! m_selectedMarkModels.isEmpty()) {
+        m_undoStack->push(new ColorMarkUndoCommand(this, m_selectedMarkModels, color));
+    }
+}
+
+void SituationModel::toggleMarkLabel() {
+    if (! m_selectedMarkModels.isEmpty()) {
+        m_undoStack->push(new ToggleMarkLabelUndoCommand(m_selectedMarkModels));
+    } else {
+        m_undoStack->push(new ToggleMarkLabelUndoCommand(m_marks));
+    }
+}
+
+void SituationModel::editMarkLabel(QString text) {
+    if (! m_selectedMarkModels.isEmpty()) {
+        m_undoStack->push(new SetMarkLabelUndoCommand(m_selectedMarkModels.first(), text));
+    }
+}
+
+void SituationModel::toggleLaylines() {
+    if (! m_selectedModels.isEmpty()) {
+        m_undoStack->push(new SetLaylinesUndoCommand(m_selectedModels, !m_selectedModels.first()->laylines()));
+    }
+}
+
+void SituationModel::setLookAt(int direction, int tilt) {
+    m_undoStack->push(new SetLookAtUndoCommand(this, direction, tilt));
 }
 
 void SituationModel::clearSelectedModels() {

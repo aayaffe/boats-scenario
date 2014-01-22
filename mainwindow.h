@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2011 Thibaut GRIDEL
+// Copyright (c) 2008-2014 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 
+class BoatsEngine;
 class SituationModel;
 class TrackWidget;
 
@@ -83,30 +84,10 @@ class MainWindow : public QMainWindow {
         void exportAnimation();
 #endif
         // Track actions
-        void addTrack();
-        void addBoat();
-        void addMark();
-        void addPolyLine();
-        void addPoint();
-        void trimSail();
-        void autotrimSail();
-        void untrimSail();
-        void togglePortOverlap();
-        void toggleStarboardOverlap();
         void toggleFlag();
         void toggleAcceleration();
-        void toggleHidden();
-        void toggleText();
-        void toggleSpin();
-        void toggleMarkSide();
-        void toggleMarkArrow();
-        void toggleMarkZone();
         void setMarkColor();
-        void toggleLaylines();
-        void toggleMarkLabel();
         void editMarkLabel();
-        void deleteTrack();
-        void deleteModels();
         void setLookAt();
 
         // Animation actions
@@ -142,13 +123,10 @@ class MainWindow : public QMainWindow {
 
         // File methods
         bool saveSituation(SituationModel *situation, QString name);
-        void setCurrentFile(SituationModel *situation, const QString &fileName);
 
         // GraphicsView Framework
-        QList<SituationModel *> situationList;
         QList<SituationScene *> sceneList;
         QList<SituationView *> viewList;
-        int currentSituation;
         static const int maxRecent;
         QStringList recentList;
         QStringList fileList;
@@ -169,6 +147,8 @@ class MainWindow : public QMainWindow {
         QSlider *animationSlider;
         QTranslator *qtTranslator;
         QTranslator *translator;
+
+        BoatsEngine *engine;
 
         // QActions
         QAction *newFileAction;
