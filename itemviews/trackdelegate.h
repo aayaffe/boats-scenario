@@ -25,7 +25,8 @@
 #ifndef TRACKDELEGATE_H
 #define TRACKDELEGATE_H
 
-#include <QtGui>
+#include <QItemDelegate>
+#include <QComboBox>
 
 class ColorPickerWidget;
 

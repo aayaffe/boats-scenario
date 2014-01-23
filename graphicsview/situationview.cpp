@@ -28,6 +28,8 @@
 
 #include "situationview.h"
 
+#include <QtGui/QWheelEvent>
+
 extern int debugLevel;
 
 SituationView::SituationView(QWidget *parent)
@@ -110,7 +112,7 @@ void SituationView::zoomFit() {
     qreal s = matrix().m11();
     if (s < 10.0 && s > 0.1) {
         // adopt scaling
-        scaleValue = (round(s * 20)) / 20.0;
+        scaleValue = (qRound(s * 20)) / 20.0;
     }
     // apply calculated or default scale
     QMatrix m(scaleValue, old.m21(), old.m21(), scaleValue, old.dx(), old.dy());

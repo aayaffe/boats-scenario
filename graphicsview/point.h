@@ -25,12 +25,12 @@
 #ifndef POINT_H
 #define POINT_H
 
-#include <QGraphicsItem>
-#include <QObject>
-
 #include "commontypes.h"
 #include "bubble.h"
 #include "laylines.h"
+
+#include <QObject>
+#include <QGraphicsItem>
 
 class PointModel;
 

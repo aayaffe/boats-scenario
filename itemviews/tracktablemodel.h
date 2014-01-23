@@ -25,11 +25,12 @@
 #ifndef TRACKTABLEMODEL_H
 #define TRACKTABLEMODEL_H
 
-#include <QtGui>
-
 #include "commontypes.h"
 
 #include "situationmodel.h"
+
+#include <QtGui>
+
 class TrackModel;
 
 class TrackTableModel : public QAbstractTableModel {

@@ -22,11 +22,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
-
-#include <QPainter>
-#include <QGraphicsScene>
-
 #include "point.h"
 
 #include "commontypes.h"
@@ -34,6 +29,12 @@
 #include "situationmodel.h"
 #include "polylinemodel.h"
 #include "pointmodel.h"
+
+#include <QPainter>
+
+#include <QGraphicsScene>
+
+#include <iostream>
 
 extern int debugLevel;
 const int size = 3;

@@ -25,13 +25,13 @@
 #ifndef MARK_H
 #define MARK_H
 
-#include <QGraphicsItem>
-#include <QObject>
-#include <QColor>
-
 #include "commontypes.h"
 #include "bubble.h"
 #include "laylines.h"
+
+#include <QObject>
+#include <QColor>
+#include <QGraphicsItem>
 
 class MarkModel;
 

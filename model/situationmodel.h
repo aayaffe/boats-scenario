@@ -25,10 +25,11 @@
 #ifndef SITUATIONMODEL_H
 #define SITUATIONMODEL_H
 
-#include <QtGui>
-
 #include "boats.h"
 #include "windmodel.h"
+
+#include <QObject>
+#include <QUndoStack>
 
 class TrackModel;
 class BoatModel;

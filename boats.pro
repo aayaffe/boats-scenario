@@ -2,6 +2,7 @@ TEMPLATE = app
 TARGET = boats
 CONFIG += qt \
     warn_on
+QT += widgets printsupport
 
 include(animation/animation.pri)
 include(graphicsview/graphicsview.pri)

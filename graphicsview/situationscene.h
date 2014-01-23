@@ -25,7 +25,8 @@
 #ifndef SITUATIONSCENE_H
 #define SITUATIONSCENE_H
 
-#include <QtGui>
+#include <QGraphicsScene>
+#include <QGraphicsItem>
 
 class SituationModel;
 class TrackModel;

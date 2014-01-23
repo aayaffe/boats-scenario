@@ -22,10 +22,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
-
-#include <QtGui>
-
 #include "mainwindow.h"
 
 #include "commontypes.h"
@@ -52,6 +48,22 @@
 #ifdef GIF_EXPORT
 #include "gifwriter.h"
 #endif
+
+
+#include <QMenuBar>
+#include <QToolBar>
+#include <QTabWidget>
+#include <QDockWidget>
+#include <QStatusBar>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QProgressDialog>
+#include <QInputDialog>
+#include <QLineEdit>
+#include <QPrintDialog>
+#include <QPrintPreviewDialog>
+
+#include <iostream>
 
 #define VERSION "201307"
 
@@ -1444,7 +1456,7 @@ void MainWindow::exportImage() {
     }
 
     // if no provided extension or incorrect extension, use selected filter
-    if (!formatsList.contains(QFileInfo(fileName).suffix().toAscii())) {
+    if (!formatsList.contains(QFileInfo(fileName).suffix().toUtf8())) {
 #if defined(Q_WS_MAC)
 	fileName.append(".png");
 #else
@@ -1488,7 +1500,7 @@ void MainWindow::exportAnimation() {
     int dotIndex = fileName.lastIndexOf(".");
     QString baseName = fileName.left(dotIndex);
     QString newExt = fileName.right(fileName.size()-dotIndex-1);
-    if (!newExt.toAscii().contains("gif")) {
+    if (!newExt.toUtf8().contains("gif")) {
         fileName.append(".gif");
     }
 

@@ -25,12 +25,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui>
-
 #include "situationwidget.h"
 #include "situationscene.h"
 #include "situationview.h"
 #include "situationprint.h"
+
+#include <QMainWindow>
+#include <QPushButton>
 
 class SituationModel;
 class TrackWidget;

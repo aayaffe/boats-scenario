@@ -25,10 +25,10 @@
 #ifndef UNDOCOMMANDS_H
 #define UNDOCOMMANDS_H
 
+#include "boats.h"
+
 #include <QUndoCommand>
 #include <QPointF>
-
-#include "boats.h"
 
 class SituationModel;
 class TrackModel;

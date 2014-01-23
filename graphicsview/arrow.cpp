@@ -22,19 +22,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
-#include <cmath>
-
-#include <QPainter>
-#include <QGraphicsScene>
-
-
 #include "arrow.h"
 
 #include "commontypes.h"
 #include "situationscene.h"
 #include "situationmodel.h"
 #include "windmodel.h"
+
+#include <QPainter>
+#include <QGraphicsScene>
+
+#include <iostream>
+#include <cmath>
 
 extern int debugLevel;
 

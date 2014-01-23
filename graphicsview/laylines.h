@@ -25,10 +25,10 @@
 #ifndef LAYLINES_H
 #define LAYLINES_H
 
-#include <QGraphicsItem>
-#include <QObject>
-
 #include "boats.h"
+
+#include <QObject>
+#include <QGraphicsItem>
 
 class PositionModel;
 

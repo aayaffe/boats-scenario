@@ -25,10 +25,6 @@
 #ifndef BOAT_H
 #define BOAT_H
 
-#include <QGraphicsItem>
-#include <QObject>
-#include <QColor>
-
 #include "boats.h"
 #include "sail.h"
 #include "spinnaker.h"
@@ -36,6 +32,10 @@
 #include "flag.h"
 #include "bubble.h"
 #include "laylines.h"
+
+#include <QObject>
+#include <QColor>
+#include <QGraphicsItem>
 
 class BoatModel;
 

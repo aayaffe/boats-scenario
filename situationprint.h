@@ -25,7 +25,8 @@
 #ifndef SITUATIONPRINT_H
 #define SITUATIONPRINT_H
 
-#include <QtGui>
+#include <QTextEdit>
+#include <QPrinter>
 
 class SituationModel;
 class SituationView;

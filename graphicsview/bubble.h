@@ -25,10 +25,10 @@
 #ifndef BUBBLE_H
 #define BUBBLE_H
 
-#include <QGraphicsItem>
-#include <QObject>
-
 #include "boats.h"
+
+#include <QObject>
+#include <QGraphicsItem>
 
 class PositionModel;
 

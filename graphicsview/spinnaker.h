@@ -25,11 +25,11 @@
 #ifndef SPINNAKER_H
 #define SPINNAKER_H
 
-#include <QGraphicsPathItem>
-#include <QObject>
-
 #include "boats.h"
 #include "sail.h"
+
+#include <QObject>
+#include <QGraphicsPathItem>
 
 class BoatModel;
 

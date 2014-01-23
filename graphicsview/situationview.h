@@ -25,7 +25,7 @@
 #ifndef SITUATIONVIEW_H
 #define SITUATIONVIEW_H
 
-#include <QtGui>
+#include <QGraphicsView>
 
 /**
     \class SituationView

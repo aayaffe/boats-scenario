@@ -22,10 +22,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
-
-#include <QtGui>
-
 #include "situationwidget.h"
 #include "trackdelegate.h"
 #include "winddelegate.h"
@@ -33,6 +29,11 @@
 #include "situationmodel.h"
 
 #include "undocommands.h"
+
+#include <QHeaderView>
+#include <QLineEdit>
+
+#include <iostream>
 
 extern int debugLevel;
 
@@ -78,10 +79,15 @@ SituationWidget::SituationWidget(QWidget *parent)
     trackTableView->setItemDelegate(new TrackDelegate);
     trackTableView->setEditTriggers(QAbstractItemView::CurrentChanged);
     trackTableView->verticalHeader()->hide();
+#if QT_VERSION < 0x050000
     trackTableView->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
+    trackTableView->horizontalHeader()->setClickable(false);
+#else
+    trackTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    trackTableView->horizontalHeader()->setSectionsClickable(false);
+#endif
     trackTableView->horizontalHeader()->setDefaultSectionSize(60);
     trackTableView->horizontalHeader()->setStretchLastSection(true);
-    trackTableView->horizontalHeader()->setClickable(false);
     trackLayout->addWidget(trackTableView);
 
     // Wind layout
@@ -92,8 +98,13 @@ SituationWidget::SituationWidget(QWidget *parent)
     windTableView->setItemDelegate(new WindDelegate);
     windTableView->setEditTriggers(QAbstractItemView::CurrentChanged);
     windTableView->verticalHeader()->hide();
+#if QT_VERSION < 0x050000
     windTableView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     windTableView->horizontalHeader()->setClickable(false);
+#else
+    windTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    windTableView->horizontalHeader()->setSectionsClickable(false);
+#endif
     windLayout->addWidget(windTableView);
 
 

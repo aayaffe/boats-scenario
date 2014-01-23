@@ -25,9 +25,9 @@
 #ifndef POLYLINE_H
 #define POLYLINE_H
 
-#include <QGraphicsItem>
 #include <QObject>
 #include <QColor>
+#include <QGraphicsItem>
 
 class PolyLineModel;
 

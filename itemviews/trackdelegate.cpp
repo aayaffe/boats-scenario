@@ -43,7 +43,7 @@ void TrackDelegate::paint(QPainter *painter,
 
     switch (index.column()) {
         case TRACK_COLOR: {
-            QColor trackColor = qVariantValue<QColor>(index.data());
+            QColor trackColor = index.data().value<QColor>();
             painter->setPen(Qt::NoPen);
             painter->setBrush(trackColor);
             qreal height = option.rect.height() / 8.0;
@@ -54,7 +54,7 @@ void TrackDelegate::paint(QPainter *painter,
             }
             break;
         case TRACK_SERIES: {
-            int series = qVariantValue<int>(index.data());
+            int series = index.data().value<int>();
             drawDisplay(painter, option, option.rect, Boats::seriesList().at(series));
             }
             break;
@@ -106,13 +106,13 @@ void TrackDelegate::setEditorData(QWidget *editor,
     switch (index.column()) {
         case TRACK_COLOR: {
             ColorPickerWidget *colorEditor = getColorEditor(editor);
-            QColor color = qVariantValue<QColor>(index.data());
+            QColor color = index.data().value<QColor>();
             colorEditor->setColor(color);
             }
             break;
         case TRACK_SERIES: {
             QComboBox *seriesEditor = getComboEditor(editor);
-            int series = qVariantValue<int>(index.data());
+            int series = index.data().value<int>();
             seriesEditor->setCurrentIndex(series);
             }
             break;

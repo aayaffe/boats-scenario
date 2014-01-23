@@ -22,11 +22,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
-#include <cmath>
-
-#include <QtGui>
-
 #include "situationscene.h"
 
 #include "commontypes.h"
@@ -49,6 +44,13 @@
 #include "trackanimation.h"
 #include "scenarioanimation.h"
 #include "angleanimation.h"
+
+#include <QGraphicsDropShadowEffect>
+#include <QGraphicsSceneMouseEvent>
+#include <QMenu>
+
+#include <iostream>
+#include <cmath>
 
 extern int debugLevel;
 

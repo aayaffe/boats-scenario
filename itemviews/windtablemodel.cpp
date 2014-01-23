@@ -45,8 +45,9 @@ WindTableModel::~WindTableModel() {
 
 void WindTableModel::setWind(WindModel *wind)  {
     if (m_wind != wind) {
+        beginResetModel();
         m_wind = wind;
-        reset();
+        endResetModel();
     }
 }
 
@@ -119,8 +120,8 @@ bool WindTableModel::setData(const QModelIndex &index, const QVariant &value, in
 
     switch (index.column()) {
         case WIND_DIRECTION:
-            if (qVariantCanConvert<qreal>(value)) {
-                qreal newValue = qVariantValue<qreal>(value);
+            if (value.canConvert<qreal>()) {
+                qreal newValue = value.value<qreal>();
                 if (debugLevel & 1 << MODEL) std::cout << "setting wind " << newValue;
                 if (index.row() == m_wind->size()) {
                     m_wind->situation()->undoStack()->push(new AddWindUndoCommand(m_wind, newValue));
@@ -147,5 +148,6 @@ bool WindTableModel::setData(const QModelIndex &index, const QVariant &value, in
 }
 
 void WindTableModel::updateWind() {
-    reset();
+    beginResetModel();
+    endResetModel();
 }

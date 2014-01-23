@@ -25,9 +25,9 @@
 #ifndef FLAG_H
 #define FLAG_H
 
-#include <QGraphicsItem>
-
 #include "boats.h"
+
+#include <QGraphicsItem>
 
 /**
     \class FlagGraphicsItem

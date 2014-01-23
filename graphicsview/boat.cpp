@@ -22,12 +22,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
-
-#include <QPainter>
-#include <QGraphicsSceneMouseEvent>
-#include <QGraphicsScene>
-
 #include "boat.h"
 
 #include "commontypes.h"
@@ -35,6 +29,12 @@
 #include "situationmodel.h"
 #include "trackmodel.h"
 #include "boatmodel.h"
+
+#include <QPainter>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsScene>
+
+#include <iostream>
 
 extern int debugLevel;
 

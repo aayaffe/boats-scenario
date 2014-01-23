@@ -25,9 +25,9 @@
 #ifndef TRACK_H
 #define TRACK_H
 
-#include <QGraphicsItem>
 #include <QObject>
 #include <QColor>
+#include <QGraphicsItem>
 
 class TrackModel;
 
