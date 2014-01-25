@@ -202,9 +202,6 @@ class SituationModel : public QObject {
         void addPolyLine(PolyLineModel *polyline, int order = -1);
         void deletePolyLine(PolyLineModel *polyline);
 
-        // Wind
-        void resetWind();
-
         // selection mechanism
         void clearSelectedModels();
         void addSelectedBoat(BoatModel *boat);
@@ -214,6 +211,10 @@ class SituationModel : public QObject {
 
         void setLookDirection(qreal theValue);
         void setTilt(qreal theValue);
+
+    public slots:
+        // Wind
+        void resetWind();
 
     signals:
         // Signals for Track
