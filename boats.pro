@@ -76,15 +76,15 @@ INCLUDEPATH += $$PWD
 
 mac {
     QMAKE_LFLAGS += -static
-    QMAKE_INFO_PLIST = Info.plist
-    ICON = boats.icns
+    QMAKE_INFO_PLIST = resources/Info.plist
+    ICON = resources/boats.icns
     mime.path = boats.app/Contents/Resources
-    mime.files = xbs.icns
+    mime.files = resources/xbs.icns
     INSTALLS += mime
 }
 
 win32 {
-    RC_FILE = boats.rc
+    RC_FILE = resources/boats.rc
     QMAKE_LFLAGS += -static
 }
 
@@ -97,7 +97,7 @@ unix_deploy {
     INSTALLS += target
 
     desktop.path = $${PREFIX}/share/applications
-    desktop.files = boats.desktop
+    desktop.files = resources/boats.desktop
     INSTALLS += desktop
 
     icons.path = $${PREFIX}/share/icons
@@ -105,7 +105,7 @@ unix_deploy {
     INSTALLS += icons
 
     mimetype.path = $${PREFIX}/share/mime
-    mimetype.files = boats.xml
+    mimetype.files = resources/boats.xml
     INSTALLS += mimetype
 
     TRANSLATEDIR = $${PREFIX}/share/boats
