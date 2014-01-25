@@ -1,46 +1,78 @@
 TEMPLATE = app
-TARGET = boats
-CONFIG += qt \
-    warn_on
-QT += widgets printsupport
+CONFIG += qt warn_on
 
-include(animation/animation.pri)
-include(graphicsview/graphicsview.pri)
-include(itemviews/itemviews.pri)
+qml {
+    TARGET = boats-qml
+    QT += quick qml widgets
+
+    HEADERS += \
+        boats.h \
+        boatsengine.h \
+        commontypes.h \
+        trace.h \
+        undocommands.h \
+        xmlsituationreader.h \
+        xmlsituationwriter.h
+
+    SOURCES += \
+        boats.cpp \
+        boatsengine.cpp \
+        main_qml.cpp \
+        trace.cpp \
+        undocommands.cpp \
+        xmlsituationreader.cpp \
+        xmlsituationwriter.cpp
+
+    qml_files.files = boats.qml
+    INSTALL += qml_files
+}
+else {
+    TARGET = boats
+    QT += widgets printsupport
+
+    include(animation/animation.pri)
+    include(graphicsview/graphicsview.pri)
+    include(itemviews/itemviews.pri)
+    include(locale/locale.pri)
+
+    HEADERS += \
+        boatapplication.h \
+        boats.h \
+        boatsengine.h \
+        commontypes.h \
+        mainwindow.h \
+        situationprint.h \
+        situationwidget.h \
+        trace.h \
+        undocommands.h \
+        xmlsituationreader.h \
+        xmlsituationwriter.h
+
+    SOURCES += \
+        boatapplication.cpp \
+        boats.cpp \
+        boatsengine.cpp \
+        main.cpp \
+        mainwindow.cpp \
+        situationprint.cpp \
+        situationwidget.cpp \
+        trace.cpp \
+        undocommands.cpp \
+        xmlsituationreader.cpp \
+        xmlsituationwriter.cpp
+
+    contains(GIF_EXPORT,1) {
+        DEFINES += GIF_EXPORT
+        HEADERS += gifwriter.h
+        SOURCES += gifwriter.cpp
+        LIBS += -lgif
+    }
+
+    PRE_TARGETDEPS += compiler_updateqm_make_all
+}
+
 include(model/model.pri)
-include(locale/locale.pri)
-
 INCLUDEPATH += $$PWD
-
-HEADERS += \
-    boatapplication.h \
-    boats.h \
-    boatsengine.h \
-    commontypes.h \
-    mainwindow.h \
-    situationprint.h \
-    situationwidget.h \
-    trace.h \
-    undocommands.h \
-    xmlsituationreader.h \
-    xmlsituationwriter.h
-
-SOURCES += \
-    boatapplication.cpp \
-    boats.cpp \
-    boatsengine.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    situationprint.cpp \
-    situationwidget.cpp \
-    trace.cpp \
-    undocommands.cpp \
-    xmlsituationreader.cpp \
-    xmlsituationwriter.cpp
-
-unix_deploy:RESOURCES = boats_unix.qrc
-
-else:RESOURCES = boats.qrc
 
 mac {
     QMAKE_LFLAGS += -static
@@ -51,15 +83,15 @@ mac {
     INSTALLS += mime
 }
 
-contains(GIF_EXPORT,1) { 
-    DEFINES += GIF_EXPORT
-    HEADERS += gifwriter.h
-    SOURCES += gifwriter.cpp
-    LIBS += -lgif
+win32 {
+    RC_FILE = boats.rc
+    QMAKE_LFLAGS += -static
 }
 
 unix_deploy { 
     isEmpty(PREFIX):PREFIX = /usr/local
+
+    RESOURCES = boats_unix.qrc
 
     target.path = $${PREFIX}/bin
     INSTALLS += target
@@ -81,18 +113,15 @@ unix_deploy {
     translations.files = locale/boats_*.qm
     INSTALLS += translations
 }
-else:TRANSLATEDIR = ":/locale"
+else {
+    RESOURCES = boats.qrc
+    TRANSLATEDIR = ":/locale"
+}
 
 DEFINES += TRANSLATEDIR=\\\"$${TRANSLATEDIR}\\\"
 
-PRE_TARGETDEPS += compiler_updateqm_make_all
-
 MOC_DIR = .moc/
-
 OBJECTS_DIR = .obj/
 
 QMAKE_CFLAGS_RELEASE += -fvisibility=hidden
 QMAKE_CXXFLAGS_RELEASE += -fvisibility=hidden -fvisibility-inlines-hidden
-
-win32:RC_FILE = boats.rc
-win32:QMAKE_LFLAGS += -static
