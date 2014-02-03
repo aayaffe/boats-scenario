@@ -59,6 +59,8 @@ class PointModel;
 
 class SituationModel : public QObject {
         Q_OBJECT
+        Q_ENUMS(SceneState)
+        Q_ENUMS(Boats::Series)
     public:
 
         /**
@@ -94,6 +96,23 @@ class SituationModel : public QObject {
             CREATE_POINT,
             ANIMATE
         };
+
+        Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+        Q_PROPERTY(QString rules READ rules WRITE setRules NOTIFY rulesChanged)
+        Q_PROPERTY(bool grid READ showLayline WRITE setShowLayline NOTIFY showLaylineChanged)
+        Q_PROPERTY(int laylineAngle READ laylineAngle WRITE setLaylineAngle NOTIFY laylineChanged)
+        Q_PROPERTY(Boats::Series situationSeries READ situationSeries WRITE setSituationSeries NOTIFY seriesChanged)
+        Q_PROPERTY(int situationLength READ situationLength WRITE setSituationLength NOTIFY lengthChanged)
+        Q_PROPERTY(QString abstract READ abstract WRITE setAbstract NOTIFY abstractChanged)
+        Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
+        Q_PROPERTY(qreal lookDirection READ lookDirection WRITE setLookDirection NOTIFY lookDirectionChanged)
+        Q_PROPERTY(qreal tilt READ tilt WRITE setTilt NOTIFY tiltChanged)
+
+        Q_PROPERTY(int size READ size NOTIFY tracksChanged)
+
+        Q_PROPERTY(SceneState state READ state WRITE setState NOTIFY stateChanged)
+        Q_PROPERTY(bool canUndo READ canUndo NOTIFY canUndoChanged)
+        Q_PROPERTY(bool canRedo READ canRedo NOTIFY canRedoChanged)
 
         SituationModel(QObject *parent = 0);
         ~SituationModel();
@@ -162,34 +181,38 @@ class SituationModel : public QObject {
         void removingPoint(PointModel *point) {emit pointRemoved(point);}
 
         // UndoCommand actions
-        void moveModel(QPointF pos);
-        void headingModel(QPointF pos);
-        void deleteModels();
-        TrackModel *createTrack(QPointF pos);
-        void deleteTrack();
-        BoatModel *createBoat(TrackModel *track, QPointF pos);
-        MarkModel *createMark(QPointF pos);
-        PolyLineModel *createLine(QPointF pos);
-        PointModel *createPoint(PolyLineModel *poly, QPointF pos);
+        Q_INVOKABLE void undo() { m_undoStack->undo(); }
+        bool canUndo() { return m_undoStack->canUndo(); }
+        Q_INVOKABLE void redo() { m_undoStack->redo(); }
+        bool canRedo() { return m_undoStack->canRedo(); }
+        Q_INVOKABLE void moveModel(QPointF pos);
+        Q_INVOKABLE void headingModel(QPointF pos);
+        Q_INVOKABLE void deleteModels();
+        Q_INVOKABLE TrackModel *createTrack(QPointF pos);
+        Q_INVOKABLE void deleteTrack();
+        Q_INVOKABLE BoatModel *createBoat(TrackModel *track, QPointF pos);
+        Q_INVOKABLE MarkModel *createMark(QPointF pos);
+        Q_INVOKABLE PolyLineModel *createLine(QPointF pos);
+        Q_INVOKABLE PointModel *createPoint(PolyLineModel *poly, QPointF pos);
 
-        void trimSail();
-        void autotrimSail();
-        void untrimSail();
-        void togglePortOverlap();
-        void toggleStarboardOverlap();
-        void toggleFlag(Boats::Flag flag);
-        void toggleAcceleration(Boats::Acceleration acceleration);
-        void toggleHidden();
-        void toggleText();
-        void toggleSpin();
-        void toggleMarkSide();
-        void toggleMarkArrow();
-        void toggleMarkZone();
-        void setMarkColor(QColor color);
-        void toggleMarkLabel();
-        void editMarkLabel(QString text);
-        void toggleLaylines();
-        void setLookAt(int direction, int tilt);
+        Q_INVOKABLE void trimSail();
+        Q_INVOKABLE void autotrimSail();
+        Q_INVOKABLE void untrimSail();
+        Q_INVOKABLE void togglePortOverlap();
+        Q_INVOKABLE void toggleStarboardOverlap();
+        Q_INVOKABLE void toggleFlag(Boats::Flag flag);
+        Q_INVOKABLE void toggleAcceleration(Boats::Acceleration acceleration);
+        Q_INVOKABLE void toggleHidden();
+        Q_INVOKABLE void toggleText();
+        Q_INVOKABLE void toggleSpin();
+        Q_INVOKABLE void toggleMarkSide();
+        Q_INVOKABLE void toggleMarkArrow();
+        Q_INVOKABLE void toggleMarkZone();
+        Q_INVOKABLE void setMarkColor(QColor color);
+        Q_INVOKABLE void toggleMarkLabel();
+        Q_INVOKABLE void editMarkLabel(QString text);
+        Q_INVOKABLE void toggleLaylines();
+        Q_INVOKABLE void setLookAt(int direction, int tilt);
 
         // Tracks
         void addTrack(TrackModel *track, int order = -1);
@@ -204,11 +227,11 @@ class SituationModel : public QObject {
         void deletePolyLine(PolyLineModel *polyline);
 
         // selection mechanism
-        void clearSelectedModels();
-        void addSelectedBoat(BoatModel *boat);
-        void addSelectedMark(MarkModel *mark);
-        void addSelectedPoint(PointModel *point);
-        void addSelectedModel(PositionModel *position);
+        Q_INVOKABLE void clearSelectedModels();
+        Q_INVOKABLE void addSelectedBoat(BoatModel *boat);
+        Q_INVOKABLE void addSelectedMark(MarkModel *mark);
+        Q_INVOKABLE void addSelectedPoint(PointModel *point);
+        Q_INVOKABLE void addSelectedModel(PositionModel *position);
 
         void setLookDirection(qreal theValue);
         void setTilt(qreal theValue);
@@ -221,6 +244,7 @@ class SituationModel : public QObject {
         // Signals for Track
         void trackAdded(TrackModel *track);
         void trackRemoved(TrackModel *track);
+        void tracksChanged();
 
         // Signals for Boat
         void boatAdded(BoatModel *boat);
@@ -251,6 +275,8 @@ class SituationModel : public QObject {
         void pointRemoved(PointModel *point);
 
         void stateChanged(SituationModel::SceneState newState);
+        void canUndoChanged(bool canUndo);
+        void canRedoChanged(bool canRedo);
 
     private:
         // Model Data

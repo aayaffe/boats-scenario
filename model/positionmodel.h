@@ -46,12 +46,13 @@ class SituationModel;
 
 class PositionModel : public QObject {
         Q_OBJECT
-        Q_PROPERTY(QPointF pos READ position WRITE setPosition)
-        Q_PROPERTY(qreal heading READ heading WRITE setHeading)
-        Q_PROPERTY(QString text READ text WRITE setText)
-        Q_PROPERTY(QPointF textPos READ textPosition WRITE setTextPosition)
-        Q_PROPERTY(bool laylines READ laylines() WRITE setLaylines)
-        Q_PROPERTY(qreal wind READ wind WRITE setWind)
+        Q_PROPERTY(QPointF pos READ position WRITE setPosition NOTIFY positionChanged)
+        Q_PROPERTY(int order READ order WRITE setOrder NOTIFY orderChanged)
+        Q_PROPERTY(qreal heading READ heading WRITE setHeading NOTIFY headingChanged)
+        Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
+        Q_PROPERTY(QPointF textPos READ textPosition WRITE setTextPosition NOTIFY textPositionChanged)
+        Q_PROPERTY(bool laylines READ laylines() WRITE setLaylines NOTIFY laylinesChanged)
+        Q_PROPERTY(qreal wind READ wind WRITE setWind NOTIFY windChanged)
 
     public:
         PositionModel(SituationModel* situation, QObject *parent = 0);

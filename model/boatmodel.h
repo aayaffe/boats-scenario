@@ -54,17 +54,17 @@ class TrackModel;
 
 class BoatModel : public PositionModel {
         Q_OBJECT
-        Q_PROPERTY(qreal trimSailAngle READ trimmedSailAngle WRITE setTrimmedSailAngle)
-        Q_PROPERTY(qreal trimJibAngle READ trimmedJibAngle WRITE setTrimmedJibAngle)
-        Q_PROPERTY(bool spin READ spin WRITE setSpin)
-        Q_PROPERTY(qreal trimSpinAngle READ trimmedSpinAngle WRITE setTrimmedSpinAngle)
-        Q_PROPERTY(qreal trimGennAngle READ trimmedGennAngle WRITE setTrimmedGennAngle)
-        Q_PROPERTY(Boats::Overlaps overlap READ overlap WRITE setOverlap)
-        Q_PROPERTY(Boats::Flag flag READ flag WRITE setFlag)
-        Q_PROPERTY(int dim READ dim WRITE setDim)
+        Q_PROPERTY(qreal trimSailAngle READ trimmedSailAngle WRITE setTrimmedSailAngle NOTIFY trimmedSailAngleChanged)
+        Q_PROPERTY(qreal trimJibAngle READ trimmedJibAngle WRITE setTrimmedJibAngle NOTIFY trimmedJibAngleChanged)
+        Q_PROPERTY(bool spin READ spin WRITE setSpin NOTIFY spinChanged)
+        Q_PROPERTY(qreal trimSpinAngle READ trimmedSpinAngle WRITE setTrimmedSpinAngle NOTIFY trimmedSpinAngleChanged)
+        Q_PROPERTY(qreal trimGennAngle READ trimmedGennAngle WRITE setTrimmedGennAngle NOTIFY trimmedGennAngleChanged)
+        Q_PROPERTY(Boats::Overlaps overlap READ overlap WRITE setOverlap NOTIFY overlapChanged)
+        Q_PROPERTY(Boats::Flag flag READ flag WRITE setFlag NOTIFY flagChanged)
+        Q_PROPERTY(int dim READ dim WRITE setDim NOTIFY dimChanged)
 
     public:
-        BoatModel(TrackModel *track, QObject *parent = 0);
+        BoatModel(TrackModel *track = 0, QObject *parent = 0);
         ~BoatModel();
 
         // Setters and Getters for Model Data
@@ -112,7 +112,7 @@ class BoatModel : public PositionModel {
         void setAcceleration(const Boats::Acceleration theValue);
 
         // Setters and Getters for Non model Data
-        TrackModel* track() const { return m_track; }
+        Q_INVOKABLE TrackModel* track() const { return m_track; }
 
         qreal sailAngle(qreal heading = -1) const;
 

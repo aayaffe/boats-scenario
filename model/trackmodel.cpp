@@ -51,6 +51,7 @@ TrackModel::TrackModel(SituationModel *situation, QObject *parent)
         case 4: m_color = QColor(Qt::cyan); break;
         case 5: m_color = QColor(Qt::magenta); break;
     }
+    emit colorChanged(m_color);
     setSeries(situation->situationSeries());
 }
 
@@ -119,6 +120,7 @@ BoatModel * TrackModel::addBoat(BoatModel *boat, int order) {
     }
     m_situation->addingBoat(boat);
     changingTrack(this);
+    emit boatsChanged();
     return boat;
 }
 
@@ -131,6 +133,7 @@ int TrackModel::deleteBoat(BoatModel *boat) {
     }
     m_situation->removingBoat(boat);
     changingTrack(this);
+    emit boatsChanged();
     return order;
 }
 
@@ -217,5 +220,9 @@ void TrackModel::changingTrack(TrackModel *track) {
 }
 
 void TrackModel::setSelected(bool selected) {
+    foreach(BoatModel *boat, m_boats) {
+        m_situation->addSelectedBoat(boat);
+    }
+
     emit trackSelected(selected);
 }

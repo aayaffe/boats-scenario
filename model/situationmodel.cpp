@@ -51,6 +51,10 @@ SituationModel::SituationModel(QObject *parent)
     if (debugLevel & 1 << MODEL) std::cout << "new situation " << this << std::endl;
     connect(&m_wind, SIGNAL(windReset()),
             this, SLOT(resetWind()));
+    connect(m_undoStack, SIGNAL(canUndoChanged(bool)),
+            this, SIGNAL(canUndoChanged(bool)));
+    connect(m_undoStack, SIGNAL(canRedoChanged(bool)),
+            this, SIGNAL(canRedoChanged(bool)));
 }
 
 SituationModel::~SituationModel() {
@@ -162,6 +166,7 @@ void SituationModel::addTrack(TrackModel *track, int order) {
     }
     track->displayBoats();
     emit trackAdded(track);
+    emit tracksChanged();
 }
 
 void SituationModel::deleteTrack(TrackModel *track) {
@@ -174,6 +179,7 @@ void SituationModel::deleteTrack(TrackModel *track) {
         m_tracks[i]->setOrder(i+1);
     }
     emit trackRemoved(track);
+    emit tracksChanged();
 }
 
 void SituationModel::addMark(MarkModel *mark, int order) {
