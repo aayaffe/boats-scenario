@@ -300,6 +300,7 @@ void SituationModel::deleteModels() {
 }
 
 TrackModel *SituationModel::createTrack(QPointF pos) {
+    clearSelectedModels();
     AddTrackUndoCommand *command = new AddTrackUndoCommand(this);
     m_undoStack->push(command);
     TrackModel *track = command->track();
@@ -307,18 +308,23 @@ TrackModel *SituationModel::createTrack(QPointF pos) {
     boat->setDim(64);
     boat->setPosition(pos);
     track->addBoat(boat);
+    addSelectedBoat(boat);
     return track;
 }
 
-BoatModel *SituationModel::createBoat(TrackModel *track, QPointF pos) {
-    m_undoStack->endMacro();
-    track->boats().last()->setDim(255);
-    qreal heading = track->boats().last()->heading();
-    AddBoatUndoCommand *command = new AddBoatUndoCommand(track, pos, heading);
-    command->boat()->setDim(64);
-    m_undoStack->beginMacro("");
-    m_undoStack->push(command);
-    return command->boat();
+BoatModel *SituationModel::createBoat(QPointF pos) {
+    if(!selectedBoatModels().isEmpty()) {
+        TrackModel *track = m_selectedBoatModels[0]->track();
+        m_undoStack->endMacro();
+        track->boats().last()->setDim(255);
+        qreal heading = track->boats().last()->heading();
+        AddBoatUndoCommand *command = new AddBoatUndoCommand(track, pos, heading);
+        command->boat()->setDim(64);
+        m_undoStack->beginMacro("");
+        m_undoStack->push(command);
+        return command->boat();
+    }
+    return 0;
 }
 
 void SituationModel::deleteTrack() {

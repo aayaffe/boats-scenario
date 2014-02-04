@@ -190,7 +190,7 @@ class SituationModel : public QObject {
         Q_INVOKABLE void deleteModels();
         Q_INVOKABLE TrackModel *createTrack(QPointF pos);
         Q_INVOKABLE void deleteTrack();
-        Q_INVOKABLE BoatModel *createBoat(TrackModel *track, QPointF pos);
+        Q_INVOKABLE BoatModel *createBoat(QPointF pos);
         Q_INVOKABLE MarkModel *createMark(QPointF pos);
         Q_INVOKABLE PolyLineModel *createLine(QPointF pos);
         Q_INVOKABLE PointModel *createPoint(PolyLineModel *poly, QPointF pos);

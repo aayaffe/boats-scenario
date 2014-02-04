@@ -139,7 +139,7 @@ void SituationScene::setState(const SituationModel::SceneState& theValue, bool c
         }
         break;
     case SituationModel::CREATE_BOAT: {
-            m_situation->createBoat(m_trackCreated, m_curPosition);
+            m_situation->createBoat(m_curPosition);
         }
         break;
     case SituationModel::CREATE_MARK: {
@@ -534,7 +534,7 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
                 if ((event->modifiers() & Qt::ControlModifier) != 0) {
                     setState(SituationModel::CREATE_BOAT, true);
                 } else if ((event->modifiers() & Qt::MetaModifier) == 0) {
-                    m_situation->createBoat(m_trackCreated, event->scenePos());
+                    m_situation->createBoat(event->scenePos());
                 }
             }
             if (event->button() == Qt::RightButton
