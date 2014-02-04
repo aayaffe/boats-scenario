@@ -37,40 +37,6 @@ class MarkModel;
 class PolyLineModel;
 class PointModel;
 
-/**
-    \enum SceneState
-
-    This enum defines the different modal states of the edition. When
-    the user wants to input data to the scenario, he sets the current
-    edition mode.
-
-    \value NO_STATE No particular mode is set. In this mode item selection
-    and movement is allowed.
-
-    \value CREATE_TRACK The Create Track mode will create a new TrackModel
-    object in the scenario. This mode is then overriden to CREATE_BOAT as
-    a natural action is to append boat positions.
-
-    \value CREATE_BOAT The Create Boat will append a BoatModel to the
-    track of the lastly selected boat object.
-
-    \value CREATE_MARK The Create Mark will create a new MarkModel to
-    the scenario.
-
-    \value ANIMATE The Animation will be prepared, and no further input
-    will be allowed in this mode.
-
-*/
-
-typedef enum {
-    NO_STATE,
-    CREATE_TRACK,
-    CREATE_BOAT,
-    CREATE_MARK,
-    CREATE_LINE,
-    CREATE_POINT,
-    ANIMATE
-} SceneState;
 
 /**
     \class SituationModel
@@ -94,6 +60,41 @@ typedef enum {
 class SituationModel : public QObject {
         Q_OBJECT
     public:
+
+        /**
+        \enum SceneState
+
+        This enum defines the different modal states of the edition. When
+        the user wants to input data to the scenario, he sets the current
+        edition mode.
+
+        \value NO_STATE No particular mode is set. In this mode item selection
+        and movement is allowed.
+
+        \value CREATE_TRACK The Create Track mode will create a new TrackModel
+        object in the scenario. This mode is then overriden to CREATE_BOAT as
+        a natural action is to append boat positions.
+
+        \value CREATE_BOAT The Create Boat will append a BoatModel to the
+        track of the lastly selected boat object.
+
+        \value CREATE_MARK The Create Mark will create a new MarkModel to
+        the scenario.
+
+        \value ANIMATE The Animation will be prepared, and no further input
+        will be allowed in this mode.
+
+        */
+        enum SceneState {
+            NO_STATE,
+            CREATE_TRACK,
+            CREATE_BOAT,
+            CREATE_MARK,
+            CREATE_LINE,
+            CREATE_POINT,
+            ANIMATE
+        };
+
         SituationModel(QObject *parent = 0);
         ~SituationModel();
 
@@ -139,7 +140,7 @@ class SituationModel : public QObject {
         QUndoStack * undoStack() const { return m_undoStack;}
 
         SceneState state(){ return m_state; }
-        void setState(const SceneState& theValue, bool commit = false);
+        void setState(const SceneState& theValue);
 
         QList< PositionModel * > selectedModels() { return m_selectedModels; }
         QList< BoatModel * > selectedBoatModels() { return m_selectedBoatModels; }
@@ -249,7 +250,7 @@ class SituationModel : public QObject {
         void pointAdded(PointModel *point);
         void pointRemoved(PointModel *point);
 
-        void stateChanged(SceneState newState);
+        void stateChanged(SituationModel::SceneState newState);
 
     private:
         // Model Data
@@ -322,5 +323,7 @@ class SituationModel : public QObject {
         /// \a m_fileName holds the name of the file on disk
         QString m_fileName;
 };
+
+Q_DECLARE_METATYPE(SituationModel::SceneState)
 
 #endif

@@ -59,7 +59,7 @@ SituationScene::SituationScene(SituationModel *situation)
         m_situation(situation),
         m_scenarioAnimation(new ScenarioAnimation),
         m_trackCreated(0),
-        m_state(NO_STATE),
+        m_state(SituationModel::NO_STATE),
         m_time(QTime::currentTime()),
         m_clickTime(QTime::currentTime()),
         m_clickState(SINGLE),
@@ -109,21 +109,21 @@ SituationScene::SituationScene(SituationModel *situation)
     connect(situation, SIGNAL(tiltChanged(qreal)),
             this, SIGNAL(tiltChanged(qreal)));
 
-    connect(situation, SIGNAL(stateChanged(SceneState)),
-            this, SLOT(setState(SceneState)));
+    connect(situation, SIGNAL(stateChanged(SituationModel::SceneState)),
+            this, SLOT(setState(SituationModel::SceneState)));
 
     setLaylines(situation->laylineAngle());
 
 }
 
-void SituationScene::setState(const SceneState& theValue, bool commit) {
+void SituationScene::setState(const SituationModel::SceneState& theValue, bool commit) {
     // undo previous state's settings
     switch(m_state) {
-    case CREATE_TRACK:
-    case CREATE_BOAT:
-    case CREATE_MARK:
-    case CREATE_LINE:
-    case CREATE_POINT: {
+    case SituationModel::CREATE_TRACK:
+    case SituationModel::CREATE_BOAT:
+    case SituationModel::CREATE_MARK:
+    case SituationModel::CREATE_LINE:
+    case SituationModel::CREATE_POINT: {
             m_situation->undoStack()->endMacro();
             if (!commit) {
                 m_situation->undoStack()->undo();
@@ -134,23 +134,23 @@ void SituationScene::setState(const SceneState& theValue, bool commit) {
         break;
     }
     switch(theValue) {
-    case CREATE_TRACK: {
+    case SituationModel::CREATE_TRACK: {
             m_trackCreated = m_situation->createTrack(m_curPosition);
         }
         break;
-    case CREATE_BOAT: {
+    case SituationModel::CREATE_BOAT: {
             m_situation->createBoat(m_trackCreated, m_curPosition);
         }
         break;
-    case CREATE_MARK: {
+    case SituationModel::CREATE_MARK: {
             m_markCreated = m_situation->createMark(m_curPosition);
         }
         break;
-    case CREATE_LINE: {
+    case SituationModel::CREATE_LINE: {
             m_polyLineCreated = m_situation->createLine(m_curPosition);
         }
         break;
-    case CREATE_POINT: {
+    case SituationModel::CREATE_POINT: {
             m_situation->createPoint(m_polyLineCreated, m_curPosition);
         }
         break;
@@ -368,7 +368,7 @@ void SituationScene::keyPressEvent(QKeyEvent *event) {
 
 void SituationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     switch (m_state) {
-        case NO_STATE:
+        case SituationModel::NO_STATE:
             mouseSelectEvent(event);
             if (!m_situation->selectedBoatModels().isEmpty()) {
                 m_trackCreated = m_situation->selectedBoatModels()[0]->track();
@@ -377,9 +377,9 @@ void SituationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
                 m_polyLineCreated = m_situation->selectedPointModels()[0]->polyLine();
             }
             break;
-        case CREATE_TRACK:
-        case CREATE_BOAT:
-        case CREATE_MARK:
+        case SituationModel::CREATE_TRACK:
+        case SituationModel::CREATE_BOAT:
+        case SituationModel::CREATE_MARK:
             if (event->buttons() == Qt::RightButton
                 || (event->buttons() == Qt::LeftButton
                     && ((event->modifiers() & Qt::MetaModifier) != 0))) {
@@ -409,7 +409,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mouseMoveEvent(event);
 
     switch (m_state) {
-        case NO_STATE:
+        case SituationModel::NO_STATE:
             if (event->buttons() == Qt::LeftButton
                 && (event->modifiers() & Qt::MetaModifier) == 0) {
                 m_situation->moveModel(event->scenePos() - m_fromPosition);
@@ -421,7 +421,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
                 m_situation->headingModel(event->scenePos() - m_modelPressed->position());
             }
         break;
-        case CREATE_TRACK:
+        case SituationModel::CREATE_TRACK:
             if (event->buttons() == Qt::NoButton) {
                 m_trackCreated->boats().last()->setPosition(event->scenePos());
             }
@@ -431,7 +431,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
                 m_situation->headingModel(event->scenePos() - m_modelPressed->position());
             }
             break;
-        case CREATE_BOAT:
+        case SituationModel::CREATE_BOAT:
             if (event->buttons() == Qt::NoButton) {
                 qreal heading = m_trackCreated->headingForNext(
                         m_trackCreated->boats().size()-2, event->scenePos());
@@ -444,13 +444,13 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
                 m_situation->headingModel(event->scenePos() - m_modelPressed->position());
             }
             break;
-        case CREATE_MARK:
+        case SituationModel::CREATE_MARK:
             if (event->buttons() == Qt::NoButton) {
                 m_markCreated->setPosition(event->scenePos());
             }
             break;
-        case CREATE_LINE:
-        case CREATE_POINT:
+        case SituationModel::CREATE_LINE:
+        case SituationModel::CREATE_POINT:
             if (event->buttons() == Qt::NoButton) {
                 m_polyLineCreated->points().last()->setPosition(event->scenePos());
             }
@@ -512,7 +512,7 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
     }
 
     switch (m_state) {
-        case NO_STATE:
+        case SituationModel::NO_STATE:
             if (event->button() == Qt::LeftButton
                 && (event->modifiers() & Qt::MetaModifier) == 0) {
                 m_situation->moveModel(event->scenePos() - m_fromPosition);
@@ -524,15 +524,15 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
                 m_situation->headingModel(event->scenePos() - m_modelPressed->position());
             }
             break;
-        case CREATE_TRACK:
+        case SituationModel::CREATE_TRACK:
             if (event->button() == Qt::LeftButton) {
-                setState(CREATE_BOAT, true);
+                setState(SituationModel::CREATE_BOAT, true);
             }
             break;
-        case CREATE_BOAT:
+        case SituationModel::CREATE_BOAT:
             if (event->button() == Qt::LeftButton) {
                 if ((event->modifiers() & Qt::ControlModifier) != 0) {
-                    setState(CREATE_BOAT, true);
+                    setState(SituationModel::CREATE_BOAT, true);
                 } else if ((event->modifiers() & Qt::MetaModifier) == 0) {
                     m_situation->createBoat(m_trackCreated, event->scenePos());
                 }
@@ -543,17 +543,17 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
                 m_situation->headingModel(event->scenePos() - m_modelPressed->position());
             }
             break;
-        case CREATE_MARK:
+        case SituationModel::CREATE_MARK:
             if (event->button() == Qt::LeftButton) {
                 m_markCreated = m_situation->createMark(event->scenePos());
             }
             break;
-        case CREATE_LINE:
+        case SituationModel::CREATE_LINE:
             if (event->button() == Qt::LeftButton) {
-                setState(CREATE_POINT, true);
+                setState(SituationModel::CREATE_POINT, true);
             }
             break;
-        case CREATE_POINT:
+        case SituationModel::CREATE_POINT:
             if (event->button() == Qt::LeftButton) {
                 m_situation->createPoint(m_polyLineCreated, event->scenePos());
             }
@@ -565,7 +565,7 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
 void SituationScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
     m_clickState = DOUBLE;
-    setState(NO_STATE);
+    m_situation->setState(SituationModel::NO_STATE);
     m_situation->undoStack()->undo();
 }
 

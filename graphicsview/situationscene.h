@@ -96,14 +96,14 @@ class SituationScene : public QGraphicsScene {
 
     signals:
         void itemMoved(QList<BoatModel*> movedItems, const QPointF &movedFromPosition);
-        void stateChanged(SceneState newState);
+        void stateChanged(SituationModel::SceneState newState);
         void selectedModelsChanged();
         void centerChanged(QPointF position);
         void lookDirectionChanged( const qreal lookDirection);
         void tiltChanged( const qreal tilt);
 
     public slots:
-        void setState(const SceneState& theValue, bool commit = false);
+        void setState(const SituationModel::SceneState& theValue, bool commit = false);
         // Slot for selection mechanism
         void setSelectedModels();
 
@@ -165,7 +165,7 @@ class SituationScene : public QGraphicsScene {
         QPointF m_curPosition;
 
         /// \a m_state holds the SceneState for the current scenario
-        SceneState m_state;
+        SituationModel::SceneState m_state;
 
         /// \a m_time holds the timer used for movement filtering
         QTime m_time;

@@ -46,7 +46,8 @@ SituationModel::SituationModel(QObject *parent)
         m_lookDirection(0),
         m_tilt(0),
         m_wind(this),
-        m_undoStack(new QUndoStack(this)) {
+        m_undoStack(new QUndoStack(this)),
+        m_state(NO_STATE) {
     if (debugLevel & 1 << MODEL) std::cout << "new situation " << this << std::endl;
     connect(&m_wind, SIGNAL(windReset()),
             this, SLOT(resetWind()));
@@ -229,7 +230,7 @@ void SituationModel::resetWind() {
     }
 }
 
-void SituationModel::setState(const SceneState& theValue, bool commit) {
+void SituationModel::setState(const SceneState& theValue) {
     m_state = theValue;
     emit stateChanged(m_state);
 }

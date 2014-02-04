@@ -396,8 +396,8 @@ void MainWindow::updateActions() {
     bool selectedPoints = !situation->selectedPointModels().isEmpty();
     bool selectedMarks = !situation->selectedMarkModels().isEmpty();
 
-    addBoatAction->setEnabled(selectedBoats || situation->state() == CREATE_BOAT);
-    addPointAction->setEnabled(selectedPoints || situation->state() == CREATE_POINT);
+    addBoatAction->setEnabled(selectedBoats || situation->state() == SituationModel::CREATE_BOAT);
+    addPointAction->setEnabled(selectedPoints || situation->state() == SituationModel::CREATE_POINT);
     trimSailAction->setEnabled(selectedBoats);
     autotrimSailAction->setEnabled(selectedBoats);
     untrimSailAction->setEnabled(selectedBoats);
@@ -478,11 +478,11 @@ void MainWindow::updateActions() {
     toggleMarkLabelAction->setChecked(allMarkLabelSet);
 }
 
-void MainWindow::changeState(SceneState newState) {
+void MainWindow::changeState(SituationModel::SceneState newState) {
     SituationView *view = viewList.at(engine->currentIndex());
 
     switch(newState) {
-        case CREATE_TRACK:
+        case SituationModel::CREATE_TRACK:
             view->setCursor(Qt::CrossCursor);
             statusbar->showMessage(tr("Create Track"));
             addTrackAction->setChecked(true);
@@ -492,7 +492,7 @@ void MainWindow::changeState(SceneState newState) {
             addPointAction->setChecked(false);
             animateAction->setChecked(false);
             break;
-        case CREATE_BOAT:
+        case SituationModel::CREATE_BOAT:
             view->setCursor(Qt::CrossCursor);
             statusbar->showMessage(tr("Create Boat"));
             addTrackAction->setChecked(false);
@@ -502,7 +502,7 @@ void MainWindow::changeState(SceneState newState) {
             addPointAction->setChecked(false);
             animateAction->setChecked(false);
             break;
-        case CREATE_MARK:
+        case SituationModel::CREATE_MARK:
             view->setCursor(Qt::CrossCursor);
             statusbar->showMessage(tr("Create Mark"));
             addTrackAction->setChecked(false);
@@ -512,7 +512,7 @@ void MainWindow::changeState(SceneState newState) {
             addPointAction->setChecked(false);
             animateAction->setChecked(false);
             break;
-        case CREATE_LINE:
+        case SituationModel::CREATE_LINE:
             view->setCursor(Qt::CrossCursor);
             statusbar->showMessage(tr("Create Line"));
             addTrackAction->setChecked(false);
@@ -522,7 +522,7 @@ void MainWindow::changeState(SceneState newState) {
             addPointAction->setChecked(false);
             animateAction->setChecked(false);
             break;
-        case CREATE_POINT:
+        case SituationModel::CREATE_POINT:
             view->setCursor(Qt::CrossCursor);
             statusbar->showMessage(tr("Create Line"));
             addTrackAction->setChecked(false);
@@ -532,7 +532,7 @@ void MainWindow::changeState(SceneState newState) {
             addPointAction->setChecked(true);
             animateAction->setChecked(false);
             break;
-        case ANIMATE:
+        case SituationModel::ANIMATE:
             statusbar->showMessage(tr("Animate"));
             addTrackAction->setChecked(false);
             addBoatAction->setChecked(false);
@@ -845,8 +845,8 @@ void MainWindow::unsetTab() {
 
     SituationModel *situation = engine->currentModel();
     SituationScene *scene = sceneList.at(engine->currentIndex());
-    if (situation->state() == ANIMATE) {
-        situation->setState(NO_STATE);
+    if (situation->state() == SituationModel::ANIMATE) {
+        situation->setState(SituationModel::NO_STATE);
     }
 
     disconnect(situation->undoStack(), 0, 0, 0);
@@ -908,8 +908,8 @@ void MainWindow::setTab(int index) {
             this, SLOT(setLookAt()));
 
     situationWidget->setSituation(situation);
-    connect(scene, SIGNAL(stateChanged(SceneState)),
-            this, SLOT(changeState(SceneState)));
+    connect(scene, SIGNAL(stateChanged(SituationModel::SceneState)),
+            this, SLOT(changeState(SituationModel::SceneState)));
     changeState(situation->state());
 
     connect(scene, SIGNAL(selectedModelsChanged()),
@@ -1023,9 +1023,9 @@ bool MainWindow::maybeSave(SituationModel *situation) {
 void MainWindow::closeEvent(QCloseEvent *event) {
     SituationModel *situation = engine->currentModel();
 
-    bool animated = (situation->state() == ANIMATE);
+    bool animated = (situation->state() == SituationModel::ANIMATE);
     if (animated) {
-        situation->setState(NO_STATE);
+        situation->setState(SituationModel::NO_STATE);
     }
 
     while(engine->situationSize()>1) {
@@ -1320,9 +1320,9 @@ bool MainWindow::saveSituation(SituationModel *situation, QString fileName) {
 bool MainWindow::saveFile() {
     SituationModel *situation = engine->currentModel();
 
-    bool animated = (situation->state() == ANIMATE);
+    bool animated = (situation->state() == SituationModel::ANIMATE);
     if (animated) {
-        situation->setState(NO_STATE);
+        situation->setState(SituationModel::NO_STATE);
     }
     bool saved = saveSituation(situation, situation->fileName());
     if (animated) {
@@ -1334,9 +1334,9 @@ bool MainWindow::saveFile() {
 bool MainWindow::saveAs() {
     SituationModel *situation = engine->currentModel();
 
-    bool animated = (situation->state() == ANIMATE);
+    bool animated = (situation->state() == SituationModel::ANIMATE);
     if (animated) {
-        situation->setState(NO_STATE);
+        situation->setState(SituationModel::NO_STATE);
     }
     bool saved = saveSituation(situation, "");
     if (animated) {
@@ -1573,8 +1573,8 @@ void MainWindow::animate(bool state, bool interactive) {
     SituationScene *scene = sceneList.at(engine->currentIndex());
 
     if (state) {
-        if (situation->state() != ANIMATE) {
-            situation->setState(ANIMATE);
+        if (situation->state() != SituationModel::ANIMATE) {
+            situation->setState(SituationModel::ANIMATE);
             scene->clearSelection();
             scene->setAnimation();
 
@@ -1597,8 +1597,8 @@ void MainWindow::animate(bool state, bool interactive) {
                 }
             }
     } else {
-        if (situation->state() == ANIMATE) {
-            situation->setState(NO_STATE);
+        if (situation->state() == SituationModel::ANIMATE) {
+            situation->setState(SituationModel::NO_STATE);
             scene->unSetAnimation();
             disconnect(this, SLOT(changeAnimationState(QAbstractAnimation::State,QAbstractAnimation::State)));
             disconnect(animationSlider, SLOT(setValue(int)));
