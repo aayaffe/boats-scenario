@@ -30,6 +30,9 @@
 
 #include <QObject>
 #include <QUndoStack>
+#ifdef QML
+#include <QQmlListProperty>
+#endif
 
 class TrackModel;
 class BoatModel;
@@ -74,7 +77,9 @@ class SituationModel : public QObject {
         Q_PROPERTY(QString description READ description WRITE changeDescription NOTIFY descriptionChanged)
         Q_PROPERTY(qreal lookDirection READ lookDirection WRITE setLookDirection NOTIFY lookDirectionChanged)
         Q_PROPERTY(qreal tilt READ tilt WRITE setTilt NOTIFY tiltChanged)
-
+#ifdef QML
+        Q_PROPERTY(QQmlListProperty<TrackModel> trackList READ trackList NOTIFY tracksChanged)
+#endif
         Q_PROPERTY(int size READ size NOTIFY tracksChanged)
 
         Q_PROPERTY(StateMachine* stateMachine READ stateMachine CONSTANT)
@@ -117,7 +122,9 @@ class SituationModel : public QObject {
 
         int size() const { return m_tracks.size();}
         const QList<TrackModel*> tracks() const { return m_tracks; }
-
+#ifdef QML
+        QQmlListProperty<TrackModel> trackList();
+#endif
         int markSize() const { return m_marks.size();}
         const QList<MarkModel*> marks() const { return m_marks; }
 

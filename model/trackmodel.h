@@ -26,7 +26,9 @@
 #define TRACKMODEL_H
 
 #include <QtGui>
-
+#ifdef QML
+#include <QQmlListProperty>
+#endif
 #include "boats.h"
 
 class SituationModel;
@@ -61,7 +63,9 @@ class TrackModel : public QObject {
         Q_PROPERTY(Boats::Series series READ series WRITE setSeries NOTIFY seriesChanged)
         Q_PROPERTY(bool showPath READ showPath WRITE setShowPath NOTIFY showPathChanged)
         Q_PROPERTY(bool followTrack READ followTrack WRITE setFollowTrack NOTIFY followTrackChanged)
-
+#ifdef QML
+        Q_PROPERTY(QQmlListProperty<BoatModel> boatList READ boatList NOTIFY boatsChanged)
+#endif
         Q_PROPERTY(int size READ size NOTIFY boatsChanged)
 
         TrackModel(SituationModel* situation = 0, QObject *parent = 0);
@@ -91,7 +95,9 @@ class TrackModel : public QObject {
 
         int size() const { return m_boats.size();}
         const QList<BoatModel*> boats() const { return m_boats; }
-
+#ifdef QML
+        QQmlListProperty<BoatModel> boatList();
+#endif
         const QPainterPath path() const { return m_path; }
 
         // Setters and Getters for Non model Data

@@ -758,3 +758,9 @@ void SituationModel::removeSelectedModel(PositionModel *position) {
     m_selectedMarkModels.removeOne(qobject_cast<MarkModel*>(position));
     m_selectedPointModels.removeOne(qobject_cast<PointModel*>(position));
 }
+
+#ifdef QML
+QQmlListProperty<TrackModel> SituationModel::trackList() {
+    return QQmlListProperty<TrackModel>(this, m_tracks);
+}
+#endif

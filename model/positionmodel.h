@@ -55,7 +55,7 @@ class PositionModel : public QObject {
         Q_PROPERTY(qreal wind READ wind WRITE setWind NOTIFY windChanged)
 
     public:
-        PositionModel(SituationModel* situation, QObject *parent = 0);
+        PositionModel(SituationModel* situation = 0, QObject *parent = 0);
         virtual ~PositionModel();
 
         // Setters and Getters for Model Data

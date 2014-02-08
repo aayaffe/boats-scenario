@@ -226,3 +226,9 @@ void TrackModel::setSelected(bool selected) {
 
     emit trackSelected(selected);
 }
+
+#ifdef QML
+QQmlListProperty<BoatModel> TrackModel::boatList() {
+    return QQmlListProperty<BoatModel>(this, m_boats);
+}
+#endif
