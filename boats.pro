@@ -74,6 +74,8 @@ else {
 include(model/model.pri)
 INCLUDEPATH += $$PWD
 
+RESOURCES = images.qrc
+
 mac {
     QMAKE_LFLAGS += -static
     QMAKE_INFO_PLIST = resources/Info.plist
@@ -90,8 +92,6 @@ win32 {
 
 unix_deploy { 
     isEmpty(PREFIX):PREFIX = /usr/local
-
-    RESOURCES = boats_unix.qrc
 
     target.path = $${PREFIX}/bin
     INSTALLS += target
@@ -114,7 +114,7 @@ unix_deploy {
     INSTALLS += translations
 }
 else {
-    RESOURCES = boats.qrc
+    RESOURCES += locales.qrc
     TRANSLATEDIR = ":/locale"
 }
 
