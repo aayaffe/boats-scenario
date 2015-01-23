@@ -127,9 +127,6 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
         /// Need to save this state until receive mouseReleaseEvent to determine what to do
         bool m_multiSelect;
 
-        /// \a if m_actOnMouseRelease is true then need to do something when mouse button is released
-        bool m_actOnMouseRelease;
-
         bool m_labelVisible;
         QString m_labelText;
 };

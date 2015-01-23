@@ -70,6 +70,11 @@ class PointGraphicsItem : public QObject, public QGraphicsItem {
         void setPosition(QPointF position);
         void deleteItem(PointModel *point);
 
+    protected:
+        virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
     private:
         /// \a m_point holds the PointModel being represented
         PointModel *m_point;

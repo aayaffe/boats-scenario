@@ -163,14 +163,9 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         LaylinesGraphicsItem *m_laylines;
 
         /// \a m_multiSelect is true if Ctrl-modified was in effect when mousePressEvent happened
-        /// Need to save this state until receive mouseReleaseEvent to determine what to do
         bool m_multiSelect;
 
-        /// \a if m_actOnMouseRelease is true then need to do something when mouse button is released
-        bool m_actOnMouseRelease;
-
         /// \a m_trackSelect is true if mousePressEvent is Shift-modified
-        /// Need to save this state until receive mouseReleaseEvent to determine what to do
         bool m_trackSelect;
 };
 

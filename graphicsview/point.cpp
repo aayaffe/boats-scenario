@@ -33,6 +33,7 @@
 #include <QPainter>
 
 #include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
 
 #include <iostream>
 
@@ -82,6 +83,26 @@ void PointGraphicsItem::deleteItem(PointModel *point) {
         scene()->removeItem(this);
         delete this;
     }
+}
+
+void PointGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    static_cast<SituationScene*>(scene())->setModelPressed(m_point);
+
+    bool selection = true;
+    if ((event->modifiers() & Qt::ControlModifier) != 0) {
+        selection = !isSelected();
+    } else {
+        scene()->clearSelection();
+    }
+    QGraphicsItem::setSelected(selection);
+}
+
+void PointGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+    Q_UNUSED(event);
+}
+
+void PointGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+    Q_UNUSED(event);
 }
 
 QRectF PointGraphicsItem::boundingRect() const {

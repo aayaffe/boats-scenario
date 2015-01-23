@@ -699,55 +699,28 @@ void BoatGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     static_cast<SituationScene*>(scene())->setModelPressed(m_boat);
     m_multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
     m_trackSelect = (event->modifiers() & Qt::ShiftModifier) != 0;
-    if (!isSelected()) {
-        if (!m_multiSelect) {
-            scene()->clearSelection();
-        }
-        if (!m_trackSelect) {
-            setSelected(true);
-        } else {
-            m_boat->track()->setSelected(true);
-        }
-        m_actOnMouseRelease=false;
+    bool selection = true;
+    if (m_multiSelect) {
+        selection = !isSelected();
     } else {
-        m_actOnMouseRelease=true;
-        if (m_trackSelect) {
-            if (!m_multiSelect) {
-                scene()->clearSelection();
-                m_actOnMouseRelease=false;
-            }
-            m_boat->track()->setSelected(true); // NB In this case do NOT set m_actOnMouseRelease to false as mouse click should deselect all boats on track
-        }
+        scene()->clearSelection();
     }
-    if ((event->button() & Qt::RightButton) != 0) {
-        m_actOnMouseRelease = false;
+
+    if (m_trackSelect) {
+        m_boat->track()->setSelected(selection);
+    } else {
+        setSelected(selection);
     }
+
     update();
 }
 
 void BoatGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
-    m_actOnMouseRelease=false;
 }
 
 void BoatGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
-    if (m_actOnMouseRelease) {
-        if (!m_multiSelect) {
-            scene()->clearSelection();
-            if (!m_trackSelect) {
-                setSelected(true);
-            } else {
-                m_boat->track()->setSelected(true);
-            }
-        } else {
-            if(!m_trackSelect) {
-                setSelected(false);
-            } else {
-                m_boat->track()->setSelected(false);
-            }
-        }
-    }
 }
 
 void BoatGraphicsItem::setSelected(bool selected) {
