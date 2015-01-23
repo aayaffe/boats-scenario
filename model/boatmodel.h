@@ -25,11 +25,10 @@
 #ifndef BOATMODEL_H
 #define BOATMODEL_H
 
-#include <QtGui>
+#include <QPainterPath>
 
 #include "boats.h"
 #include "positionmodel.h"
-#include "situationmodel.h"
 
 class SituationModel;
 class TrackModel;

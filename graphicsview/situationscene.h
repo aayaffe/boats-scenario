@@ -27,6 +27,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsItem>
+#include <QTime>
 
 class SituationModel;
 class TrackModel;

@@ -42,6 +42,7 @@ SituationPrint::SituationPrint(SituationModel *situation, SituationView *view, Q
 }
 
 void SituationPrint::render(QRectF pageRect) {
+    Q_UNUSED(pageRect);
     if (!m_situation) {
         return;
     }

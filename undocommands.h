@@ -29,6 +29,7 @@
 
 #include <QUndoCommand>
 #include <QPointF>
+#include <QColor>
 
 class SituationModel;
 class TrackModel;
@@ -38,6 +39,7 @@ class MarkModel;
 class PolyLineModel;
 class PointModel;
 class WindModel;
+
 
 enum {
     SET_TITLE,

@@ -31,6 +31,8 @@
 #include "commontypes.h"
 #include "boats.h"
 
+#include <QPainter>
+
 extern int debugLevel;
 
 void TrackDelegate::paint(QPainter *painter,
@@ -75,6 +77,7 @@ QSize TrackDelegate::sizeHint(const QStyleOptionViewItem &option,
 QWidget * TrackDelegate::createEditor(QWidget *parent,
     const QStyleOptionViewItem &option,
     const QModelIndex &index) const {
+    Q_UNUSED(option);
     if (debugLevel & 1 << DELEGATE) std::cout << "createEditor " << index.column() << std::endl;
 
     switch (index.column()) {

@@ -429,6 +429,7 @@ void SetFollowTrackUndoCommand::redo() {
 }
 
 bool SetFollowTrackUndoCommand::mergeWith(const QUndoCommand *command) {
+    Q_UNUSED(command);
     return false;
 }
 

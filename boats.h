@@ -25,7 +25,9 @@
 #ifndef BOATS_H
 #define BOATS_H
 
-#include <QtGui>
+#include <QObject>
+#include <QList>
+#include <QMetaEnum>
 
 #define ENUM_NAME(o,e,v) (o::staticMetaObject.enumerator(o::staticMetaObject.indexOfEnumerator(#e)).valueToKey((v)))
 
