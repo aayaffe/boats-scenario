@@ -313,71 +313,57 @@ void SituationWidget::unSetSituation() {
 
 void SituationWidget::setTitle() {
     if (m_situation) {
-        if (titleEdit->text() != m_situation->title()) {
-            m_situation->undoStack()->push(new SetTitleUndoCommand(m_situation, titleEdit->text()));
-        }
+        m_situation->changeTitle(titleEdit->text());
     }
 }
 
 void SituationWidget::setRules() {
     if (m_situation) {
-        if (rulesEdit->text() != m_situation->rules()) {
-            m_situation->undoStack()->push(new SetRulesUndoCommand(m_situation, rulesEdit->text()));
-        }
+        m_situation->changeRules(rulesEdit->text());
     }
 }
 
 void SituationWidget::setShowLayline(bool show) {
     if (m_situation) {
-        if (show != m_situation->showLayline())
-            m_situation->undoStack()->push(new SetShowLaylineUndoCommand(m_situation));
+        m_situation->toggleShowLayline(show);
     }
 }
 
 void SituationWidget::setLayline(int angle) {
     if (m_situation) {
-        if (angle != m_situation->laylineAngle()) {
-            m_situation->undoStack()->push(new SetLaylineUndoCommand(m_situation, angle));
-        }
+        m_situation->changeLaylineAngle(angle);
     }
 }
 
 void SituationWidget::setLength(int length) {
     if (m_situation) {
-        if (length != m_situation->situationLength()) {
-            m_situation->undoStack()->push(new LengthMarkUndoCommand(m_situation, length));
-        }
+        m_situation->changeLength(length);
     }
 }
 
 void SituationWidget::setShowWind(bool show) {
     if (m_situation) {
-        if (show != m_situation->wind().visible())
-            m_situation->undoStack()->push(new SetShowWindUndoCommand(&m_situation->wind()));
+        if (show != m_situation->wind().visible()) {
+            m_situation->toggleWind();
+        }
     }
 }
 
 void SituationWidget::setSeries(int series) {
     if (m_situation) {
-        if (series != m_situation->situationSeries()) {
-            m_situation->undoStack()->push(new SetSituationSeriesUndoCommand(m_situation, series));
-        }
+        m_situation->changeSeries((Boats::Series)series);
     }
 }
 
 void SituationWidget::setAbstract() {
     if (m_situation) {
-        if (abstractEdit->document()->toPlainText() != m_situation->abstract()) {
-            m_situation->undoStack()->push(new SetAbstractUndoCommand(m_situation, abstractEdit->document()->toPlainText()));
-        }
+        m_situation->changeAbstract(abstractEdit->document()->toPlainText());
     }
 }
 
 void SituationWidget::setDescription() {
     if (m_situation) {
-        if (descriptionEdit->document()->toPlainText() != m_situation->description()) {
-            m_situation->undoStack()->push(new SetDescriptionUndoCommand(m_situation, descriptionEdit->document()->toPlainText()));
-        }
+        m_situation->changeDescription(descriptionEdit->document()->toPlainText());
     }
 }
 

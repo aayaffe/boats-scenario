@@ -85,40 +85,27 @@ void XmlSituationReader::readSituation() {
             break;
         if (isStartElement()) {
             if (name() == "title") {
-                m_situation->undoStack()->push(
-                        new SetTitleUndoCommand(m_situation,
-                                                readElementText()));
+                m_situation->changeTitle(readElementText());
 
             } else if (name() == "rules") {
-                m_situation->undoStack()->push(
-                        new SetRulesUndoCommand(m_situation,
-                                                readElementText()));
+                m_situation->changeRules(readElementText());
 
             } else if (name() == "abstract") {
-                m_situation->undoStack()->push(
-                        new SetAbstractUndoCommand(m_situation,
-                                                   readElementText()));
+                m_situation->changeAbstract(readElementText());
 
             } else if (name() == "description") {
-                m_situation->undoStack()->push(
-                        new SetDescriptionUndoCommand(m_situation,
-                                                      readElementText()));
+                m_situation->changeDescription(readElementText());
 
             } else if (name() == "series") {
-                m_situation->undoStack()->push(
-                        new SetSituationSeriesUndoCommand(m_situation,
-                                                          series(readElementText())));
+                m_situation->changeSeries(series(readElementText()));
 
             } else if (name() == "showlayline") {
                 if (readElementText() == "0") {
-                    m_situation->undoStack()->push(
-                            new SetShowLaylineUndoCommand(m_situation));
+                    m_situation->toggleShowLayline(false);
                 }
 
             } else if (name() == "layline") {
-                m_situation->undoStack()->push(
-                        new SetLaylineUndoCommand(m_situation,
-                                                  readElementText().toInt()));
+                m_situation->changeLaylineAngle(readElementText().toInt());
 
             } else if (name() == "length") {
                 m_situation->setSituationLength(readElementText().toInt());
@@ -266,11 +253,11 @@ void XmlSituationReader::readMark(SituationModel *situation) {
     int length = 0;
     QPointF textPos(10,10);
     QString text;
-    bool laylines = 0;
-    qreal heading;
-    bool arrowVisible;
-    bool leaveToPort;
-    bool labelVisible;
+    bool laylines = false;
+    qreal heading = 0;
+    bool arrowVisible = false;
+    bool leaveToPort = true;
+    bool labelVisible = true;
     QString labelText;
     QStringList discarded;
     while (!atEnd()) {
@@ -310,9 +297,7 @@ void XmlSituationReader::readMark(SituationModel *situation) {
                 discarded.append(readUnknownElement());
         }
     }
-    AddMarkUndoCommand *command = new AddMarkUndoCommand(situation, pos);
-    situation->undoStack()->push(command);
-    MarkModel *mark = command->mark();
+    MarkModel *mark = situation->createMark(pos);
     mark->setColor(color);
     mark->setZone(zone);
     if (length != 0) {

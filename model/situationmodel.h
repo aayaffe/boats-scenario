@@ -97,14 +97,14 @@ class SituationModel : public QObject {
             ANIMATE
         };
 
-        Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
-        Q_PROPERTY(QString rules READ rules WRITE setRules NOTIFY rulesChanged)
-        Q_PROPERTY(bool grid READ showLayline WRITE setShowLayline NOTIFY showLaylineChanged)
-        Q_PROPERTY(int laylineAngle READ laylineAngle WRITE setLaylineAngle NOTIFY laylineChanged)
-        Q_PROPERTY(Boats::Series situationSeries READ situationSeries WRITE setSituationSeries NOTIFY seriesChanged)
-        Q_PROPERTY(int situationLength READ situationLength WRITE setSituationLength NOTIFY lengthChanged)
-        Q_PROPERTY(QString abstract READ abstract WRITE setAbstract NOTIFY abstractChanged)
-        Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
+        Q_PROPERTY(QString title READ title WRITE changeTitle NOTIFY titleChanged)
+        Q_PROPERTY(QString rules READ rules WRITE changeRules NOTIFY rulesChanged)
+        Q_PROPERTY(bool grid READ showLayline WRITE toggleShowLayline NOTIFY showLaylineChanged)
+        Q_PROPERTY(int laylineAngle READ laylineAngle WRITE changeLaylineAngle NOTIFY laylineChanged)
+        Q_PROPERTY(Boats::Series situationSeries READ situationSeries WRITE changeSeries NOTIFY seriesChanged)
+        Q_PROPERTY(int situationLength READ situationLength WRITE changeLength NOTIFY lengthChanged)
+        Q_PROPERTY(QString abstract READ abstract WRITE changeAbstract NOTIFY abstractChanged)
+        Q_PROPERTY(QString description READ description WRITE changeDescription NOTIFY descriptionChanged)
         Q_PROPERTY(qreal lookDirection READ lookDirection WRITE setLookDirection NOTIFY lookDirectionChanged)
         Q_PROPERTY(qreal tilt READ tilt WRITE setTilt NOTIFY tiltChanged)
 
@@ -185,6 +185,17 @@ class SituationModel : public QObject {
         bool canUndo() { return m_undoStack->canUndo(); }
         Q_INVOKABLE void redo() { m_undoStack->redo(); }
         bool canRedo() { return m_undoStack->canRedo(); }
+
+        Q_INVOKABLE void changeTitle(QString title);
+        Q_INVOKABLE void changeRules(QString rules);
+        Q_INVOKABLE void toggleShowLayline(bool showlayline);
+        Q_INVOKABLE void changeSeries(Boats::Series series);
+        Q_INVOKABLE void changeLaylineAngle(int angle);
+        Q_INVOKABLE void changeLength(int length);
+        Q_INVOKABLE void changeAbstract(QString abstract);
+        Q_INVOKABLE void changeDescription(QString description);
+        Q_INVOKABLE void toggleWind();
+
         Q_INVOKABLE void moveModel(QPointF pos);
         Q_INVOKABLE void headingModel(QPointF pos);
         Q_INVOKABLE void deleteModels();

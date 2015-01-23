@@ -241,6 +241,58 @@ void SituationModel::setState(const SceneState& theValue) {
     emit stateChanged(m_state);
 }
 
+void SituationModel::changeTitle(QString title) {
+    if (title != m_title) {
+        m_undoStack->push(new SetTitleUndoCommand(this, title));
+    }
+}
+
+void SituationModel::changeRules(QString rules) {
+    if (rules != m_rules) {
+        m_undoStack->push(new SetRulesUndoCommand(this, rules));
+    }
+}
+
+void SituationModel::toggleShowLayline(bool showlayline) {
+    if (showlayline != m_showLayline) {
+        m_undoStack->push(new SetShowLaylineUndoCommand(this));
+    }
+}
+
+void SituationModel::changeSeries(Boats::Series series) {
+    if (series != m_situationSeries) {
+        m_undoStack->push(new SetSituationSeriesUndoCommand(this, series));
+    }
+}
+
+void SituationModel::changeLaylineAngle(int angle) {
+    if (angle != m_laylineAngle) {
+        m_undoStack->push(new SetLaylineUndoCommand(this, angle));
+    }
+}
+
+void SituationModel::changeLength(int length) {
+    if (length != m_situationLength) {
+        m_undoStack->push(new LengthMarkUndoCommand(this, length));
+    }
+}
+
+void SituationModel::changeAbstract(QString abstract) {
+    if (abstract != m_abstract) {
+        m_undoStack->push(new SetAbstractUndoCommand(this, abstract));
+    }
+}
+
+void SituationModel::changeDescription(QString description) {
+    if (description != m_description) {
+        m_undoStack->push(new SetDescriptionUndoCommand(this, description));
+    }
+}
+
+void SituationModel::toggleWind() {
+    m_undoStack->push(new SetShowWindUndoCommand(&m_wind));
+}
+
 void SituationModel::moveModel(QPointF pos) {
     if (!m_selectedModels.isEmpty() && pos != QPointF()) {
         m_undoStack->push(new MoveModelUndoCommand(m_selectedModels,pos));
