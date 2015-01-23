@@ -363,6 +363,30 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             boundingRect = QRectF(-14.0, -24.0, 28.0, 48.0);
             border = 14.5;
             break;
+        case Boats::rsfeva:
+            m_numberSize = 7;
+            posY = 10;
+            flagRect = QRectF(-3, 12 , 6, 4);
+            mast = QPointF(0, -5.8);
+            sailSize = 23.8;
+            jibTackPos = QPointF(0,-16.0);
+            jibSize = 11.2;
+            gennTackPos = QPointF(0,-27.2);
+            gennPoleLength = 9.1;
+            gennSize = 17.0;
+            maxWithSpinSailAngle = 40;
+            maxWithSpinJibAngle = 35;
+            path.moveTo(0,-18.2);
+            path.quadTo(0.2,-18.2,0.4,-18.0);
+            path.quadTo(7.1,-6.8,7.1,4.8);
+            path.quadTo(7.1,10.4,5.3,18.2);
+            path.lineTo(-5.3,18.2);
+            path.quadTo(-7.1,10.4,-7.1,4.8);
+            path.quadTo(-7.1,-6.8,-0.4,-18.0);
+            path.quadTo(-0.2,-18.2,0,-18.2);
+            boundingRect = QRectF(-7.1,-18.2,14.2,36.4);
+            border = 5.3;
+            break;
         case Boats::int470:
             m_numberSize = 7;
             posY = 9;
@@ -425,6 +449,21 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             path.lineTo(0,-20.5);
             boundingRect = QRectF(-8.8, -20.5, 17.6, 41.0);
             border = 4.4;
+            break;
+        case Boats::finn:
+            m_numberSize = 8;
+            posY = 11;
+            flagRect = QRectF(-3, 13, 6, 4);
+            mast = QPointF(0, -15.0);
+            sailSize = 33.3;
+            path.moveTo(0,-22.5);
+            path.quadTo(-7.35,-9.1,-7.35,5.1);
+            path.quadTo(-7.35,14.9,-4.9,22.5);
+            path.lineTo(4.9,22.5);
+            path.quadTo(7.35,14.9,7.35,5.1);
+            path.quadTo(7.35,-9.1,0,-22.5);
+            boundingRect = QRectF(-7.35,-22.5,14.7,45.0);
+            border = 4.9;
             break;
         case Boats::laser:
             m_numberSize = 7;
@@ -525,6 +564,40 @@ void BoatGraphicsItem::setSeries(Boats::Series value) {
             boundingRect = QRectF(-15.3, -30.5, 30.6, 61);
             border = 14.7;
             break;
+        case Boats::nacra17:
+            m_numberSize = 7;
+            posY = 14;
+            flagRect = QRectF(-3, 16, 6, 4);
+            mast = QPointF(0, 0);
+            sailSize = 20.95;
+            jibTackPos = QPointF(0,-15.05);
+            jibSize = 14.15;
+            gennTackPos = QPointF(0,-33.35);
+            gennPoleLength = 0;
+            gennSize = 33.65;
+            maxNormalSailAngle = 20;
+            maxNormalJibAngle = 20;
+            maxWithSpinSailAngle = 20;
+            maxWithSpinJibAngle = 20;
+            path.moveTo(0,-0.65);
+            path.lineTo(-8.95,-0.65);
+            path.quadTo(-8.95,-16.75,-10.95,-25.90);
+            path.quadTo(-12.95,-16.75,-12.95,-0.65);
+            path.quadTo(-12.95,21.90,-12.70,26.60);
+            path.lineTo(-9.20,26.60);
+            path.lineTo(-9.00,21.45);
+            path.lineTo(9.00,21.45);
+            path.lineTo(9.20,26.60);
+            path.lineTo(12.7,26.60);
+            path.quadTo(12.95,21.90,12.95,-0.65);
+            path.quadTo(12.95,-16.75,10.95,-25.90);
+            path.quadTo(8.95,-16.75,8.95,-0.65);
+            path.lineTo(0,-0.65);
+            path.lineTo(0,-33.35);
+            boundingRect = QRectF(-12.95,-33.35,25.90,59.95);
+            border = 12.70;
+            break;
+
         case Boats::startboat:
             m_numberSize = 0;
             flagRect = QRectF(-7.5, 30 , 15, 10);
