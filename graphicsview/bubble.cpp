@@ -97,26 +97,28 @@ void BubbleGraphicsItem::setPosition(QPointF position) {
 }
 
 void BubbleGraphicsItem::setTail() {
+    //centerx,y is the centre of the text relative to pos()
+    double centerx = boundingRect().width()/2 - 4;
+    double centery = boundingRect().height()/2 - 4;
+
     double a = 0;
     if (BoatModel *boat = dynamic_cast<BoatModel*> (m_model)) {
-        a = -boat->heading() * M_PI / 180;
+        a = -boat->heading();
         // set the transform to have horizontal text
-        setTransform(QTransform().rotateRadians(a));
+        setTransformOriginPoint(centerx, centery); // Rotate about centre of text rather than top left corner
+        setRotation(a);
     }
 
-    //centerx,y is half the size of the text
-    double centerx = boundingRect().width()/2;
-    double centery = boundingRect().height()/2;
     // x,y is the center of the text
-    double x = pos().x() + centerx*cos(a) - centery*sin(a);
-    double y = pos().y() + centerx*sin(a) + centery*cos(a);
+    double x = pos().x() + centerx;
+    double y = pos().y() + centery;
     // t is a factor for the width of the tail
     double t = boundingRect().height()/5;
     // q is the angle of the tail
     double q = atan2(y, x);
     QPolygonF polygon;
     polygon << QPointF(x,y) << QPointF(x - t*sin(q), y + t*cos(q))
-            << QPointF(x/2, y/2) << QPointF(x + t*sin(q), y - t*cos(q));
+            << QPointF(x/4, y/4) << QPointF(x + t*sin(q), y - t*cos(q));
     m_tail->setPolygon(polygon);
 }
 
