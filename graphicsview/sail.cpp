@@ -39,7 +39,8 @@ extern int debugLevel;
 SailGraphicsItem::SailGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         : QGraphicsPathItem(parent),
         m_boat(boat),
-        m_sailAngle(0) {
+        m_sailAngle(0),
+        m_sailSize(0) {
     setZValue(0);
     setBrush(QBrush(Qt::white));
 }
