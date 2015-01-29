@@ -65,6 +65,8 @@ SituationModel::SituationModel(QObject *parent)
             m_scenarioAnimation, SLOT(setAnimation()));
     connect(m_stateMachine->animationState(), SIGNAL(exited()),
             m_scenarioAnimation, SLOT(unsetAnimation()));
+    connect(m_stateMachine->createState(), SIGNAL(exited()),
+            this, SLOT(exitCreateState()));
     m_stateMachine->start();
 }
 
@@ -251,21 +253,6 @@ void SituationModel::resetWind() {
 
 void SituationModel::setState(const SceneState& theValue) {
     if (theValue != m_state) {
-        // end macro for macro-states
-        switch(m_state) {
-        case SituationModel::CREATE_BOAT:
-        case SituationModel::CREATE_MARK:
-        case SituationModel::CREATE_POINT:
-            m_undoStack->endMacro();
-            break;
-        default:
-            break;
-        }
-        // undo last action when going back to no_state (except animation)
-        if (theValue == SituationModel::NO_STATE
-             && (m_state != SituationModel::ANIMATE)) {
-            m_undoStack->undo();
-        }
         m_state = theValue;
         emit stateChanged(m_state);
     }
@@ -453,6 +440,11 @@ PointModel *SituationModel::createPoint(QPointF pos) {
         return command->point();
     }
     return 0;
+}
+
+void SituationModel::exitCreateState() {
+    m_undoStack->endMacro();
+    m_undoStack->undo();
 }
 
 void SituationModel::trimSail() {

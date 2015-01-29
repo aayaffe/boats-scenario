@@ -256,6 +256,7 @@ class SituationModel : public QObject {
     public slots:
         // Wind
         void resetWind();
+        void exitCreateState();
 
     signals:
         // Signals for Track
