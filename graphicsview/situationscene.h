@@ -117,6 +117,9 @@ class SituationScene : public QGraphicsScene {
         void createLine();
         void createPoint();
 
+        void moveModel();
+        void rotateModel();
+
         // Slots for animation signals
         void setAnimation();
 

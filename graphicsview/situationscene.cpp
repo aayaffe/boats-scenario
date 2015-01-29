@@ -123,6 +123,10 @@ SituationScene::SituationScene(SituationModel *situation)
             this, SLOT(createLine()));
     connect(situation->stateMachine()->createPointState(), SIGNAL(entered()),
             this, SLOT(createPoint()));
+    connect(situation->stateMachine()->moveState(), SIGNAL(entered()),
+            this, SLOT(moveModel()));
+    connect(situation->stateMachine()->rotateState(), SIGNAL(entered()),
+            this, SLOT(rotateModel()));
     connect(situation->stateMachine()->animationState(), SIGNAL(entered()),
             this, SLOT(setAnimation()));
 
@@ -193,6 +197,24 @@ void SituationScene::createLine() {
 void SituationScene::createPoint() {
     m_situation->createPoint(m_curPosition);
     m_fromPosition = m_curPosition;
+}
+
+void SituationScene::moveModel() {
+    m_situation->moveModel(m_curPosition - m_fromPosition);
+    if (!m_situation->selectedBoatModels().isEmpty()) {
+        BoatModel *boat = m_situation->selectedBoatModels()[0];
+        m_trackCreated = boat->track();
+        if(boat->order() > 1) {
+            qreal heading = m_trackCreated->headingForNext(
+                        boat->order()-2, m_curPosition);
+            boat->setHeading(heading);
+        }
+    }
+    m_fromPosition = m_curPosition;
+}
+
+void SituationScene::rotateModel() {
+    m_situation->headingModel(m_curPosition - m_modelPressed->position());
 }
 
 /**
@@ -308,57 +330,24 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     }
 
     QGraphicsScene::mouseMoveEvent(event);
+    m_curPosition = event->scenePos();
     if (event->buttons() == Qt::LeftButton
-        && (event->modifiers() & Qt::MetaModifier) == 0
-        && m_state == SituationModel::NO_STATE) {
-        m_situation->moveModel(event->scenePos() - m_fromPosition);
-        m_fromPosition = event->scenePos();
+        && (event->modifiers() & Qt::MetaModifier) == 0) {
+        m_situation->stateMachine()->lmbMove();
     }
 
     if (event->buttons() == Qt::RightButton
         || (event->buttons() == Qt::LeftButton
             && ((event->modifiers() & Qt::MetaModifier) != 0))) {
-        switch (m_state) {
-            case SituationModel::NO_STATE:
-            case SituationModel::CREATE_TRACK:
-            case SituationModel::CREATE_BOAT: {
-                m_situation->headingModel(event->scenePos() - m_modelPressed->position());
-            }
-            break;
-        default:
-            break;
-        }
+        m_situation->stateMachine()->rmbMove();
     }
 
     if (event->buttons() == Qt::NoButton) {
-        switch (m_state) {
-        case SituationModel::CREATE_TRACK:
-        case SituationModel::CREATE_MARK:
-        case SituationModel::CREATE_LINE:
-        case SituationModel::CREATE_POINT: {
-            m_situation->moveModel(event->scenePos() - m_fromPosition);
-            m_fromPosition = event->scenePos();
-        }
-            break;
-        case SituationModel::CREATE_BOAT: {
-            if (!m_situation->selectedBoatModels().isEmpty()) {
-                m_trackCreated = m_situation->selectedBoatModels()[0]->track();
-                qreal heading = m_trackCreated->headingForNext(
-                            m_trackCreated->boats().size()-2, event->scenePos());
-                m_trackCreated->boats().last()->setHeading(heading);
-            }
-            m_situation->moveModel(event->scenePos() - m_fromPosition);
-            m_fromPosition = event->scenePos();
-        }
-            break;
-        default:
-            break;
-        }
+        m_situation->stateMachine()->move();
     }
 
     // trigger next update rate calculation
     m_time.start();
-    m_curPosition = event->scenePos();
 }
 
 /**
@@ -408,8 +397,13 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
         return;
     }
 
+    if (event->button() == Qt::RightButton
+        || (event->button() == Qt::LeftButton
+           && ((event->modifiers() & Qt::MetaModifier) != 0))) {
+        m_situation->stateMachine()->rmbclick();
+    }
     if (event->button() == Qt::LeftButton) {
-        m_situation->stateMachine()->click();
+        m_situation->stateMachine()->lmbclick();
         switch (m_state) {
             case SituationModel::CREATE_TRACK: {
                 m_situation->setState(SituationModel::CREATE_BOAT);

@@ -32,15 +32,22 @@
 class StateMachine : public QStateMachine
 {
     Q_OBJECT
+    Q_PROPERTY(EnableState* parallelEditionState READ parallelEditionState CONSTANT)
     Q_PROPERTY(EnableState* editingState READ editingState CONSTANT)
+    Q_PROPERTY(EnableState* mouseState READ mouseState CONSTANT)
     Q_PROPERTY(EnableState* animationState READ animationState CONSTANT)
 
     Q_PROPERTY(EnableState* noStateState READ noStateState CONSTANT)
+    Q_PROPERTY(EnableState* createState READ createState CONSTANT)
     Q_PROPERTY(EnableState* createTrackState READ createTrackState CONSTANT)
     Q_PROPERTY(EnableState* createBoatState READ createBoatState CONSTANT)
     Q_PROPERTY(EnableState* createMarkState READ createMarkState CONSTANT)
     Q_PROPERTY(EnableState* createLineState READ createLineState CONSTANT)
     Q_PROPERTY(EnableState* createPointState READ createPointState CONSTANT)
+
+    Q_PROPERTY(EnableState* selectState READ selectState CONSTANT)
+    Q_PROPERTY(EnableState* moveState READ moveState CONSTANT)
+    Q_PROPERTY(EnableState* rotateState READ rotateState CONSTANT)
 
     Q_PROPERTY(EnableState* stopState READ stopState CONSTANT)
     Q_PROPERTY(EnableState* playState READ playState CONSTANT)
@@ -49,15 +56,21 @@ class StateMachine : public QStateMachine
 public:
     explicit StateMachine(QObject *parent = 0);
 
+    EnableState *parallelEditionState();
     EnableState *editingState();
+    EnableState *mouseState();
     EnableState *animationState();
 
     EnableState *noStateState();
+    EnableState *createState();
     EnableState *createTrackState();
     EnableState *createBoatState();
     EnableState *createMarkState();
     EnableState *createLineState();
     EnableState *createPointState();
+    EnableState *selectState();
+    EnableState *moveState();
+    EnableState *rotateState();
     EnableState *stopState();
     EnableState *playState();
     EnableState *pauseState();
@@ -71,23 +84,38 @@ signals:
     void createMark();
     void createLine();
     void createPoint();
+    void move();
+    void lmbMove();
+    void rmbMove();
     void stop();
     void play();
     void pause();
-    void click();
+    void lmbclick();
+    void rmbclick();
 
 public slots:
+    void setCreateMouseTransitions();
+    void unsetCreateMouseTransitions();
+    void setNoStateMouseTransitions();
+    void unsetNoStateMouseTransitions();
 
 private:
+    EnableState* m_parallelEditionState;
     EnableState* m_editingState;
+    EnableState* m_mouseState;
     EnableState* m_animationState;
 
     EnableState* m_noStateState;
+    EnableState* m_createState;
     EnableState* m_createTrackState;
     EnableState* m_createBoatState;
     EnableState* m_createMarkState;
     EnableState* m_createLineState;
     EnableState* m_createPointState;
+
+    EnableState* m_selectState;
+    EnableState* m_moveState;
+    EnableState* m_rotateState;
 
     EnableState* m_stopState;
     EnableState* m_playState;
