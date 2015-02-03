@@ -395,12 +395,6 @@ void MainWindow::updateActions() {
     bool selectedItems = !situation->selectedModels().isEmpty();
     bool selectedBoats = !situation->selectedBoatModels().isEmpty();
     bool selectedMarks = !situation->selectedMarkModels().isEmpty();
-    bool animating = situation->state() == SituationModel::ANIMATE;
-
-    if(animating) {
-        undoAction->setEnabled(false);
-        redoAction->setEnabled(false);
-    }
 
     trimSailAction->setEnabled(selectedBoats);
     autotrimSailAction->setEnabled(selectedBoats);
@@ -1361,7 +1355,7 @@ bool MainWindow::saveSituation(QString fileName) {
 bool MainWindow::saveFile() {
     SituationModel *situation = engine->currentModel();
 
-    bool animated = (situation->state() == SituationModel::ANIMATE);
+    bool animated = situation->stateMachine()->animationState()->isActive();
     animate(false);
     bool saved = saveSituation(situation->fileName());
     if (animated) {
@@ -1373,7 +1367,7 @@ bool MainWindow::saveFile() {
 bool MainWindow::saveAs() {
     SituationModel *situation = engine->currentModel();
 
-    bool animated = (situation->state() == SituationModel::ANIMATE);
+    bool animated = situation->stateMachine()->animationState()->isActive();
     animate(false);
     bool saved = saveSituation("");
     if (animated) {
@@ -1608,10 +1602,12 @@ void MainWindow::animate(bool state, bool interactive) {
     SituationModel *situation = engine->currentModel();
 
     if (state) {
-        if (situation->state() != SituationModel::ANIMATE) {
+        if(!situation->stateMachine()->animationState()->isActive()) {
             situation->stateMachine()->animate();
             situation->setState(SituationModel::ANIMATE);
 
+            undoAction->setEnabled(false);
+            redoAction->setEnabled(false);
             connect(situation->animation(), SIGNAL(stateChanged(QAbstractAnimation::State, QAbstractAnimation::State)),
                     this, SLOT(changeAnimationState(QAbstractAnimation::State, QAbstractAnimation::State)));
             connect(situation->animation(), SIGNAL(timeChanged(int)),
@@ -1629,9 +1625,11 @@ void MainWindow::animate(bool state, bool interactive) {
                 }
             }
     } else {
-        if (situation->state() == SituationModel::ANIMATE) {
+        if(situation->stateMachine()->animationState()->isActive()) {
             situation->stateMachine()->noState();
             situation->setState(SituationModel::NO_STATE);
+            undoAction->setEnabled(situation->undoStack()->canUndo());
+            redoAction->setEnabled(situation->undoStack()->canRedo());
             disconnect(this, SLOT(changeAnimationState(QAbstractAnimation::State,QAbstractAnimation::State)));
             disconnect(animationSlider, SLOT(setValue(int)));
             disconnect(situation->animation(), SLOT(setCurrentTime(int)));
