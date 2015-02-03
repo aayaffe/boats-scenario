@@ -29,6 +29,7 @@ StateMachine::StateMachine(QObject *parent) :
     m_parallelEditionState(new EnableState(this)),
     m_editingState(new EnableState(m_parallelEditionState)),
     m_mouseState(new EnableState(m_parallelEditionState)),
+    m_selectionState(new EnableState(m_parallelEditionState)),
     m_animationState(new EnableState(this)),
     m_noStateState(new EnableState(m_editingState)),
     m_createState(new EnableState(m_editingState)),
@@ -40,6 +41,9 @@ StateMachine::StateMachine(QObject *parent) :
     m_selectState(new EnableState(m_mouseState)),
     m_moveState(new EnableState(m_mouseState)),
     m_rotateState(new EnableState(m_mouseState)),
+    m_noSelectionState(new EnableState(m_selectionState)),
+    m_boatSelectionState(new EnableState(m_selectionState)),
+    m_pointSelectionState(new EnableState(m_selectionState)),
     m_stopState(new EnableState(m_animationState)),
     m_playState(new EnableState(m_animationState)),
     m_pauseState(new EnableState(m_animationState))
@@ -58,6 +62,9 @@ StateMachine::StateMachine(QObject *parent) :
     m_selectState->setObjectName("Select");
     m_moveState->setObjectName("Move");
     m_rotateState->setObjectName("Rotate");
+    m_noSelectionState->setObjectName("No Selection");
+    m_boatSelectionState->setObjectName("Boat Selection");
+    m_pointSelectionState->setObjectName("Point Selection");
     m_stopState->setObjectName("STOP");
     m_playState->setObjectName("PLAY");
     m_pauseState->setObjectName("PAUSE");
@@ -67,6 +74,7 @@ StateMachine::StateMachine(QObject *parent) :
     m_editingState->setInitialState(m_noStateState);
     m_editingState->addTransition(this, SIGNAL(animate()), m_animationState);
     m_mouseState->setInitialState(m_selectState);
+    m_selectionState->setInitialState(m_noSelectionState);
 
     m_animationState->setInitialState(m_stopState);
     m_animationState->setToggable(true);
@@ -117,6 +125,13 @@ StateMachine::StateMachine(QObject *parent) :
     m_createPointState->addTransition(this, SIGNAL(createMark()), m_createMarkState);
     m_createPointState->addTransition(this, SIGNAL(createLine()), m_createLineState);
     m_createPointState->addTransition(this, SIGNAL(createPoint()), m_noStateState);
+
+    m_noSelectionState->addTransition(this, SIGNAL(selectBoat()), m_boatSelectionState);
+    m_noSelectionState->addTransition(this, SIGNAL(selectPoint()), m_pointSelectionState);
+
+    m_boatSelectionState->addTransition(this, SIGNAL(clearSelection()), m_noSelectionState);
+
+    m_pointSelectionState->addTransition(this, SIGNAL(clearSelection()), m_noSelectionState);
 
     m_stopState->addTransition(this, SIGNAL(play()), m_playState);
 
@@ -205,6 +220,10 @@ EnableState *StateMachine::mouseState() {
     return m_mouseState;
 }
 
+EnableState *StateMachine::selectionState() {
+    return m_selectionState;
+}
+
 EnableState *StateMachine::animationState() {
     return m_animationState;
 }
@@ -245,8 +264,21 @@ EnableState *StateMachine::moveState() {
     return m_moveState;
 }
 
+
 EnableState *StateMachine::rotateState() {
     return m_rotateState;
+}
+
+EnableState *StateMachine::noSelectionState() {
+    return m_noSelectionState;
+}
+
+EnableState *StateMachine::boatSelectionState() {
+    return m_boatSelectionState;
+}
+
+EnableState *StateMachine::pointSelectionState() {
+    return m_pointSelectionState;
 }
 
 EnableState *StateMachine::stopState() {

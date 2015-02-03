@@ -35,6 +35,7 @@ class StateMachine : public QStateMachine
     Q_PROPERTY(EnableState* parallelEditionState READ parallelEditionState CONSTANT)
     Q_PROPERTY(EnableState* editingState READ editingState CONSTANT)
     Q_PROPERTY(EnableState* mouseState READ mouseState CONSTANT)
+    Q_PROPERTY(EnableState* selectionState READ selectionState CONSTANT)
     Q_PROPERTY(EnableState* animationState READ animationState CONSTANT)
 
     Q_PROPERTY(EnableState* noStateState READ noStateState CONSTANT)
@@ -49,6 +50,9 @@ class StateMachine : public QStateMachine
     Q_PROPERTY(EnableState* moveState READ moveState CONSTANT)
     Q_PROPERTY(EnableState* rotateState READ rotateState CONSTANT)
 
+    Q_PROPERTY(EnableState* boatSelectionState READ boatSelectionState CONSTANT)
+    Q_PROPERTY(EnableState* pointSelectionState READ pointSelectionState CONSTANT)
+
     Q_PROPERTY(EnableState* stopState READ stopState CONSTANT)
     Q_PROPERTY(EnableState* playState READ playState CONSTANT)
     Q_PROPERTY(EnableState* pauseState READ pauseState CONSTANT)
@@ -59,6 +63,7 @@ public:
     EnableState *parallelEditionState();
     EnableState *editingState();
     EnableState *mouseState();
+    EnableState *selectionState();
     EnableState *animationState();
 
     EnableState *noStateState();
@@ -71,6 +76,9 @@ public:
     EnableState *selectState();
     EnableState *moveState();
     EnableState *rotateState();
+    EnableState *noSelectionState();
+    EnableState *boatSelectionState();
+    EnableState *pointSelectionState();
     EnableState *stopState();
     EnableState *playState();
     EnableState *pauseState();
@@ -87,11 +95,14 @@ signals:
     void move();
     void lmbMove();
     void rmbMove();
+    void lmbclick();
+    void rmbclick();
+    void selectBoat();
+    void selectPoint();
+    void clearSelection();
     void stop();
     void play();
     void pause();
-    void lmbclick();
-    void rmbclick();
 
 public slots:
     void setCreateMouseTransitions();
@@ -103,6 +114,7 @@ private:
     EnableState* m_parallelEditionState;
     EnableState* m_editingState;
     EnableState* m_mouseState;
+    EnableState* m_selectionState;
     EnableState* m_animationState;
 
     EnableState* m_noStateState;
@@ -116,6 +128,10 @@ private:
     EnableState* m_selectState;
     EnableState* m_moveState;
     EnableState* m_rotateState;
+
+    EnableState* m_noSelectionState;
+    EnableState* m_boatSelectionState;
+    EnableState* m_pointSelectionState;
 
     EnableState* m_stopState;
     EnableState* m_playState;

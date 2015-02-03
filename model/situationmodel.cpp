@@ -586,11 +586,13 @@ void SituationModel::clearSelectedModels() {
     m_selectedBoatModels.clear();
     m_selectedMarkModels.clear();
     m_selectedPointModels.clear();
+    m_stateMachine->clearSelection();
 }
 
 void SituationModel::addSelectedBoat(BoatModel *boat) {
     m_selectedBoatModels << boat;
     m_selectedModels << boat;
+    m_stateMachine->selectBoat();
 }
 
 void SituationModel::addSelectedMark(MarkModel *mark) {
@@ -601,6 +603,7 @@ void SituationModel::addSelectedMark(MarkModel *mark) {
 void SituationModel::addSelectedPoint(PointModel *point) {
     m_selectedPointModels << point;
     m_selectedModels << point;
+    m_stateMachine->selectPoint();
 }
 
 void SituationModel::addSelectedModel(PositionModel *position) {

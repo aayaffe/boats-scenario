@@ -394,7 +394,6 @@ void MainWindow::updateActions() {
 
     bool selectedItems = !situation->selectedModels().isEmpty();
     bool selectedBoats = !situation->selectedBoatModels().isEmpty();
-    bool selectedPoints = !situation->selectedPointModels().isEmpty();
     bool selectedMarks = !situation->selectedMarkModels().isEmpty();
     bool animating = situation->state() == SituationModel::ANIMATE;
 
@@ -403,8 +402,6 @@ void MainWindow::updateActions() {
         redoAction->setEnabled(false);
     }
 
-    addBoatAction->setEnabled(selectedBoats || situation->state() == SituationModel::CREATE_BOAT);
-    addPointAction->setEnabled(selectedPoints || situation->state() == SituationModel::CREATE_POINT);
     trimSailAction->setEnabled(selectedBoats);
     autotrimSailAction->setEnabled(selectedBoats);
     untrimSailAction->setEnabled(selectedBoats);
@@ -856,8 +853,11 @@ void MainWindow::setTab(int index) {
     addTrackAction->setEnabled(machine->createTrackState()->isEnabled());
     addTrackAction->setChecked(machine->createTrackState()->isActive());
 
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            addBoatAction, SLOT(setEnabled(bool)));
     connect(machine->createBoatState(), SIGNAL(activeChanged(bool)),
             addBoatAction, SLOT(setChecked(bool)));
+    addBoatAction->setEnabled(machine->boatSelectionState()->isActive());
     addBoatAction->setChecked(machine->createBoatState()->isActive());
 
     connect(machine->createMarkState(), SIGNAL(enabledChanged(bool)),
@@ -874,8 +874,11 @@ void MainWindow::setTab(int index) {
     addPolyLineAction->setEnabled(machine->createLineState()->isEnabled());
     addPolyLineAction->setChecked(machine->createLineState()->isActive());
 
+    connect(machine->pointSelectionState(), SIGNAL(activeChanged(bool)),
+            addPointAction, SLOT(setEnabled(bool)));
     connect(machine->createPointState(), SIGNAL(activeChanged(bool)),
             addPointAction, SLOT(setChecked(bool)));
+    addPointAction->setEnabled(machine->pointSelectionState()->isActive());
     addPointAction->setChecked(machine->createPointState()->isActive());
 
     connect(machine->animationState(), SIGNAL(enabledChanged(bool)),
