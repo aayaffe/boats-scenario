@@ -34,6 +34,7 @@
 #include "polylinemodel.h"
 #include "pointmodel.h"
 #include "undocommands.h"
+#include "scenarioanimation.h"
 
 extern int debugLevel;
 
@@ -47,7 +48,8 @@ SituationModel::SituationModel(QObject *parent)
         m_tilt(0),
         m_wind(this),
         m_undoStack(new QUndoStack(this)),
-        m_state(NO_STATE) {
+        m_state(NO_STATE),
+        m_scenarioAnimation(new ScenarioAnimation(this, this)) {
     if (debugLevel & 1 << MODEL) std::cout << "new situation " << this << std::endl;
     connect(&m_wind, SIGNAL(windReset()),
             this, SLOT(resetWind()));
@@ -187,6 +189,8 @@ void SituationModel::addMark(MarkModel *mark, int order) {
         order = m_marks.size();
     }
     m_marks.insert(order, mark);
+    connect(&m_wind, SIGNAL(directionChanged(qreal)),
+            mark, SLOT(setWind(qreal)));
     if (debugLevel & 1 << MODEL) std::cout << "Adding Mark " << order+1 << std::endl;
     for (int i=order+1; i<m_marks.size(); i++) {
         m_marks[i]->setOrder(i+1);

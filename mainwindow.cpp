@@ -1570,27 +1570,24 @@ void MainWindow::toggleLang() {
 
 void MainWindow::animate(bool state, bool interactive) {
     SituationModel *situation = engine->currentModel();
-    SituationScene *scene = sceneList.at(engine->currentIndex());
 
     if (state) {
         if (situation->state() != SituationModel::ANIMATE) {
             situation->setState(SituationModel::ANIMATE);
-            scene->clearSelection();
-            scene->setAnimation();
 
-            connect(scene->animation(), SIGNAL(stateChanged(QAbstractAnimation::State, QAbstractAnimation::State)),
+            connect(situation->animation(), SIGNAL(stateChanged(QAbstractAnimation::State, QAbstractAnimation::State)),
                     this, SLOT(changeAnimationState(QAbstractAnimation::State, QAbstractAnimation::State)));
-            connect(scene->animation(), SIGNAL(timeChanged(int)),
+            connect(situation->animation(), SIGNAL(timeChanged(int)),
                     animationSlider, SLOT(setValue(int)));
             connect(animationSlider, SIGNAL(valueChanged(int)),
-                    scene->animation(), SLOT(setCurrentTime(int)));
+                    situation->animation(), SLOT(setCurrentTime(int)));
 
-            scene->animation()->setCurrentTime(0);
+            situation->animation()->setCurrentTime(0);
             if (interactive) {
                 if (!toggleAnimationToolbarAction->isChecked()) {
                     toggleAnimationToolbarAction->setChecked(true);
                 }
-                animationSlider->setRange(0,scene->animation()->duration());
+                animationSlider->setRange(0,situation->animation()->duration());
                 animationSlider->setEnabled(true);
                 startAction->setEnabled(true);
                 loopAction->setEnabled(true);
@@ -1599,13 +1596,12 @@ void MainWindow::animate(bool state, bool interactive) {
     } else {
         if (situation->state() == SituationModel::ANIMATE) {
             situation->setState(SituationModel::NO_STATE);
-            scene->unSetAnimation();
             disconnect(this, SLOT(changeAnimationState(QAbstractAnimation::State,QAbstractAnimation::State)));
             disconnect(animationSlider, SLOT(setValue(int)));
-            disconnect(scene->animation(), SLOT(setCurrentTime(int)));
+            disconnect(situation->animation(), SLOT(setCurrentTime(int)));
 
             animationSlider->setEnabled(false);
-            scene->animation()->stop();
+            situation->animation()->stop();
             startAction->setEnabled(false);
             stopAction->setEnabled(false);
             loopAction->setEnabled(false);
@@ -1615,38 +1611,38 @@ void MainWindow::animate(bool state, bool interactive) {
 
 void MainWindow::play() {
     if (debugLevel & 1 << ANIMATION) std::cout << "playing" << std::endl;
-    SituationScene *scene = sceneList.at(engine->currentIndex());
+    SituationModel *situation = engine->currentModel();
     pauseAction->setChecked(false);
-    scene->animation()->start();
+    situation->animation()->start();
 }
 
 void MainWindow::pause(bool pause) {
-    SituationScene *scene = sceneList.at(engine->currentIndex());
+    SituationModel *situation = engine->currentModel();
     if (pause) {
         if (debugLevel & 1 << ANIMATION) std::cout << "pausing" << std::endl;
-        scene->animation()->setPaused(true);
+        situation->animation()->setPaused(true);
     } else {
         if (debugLevel & 1 << ANIMATION) std::cout << "resuming" << std::endl;
-        scene->animation()->setPaused(false);
+        situation->animation()->setPaused(false);
     }
 }
 
 void MainWindow::stop() {
     if (debugLevel & 1 << ANIMATION) std::cout << "stopping" << std::endl;
-    SituationScene *scene = sceneList.at(engine->currentIndex());
+    SituationModel *situation = engine->currentModel();
     pauseAction->setChecked(false);
-    scene->animation()->stop();
-    scene->animation()->setCurrentTime(0);
+    situation->animation()->stop();
+    situation->animation()->setCurrentTime(0);
 }
 
 void MainWindow::loop(bool loop) {
-    SituationScene *scene = sceneList.at(engine->currentIndex());
+    SituationModel *situation = engine->currentModel();
     if (loop) {
         if (debugLevel & 1 << ANIMATION) std::cout << "loop play" << std::endl;
-        scene->animation()->setLoopCount(0);
+        situation->animation()->setLoopCount(-1);
     } else {
         if (debugLevel & 1 << ANIMATION) std::cout << "single play" << std::endl;
-        scene->animation()->setLoopCount(1);
+        situation->animation()->setLoopCount(1);
     }
 }
 

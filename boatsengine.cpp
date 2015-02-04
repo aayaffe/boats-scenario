@@ -34,8 +34,6 @@
 #include "polylinemodel.h"
 #include "pointmodel.h"
 
-#include "scenarioanimation.h"
-
 #include "undocommands.h"
 #include "xmlsituationreader.h"
 #include "xmlsituationwriter.h"

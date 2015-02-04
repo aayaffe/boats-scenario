@@ -27,6 +27,11 @@
 
 #include <QParallelAnimationGroup>
 
+class TrackAnimation;
+
+class SituationModel;
+class TrackModel;
+
 /**
     \class ScenarioAnimation
 
@@ -46,10 +51,27 @@ class ScenarioAnimation: public QParallelAnimationGroup
     Q_OBJECT
 
     public:
+        ScenarioAnimation(SituationModel *situation, QObject *parent = 0);
+        ~ScenarioAnimation();
+
         virtual void updateCurrentTime(int currentTime);
+
+        /// \a m_animationItems holds the list of TrackAnimation items
+        /// created for animation mode
+        QList<TrackAnimation*> m_animationItems;
 
     signals:
         void timeChanged(int time);
+
+    public slots:
+        void setAnimation();
+        void unsetAnimation();
+
+    private:
+        SituationModel *m_situation;
+
+        /// \a m_windAnimation holds the animation for wind
+        QAnimationGroup *m_windAnimation;
 
 };
 

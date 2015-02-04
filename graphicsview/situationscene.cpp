@@ -34,6 +34,8 @@
 #include "polylinemodel.h"
 #include "pointmodel.h"
 #include "windmodel.h"
+#include "scenarioanimation.h"
+#include "trackanimation.h"
 
 #include "boat.h"
 #include "track.h"
@@ -41,9 +43,6 @@
 #include "polyline.h"
 #include "point.h"
 #include "arrow.h"
-#include "trackanimation.h"
-#include "scenarioanimation.h"
-#include "angleanimation.h"
 
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneMouseEvent>
@@ -57,7 +56,6 @@ extern int debugLevel;
 SituationScene::SituationScene(SituationModel *situation)
         : QGraphicsScene(situation),
         m_situation(situation),
-        m_scenarioAnimation(new ScenarioAnimation),
         m_trackCreated(0),
         m_state(SituationModel::NO_STATE),
         m_time(QTime::currentTime()),
@@ -200,54 +198,23 @@ void SituationScene::setWind(bool visible) {
 }
 
 /**
-    Prepares the Scene for animation mode.
-    This method finds the maximum size of track, and sets the timer length
-    accordingly.
-    It then creates a BoatGraphicsItem for animation purpose, and associates
-    an TrackAnimation.
+    Creates a BoatGraphicsItem for animation purpose
 */
 
 void SituationScene::setAnimation() {
-    if (debugLevel & 1 << VIEW) std::cout << "preparing for Animation" << std::endl;
-    int maxSize = 0;
-    foreach (const TrackModel *track, m_situation->tracks()) {
-        if (track->boats().size() > maxSize)
-            maxSize = track->boats().size() - 1;
-    }
 
-    m_windAnimation = new QSequentialAnimationGroup(this);
-    for (int i = 0; i < m_situation->wind().size()-1; ++i) {
-        AngleAnimation *wind = new AngleAnimation(&m_situation->wind(), "direction");
-        wind->setDuration(2000);
-        wind->setStartValue(m_situation->wind().windAt(i));
-        wind->setEndValue(m_situation->wind().windAt(i+1));
-        m_windAnimation->addAnimation(wind);
-    }
-    m_scenarioAnimation->addAnimation(m_windAnimation);
-
-
-    foreach (TrackModel *track, m_situation->tracks()) {
-        BoatModel *boat = track->boats()[0];
-        BoatGraphicsItem *boatItem = new BoatGraphicsItem(new BoatModel(track));
+    clearSelection();
+    foreach (TrackAnimation *track, m_situation->animation()->m_animationItems) {
+        BoatGraphicsItem *boatItem = new BoatGraphicsItem(track->boat());
+        boatItem->setOrder(0);
         addItem(boatItem);
-        boatItem->boat()->setOrder(0);
-        boatItem->setPosition(boat->position());
-        boatItem->setHeading(boat->heading());
-        boatItem->boat()->setWind(m_situation->wind().windAt(0));
-        boatItem->boat()->setLaylines(boat->laylines());
-        connect(&track->situation()->wind(), SIGNAL(directionChanged(qreal)),
-                boatItem->boat(), SLOT(setWind(qreal)));
         QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
         shadow->setXOffset(4);
         shadow->setYOffset(4);
         shadow->setBlurRadius(4);
         boatItem->setGraphicsEffect(shadow);
 
-        TrackAnimation *animation = new TrackAnimation(track, boatItem->boat(), m_scenarioAnimation);
-        m_scenarioAnimation->addAnimation(animation);
-        m_animationItems.push_back(animation);
-
-        if(track->followTrack()) {
+        if(track->boat()->track()->followTrack()) {
             connect(boatItem->boat(), SIGNAL(positionChanged(QPointF)),
                     this, SIGNAL(centerChanged(QPointF)));
             disconnect(m_situation, SIGNAL(lookDirectionChanged(qreal)));
@@ -256,50 +223,6 @@ void SituationScene::setAnimation() {
         }
     }
 
-    foreach (MarkModel *mark, m_situation->marks()) {
-        connect(&m_situation->wind(), SIGNAL(directionChanged(qreal)),
-                mark, SLOT(setWind(qreal)));
-    }
-
-    foreach(PolyLineModel *poly, m_situation->polyLines()) {
-        foreach(PointModel *point, poly->points()) {
-            connect(&m_situation->wind(), SIGNAL(directionChanged(qreal)),
-                    point, SLOT(setWind(qreal)));
-        }
-    }
-}
-
-/**
-    Restores the Scene out of animation mode.
-    This method brings the scene back to the normal drawing mode.
-    For this it removes all TrackAnimation objects created in setAnimation().
-*/
-
-void SituationScene::unSetAnimation() {
-    if (debugLevel & 1 << VIEW) std::cout << "ending Animation" << std::endl;
-
-    m_situation->wind().setDirection(m_situation->wind().windAt(0));
-    m_scenarioAnimation->removeAnimation(m_windAnimation);
-    for (int i = 0; i < m_situation->wind().size()-1; ++i) {
-        QAbstractAnimation *animation = m_windAnimation->animationAt(0);
-        m_windAnimation->removeAnimation(animation);
-        delete animation;
-    }
-    delete m_windAnimation;
-
-    foreach (TrackAnimation *animation, m_animationItems) {
-        // the boat was never really part of the track, we use situation signal
-        // directly to have the graphicsitem removed
-        animation->boat()->track()->situation()->removingBoat(animation->boat());
-        m_scenarioAnimation->removeAnimation(animation);
-        m_animationItems.removeOne(animation);
-        delete animation->boat();
-        delete animation;
-    }
-
-    foreach (MarkModel *mark, m_situation->marks()) {
-        disconnect(mark, SLOT(setWind(qreal)));
-    }
 }
 
 /**

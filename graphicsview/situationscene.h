@@ -36,8 +36,6 @@ class BoatModel;
 class MarkModel;
 class PolyLineModel;
 class PointModel;
-class TrackAnimation;
-class ScenarioAnimation;
 
 #include "situationmodel.h"
 
@@ -75,8 +73,7 @@ enum {
     The class provides slots to react to SituationModel changes and update
     drawing accordingly.
 
-    The class prepares the drawing of animation as well, through
-    setAnimation() and unSetAnimation() methods.
+    The class prepares the drawing of animation boats as well.
 
     \sa QGraphicsScene, SituationModel, BoatGraphicsItem, MarkGraphicsItem
 */
@@ -92,7 +89,6 @@ class SituationScene : public QGraphicsScene {
         void setBoatPopup(QMenu *theValue) { m_boatPopup = theValue; }
         void setMarkPopup(QMenu *theValue) { m_markPopup = theValue; }
         void setPointPopup(QMenu *theValue) { m_pointPopup = theValue; }
-        ScenarioAnimation *animation() const { return m_scenarioAnimation; }
 
     signals:
         void itemMoved(QList<BoatModel*> movedItems, const QPointF &movedFromPosition);
@@ -118,7 +114,6 @@ class SituationScene : public QGraphicsScene {
 
         // Slots for animation signals
         void setAnimation();
-        void unSetAnimation();
 
     protected:
         // Overloaded methods for Events
@@ -134,17 +129,6 @@ class SituationScene : public QGraphicsScene {
         void mouseSelectEvent(QGraphicsSceneMouseEvent *event);
 
         SituationModel *m_situation;
-
-        /// \a m_windAnimation holds the animation for wind
-        QAnimationGroup *m_windAnimation;
-
-        /// \a m_animationItems holds the list of TrackAnimation items
-        /// created for animation mode
-        QList<TrackAnimation*> m_animationItems;
-
-        /// \a m_scenarioAnimation holds the general AnimationGroup
-        /// manipulated during animation mode
-        ScenarioAnimation* m_scenarioAnimation;
 
         /// \a m_modelPressed holds the BoatModel being pressed
         PositionModel* m_modelPressed;

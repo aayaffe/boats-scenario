@@ -36,6 +36,7 @@ class BoatModel;
 class MarkModel;
 class PolyLineModel;
 class PointModel;
+class ScenarioAnimation;
 
 
 /**
@@ -160,6 +161,8 @@ class SituationModel : public QObject {
 
         SceneState state(){ return m_state; }
         void setState(const SceneState& theValue);
+
+        ScenarioAnimation *animation() const { return m_scenarioAnimation; }
 
         QList< PositionModel * > selectedModels() { return m_selectedModels; }
         QList< BoatModel * > selectedBoatModels() { return m_selectedBoatModels; }
@@ -340,6 +343,10 @@ class SituationModel : public QObject {
 
         /// \a m_state holds the SceneState for the current scenario
         SceneState m_state;
+
+        /// \a m_scenarioAnimation holds the general AnimationGroup
+        /// manipulated during animation mode
+        ScenarioAnimation* m_scenarioAnimation;
 
         // Bookkeeping references to selected models
         /// \a m_selectedModels holds the list of selected PositionModel
