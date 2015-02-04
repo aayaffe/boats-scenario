@@ -34,6 +34,7 @@
 #include "polylinemodel.h"
 #include "pointmodel.h"
 
+#include "statemachine.h"
 #include "undocommands.h"
 #include "xmlsituationreader.h"
 #include "xmlsituationwriter.h"
@@ -154,6 +155,7 @@ QStringList BoatsEngine::fileList() {
 void BoatsEngine::addTrack() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
 
+    situation->stateMachine()->createTrack();
     if(situation->state() == SituationModel::CREATE_TRACK) {
         situation->setState(SituationModel::NO_STATE);
     } else {
@@ -169,6 +171,7 @@ void BoatsEngine::deleteTrack() {
 void BoatsEngine::addBoat() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
 
+    situation->stateMachine()->createBoat();
     if (situation->state() == SituationModel::CREATE_BOAT) {
         situation->setState(SituationModel::NO_STATE);
     } else {
@@ -184,6 +187,7 @@ void BoatsEngine::deleteModels() {
 void BoatsEngine::addMark() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
 
+    situation->stateMachine()->createMark();
     if (situation->state() == SituationModel::CREATE_MARK) {
         situation->setState(SituationModel::NO_STATE);
     } else {
@@ -194,6 +198,7 @@ void BoatsEngine::addMark() {
 void BoatsEngine::addPolyLine() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
 
+    situation->stateMachine()->createLine();
     if (situation->state() == SituationModel::CREATE_LINE) {
         situation->setState(SituationModel::NO_STATE);
     } else {
@@ -204,6 +209,7 @@ void BoatsEngine::addPolyLine() {
 void BoatsEngine::addPoint() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
 
+    situation->stateMachine()->createPoint();
     if (situation->state() == SituationModel::CREATE_POINT) {
         situation->setState(SituationModel::NO_STATE);
     } else {

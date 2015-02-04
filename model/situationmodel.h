@@ -36,6 +36,7 @@ class BoatModel;
 class MarkModel;
 class PolyLineModel;
 class PointModel;
+class StateMachine;
 class ScenarioAnimation;
 
 
@@ -112,6 +113,7 @@ class SituationModel : public QObject {
         Q_PROPERTY(int size READ size NOTIFY tracksChanged)
 
         Q_PROPERTY(SceneState state READ state WRITE setState NOTIFY stateChanged)
+        Q_PROPERTY(StateMachine* stateMachine READ stateMachine)
         Q_PROPERTY(bool canUndo READ canUndo NOTIFY canUndoChanged)
         Q_PROPERTY(bool canRedo READ canRedo NOTIFY canRedoChanged)
 
@@ -161,6 +163,7 @@ class SituationModel : public QObject {
 
         SceneState state(){ return m_state; }
         void setState(const SceneState& theValue);
+        StateMachine *stateMachine(){ return m_stateMachine; }
 
         ScenarioAnimation *animation() const { return m_scenarioAnimation; }
 
@@ -343,6 +346,7 @@ class SituationModel : public QObject {
 
         /// \a m_state holds the SceneState for the current scenario
         SceneState m_state;
+        StateMachine *m_stateMachine;
 
         /// \a m_scenarioAnimation holds the general AnimationGroup
         /// manipulated during animation mode

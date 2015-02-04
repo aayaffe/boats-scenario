@@ -5,6 +5,8 @@ HEADERS += \
         boats.h \
         boatsengine.h \
         commontypes.h \
+        enablestate.h \
+        statemachine.h \
         trace.h \
         undocommands.h \
         xmlsituationreader.h \
@@ -13,6 +15,8 @@ HEADERS += \
 SOURCES += \
         boats.cpp \
         boatsengine.cpp \
+        enablestate.cpp \
+        statemachine.cpp \
         trace.cpp \
         undocommands.cpp \
         xmlsituationreader.cpp \

@@ -34,6 +34,7 @@
 #include "polylinemodel.h"
 #include "pointmodel.h"
 #include "undocommands.h"
+#include "statemachine.h"
 #include "scenarioanimation.h"
 
 extern int debugLevel;
@@ -49,14 +50,22 @@ SituationModel::SituationModel(QObject *parent)
         m_wind(this),
         m_undoStack(new QUndoStack(this)),
         m_state(NO_STATE),
+        m_stateMachine(new StateMachine(this)),
         m_scenarioAnimation(new ScenarioAnimation(this, this)) {
     if (debugLevel & 1 << MODEL) std::cout << "new situation " << this << std::endl;
     connect(&m_wind, SIGNAL(windReset()),
             this, SLOT(resetWind()));
+
     connect(m_undoStack, SIGNAL(canUndoChanged(bool)),
             this, SIGNAL(canUndoChanged(bool)));
     connect(m_undoStack, SIGNAL(canRedoChanged(bool)),
             this, SIGNAL(canRedoChanged(bool)));
+
+    connect(m_stateMachine->animationState(), SIGNAL(entered()),
+            m_scenarioAnimation, SLOT(setAnimation()));
+    connect(m_stateMachine->animationState(), SIGNAL(exited()),
+            m_scenarioAnimation, SLOT(unsetAnimation()));
+    m_stateMachine->start();
 }
 
 SituationModel::~SituationModel() {
@@ -241,8 +250,25 @@ void SituationModel::resetWind() {
 }
 
 void SituationModel::setState(const SceneState& theValue) {
-    m_state = theValue;
-    emit stateChanged(m_state);
+    if (theValue != m_state) {
+        // end macro for macro-states
+        switch(m_state) {
+        case SituationModel::CREATE_BOAT:
+        case SituationModel::CREATE_MARK:
+        case SituationModel::CREATE_POINT:
+            m_undoStack->endMacro();
+            break;
+        default:
+            break;
+        }
+        // undo last action when going back to no_state (except animation)
+        if (theValue == SituationModel::NO_STATE
+             && (m_state != SituationModel::ANIMATE)) {
+            m_undoStack->undo();
+        }
+        m_state = theValue;
+        emit stateChanged(m_state);
+    }
 }
 
 void SituationModel::changeTitle(QString title) {
@@ -356,7 +382,6 @@ void SituationModel::deleteModels() {
 }
 
 TrackModel *SituationModel::createTrack(QPointF pos) {
-    clearSelectedModels();
     AddTrackUndoCommand *command = new AddTrackUndoCommand(this);
     m_undoStack->push(command);
     TrackModel *track = command->track();
@@ -364,6 +389,7 @@ TrackModel *SituationModel::createTrack(QPointF pos) {
     boat->setDim(64);
     boat->setPosition(pos);
     track->addBoat(boat);
+    clearSelectedModels();
     addSelectedBoat(boat);
     return track;
 }
@@ -378,6 +404,8 @@ BoatModel *SituationModel::createBoat(QPointF pos) {
         command->boat()->setDim(64);
         m_undoStack->beginMacro("");
         m_undoStack->push(command);
+        clearSelectedModels();
+        addSelectedBoat(command->boat());
         return command->boat();
     }
     return 0;
@@ -397,6 +425,8 @@ MarkModel *SituationModel::createMark(QPointF pos) {
     AddMarkUndoCommand *command = new AddMarkUndoCommand(this, pos);
     m_undoStack->beginMacro("");
     m_undoStack->push(command);
+    clearSelectedModels();
+    addSelectedMark(command->mark());
     return command->mark();
 }
 
@@ -406,6 +436,8 @@ PolyLineModel *SituationModel::createLine(QPointF pos) {
     PointModel *point = new PointModel(command->polyLine());
     point->setPosition(pos);
     command->polyLine()->addPoint(point);
+    clearSelectedModels();
+    addSelectedPoint(point);
     return command->polyLine();
 }
 

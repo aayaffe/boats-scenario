@@ -34,6 +34,7 @@
 #include "polylinemodel.h"
 #include "pointmodel.h"
 
+#include "statemachine.h"
 #include "scenarioanimation.h"
 
 #include "undocommands.h"
@@ -395,6 +396,12 @@ void MainWindow::updateActions() {
     bool selectedBoats = !situation->selectedBoatModels().isEmpty();
     bool selectedPoints = !situation->selectedPointModels().isEmpty();
     bool selectedMarks = !situation->selectedMarkModels().isEmpty();
+    bool animating = situation->state() == SituationModel::ANIMATE;
+
+    if(animating) {
+        undoAction->setEnabled(false);
+        redoAction->setEnabled(false);
+    }
 
     addBoatAction->setEnabled(selectedBoats || situation->state() == SituationModel::CREATE_BOAT);
     addPointAction->setEnabled(selectedPoints || situation->state() == SituationModel::CREATE_POINT);
@@ -485,71 +492,29 @@ void MainWindow::changeState(SituationModel::SceneState newState) {
         case SituationModel::CREATE_TRACK:
             view->setCursor(Qt::CrossCursor);
             statusbar->showMessage(tr("Create Track"));
-            addTrackAction->setChecked(true);
-            addBoatAction->setChecked(false);
-            addMarkAction->setChecked(false);
-            addPolyLineAction->setChecked(false);
-            addPointAction->setChecked(false);
-            animateAction->setChecked(false);
             break;
         case SituationModel::CREATE_BOAT:
             view->setCursor(Qt::CrossCursor);
             statusbar->showMessage(tr("Create Boat"));
-            addTrackAction->setChecked(false);
-            addBoatAction->setChecked(true);
-            addMarkAction->setChecked(false);
-            addPolyLineAction->setChecked(false);
-            addPointAction->setChecked(false);
-            animateAction->setChecked(false);
             break;
         case SituationModel::CREATE_MARK:
             view->setCursor(Qt::CrossCursor);
             statusbar->showMessage(tr("Create Mark"));
-            addTrackAction->setChecked(false);
-            addBoatAction->setChecked(false);
-            addMarkAction->setChecked(true);
-            addPolyLineAction->setChecked(false);
-            addPointAction->setChecked(false);
-            animateAction->setChecked(false);
             break;
         case SituationModel::CREATE_LINE:
             view->setCursor(Qt::CrossCursor);
             statusbar->showMessage(tr("Create Line"));
-            addTrackAction->setChecked(false);
-            addBoatAction->setChecked(false);
-            addMarkAction->setChecked(false);
-            addPolyLineAction->setChecked(true);
-            addPointAction->setChecked(false);
-            animateAction->setChecked(false);
             break;
         case SituationModel::CREATE_POINT:
             view->setCursor(Qt::CrossCursor);
             statusbar->showMessage(tr("Create Line"));
-            addTrackAction->setChecked(false);
-            addBoatAction->setChecked(false);
-            addMarkAction->setChecked(false);
-            addPolyLineAction->setChecked(false);
-            addPointAction->setChecked(true);
-            animateAction->setChecked(false);
             break;
         case SituationModel::ANIMATE:
             statusbar->showMessage(tr("Animate"));
-            addTrackAction->setChecked(false);
-            addBoatAction->setChecked(false);
-            addMarkAction->setChecked(false);
-            addPolyLineAction->setChecked(false);
-            addPointAction->setChecked(false);
-            animateAction->setChecked(true);
             break;
         default:
             view->unsetCursor();
             statusbar->clearMessage();
-            addTrackAction->setChecked(false);
-            addBoatAction->setChecked(false);
-            addMarkAction->setChecked(false);
-            addPolyLineAction->setChecked(false);
-            addPointAction->setChecked(false);
-            animateAction->setChecked(false);
     }
     updateActions();
 }
@@ -845,12 +810,22 @@ void MainWindow::unsetTab() {
 
     SituationModel *situation = engine->currentModel();
     SituationScene *scene = sceneList.at(engine->currentIndex());
-    if (situation->state() == SituationModel::ANIMATE) {
-        situation->setState(SituationModel::NO_STATE);
-    }
+    StateMachine *machine = situation->stateMachine();
+
+    animate(false);
 
     disconnect(situation->undoStack(), 0, 0, 0);
     disconnect(scene, 0, this, 0);
+
+    disconnect(machine->createTrackState(), 0, 0, 0);
+    disconnect(machine->createBoatState(), 0, 0, 0);
+    disconnect(machine->createMarkState(), 0, 0, 0);
+    disconnect(machine->createLineState(), 0, 0, 0);
+    disconnect(machine->createPointState(), 0, 0, 0);
+    disconnect(machine->animationState(), 0, 0, 0);
+    disconnect(machine->playState(), 0, 0, 0);
+    disconnect(machine->pauseState(), 0, 0, 0);
+    disconnect(machine->stopState(), 0, 0, 0);
 
     disconnect(undoAction, 0, 0, 0);
     disconnect(redoAction, 0, 0, 0);
@@ -872,12 +847,77 @@ void MainWindow::setTab(int index) {
     SituationModel *situation = engine->currentModel();
     SituationScene *scene = sceneList.at(index);
     SituationView *view = viewList.at(index);
+    StateMachine *machine = situation->stateMachine();
+
+    connect(machine->createTrackState(), SIGNAL(enabledChanged(bool)),
+            addTrackAction, SLOT(setEnabled(bool)));
+    connect(machine->createTrackState(), SIGNAL(activeChanged(bool)),
+            addTrackAction, SLOT(setChecked(bool)));
+    addTrackAction->setEnabled(machine->createTrackState()->isEnabled());
+    addTrackAction->setChecked(machine->createTrackState()->isActive());
+
+    connect(machine->createBoatState(), SIGNAL(activeChanged(bool)),
+            addBoatAction, SLOT(setChecked(bool)));
+    addBoatAction->setChecked(machine->createBoatState()->isActive());
+
+    connect(machine->createMarkState(), SIGNAL(enabledChanged(bool)),
+            addMarkAction, SLOT(setEnabled(bool)));
+    connect(machine->createMarkState(), SIGNAL(activeChanged(bool)),
+            addMarkAction, SLOT(setChecked(bool)));
+    addMarkAction->setEnabled(machine->createMarkState()->isEnabled());
+    addMarkAction->setChecked(machine->createMarkState()->isActive());
+
+    connect(machine->createLineState(), SIGNAL(enabledChanged(bool)),
+            addPolyLineAction, SLOT(setEnabled(bool)));
+    connect(machine->createLineState(), SIGNAL(activeChanged(bool)),
+            addPolyLineAction, SLOT(setChecked(bool)));
+    addPolyLineAction->setEnabled(machine->createLineState()->isEnabled());
+    addPolyLineAction->setChecked(machine->createLineState()->isActive());
+
+    connect(machine->createPointState(), SIGNAL(activeChanged(bool)),
+            addPointAction, SLOT(setChecked(bool)));
+    addPointAction->setChecked(machine->createPointState()->isActive());
+
+    connect(machine->animationState(), SIGNAL(enabledChanged(bool)),
+            animateAction, SLOT(setEnabled(bool)));
+    connect(machine->animationState(), SIGNAL(activeChanged(bool)),
+            animateAction, SLOT(setChecked(bool)));
+    animateAction->setEnabled(machine->animationState()->isEnabled());
+    animateAction->setChecked(machine->animationState()->isActive());
+
+    connect(machine->animationState(), SIGNAL(enabledChanged(bool)),
+            loopAction, SLOT(setEnabled(bool)));
+    connect(machine->animationState(), SIGNAL(activeChanged(bool)),
+            loopAction, SLOT(setChecked(bool)));
+    loopAction->setEnabled(machine->animationState()->isEnabled());
+    loopAction->setChecked(machine->animationState()->isActive());
+
+    connect(machine->playState(), SIGNAL(enabledChanged(bool)),
+            startAction, SLOT(setEnabled(bool)));
+    connect(machine->playState(), SIGNAL(activeChanged(bool)),
+            startAction, SLOT(setChecked(bool)));
+    startAction->setEnabled(machine->playState()->isEnabled());
+    startAction->setChecked(machine->playState()->isActive());
+
+    connect(machine->pauseState(), SIGNAL(enabledChanged(bool)),
+            pauseAction, SLOT(setEnabled(bool)));
+    connect(machine->pauseState(), SIGNAL(activeChanged(bool)),
+            pauseAction, SLOT(setChecked(bool)));
+    pauseAction->setEnabled(machine->pauseState()->isEnabled());
+    pauseAction->setChecked(machine->pauseState()->isActive());
+
+    connect(machine->stopState(), SIGNAL(enabledChanged(bool)),
+            stopAction, SLOT(setEnabled(bool)));
+    connect(machine->stopState(), SIGNAL(activeChanged(bool)),
+            stopAction, SLOT(setChecked(bool)));
+    stopAction->setEnabled(machine->stopState()->isEnabled());
+    stopAction->setChecked(machine->stopState()->isActive());
 
     connect(undoAction, SIGNAL(triggered()),
             situation->undoStack(), SLOT(undo()));
     connect(situation->undoStack(), SIGNAL(canUndoChanged(bool)),
             undoAction, SLOT(setEnabled(bool)));
-    undoAction->setEnabled(situation->undoStack()->canUndo()),
+    undoAction->setEnabled(situation->undoStack()->canUndo());
 
     connect(redoAction, SIGNAL(triggered()),
             situation->undoStack(), SLOT(redo()));
@@ -908,7 +948,7 @@ void MainWindow::setTab(int index) {
             this, SLOT(setLookAt()));
 
     situationWidget->setSituation(situation);
-    connect(scene, SIGNAL(stateChanged(SituationModel::SceneState)),
+    connect(situation, SIGNAL(stateChanged(SituationModel::SceneState)),
             this, SLOT(changeState(SituationModel::SceneState)));
     changeState(situation->state());
 
@@ -1022,11 +1062,7 @@ bool MainWindow::maybeSave(SituationModel *situation) {
 
 void MainWindow::closeEvent(QCloseEvent *event) {
     SituationModel *situation = engine->currentModel();
-
-    bool animated = (situation->state() == SituationModel::ANIMATE);
-    if (animated) {
-        situation->setState(SituationModel::NO_STATE);
-    }
+    animate(false);
 
     while(engine->situationSize()>1) {
         if (!maybeSave(situation)) {
@@ -1207,6 +1243,8 @@ void MainWindow::newFile() {
     SituationView *view = viewList.at(engine->currentIndex());
 
     if (maybeSave(situation)) {
+        // tidy up animation (does no harm if not in animation mode)
+        animate(false);
         engine->resetFile();
         situationWidget->unSetSituation();
         situationWidget->setSituation(situation);
@@ -1321,10 +1359,8 @@ bool MainWindow::saveFile() {
     SituationModel *situation = engine->currentModel();
 
     bool animated = (situation->state() == SituationModel::ANIMATE);
-    if (animated) {
-        situation->setState(SituationModel::NO_STATE);
-    }
     bool saved = saveSituation(situation, situation->fileName());
+    animate(false);
     if (animated) {
         animate(true);
     }
@@ -1335,10 +1371,8 @@ bool MainWindow::saveAs() {
     SituationModel *situation = engine->currentModel();
 
     bool animated = (situation->state() == SituationModel::ANIMATE);
-    if (animated) {
-        situation->setState(SituationModel::NO_STATE);
-    }
     bool saved = saveSituation(situation, "");
+    animate(false);
     if (animated) {
         animate(true);
     }
@@ -1453,7 +1487,6 @@ void MainWindow::exportImage() {
 void MainWindow::exportAnimation() {
     SituationModel *situation = engine->currentModel();
     SituationView *view = viewList.at(engine->currentIndex());
-    SituationScene *scene = sceneList.at(engine->currentIndex());
 
     QString defaultName(situation->fileName());
     defaultName.chop(4);
@@ -1479,17 +1512,17 @@ void MainWindow::exportAnimation() {
     GifWriter *writer = new GifWriter();
 
     animate(true, false);
-    QProgressDialog progress(tr("Exporting Animation..."), tr("Abort"), 0, scene->animation()->duration(), this);
+    QProgressDialog progress(tr("Exporting Animation..."), tr("Abort"), 0, situation->animation()->duration(), this);
     progress.setWindowModality(Qt::WindowModal);
     statusbar->showMessage("Exporting animation");
-    scene->animation()->setCurrentTime(scene->animation()->duration()/2);
+    situation->animation()->setCurrentTime(situation->animation()->duration()/2);
     QPixmap pixmap = view->screenShot();
     QImage shot = pixmap.toImage().convertToFormat(QImage::Format_Indexed8);
     writer->setColorMap(shot);
 
     QList<QImage*> imageList;
-    for (int i=0; i<=scene->animation()->duration(); i+=80) {
-        scene->animation()->setCurrentTime(i);
+    for (int i=0; i<=situation->animation()->duration(); i+=80) {
+        situation->animation()->setCurrentTime(i);
         pixmap = view->screenShot();
         QImage *image = new QImage(pixmap.toImage()
                                    .convertToFormat(QImage::Format_Indexed8, writer->colormap()));
@@ -1573,6 +1606,7 @@ void MainWindow::animate(bool state, bool interactive) {
 
     if (state) {
         if (situation->state() != SituationModel::ANIMATE) {
+            situation->stateMachine()->animate();
             situation->setState(SituationModel::ANIMATE);
 
             connect(situation->animation(), SIGNAL(stateChanged(QAbstractAnimation::State, QAbstractAnimation::State)),
@@ -1589,12 +1623,11 @@ void MainWindow::animate(bool state, bool interactive) {
                 }
                 animationSlider->setRange(0,situation->animation()->duration());
                 animationSlider->setEnabled(true);
-                startAction->setEnabled(true);
-                loopAction->setEnabled(true);
                 }
             }
     } else {
         if (situation->state() == SituationModel::ANIMATE) {
+            situation->stateMachine()->noState();
             situation->setState(SituationModel::NO_STATE);
             disconnect(this, SLOT(changeAnimationState(QAbstractAnimation::State,QAbstractAnimation::State)));
             disconnect(animationSlider, SLOT(setValue(int)));
@@ -1602,9 +1635,6 @@ void MainWindow::animate(bool state, bool interactive) {
 
             animationSlider->setEnabled(false);
             situation->animation()->stop();
-            startAction->setEnabled(false);
-            stopAction->setEnabled(false);
-            loopAction->setEnabled(false);
         }
     }
 }
@@ -1612,26 +1642,20 @@ void MainWindow::animate(bool state, bool interactive) {
 void MainWindow::play() {
     if (debugLevel & 1 << ANIMATION) std::cout << "playing" << std::endl;
     SituationModel *situation = engine->currentModel();
-    pauseAction->setChecked(false);
-    situation->animation()->start();
+    situation->stateMachine()->play();
 }
 
 void MainWindow::pause(bool pause) {
+    Q_UNUSED(pause);
+    if (debugLevel & 1 << ANIMATION) std::cout << "pausing" << std::endl;
     SituationModel *situation = engine->currentModel();
-    if (pause) {
-        if (debugLevel & 1 << ANIMATION) std::cout << "pausing" << std::endl;
-        situation->animation()->setPaused(true);
-    } else {
-        if (debugLevel & 1 << ANIMATION) std::cout << "resuming" << std::endl;
-        situation->animation()->setPaused(false);
-    }
+    situation->stateMachine()->pause();
 }
 
 void MainWindow::stop() {
     if (debugLevel & 1 << ANIMATION) std::cout << "stopping" << std::endl;
     SituationModel *situation = engine->currentModel();
-    pauseAction->setChecked(false);
-    situation->animation()->stop();
+    situation->stateMachine()->stop();
     situation->animation()->setCurrentTime(0);
 }
 
@@ -1650,25 +1674,16 @@ void MainWindow::changeAnimationState(QAbstractAnimation::State newState, QAbstr
     switch(newState) {
         case QAbstractAnimation::Running:
             if (debugLevel & 1 << ANIMATION) std::cout << "state running" << std::endl;
-            startAction->setEnabled(false);
-            pauseAction->setEnabled(true);
-            stopAction->setEnabled(true);
             animationSlider->blockSignals(true);
             break;
 
         case QAbstractAnimation::Paused:
             if (debugLevel & 1 << ANIMATION) std::cout << "state paused" << std::endl;
-            startAction->setEnabled(true);
-            pauseAction->setEnabled(true);
-            stopAction->setEnabled(true);
             animationSlider->blockSignals(false);
             break;
 
         case QAbstractAnimation::Stopped:
             if (debugLevel & 1 << ANIMATION) std::cout << "state not running" << std::endl;
-            startAction->setEnabled(true);
-            pauseAction->setEnabled(false);
-            stopAction->setEnabled(false);
             animationSlider->blockSignals(false);
             break;
     }

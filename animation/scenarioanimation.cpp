@@ -29,6 +29,7 @@
 #include "situationmodel.h"
 #include "trackmodel.h"
 #include "boatmodel.h"
+#include "statemachine.h"
 
 #include "trackanimation.h"
 #include "angleanimation.h"
@@ -40,6 +41,13 @@ ScenarioAnimation::ScenarioAnimation(SituationModel *situation, QObject *parent)
       m_situation(situation),
       m_windAnimation(new QSequentialAnimationGroup(this)) {
     addAnimation(m_windAnimation);
+
+    connect(m_situation->stateMachine()->playState(), SIGNAL(entered()),
+            this, SLOT(start()));
+    connect(m_situation->stateMachine()->pauseState(), SIGNAL(entered()),
+            this, SLOT(pause()));
+    connect(m_situation->stateMachine()->stopState(), SIGNAL(entered()),
+            this, SLOT(stop()));
 }
 
 ScenarioAnimation::~ScenarioAnimation() {

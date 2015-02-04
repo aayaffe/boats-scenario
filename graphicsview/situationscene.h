@@ -91,15 +91,13 @@ class SituationScene : public QGraphicsScene {
         void setPointPopup(QMenu *theValue) { m_pointPopup = theValue; }
 
     signals:
-        void itemMoved(QList<BoatModel*> movedItems, const QPointF &movedFromPosition);
-        void stateChanged(SituationModel::SceneState newState);
         void selectedModelsChanged();
         void centerChanged(QPointF position);
         void lookDirectionChanged( const qreal lookDirection);
         void tiltChanged( const qreal tilt);
 
     public slots:
-        void setState(const SituationModel::SceneState& theValue, bool commit = false);
+        void setState(const SituationModel::SceneState& theValue);
         // Slot for selection mechanism
         void setSelectedModels();
 
@@ -111,6 +109,13 @@ class SituationScene : public QGraphicsScene {
         void addPoint(PointModel *point);
         void setLaylines(const int angle);
         void setWind(bool visible);
+
+        // Slots for state signals
+        void createTrack();
+        void createBoat();
+        void createMark();
+        void createLine();
+        void createPoint();
 
         // Slots for animation signals
         void setAnimation();
@@ -135,12 +140,6 @@ class SituationScene : public QGraphicsScene {
 
         /// \a m_trackCreated holds the last selected TrackModel
         TrackModel *m_trackCreated;
-
-        /// \a m_polyLineCreated holds the last selected PolyLineModel
-        PolyLineModel *m_polyLineCreated;
-
-        /// \a m_markCreated holds the last selected MarkModel
-        MarkModel *m_markCreated;
 
         /// \a m_fromPosition holds the QPointF where mouse was pressed
         QPointF m_fromPosition;
