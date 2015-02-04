@@ -1,11 +1,7 @@
 TEMPLATE = app
 CONFIG += qt warn_on
 
-qml {
-    TARGET = boats-qml
-    QT += quick qml widgets
-
-    HEADERS += \
+HEADERS += \
         boats.h \
         boatsengine.h \
         commontypes.h \
@@ -14,14 +10,20 @@ qml {
         xmlsituationreader.h \
         xmlsituationwriter.h
 
-    SOURCES += \
+SOURCES += \
         boats.cpp \
         boatsengine.cpp \
-        main_qml.cpp \
         trace.cpp \
         undocommands.cpp \
         xmlsituationreader.cpp \
         xmlsituationwriter.cpp
+
+qml {
+    TARGET = boats-qml
+    QT += quick qml widgets
+
+    SOURCES += \
+        main_qml.cpp
 
     qml_files.files = boats.qml
     INSTALL += qml_files
@@ -37,29 +39,16 @@ else {
 
     HEADERS += \
         boatapplication.h \
-        boats.h \
-        boatsengine.h \
-        commontypes.h \
         mainwindow.h \
         situationprint.h \
-        situationwidget.h \
-        trace.h \
-        undocommands.h \
-        xmlsituationreader.h \
-        xmlsituationwriter.h
+        situationwidget.h
 
     SOURCES += \
         boatapplication.cpp \
-        boats.cpp \
-        boatsengine.cpp \
         main.cpp \
         mainwindow.cpp \
         situationprint.cpp \
-        situationwidget.cpp \
-        trace.cpp \
-        undocommands.cpp \
-        xmlsituationreader.cpp \
-        xmlsituationwriter.cpp
+        situationwidget.cpp
 
     contains(GIF_EXPORT,1) {
         DEFINES += GIF_EXPORT
