@@ -151,7 +151,7 @@ void SituationScene::setState(const SituationModel::SceneState& theValue, bool c
         }
         break;
     case SituationModel::CREATE_POINT: {
-            m_situation->createPoint(m_polyLineCreated, m_curPosition);
+            m_situation->createPoint(m_curPosition);
         }
         break;
     default:
@@ -555,7 +555,7 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
             break;
         case SituationModel::CREATE_POINT:
             if (event->button() == Qt::LeftButton) {
-                m_situation->createPoint(m_polyLineCreated, event->scenePos());
+                m_situation->createPoint(event->scenePos());
             }
         default:
             break;

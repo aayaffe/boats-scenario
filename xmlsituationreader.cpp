@@ -361,15 +361,13 @@ void XmlSituationReader::readPoint(SituationModel *situation, PolyLineModel *pol
                 discarded.append(readUnknownElement());
         }
     }
-    AddPointUndoCommand *command = new AddPointUndoCommand(polyLine, pos);
-    PointModel *point = command->point();
+    PointModel *point = situation->createPoint(pos);
     point->setTextPosition(textPos);
     point->setText(text);
     point->setLaylines(laylines);
     foreach (const QString elem, discarded) {
         point->appendDiscardedXml(elem);
     }
-    situation->undoStack()->push(command);
 }
 
 void XmlSituationReader::readWind(SituationModel *situation) {

@@ -405,12 +405,18 @@ PolyLineModel *SituationModel::createLine(QPointF pos) {
     return command->polyLine();
 }
 
-PointModel *SituationModel::createPoint(PolyLineModel *poly, QPointF pos) {
-    m_undoStack->endMacro();
-    AddPointUndoCommand *command = new AddPointUndoCommand(poly, pos);
-    m_undoStack->beginMacro("");
-    m_undoStack->push(command);
-    return command->point();
+PointModel *SituationModel::createPoint(QPointF pos) {
+    if(!selectedPointModels().isEmpty()) {
+        PolyLineModel *poly = m_selectedPointModels[0]->polyLine();
+        m_undoStack->endMacro();
+        AddPointUndoCommand *command = new AddPointUndoCommand(poly, pos);
+        m_undoStack->beginMacro("");
+        m_undoStack->push(command);
+        clearSelectedModels();
+        addSelectedPoint(command->point());
+        return command->point();
+    }
+    return 0;
 }
 
 void SituationModel::trimSail() {

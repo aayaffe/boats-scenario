@@ -204,7 +204,7 @@ class SituationModel : public QObject {
         Q_INVOKABLE BoatModel *createBoat(QPointF pos);
         Q_INVOKABLE MarkModel *createMark(QPointF pos);
         Q_INVOKABLE PolyLineModel *createLine(QPointF pos);
-        Q_INVOKABLE PointModel *createPoint(PolyLineModel *poly, QPointF pos);
+        Q_INVOKABLE PointModel *createPoint(QPointF pos);
 
         Q_INVOKABLE void trimSail();
         Q_INVOKABLE void autotrimSail();
