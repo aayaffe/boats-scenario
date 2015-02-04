@@ -49,7 +49,6 @@ SituationModel::SituationModel(QObject *parent)
         m_tilt(0),
         m_wind(this),
         m_undoStack(new QUndoStack(this)),
-        m_state(NO_STATE),
         m_stateMachine(new StateMachine(this)),
         m_scenarioAnimation(new ScenarioAnimation(this, this)) {
     if (debugLevel & 1 << MODEL) std::cout << "new situation " << this << std::endl;
@@ -248,13 +247,6 @@ void SituationModel::resetWind() {
     }
     foreach (MarkModel *mark, m_marks) {
         mark->setWind(m_wind.windAt(0));
-    }
-}
-
-void SituationModel::setState(const SceneState& theValue) {
-    if (theValue != m_state) {
-        m_state = theValue;
-        emit stateChanged(m_state);
     }
 }
 

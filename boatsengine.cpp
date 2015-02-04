@@ -72,7 +72,6 @@ void BoatsEngine::removeFile(int index) {
 
 void BoatsEngine::resetFile() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
-    situation->setState(SituationModel::NO_STATE);
     situation->undoStack()->setIndex(0);
     setCurrentFile(situation, "");
     situation->undoStack()->clear();
@@ -161,11 +160,6 @@ void BoatsEngine::addTrack() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
 
     situation->stateMachine()->createTrack();
-    if(situation->state() == SituationModel::CREATE_TRACK) {
-        situation->setState(SituationModel::NO_STATE);
-    } else {
-        situation->setState(SituationModel::CREATE_TRACK);
-    }
 }
 
 void BoatsEngine::deleteTrack() {
@@ -177,11 +171,6 @@ void BoatsEngine::addBoat() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
 
     situation->stateMachine()->createBoat();
-    if (situation->state() == SituationModel::CREATE_BOAT) {
-        situation->setState(SituationModel::NO_STATE);
-    } else {
-        situation->setState(SituationModel::CREATE_BOAT);
-    }
 }
 
 void BoatsEngine::deleteModels() {
@@ -193,33 +182,18 @@ void BoatsEngine::addMark() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
 
     situation->stateMachine()->createMark();
-    if (situation->state() == SituationModel::CREATE_MARK) {
-        situation->setState(SituationModel::NO_STATE);
-    } else {
-        situation->setState(SituationModel::CREATE_MARK);
-    }
 }
 
 void BoatsEngine::addPolyLine() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
 
     situation->stateMachine()->createLine();
-    if (situation->state() == SituationModel::CREATE_LINE) {
-        situation->setState(SituationModel::NO_STATE);
-    } else {
-        situation->setState(SituationModel::CREATE_LINE);
-    }
 }
 
 void BoatsEngine::addPoint() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
 
     situation->stateMachine()->createPoint();
-    if (situation->state() == SituationModel::CREATE_POINT) {
-        situation->setState(SituationModel::NO_STATE);
-    } else {
-        situation->setState(SituationModel::CREATE_POINT);
-    }
 }
 
 void BoatsEngine::trimSail() {

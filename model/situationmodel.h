@@ -61,43 +61,8 @@ class ScenarioAnimation;
 
 class SituationModel : public QObject {
         Q_OBJECT
-        Q_ENUMS(SceneState)
         Q_ENUMS(Boats::Series)
     public:
-
-        /**
-        \enum SceneState
-
-        This enum defines the different modal states of the edition. When
-        the user wants to input data to the scenario, he sets the current
-        edition mode.
-
-        \value NO_STATE No particular mode is set. In this mode item selection
-        and movement is allowed.
-
-        \value CREATE_TRACK The Create Track mode will create a new TrackModel
-        object in the scenario. This mode is then overriden to CREATE_BOAT as
-        a natural action is to append boat positions.
-
-        \value CREATE_BOAT The Create Boat will append a BoatModel to the
-        track of the lastly selected boat object.
-
-        \value CREATE_MARK The Create Mark will create a new MarkModel to
-        the scenario.
-
-        \value ANIMATE The Animation will be prepared, and no further input
-        will be allowed in this mode.
-
-        */
-        enum SceneState {
-            NO_STATE,
-            CREATE_TRACK,
-            CREATE_BOAT,
-            CREATE_MARK,
-            CREATE_LINE,
-            CREATE_POINT,
-            ANIMATE
-        };
 
         Q_PROPERTY(QString title READ title WRITE changeTitle NOTIFY titleChanged)
         Q_PROPERTY(QString rules READ rules WRITE changeRules NOTIFY rulesChanged)
@@ -112,7 +77,6 @@ class SituationModel : public QObject {
 
         Q_PROPERTY(int size READ size NOTIFY tracksChanged)
 
-        Q_PROPERTY(SceneState state READ state WRITE setState NOTIFY stateChanged)
         Q_PROPERTY(StateMachine* stateMachine READ stateMachine)
         Q_PROPERTY(bool canUndo READ canUndo NOTIFY canUndoChanged)
         Q_PROPERTY(bool canRedo READ canRedo NOTIFY canRedoChanged)
@@ -161,8 +125,6 @@ class SituationModel : public QObject {
         // Setters and Getters for Non model Data
         QUndoStack * undoStack() const { return m_undoStack;}
 
-        SceneState state(){ return m_state; }
-        void setState(const SceneState& theValue);
         StateMachine *stateMachine(){ return m_stateMachine; }
 
         ScenarioAnimation *animation() const { return m_scenarioAnimation; }
@@ -292,7 +254,6 @@ class SituationModel : public QObject {
         void pointAdded(PointModel *point);
         void pointRemoved(PointModel *point);
 
-        void stateChanged(SituationModel::SceneState newState);
         void canUndoChanged(bool canUndo);
         void canRedoChanged(bool canRedo);
 
@@ -346,7 +307,6 @@ class SituationModel : public QObject {
         QUndoStack *m_undoStack;
 
         /// \a m_state holds the SceneState for the current scenario
-        SceneState m_state;
         StateMachine *m_stateMachine;
 
         /// \a m_scenarioAnimation holds the general AnimationGroup
@@ -372,7 +332,5 @@ class SituationModel : public QObject {
         /// \a m_fileName holds the name of the file on disk
         QString m_fileName;
 };
-
-Q_DECLARE_METATYPE(SituationModel::SceneState)
 
 #endif

@@ -60,9 +60,10 @@ class MainWindow : public QMainWindow {
 
     public slots:
         // State management
-        void changeState(SituationModel::SceneState newState);
         void cleanState(bool state);
         void updateActions();
+        void enterCreateState();
+        void exitCreateState();
 
         // File actions
         void newTab();

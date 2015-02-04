@@ -476,38 +476,14 @@ void MainWindow::updateActions() {
     toggleMarkLabelAction->setChecked(allMarkLabelSet);
 }
 
-void MainWindow::changeState(SituationModel::SceneState newState) {
+void MainWindow::enterCreateState() {
     SituationView *view = viewList.at(engine->currentIndex());
+    view->setCursor(Qt::CrossCursor);
+}
 
-    switch(newState) {
-        case SituationModel::CREATE_TRACK:
-            view->setCursor(Qt::CrossCursor);
-            statusbar->showMessage(tr("Create Track"));
-            break;
-        case SituationModel::CREATE_BOAT:
-            view->setCursor(Qt::CrossCursor);
-            statusbar->showMessage(tr("Create Boat"));
-            break;
-        case SituationModel::CREATE_MARK:
-            view->setCursor(Qt::CrossCursor);
-            statusbar->showMessage(tr("Create Mark"));
-            break;
-        case SituationModel::CREATE_LINE:
-            view->setCursor(Qt::CrossCursor);
-            statusbar->showMessage(tr("Create Line"));
-            break;
-        case SituationModel::CREATE_POINT:
-            view->setCursor(Qt::CrossCursor);
-            statusbar->showMessage(tr("Create Line"));
-            break;
-        case SituationModel::ANIMATE:
-            statusbar->showMessage(tr("Animate"));
-            break;
-        default:
-            view->unsetCursor();
-            statusbar->clearMessage();
-    }
-    updateActions();
+void MainWindow::exitCreateState() {
+    SituationView *view = viewList.at(engine->currentIndex());
+    view->unsetCursor();
 }
 
 void MainWindow::cleanState(bool state) {
@@ -802,21 +778,26 @@ void MainWindow::unsetTab() {
     SituationModel *situation = engine->currentModel();
     SituationScene *scene = sceneList.at(engine->currentIndex());
     StateMachine *machine = situation->stateMachine();
+    SituationView *view = viewList.at(engine->currentIndex());
 
     animate(false);
 
-    disconnect(situation->undoStack(), 0, 0, 0);
+    disconnect(situation->undoStack(), 0, this, 0);
     disconnect(scene, 0, this, 0);
+    disconnect(view, 0, 0, 0);
 
-    disconnect(machine->createTrackState(), 0, 0, 0);
-    disconnect(machine->createBoatState(), 0, 0, 0);
-    disconnect(machine->createMarkState(), 0, 0, 0);
-    disconnect(machine->createLineState(), 0, 0, 0);
-    disconnect(machine->createPointState(), 0, 0, 0);
-    disconnect(machine->animationState(), 0, 0, 0);
-    disconnect(machine->playState(), 0, 0, 0);
-    disconnect(machine->pauseState(), 0, 0, 0);
-    disconnect(machine->stopState(), 0, 0, 0);
+    disconnect(machine->createState(), 0, this, 0);
+    disconnect(machine->createTrackState(), 0, this, 0);
+    disconnect(machine->boatSelectionState(), 0, this, 0);
+    disconnect(machine->createBoatState(), 0, this, 0);
+    disconnect(machine->createMarkState(), 0, this, 0);
+    disconnect(machine->createLineState(), 0, this, 0);
+    disconnect(machine->pointSelectionState(), 0, this, 0);
+    disconnect(machine->createPointState(), 0, this, 0);
+    disconnect(machine->animationState(), 0, this, 0);
+    disconnect(machine->playState(), 0, this, 0);
+    disconnect(machine->pauseState(), 0, this, 0);
+    disconnect(machine->stopState(), 0, this, 0);
 
     disconnect(undoAction, 0, 0, 0);
     disconnect(redoAction, 0, 0, 0);
@@ -840,6 +821,10 @@ void MainWindow::setTab(int index) {
     SituationView *view = viewList.at(index);
     StateMachine *machine = situation->stateMachine();
 
+    connect(machine->createState(), SIGNAL(entered()),
+            this, SLOT(enterCreateState()));
+    connect(machine->createState(), SIGNAL(exited()),
+            this, SLOT(exitCreateState()));
     connect(machine->createTrackState(), SIGNAL(enabledChanged(bool)),
             addTrackAction, SLOT(setEnabled(bool)));
     connect(machine->createTrackState(), SIGNAL(activeChanged(bool)),
@@ -945,9 +930,6 @@ void MainWindow::setTab(int index) {
             this, SLOT(setLookAt()));
 
     situationWidget->setSituation(situation);
-    connect(situation, SIGNAL(stateChanged(SituationModel::SceneState)),
-            this, SLOT(changeState(SituationModel::SceneState)));
-    changeState(situation->state());
 
     connect(scene, SIGNAL(selectedModelsChanged()),
             this, SLOT(updateActions()));
@@ -1604,7 +1586,6 @@ void MainWindow::animate(bool state, bool interactive) {
     if (state) {
         if(!situation->stateMachine()->animationState()->isActive()) {
             situation->stateMachine()->animate();
-            situation->setState(SituationModel::ANIMATE);
 
             undoAction->setEnabled(false);
             redoAction->setEnabled(false);
@@ -1627,7 +1608,7 @@ void MainWindow::animate(bool state, bool interactive) {
     } else {
         if(situation->stateMachine()->animationState()->isActive()) {
             situation->stateMachine()->noState();
-            situation->setState(SituationModel::NO_STATE);
+
             undoAction->setEnabled(situation->undoStack()->canUndo());
             redoAction->setEnabled(situation->undoStack()->canRedo());
             disconnect(this, SLOT(changeAnimationState(QAbstractAnimation::State,QAbstractAnimation::State)));

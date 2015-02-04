@@ -97,7 +97,6 @@ class SituationScene : public QGraphicsScene {
         void tiltChanged( const qreal tilt);
 
     public slots:
-        void setState(const SituationModel::SceneState& theValue);
         // Slot for selection mechanism
         void setSelectedModels();
 
@@ -149,9 +148,6 @@ class SituationScene : public QGraphicsScene {
 
         /// \a m_curPosition holds the QPointF where mouse was last seen
         QPointF m_curPosition;
-
-        /// \a m_state holds the SceneState for the current scenario
-        SituationModel::SceneState m_state;
 
         /// \a m_time holds the timer used for movement filtering
         QTime m_time;

@@ -58,7 +58,6 @@ SituationScene::SituationScene(SituationModel *situation)
         : QGraphicsScene(situation),
         m_situation(situation),
         m_trackCreated(0),
-        m_state(SituationModel::NO_STATE),
         m_time(QTime::currentTime()),
         m_clickTime(QTime::currentTime()),
         m_clickState(SINGLE),
@@ -108,9 +107,6 @@ SituationScene::SituationScene(SituationModel *situation)
     connect(situation, SIGNAL(tiltChanged(qreal)),
             this, SIGNAL(tiltChanged(qreal)));
 
-    connect(situation, SIGNAL(stateChanged(SituationModel::SceneState)),
-            this, SLOT(setState(SituationModel::SceneState)));
-
     setLaylines(situation->laylineAngle());
 
     connect(situation->stateMachine()->createTrackState(), SIGNAL(entered()),
@@ -130,10 +126,6 @@ SituationScene::SituationScene(SituationModel *situation)
     connect(situation->stateMachine()->animationState(), SIGNAL(entered()),
             this, SLOT(setAnimation()));
 
-}
-
-void SituationScene::setState(const SituationModel::SceneState& theValue) {
-    m_state = theValue;
 }
 
 void SituationScene::addTrack(TrackModel *track) {
@@ -303,12 +295,6 @@ void SituationScene::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-/**
-    Sets selection depending on modal status.
-    Selection happens with left button in NO_STATE, and right button in CREATE_BOAT
-    and CREATE_MARK modes.
-*/
-
 void SituationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
     mouseSelectEvent(event);
@@ -404,29 +390,6 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
     }
     if (event->button() == Qt::LeftButton) {
         m_situation->stateMachine()->lmbclick();
-        switch (m_state) {
-            case SituationModel::CREATE_TRACK: {
-                m_situation->setState(SituationModel::CREATE_BOAT);
-            }
-            break;
-            case SituationModel::CREATE_BOAT: {
-                // Ctrl + Click will leave the current track, create a new one
-                if ((event->modifiers() & Qt::ControlModifier) != 0) {
-                    m_situation->stateMachine()->createBoat();
-                    m_situation->setState(SituationModel::NO_STATE);
-
-                    m_situation->stateMachine()->createTrack();
-                    m_situation->setState(SituationModel::CREATE_TRACK);
-                }
-            }
-            break;
-            case SituationModel::CREATE_LINE: {
-                m_situation->setState(SituationModel::CREATE_POINT);
-            }
-            break;
-            default:
-            break;
-        }
     }
 }
 
@@ -434,7 +397,6 @@ void SituationScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
     m_clickState = DOUBLE;
     m_situation->stateMachine()->noState();
-    m_situation->setState(SituationModel::NO_STATE);
     m_situation->undoStack()->undo();
 }
 
