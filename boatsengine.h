@@ -25,11 +25,12 @@
 #ifndef BOATSENGINE_H
 #define BOATSENGINE_H
 
-#include "boat.h"
+#include "boats.h"
 
 #include <QObject>
 #include <QStringList>
 #include <QTranslator>
+#include <QColor>
 
 class SituationModel;
 
@@ -37,14 +38,22 @@ class BoatsEngine : public QObject
 {
     Q_OBJECT
 public:
+    Q_PROPERTY(int index READ currentIndex WRITE setIndex NOTIFY indexChanged)
+    Q_PROPERTY(int size  READ situationSize               NOTIFY sizeChanged)
+    Q_PROPERTY(SituationModel* scenario READ currentModel NOTIFY indexChanged)
+
     explicit BoatsEngine(QObject *parent = 0);
-    
-    SituationModel *currentModel() { return m_situationList.at(m_currentSituation); }
+
+    Q_INVOKABLE SituationModel *currentModel() {
+        if(m_situationList.size()) {
+            return m_situationList.at(m_currentSituation);
+        } else return 0;
+    }
     int situationSize() { return m_situationList.size(); }
     int currentIndex() { return m_currentSituation; }
-    QStringList fileList();
+    Q_INVOKABLE QStringList fileList();
 
-    bool saveSituation(SituationModel *situation, QString name);
+    Q_INVOKABLE bool saveSituation(QString name = QString());
 
 public slots:
 
@@ -88,8 +97,11 @@ public slots:
     void deleteModels();
     void setLookAt(int direction, int tilt);
 
-private:
+signals:
+    void indexChanged();
+    void sizeChanged();
 
+private:
     // File methods
     void setCurrentFile(SituationModel *situation, const QString &fileName);
 

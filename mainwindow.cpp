@@ -959,11 +959,10 @@ void MainWindow::setTab(int index) {
 
 void MainWindow::removeTab() {
     int index = tabWidget->currentIndex();
-    SituationModel *situation = engine->currentModel();
     SituationScene *scene = sceneList.at(index);
     SituationView *view = viewList.at(index);
 
-    if (!maybeSave(situation)) {
+    if (!maybeSave()) {
         return;
     }
 
@@ -1043,7 +1042,8 @@ void MainWindow::updateRecentList() {
     }
 }
 
-bool MainWindow::maybeSave(SituationModel *situation) {
+bool MainWindow::maybeSave() {
+    SituationModel *situation = engine->currentModel();
     if (!situation->undoStack()->isClean()) {
         QString shownName = QFileInfo(situation->fileName()).fileName();
         QMessageBox::StandardButton ret;
@@ -1052,7 +1052,7 @@ bool MainWindow::maybeSave(SituationModel *situation) {
                         "Do you want to save your changes?").arg(shownName),
                     QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         if (ret == QMessageBox::Save) {
-            return saveSituation(situation, "");
+            return saveSituation("");
         } else if (ret == QMessageBox::Cancel) {
             return false;
         }
@@ -1061,11 +1061,10 @@ bool MainWindow::maybeSave(SituationModel *situation) {
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
-    SituationModel *situation = engine->currentModel();
     animate(false);
 
     while(engine->situationSize()>1) {
-        if (!maybeSave(situation)) {
+        if (!maybeSave()) {
             event->ignore();
             return;
         }
@@ -1242,7 +1241,7 @@ void MainWindow::newFile() {
     SituationModel *situation = engine->currentModel();
     SituationView *view = viewList.at(engine->currentIndex());
 
-    if (maybeSave(situation)) {
+    if (maybeSave()) {
         // tidy up animation (does no harm if not in animation mode)
         animate(false);
         engine->resetFile();
@@ -1310,7 +1309,8 @@ void MainWindow::openFile(const QString &fileName, bool inNewTab) {
     statusbar->showMessage(tr("File loaded"), 2000);
 }
 
-bool MainWindow::saveSituation(SituationModel *situation, QString fileName) {
+bool MainWindow::saveSituation(QString fileName) {
+    SituationModel *situation = engine->currentModel();
     QString name = fileName;
     if (name.isEmpty()) {
         QString defaultFile;
@@ -1348,7 +1348,7 @@ bool MainWindow::saveSituation(SituationModel *situation, QString fileName) {
                             .arg(file.errorString()));
         return false;
     }
-    if(!engine->saveSituation(situation, name)) {
+    if(!engine->saveSituation(name)) {
         return false;
     }
     statusbar->showMessage(tr("File saved"), 2000);
@@ -1359,8 +1359,8 @@ bool MainWindow::saveFile() {
     SituationModel *situation = engine->currentModel();
 
     bool animated = (situation->state() == SituationModel::ANIMATE);
-    bool saved = saveSituation(situation, situation->fileName());
     animate(false);
+    bool saved = saveSituation(situation->fileName());
     if (animated) {
         animate(true);
     }
@@ -1371,8 +1371,8 @@ bool MainWindow::saveAs() {
     SituationModel *situation = engine->currentModel();
 
     bool animated = (situation->state() == SituationModel::ANIMATE);
-    bool saved = saveSituation(situation, "");
     animate(false);
+    bool saved = saveSituation("");
     if (animated) {
         animate(true);
     }

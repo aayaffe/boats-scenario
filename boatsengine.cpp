@@ -46,24 +46,28 @@
 extern int debugLevel;
 
 BoatsEngine::BoatsEngine(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_currentSituation(0)
 {
 }
 
 void BoatsEngine::newFile() {
     SituationModel *situation = new SituationModel(this);
     m_situationList.append(situation);
-    m_currentSituation = m_situationList.size()-1;
+    setIndex(m_situationList.size()-1);
+    emit sizeChanged();
 }
 
 void BoatsEngine::setIndex(int index) {
     m_currentSituation = index;
+    emit indexChanged();
 }
 
 void BoatsEngine::removeFile(int index) {
     SituationModel *situation = m_situationList.at(index);
     m_situationList.removeAt(index);
     situation->deleteLater();
+    emit sizeChanged();
 }
 
 void BoatsEngine::resetFile() {
@@ -101,7 +105,8 @@ bool BoatsEngine::openFile(const QString &fileName) {
     return true;
 }
 
-bool BoatsEngine::saveSituation(SituationModel *situation, QString fileName) {
+bool BoatsEngine::saveSituation(QString fileName) {
+    SituationModel *situation = m_situationList.at(m_currentSituation);
     QString name = fileName;
     if (name.isEmpty()) {
         QString defaultFile;

@@ -119,10 +119,10 @@ class MainWindow : public QMainWindow {
         void writeSettings();
         void readSettings();
         void updateRecentList();
-        bool maybeSave(SituationModel *situation);
+        bool maybeSave();
 
         // File methods
-        bool saveSituation(SituationModel *situation, QString name);
+        bool saveSituation(QString name);
 
         // GraphicsView Framework
         QList<SituationScene *> sceneList;
