@@ -23,7 +23,7 @@ isEmpty(QMAKE_LRELEASE) {
     else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
 }
 
-updatets.commands = $$QMAKE_LUPDATE -locations none -noobsolete boats.pro
+updatets.commands = $$QMAKE_LUPDATE -locations none -noobsolete $$_PRO_FILE_
 QMAKE_EXTRA_TARGETS += updatets
 
 updateqm.depends = updatets
