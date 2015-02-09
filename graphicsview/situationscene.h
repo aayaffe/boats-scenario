@@ -109,16 +109,6 @@ class SituationScene : public QGraphicsScene {
         void setLaylines(const int angle);
         void setWind(bool visible);
 
-        // Slots for state signals
-        void createTrack();
-        void createBoat();
-        void createMark();
-        void createLine();
-        void createPoint();
-
-        void moveModel();
-        void rotateModel();
-
         // Slots for animation signals
         void setAnimation();
 
@@ -139,15 +129,6 @@ class SituationScene : public QGraphicsScene {
 
         /// \a m_modelPressed holds the BoatModel being pressed
         PositionModel* m_modelPressed;
-
-        /// \a m_trackCreated holds the last selected TrackModel
-        TrackModel *m_trackCreated;
-
-        /// \a m_fromPosition holds the QPointF where mouse was pressed
-        QPointF m_fromPosition;
-
-        /// \a m_curPosition holds the QPointF where mouse was last seen
-        QPointF m_curPosition;
 
         /// \a m_time holds the timer used for movement filtering
         QTime m_time;

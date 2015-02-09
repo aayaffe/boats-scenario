@@ -77,7 +77,7 @@ class SituationModel : public QObject {
 
         Q_PROPERTY(int size READ size NOTIFY tracksChanged)
 
-        Q_PROPERTY(StateMachine* stateMachine READ stateMachine)
+        Q_PROPERTY(StateMachine* stateMachine READ stateMachine CONSTANT)
         Q_PROPERTY(bool canUndo READ canUndo NOTIFY canUndoChanged)
         Q_PROPERTY(bool canRedo READ canRedo NOTIFY canRedoChanged)
 
@@ -205,6 +205,9 @@ class SituationModel : public QObject {
         void addPolyLine(PolyLineModel *polyline, int order = -1);
         void deletePolyLine(PolyLineModel *polyline);
 
+        Q_INVOKABLE void setFromPosition(QPointF pos);
+        Q_INVOKABLE void setCurPosition(QPointF pos);
+
         // selection mechanism
         Q_INVOKABLE void clearSelectedModels();
         Q_INVOKABLE void addSelectedBoat(BoatModel *boat);
@@ -218,6 +221,16 @@ class SituationModel : public QObject {
     public slots:
         // Wind
         void resetWind();
+
+        // Slots for state signals
+        void createTrack();
+        void createBoat();
+        void createMark();
+        void createLine();
+        void createPoint();
+
+        void moveModel();
+        void rotateModel();
         void exitCreateState();
 
     signals:
@@ -312,6 +325,12 @@ class SituationModel : public QObject {
         /// \a m_scenarioAnimation holds the general AnimationGroup
         /// manipulated during animation mode
         ScenarioAnimation* m_scenarioAnimation;
+
+        /// \a m_fromPosition holds the QPointF where mouse was pressed
+        QPointF m_fromPosition;
+
+        /// \a m_curPosition holds the QPointF where mouse was last seen
+        QPointF m_curPosition;
 
         // Bookkeeping references to selected models
         /// \a m_selectedModels holds the list of selected PositionModel

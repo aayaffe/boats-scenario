@@ -57,7 +57,6 @@ extern int debugLevel;
 SituationScene::SituationScene(SituationModel *situation)
         : QGraphicsScene(situation),
         m_situation(situation),
-        m_trackCreated(0),
         m_time(QTime::currentTime()),
         m_clickTime(QTime::currentTime()),
         m_clickState(SINGLE),
@@ -109,20 +108,6 @@ SituationScene::SituationScene(SituationModel *situation)
 
     setLaylines(situation->laylineAngle());
 
-    connect(situation->stateMachine()->createTrackState(), SIGNAL(entered()),
-            this, SLOT(createTrack()));
-    connect(situation->stateMachine()->createBoatState(), SIGNAL(entered()),
-            this, SLOT(createBoat()));
-    connect(situation->stateMachine()->createMarkState(), SIGNAL(entered()),
-            this, SLOT(createMark()));
-    connect(situation->stateMachine()->createLineState(), SIGNAL(entered()),
-            this, SLOT(createLine()));
-    connect(situation->stateMachine()->createPointState(), SIGNAL(entered()),
-            this, SLOT(createPoint()));
-    connect(situation->stateMachine()->moveState(), SIGNAL(entered()),
-            this, SLOT(moveModel()));
-    connect(situation->stateMachine()->rotateState(), SIGNAL(entered()),
-            this, SLOT(rotateModel()));
     connect(situation->stateMachine()->animationState(), SIGNAL(entered()),
             this, SLOT(setAnimation()));
 
@@ -164,49 +149,6 @@ void SituationScene::setWind(bool visible) {
         ArrowGraphicsItem *arrow= new ArrowGraphicsItem(&m_situation->wind());
         addItem(arrow);
     }
-}
-
-void SituationScene::createTrack() {
-    m_situation->createTrack(m_curPosition);
-    m_fromPosition = m_curPosition;
-}
-
-void SituationScene::createBoat() {
-    m_situation->createBoat(m_curPosition);
-    m_fromPosition = m_curPosition;
-}
-
-void SituationScene::createMark() {
-    m_situation->createMark(m_curPosition);
-    m_fromPosition = m_curPosition;
-}
-
-void SituationScene::createLine() {
-    m_situation->createLine(m_curPosition);
-    m_fromPosition = m_curPosition;
-}
-
-void SituationScene::createPoint() {
-    m_situation->createPoint(m_curPosition);
-    m_fromPosition = m_curPosition;
-}
-
-void SituationScene::moveModel() {
-    m_situation->moveModel(m_curPosition - m_fromPosition);
-    if (!m_situation->selectedBoatModels().isEmpty()) {
-        BoatModel *boat = m_situation->selectedBoatModels()[0];
-        m_trackCreated = boat->track();
-        if(boat->order() > 1) {
-            qreal heading = m_trackCreated->headingForNext(
-                        boat->order()-2, m_curPosition);
-            boat->setHeading(heading);
-        }
-    }
-    m_fromPosition = m_curPosition;
-}
-
-void SituationScene::rotateModel() {
-    m_situation->headingModel(m_curPosition - m_modelPressed->position());
 }
 
 /**
@@ -316,7 +258,7 @@ void SituationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     }
 
     QGraphicsScene::mouseMoveEvent(event);
-    m_curPosition = event->scenePos();
+    m_situation->setCurPosition(event->scenePos());
     if (event->buttons() == Qt::LeftButton
         && (event->modifiers() & Qt::MetaModifier) == 0) {
         m_situation->stateMachine()->lmbMove();
@@ -404,7 +346,7 @@ void SituationScene::mouseSelectEvent(QGraphicsSceneMouseEvent *event) {
     // propagate mouse event first for selected items
     QGraphicsScene::mousePressEvent(event);
 
-    m_fromPosition = event->scenePos();
+    m_situation->setFromPosition(event->scenePos());
 }
 
 void SituationScene::setSelectedModels() {

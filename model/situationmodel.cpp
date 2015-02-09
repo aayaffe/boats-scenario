@@ -64,6 +64,21 @@ SituationModel::SituationModel(QObject *parent)
             m_scenarioAnimation, SLOT(setAnimation()));
     connect(m_stateMachine->animationState(), SIGNAL(exited()),
             m_scenarioAnimation, SLOT(unsetAnimation()));
+
+    connect(m_stateMachine->createTrackState(), SIGNAL(entered()),
+            this, SLOT(createTrack()));
+    connect(m_stateMachine->createBoatState(), SIGNAL(entered()),
+            this, SLOT(createBoat()));
+    connect(m_stateMachine->createMarkState(), SIGNAL(entered()),
+            this, SLOT(createMark()));
+    connect(m_stateMachine->createLineState(), SIGNAL(entered()),
+            this, SLOT(createLine()));
+    connect(m_stateMachine->createPointState(), SIGNAL(entered()),
+            this, SLOT(createPoint()));
+    connect(m_stateMachine->moveState(), SIGNAL(entered()),
+            this, SLOT(moveModel()));
+    connect(m_stateMachine->rotateState(), SIGNAL(entered()),
+            this, SLOT(rotateModel()));
     connect(m_stateMachine->createState(), SIGNAL(exited()),
             this, SLOT(exitCreateState()));
     m_stateMachine->start();
@@ -432,6 +447,59 @@ PointModel *SituationModel::createPoint(QPointF pos) {
         return command->point();
     }
     return 0;
+}
+
+void SituationModel::setFromPosition(QPointF pos) {
+    m_fromPosition = pos;
+}
+
+void SituationModel::setCurPosition(QPointF pos) {
+    m_curPosition = pos;
+}
+
+void SituationModel::createTrack() {
+    createTrack(m_curPosition);
+    m_fromPosition = m_curPosition;
+}
+
+void SituationModel::createBoat() {
+    createBoat(m_curPosition);
+    m_fromPosition = m_curPosition;
+}
+
+void SituationModel::createMark() {
+    createMark(m_curPosition);
+    m_fromPosition = m_curPosition;
+}
+
+void SituationModel::createLine() {
+    createLine(m_curPosition);
+    m_fromPosition = m_curPosition;
+}
+
+void SituationModel::createPoint() {
+    createPoint(m_curPosition);
+    m_fromPosition = m_curPosition;
+}
+
+void SituationModel::moveModel() {
+    moveModel(m_curPosition - m_fromPosition);
+    if (!selectedBoatModels().isEmpty()) {
+        BoatModel *boat = selectedBoatModels()[0];
+        TrackModel *track = boat->track();
+        if(boat->order() > 1) {
+            qreal heading = track->headingForNext(
+                        boat->order()-2, m_curPosition);
+            boat->setHeading(heading);
+        }
+    }
+    m_fromPosition = m_curPosition;
+}
+
+void SituationModel::rotateModel() {
+    if (!selectedModels().isEmpty()) {
+        headingModel(m_curPosition - selectedModels().last()->position());
+    }
 }
 
 void SituationModel::exitCreateState() {
