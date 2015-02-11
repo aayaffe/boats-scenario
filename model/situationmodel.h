@@ -79,6 +79,7 @@ class SituationModel : public QObject {
         Q_PROPERTY(qreal tilt READ tilt WRITE setTilt NOTIFY tiltChanged)
 #ifdef QML
         Q_PROPERTY(QQmlListProperty<TrackModel> trackList READ trackList NOTIFY tracksChanged)
+        Q_PROPERTY(QQmlListProperty<MarkModel> markList READ markList NOTIFY marksChanged)
 #endif
         Q_PROPERTY(int size READ size NOTIFY tracksChanged)
 
@@ -124,6 +125,7 @@ class SituationModel : public QObject {
         const QList<TrackModel*> tracks() const { return m_tracks; }
 #ifdef QML
         QQmlListProperty<TrackModel> trackList();
+        QQmlListProperty<MarkModel> markList();
 #endif
         int markSize() const { return m_marks.size();}
         const QList<MarkModel*> marks() const { return m_marks; }
@@ -283,6 +285,7 @@ class SituationModel : public QObject {
         // Signals for Marks
         void markAdded(MarkModel *mark);
         void markRemoved(MarkModel *mark);
+        void marksChanged();
 
         // Signals for Lines
         void polyLineAdded(PolyLineModel *polyline);

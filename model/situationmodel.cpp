@@ -221,6 +221,7 @@ void SituationModel::addMark(MarkModel *mark, int order) {
         m_marks[i]->setOrder(i+1);
     }
     emit markAdded(mark);
+    emit marksChanged();
 }
 
 int SituationModel::deleteMark(MarkModel *mark) {
@@ -231,6 +232,7 @@ int SituationModel::deleteMark(MarkModel *mark) {
         m_marks[i]->setOrder(i+1);
     }
     emit markRemoved(mark);
+    emit marksChanged();
     return index;
 }
 
@@ -762,5 +764,9 @@ void SituationModel::removeSelectedModel(PositionModel *position) {
 #ifdef QML
 QQmlListProperty<TrackModel> SituationModel::trackList() {
     return QQmlListProperty<TrackModel>(this, m_tracks);
+}
+
+QQmlListProperty<MarkModel> SituationModel::markList() {
+    return QQmlListProperty<MarkModel>(this, m_marks);
 }
 #endif
