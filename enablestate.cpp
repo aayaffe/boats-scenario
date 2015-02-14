@@ -24,12 +24,15 @@
 //
 #include "enablestate.h"
 
+#include "commontypes.h"
+
 #include <QStateMachine>
 #include <QAbstractTransition>
 #include <QAbstractState>
-#include <QDebug>
 
 #include <iostream>
+
+extern int debugLevel;
 
 EnableState::EnableState(QState *parent) :
     QState(parent),
@@ -54,7 +57,7 @@ void EnableState::onEntry(QEvent *event) {
     Q_UNUSED(event);
     if(!m_active) {
         m_active = true;
-        std::cout << "State Entry " << this->objectName().toStdString() << std::endl;
+        if (debugLevel & 1 << STATE) std::cout << "State Entry " << this->objectName().toStdString() << std::endl;
         emit activeChanged(m_active);
         foreach (QAbstractTransition* transition, transitions()) {
             EnableState *state = static_cast<EnableState*> (transition->targetState());
@@ -70,7 +73,7 @@ void EnableState::onExit(QEvent *event) {
     Q_UNUSED(event);
     if(m_active) {
         m_active = false;
-        std::cout << "State Exit " << this->objectName().toStdString() << std::endl;
+        if (debugLevel & 1 << STATE) std::cout << "State Exit " << this->objectName().toStdString() << std::endl;
         emit activeChanged(m_active);
         foreach (QAbstractTransition* transition, transitions()) {
             EnableState *state = static_cast<EnableState*> (transition->targetState());
