@@ -158,7 +158,6 @@ QStringList BoatsEngine::fileList() {
 
 void BoatsEngine::addTrack() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
-
     situation->stateMachine()->createTrack();
 }
 
@@ -169,7 +168,6 @@ void BoatsEngine::deleteTrack() {
 
 void BoatsEngine::addBoat() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
-
     situation->stateMachine()->createBoat();
 }
 
@@ -180,19 +178,16 @@ void BoatsEngine::deleteModels() {
 
 void BoatsEngine::addMark() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
-
     situation->stateMachine()->createMark();
 }
 
 void BoatsEngine::addPolyLine() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
-
     situation->stateMachine()->createLine();
 }
 
 void BoatsEngine::addPoint() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
-
     situation->stateMachine()->createPoint();
 }
 

@@ -44,7 +44,7 @@ public:
 
     explicit BoatsEngine(QObject *parent = 0);
 
-    Q_INVOKABLE SituationModel *currentModel() {
+    SituationModel *currentModel() {
         if(m_situationList.size()) {
             return m_situationList.at(m_currentSituation);
         } else return 0;
