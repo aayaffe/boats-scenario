@@ -27,6 +27,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsItem>
+#include <QAnimationGroup>
 #include <QTime>
 
 class SituationModel;

@@ -29,6 +29,7 @@
 
 #include <QObject>
 #include <QGraphicsItem>
+#include <QTime>
 
 class PositionModel;
 

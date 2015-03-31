@@ -28,6 +28,8 @@
 #include "commontypes.h"
 #include "situationscene.h"
 
+#include <QPainter>
+
 FlagGraphicsItem::FlagGraphicsItem(QGraphicsItem *parent)
         : QGraphicsItem(parent) {
 }
