@@ -60,16 +60,25 @@ BoatModel::~BoatModel() {
 
 void BoatModel::setHeading(const qreal& theValue) {
     if (theValue != m_heading) {
-        if (debugLevel & 1 << MODEL) std::cout
-                << "heading = " << theValue  << std::endl;
         m_heading = fmod(theValue,360.0); // This is always between -360 and +360
         if (m_heading < 0) m_heading += 360.0; // This ensures it is between 0 and +360
         emit headingChanged(m_heading);
-        setTrimmedSailAngle(trimmedSailAngle());
-        setTrimmedJibAngle(trimmedJibAngle());
-        setTrimmedSpinAngle(trimmedSpinAngle());
-        setTrimmedGennAngle(trimmedGennAngle());
+        qreal trimmedSail = trimmedSailAngle();
+        qreal trimmedJib = trimmedJibAngle();
+        qreal trimmedSpin = trimmedSpinAngle();
+        qreal trimmedGenn = trimmedGennAngle();
+        emit trimmedSailAngleChanged(trimmedSail);
+        emit trimmedJibAngleChanged(trimmedJib);
+        emit trimmedSpinAngleChanged(trimmedSpin);
+        emit trimmedGennAngleChanged(trimmedGenn);
         m_track->changingTrack(m_track);
+        if (debugLevel & 1 << MODEL) std::cout
+                << "heading = " << theValue
+                << " sail = " << trimmedSail
+                << " jib = " << trimmedJib
+                << " spin = " << trimmedSpin
+                << " genn = " << trimmedGenn
+                << std::endl;
     }
 }
 
@@ -84,10 +93,18 @@ void BoatModel::setTrim(const qreal& theValue) {
         && newAngle < 180
         && newAngle > -180) {
         m_trim = theValue;
+        qreal trimmedSail = trimmedSailAngle();
+        emit trimmedSailAngleChanged(trimmedSail);
         if (debugLevel & 1 << MODEL) std::cout
-                << "trim = " << theValue  << std::endl;
-        setTrimmedSailAngle(trimmedSailAngle());
+                << "trim = " << theValue
+                << " heading = " << m_heading
+                << " sail = " << trimmedSail
+                << std::endl;
     }
+}
+
+qreal BoatModel::trimmedSailAngle() const {
+    return sailAngle() + m_trim;
 }
 
 void BoatModel::setTrimmedSailAngle(qreal theValue) {
@@ -100,10 +117,18 @@ void BoatModel::setJibTrim(const qreal& theValue) {
         && newAngle < 180
         && newAngle > -180) {
         m_jibTrim = theValue;
+        qreal trimmedJib = trimmedJibAngle();
+        emit trimmedJibAngleChanged(trimmedJib);
         if (debugLevel & 1 << MODEL) std::cout
-                << "jibtrim = " << theValue  << std::endl;
-        setTrimmedJibAngle(trimmedJibAngle());
+                << "jibtrim = " << theValue
+                << " heading = " << m_heading
+                << " jib = " << trimmedJib
+                << std::endl;
     }
+}
+
+qreal BoatModel::trimmedJibAngle() const {
+    return jibAngle() + m_jibTrim;
 }
 
 void BoatModel::setTrimmedJibAngle(qreal theValue) {
@@ -120,8 +145,8 @@ void BoatModel::setSpin(const bool theValue) {
     if (theValue != m_spin) {
         m_spin = theValue;
         emit spinChanged(m_spin);
-        setTrimmedSailAngle(trimmedSailAngle());
-        setTrimmedJibAngle(trimmedJibAngle());
+        emit trimmedSailAngleChanged(trimmedSailAngle());
+        emit trimmedJibAngleChanged(trimmedJibAngle());
     }
 }
 
@@ -133,15 +158,29 @@ void BoatModel::setSpinTrim(const qreal& theValue) {
         && newAngle < 180
         && newAngle > -180) {
         m_spinTrim = theValue;
+        qreal trimmedSpin = trimmedSpinAngle();
+        qreal trimmedGenn = trimmedGennAngle();
+        emit trimmedSpinAngleChanged(trimmedSpin);
+        emit trimmedGennAngleChanged(trimmedGenn);
         if (debugLevel & 1 << MODEL) std::cout
-                << "spinTrim = " << theValue  << std::endl;
-        setTrimmedSpinAngle(trimmedSpinAngle());
-        setTrimmedGennAngle(trimmedGennAngle());
+                << "spintrim = " << theValue
+                << " heading = " << m_heading
+                << " spin = " << trimmedSpin
+                << " genn = " << trimmedGenn
+                << std::endl;
     }
+}
+
+qreal BoatModel::trimmedSpinAngle() const {
+    return spinAngle() + m_spinTrim;
 }
 
 void BoatModel::setTrimmedSpinAngle(qreal theValue) {
     emit trimmedSpinAngleChanged(theValue);
+}
+
+qreal BoatModel::trimmedGennAngle() const {
+    return gennAngle() + m_spinTrim;
 }
 
 void BoatModel::setTrimmedGennAngle(qreal theValue) {
@@ -213,11 +252,6 @@ qreal BoatModel::sailAngle(qreal heading) const {
             sailAngle = heading/a - b - 2*maxSailAngle;
         }
     }
-
-    if (debugLevel & 1 << MODEL) std::cout
-            << "heading = " << heading
-            << " sail = " << sailAngle
-            << std::endl;
     return sailAngle;
 }
 
@@ -251,10 +285,6 @@ qreal BoatModel::jibAngle(qreal heading) const {
         }
     }
 
-    if (debugLevel & 1 << MODEL) std::cout
-            << "heading = " << heading
-            << " jib = " << sailAngle
-            << std::endl;
     return sailAngle;
 }
 
@@ -277,10 +307,6 @@ qreal BoatModel::spinAngle(qreal heading) const {
         }
     }
 
-    if (debugLevel & 1 << MODEL) std::cout
-            << "heading = " << heading
-            << " spin = " << sailAngle
-            << std::endl;
     return sailAngle;
 }
 
@@ -307,20 +333,16 @@ qreal BoatModel::gennAngle(qreal heading) const {
         }
     }
 
-    if (debugLevel & 1 << MODEL) std::cout
-            << "heading = " << heading
-            << " genn = " << sailAngle
-            << std::endl;
     return sailAngle;
 }
 
 void BoatModel::setWind(qreal wind) {
     PositionModel::setWind(wind);
     emit headingChanged(m_heading);
-    setTrimmedSailAngle(trimmedSailAngle());
-    setTrimmedJibAngle(trimmedJibAngle());
-    setTrimmedSpinAngle(trimmedSpinAngle());
-    setTrimmedGennAngle(trimmedGennAngle());
+    emit trimmedSailAngleChanged(trimmedSailAngle());
+    emit trimmedJibAngleChanged(trimmedJibAngle());
+    emit trimmedSpinAngleChanged(trimmedSpinAngle());
+    emit trimmedGennAngleChanged(trimmedGennAngle());
 }
 
 void BoatModel::setDim(int dim) {

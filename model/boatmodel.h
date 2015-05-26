@@ -54,11 +54,21 @@ class TrackModel;
 
 class BoatModel : public PositionModel {
         Q_OBJECT
+        Q_PROPERTY(qreal trim READ trim WRITE setTrim NOTIFY trimmedSailAngleChanged)
+        Q_PROPERTY(qreal maxNormalSailAngle READ maxNormalSailAngle WRITE setMaxNormalSailAngle)
+        Q_PROPERTY(qreal maxWithSpinSailAngle READ maxWithSpinSailAngle WRITE setMaxWithSpinSailAngle)
         Q_PROPERTY(qreal trimSailAngle READ trimmedSailAngle WRITE setTrimmedSailAngle NOTIFY trimmedSailAngleChanged)
+
+        Q_PROPERTY(qreal jibTrim READ jibTrim WRITE setJibTrim NOTIFY trimmedJibAngleChanged)
+        Q_PROPERTY(qreal maxNormalJibAngle READ maxNormalJibAngle WRITE setMaxNormalJibAngle)
+        Q_PROPERTY(qreal maxWithSpinJibAngle READ maxWithSpinJibAngle WRITE setMaxWithSpinJibAngle)
         Q_PROPERTY(qreal trimJibAngle READ trimmedJibAngle WRITE setTrimmedJibAngle NOTIFY trimmedJibAngleChanged)
+
         Q_PROPERTY(bool spin READ spin WRITE setSpin NOTIFY spinChanged)
+        Q_PROPERTY(qreal spinTrim READ spinTrim WRITE setSpinTrim NOTIFY trimmedSpinAngleChanged)
         Q_PROPERTY(qreal trimSpinAngle READ trimmedSpinAngle WRITE setTrimmedSpinAngle NOTIFY trimmedSpinAngleChanged)
         Q_PROPERTY(qreal trimGennAngle READ trimmedGennAngle WRITE setTrimmedGennAngle NOTIFY trimmedGennAngleChanged)
+
         Q_PROPERTY(Boats::Overlaps overlap READ overlap WRITE setOverlap NOTIFY overlapChanged)
         Q_PROPERTY(Boats::Flag flag READ flag WRITE setFlag NOTIFY flagChanged)
         Q_PROPERTY(int dim READ dim WRITE setDim NOTIFY dimChanged)
@@ -74,14 +84,12 @@ class BoatModel : public PositionModel {
 
         qreal trim() const { return m_trim; }
         void setTrim(const qreal& theValue);
-
-        qreal trimmedSailAngle() const { return sailAngle() + m_trim; }
+        qreal trimmedSailAngle() const;
         void setTrimmedSailAngle(qreal theValue);
 
         qreal jibTrim() const { return m_jibTrim; }
         void setJibTrim(const qreal& theValue);
-
-        qreal trimmedJibAngle() const { return jibAngle() + m_jibTrim; }
+        qreal trimmedJibAngle() const;
         void setTrimmedJibAngle(qreal theValue);
 
         bool hasSpin() const {return m_hasSpin; }
@@ -92,11 +100,9 @@ class BoatModel : public PositionModel {
 
         qreal spinTrim() const { return m_spinTrim; }
         void setSpinTrim(const qreal& theValue);
-
-        qreal trimmedSpinAngle() const { return spinAngle() + m_spinTrim; }
+        qreal trimmedSpinAngle() const;
         void setTrimmedSpinAngle(qreal theValue);
-
-        qreal trimmedGennAngle() const { return gennAngle() + m_spinTrim; }
+        qreal trimmedGennAngle() const;
         void setTrimmedGennAngle(qreal theValue);
 
         Boats::Overlaps overlap() const {return m_overlap; }
