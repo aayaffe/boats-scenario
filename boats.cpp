@@ -49,6 +49,7 @@ QList<QString> Boats::seriesList() {
     m_seriesList[optimist] = QObject::tr("Optimist");
     m_seriesList[tornado] = QObject::tr("Tornado");
     m_seriesList[nacra17] = QObject::tr("Nacra 17");
+    m_seriesList[diam24] = QObject::tr("Diam 24");
     m_seriesList[startboat] = QObject::tr("Committee boat");
     m_seriesList[rib] = QObject::tr("RIB");
     return m_seriesList;
@@ -75,6 +76,7 @@ QList<int> Boats::seriesSizeList() {
         m_seriesSizeList[optimist] = 23;
         m_seriesSizeList[tornado] = 61;
         m_seriesSizeList[nacra17] = 52.5;
+        m_seriesSizeList[diam24] = 72.5;
         m_seriesSizeList[rib] = 60;
     }
     return m_seriesSizeList;

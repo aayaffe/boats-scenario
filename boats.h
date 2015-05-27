@@ -58,6 +58,7 @@ public:
         optimist,
         tornado,
         nacra17,
+        diam24,
         startboat,
         rib,
         unknown
