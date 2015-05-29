@@ -205,7 +205,6 @@ class SituationModel : public QObject {
         void addPolyLine(PolyLineModel *polyline, int order = -1);
         void deletePolyLine(PolyLineModel *polyline);
 
-        Q_INVOKABLE void setFromPosition(QPointF pos);
         Q_INVOKABLE void setCurPosition(QPointF pos);
 
         // selection mechanism
@@ -325,9 +324,6 @@ class SituationModel : public QObject {
         /// \a m_scenarioAnimation holds the general AnimationGroup
         /// manipulated during animation mode
         ScenarioAnimation* m_scenarioAnimation;
-
-        /// \a m_fromPosition holds the QPointF where mouse was pressed
-        QPointF m_fromPosition;
 
         /// \a m_curPosition holds the QPointF where mouse was last seen
         QPointF m_curPosition;

@@ -318,8 +318,8 @@ void SituationModel::toggleWind() {
 }
 
 void SituationModel::moveModel(QPointF pos) {
-    if (!m_selectedModels.isEmpty() && pos != QPointF()) {
-        m_undoStack->push(new MoveModelUndoCommand(m_selectedModels,pos));
+    if (!m_selectedModels.isEmpty()) {
+        m_undoStack->push(new MoveModelUndoCommand(m_selectedModels,pos - m_selectedModels.first()->position()));
     }
 }
 
@@ -449,51 +449,41 @@ PointModel *SituationModel::createPoint(QPointF pos) {
     return 0;
 }
 
-void SituationModel::setFromPosition(QPointF pos) {
-    m_fromPosition = pos;
-}
-
 void SituationModel::setCurPosition(QPointF pos) {
     m_curPosition = pos;
 }
 
 void SituationModel::createTrack() {
     createTrack(m_curPosition);
-    m_fromPosition = m_curPosition;
 }
 
 void SituationModel::createBoat() {
     createBoat(m_curPosition);
-    m_fromPosition = m_curPosition;
 }
 
 void SituationModel::createMark() {
     createMark(m_curPosition);
-    m_fromPosition = m_curPosition;
 }
 
 void SituationModel::createLine() {
     createLine(m_curPosition);
-    m_fromPosition = m_curPosition;
 }
 
 void SituationModel::createPoint() {
     createPoint(m_curPosition);
-    m_fromPosition = m_curPosition;
 }
 
 void SituationModel::moveModel() {
-    moveModel(m_curPosition - m_fromPosition);
+    moveModel(m_curPosition);
     if (!selectedBoatModels().isEmpty()) {
         BoatModel *boat = selectedBoatModels()[0];
         TrackModel *track = boat->track();
         if(boat->order() > 1) {
             qreal heading = track->headingForNext(
-                        boat->order()-2, m_curPosition);
+                        boat->order()-2, boat->position());
             boat->setHeading(heading);
         }
     }
-    m_fromPosition = m_curPosition;
 }
 
 void SituationModel::rotateModel() {

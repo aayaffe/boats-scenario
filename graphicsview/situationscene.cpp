@@ -345,8 +345,6 @@ void SituationScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 void SituationScene::mouseSelectEvent(QGraphicsSceneMouseEvent *event) {
     // propagate mouse event first for selected items
     QGraphicsScene::mousePressEvent(event);
-
-    m_situation->setFromPosition(event->scenePos());
 }
 
 void SituationScene::setSelectedModels() {
