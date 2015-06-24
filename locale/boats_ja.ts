@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ja_JP">
+<TS version="2.1" language="ja_JP">
+<context>
+    <name>ArrowGraphicsItem</name>
+    <message>
+        <source>Wind</source>
+        <translation>風情報</translation>
+    </message>
+</context>
 <context>
     <name>MainWindow</name>
     <message>
@@ -284,22 +291,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Create Track</source>
-        <translation>航跡を作成</translation>
-    </message>
-    <message>
-        <source>Create Boat</source>
-        <translation>艇を付加</translation>
-    </message>
-    <message>
-        <source>Create Mark</source>
-        <translation>マークを作成</translation>
-    </message>
-    <message>
-        <source>Animate</source>
-        <translation>アニメを作成</translation>
-    </message>
-    <message>
         <source>%1 - %2 [*]</source>
         <translation></translation>
     </message>
@@ -340,10 +331,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Create Line</source>
-        <translation>新しい線</translation>
-    </message>
-    <message>
         <source>The document %1 has been modified.
 Do you want to save your changes?</source>
         <translation></translation>
@@ -374,20 +361,6 @@ Do you want to save your changes?</source>
     </message>
     <message>
         <source>xmlscenario Files (*.xbs)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Open Scenario file</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Parse error in file %1 at line %2, column %3:
-%4</source>
         <translation></translation>
     </message>
     <message>
@@ -431,10 +404,6 @@ Do you want to replace it?</source>
     <message>
         <source>Abort</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>Protest!</source>
-        <translation>プロテスト!</translation>
     </message>
     <message>
         <source>About Boat Scenario</source>
@@ -594,6 +563,29 @@ Do you want to replace it?</source>
     <message>
         <source>470</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>RS Feva</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Finn</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Nacra 17</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Diam 24</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SituationModel</name>
+    <message>
+        <source>Protest!</source>
+        <translation>プロテスト!</translation>
     </message>
 </context>
 <context>

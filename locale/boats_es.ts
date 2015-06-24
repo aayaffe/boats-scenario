@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="es_ES">
+<TS version="2.1" language="es_ES">
+<context>
+    <name>ArrowGraphicsItem</name>
+    <message>
+        <source>Wind</source>
+        <translation type="unfinished">Viento</translation>
+    </message>
+</context>
 <context>
     <name>MainWindow</name>
     <message>
@@ -284,22 +291,6 @@
         <translation>&amp;Acerca de</translation>
     </message>
     <message>
-        <source>Create Track</source>
-        <translation>Crear Trayectoria</translation>
-    </message>
-    <message>
-        <source>Create Boat</source>
-        <translation>Crear Barco</translation>
-    </message>
-    <message>
-        <source>Create Mark</source>
-        <translation>Crear Baliza</translation>
-    </message>
-    <message>
-        <source>Animate</source>
-        <translation>Animar</translation>
-    </message>
-    <message>
         <source>%1 - %2 [*]</source>
         <translation></translation>
     </message>
@@ -340,10 +331,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Create Line</source>
-        <translation>Crear Linea</translation>
-    </message>
-    <message>
         <source>The document %1 has been modified.
 Do you want to save your changes?</source>
         <translation>El archivo %1 fué modificado. ¿Quiere guardar sus cambios?</translation>
@@ -375,20 +362,6 @@ Do you want to save your changes?</source>
     <message>
         <source>xmlscenario Files (*.xbs)</source>
         <translation>Archivos xmlscenario (*.xbs)</translation>
-    </message>
-    <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation>No puedo leer el archivo %1: %2.</translation>
-    </message>
-    <message>
-        <source>Open Scenario file</source>
-        <translation>Abrir Archivo de Escenario</translation>
-    </message>
-    <message>
-        <source>Parse error in file %1 at line %2, column %3:
-%4</source>
-        <translation>Analizar error en el archivo %1 en la linea %2, columna %3: %4</translation>
     </message>
     <message>
         <source>File loaded</source>
@@ -432,10 +405,6 @@ Do you want to replace it?</source>
     <message>
         <source>Abort</source>
         <translation>Abortar</translation>
-    </message>
-    <message>
-        <source>Protest!</source>
-        <translation>Protesto!</translation>
     </message>
     <message>
         <source>About Boat Scenario</source>
@@ -546,15 +515,15 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Laser</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Optimist</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Tornado</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Committee boat</source>
@@ -574,27 +543,50 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Topper</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Firefly</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>29er</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>49er</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>420</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>470</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <source>RS Feva</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Finn</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Nacra 17</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Diam 24</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SituationModel</name>
+    <message>
+        <source>Protest!</source>
+        <translation>Protesto!</translation>
     </message>
 </context>
 <context>

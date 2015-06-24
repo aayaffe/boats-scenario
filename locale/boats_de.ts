@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE" sourcelanguage="en">
+<TS version="2.1" language="de_DE" sourcelanguage="en">
+<context>
+    <name>ArrowGraphicsItem</name>
+    <message>
+        <source>Wind</source>
+        <translation>Wind</translation>
+    </message>
+</context>
 <context>
     <name>MainWindow</name>
     <message>
@@ -284,22 +291,6 @@
         <translation>&amp;Über</translation>
     </message>
     <message>
-        <source>Create Track</source>
-        <translation>Kurs erstellen</translation>
-    </message>
-    <message>
-        <source>Create Boat</source>
-        <translation>Boot erstellen</translation>
-    </message>
-    <message>
-        <source>Create Mark</source>
-        <translation>Bahnmarke erstellen</translation>
-    </message>
-    <message>
-        <source>Animate</source>
-        <translation>Animieren</translation>
-    </message>
-    <message>
         <source>%1 - %2 [*]</source>
         <translation>%1 - %2 [*]</translation>
     </message>
@@ -340,10 +331,6 @@
         <translation>&amp;%1 %2</translation>
     </message>
     <message>
-        <source>Create Line</source>
-        <translation>Linie erstellen</translation>
-    </message>
-    <message>
         <source>The document %1 has been modified.
 Do you want to save your changes?</source>
         <translation>Das Dokument %1 wurde verändert.
@@ -376,22 +363,6 @@ Möchten Sie ihre Änderungen speichern?</translation>
     <message>
         <source>xmlscenario Files (*.xbs)</source>
         <translation>xmlscenario Dateien (*.xbs)</translation>
-    </message>
-    <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation>Kann Datei %1:
-%2 nicht lesen.</translation>
-    </message>
-    <message>
-        <source>Open Scenario file</source>
-        <translation>Open Scenario file</translation>
-    </message>
-    <message>
-        <source>Parse error in file %1 at line %2, column %3:
-%4</source>
-        <translation>Analysiere Fehler in Datei %1, Zeile %2, Spalte %3:
-%4</translation>
     </message>
     <message>
         <source>File loaded</source>
@@ -435,10 +406,6 @@ Möchten Sie die Datei ersetzen?</translation>
     <message>
         <source>Abort</source>
         <translation>Abbruch</translation>
-    </message>
-    <message>
-        <source>Protest!</source>
-        <translation></translation>
     </message>
     <message>
         <source>About Boat Scenario</source>
@@ -597,6 +564,29 @@ Möchten Sie die Datei ersetzen?</translation>
     </message>
     <message>
         <source>470</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>RS Feva</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Finn</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Nacra 17</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Diam 24</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SituationModel</name>
+    <message>
+        <source>Protest!</source>
         <translation></translation>
     </message>
 </context>

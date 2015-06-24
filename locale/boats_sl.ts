@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="sl_SI">
+<TS version="2.1" language="sl_SI">
+<context>
+    <name>ArrowGraphicsItem</name>
+    <message>
+        <source>Wind</source>
+        <translation>Veter</translation>
+    </message>
+</context>
 <context>
     <name>MainWindow</name>
     <message>
@@ -260,22 +267,6 @@
         <translation>&amp;Vizitka</translation>
     </message>
     <message>
-        <source>Create Track</source>
-        <translation>Ustvari sled</translation>
-    </message>
-    <message>
-        <source>Create Boat</source>
-        <translation>Ustvari plovilo</translation>
-    </message>
-    <message>
-        <source>Create Mark</source>
-        <translation>Ustvari oznako</translation>
-    </message>
-    <message>
-        <source>Animate</source>
-        <translation>Animiraj</translation>
-    </message>
-    <message>
         <source>%1 - %2 [*]</source>
         <translation></translation>
     </message>
@@ -350,22 +341,6 @@ Ali želite shraniti spremembe?</translation>
         <translation>Datoteke xmlscenario (*.xbs)</translation>
     </message>
     <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation>Ne morem prebrati datoteke %1:
-%2.</translation>
-    </message>
-    <message>
-        <source>Open Scenario file</source>
-        <translation>Odpri datoteko s scenarijem</translation>
-    </message>
-    <message>
-        <source>Parse error in file %1 at line %2, column %3:
-%4</source>
-        <translation>Napaka pri prebiranju datoteke %1 v vrstici %2, kolona %3:
-%4</translation>
-    </message>
-    <message>
         <source>File loaded</source>
         <translation>Datoteka je naložena</translation>
     </message>
@@ -410,10 +385,6 @@ Ali jo želite prepisati?</translation>
         <translation>Prekini</translation>
     </message>
     <message>
-        <source>Protest!</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>About Boat Scenario</source>
         <translation>O programu Boat Scenario</translation>
     </message>
@@ -424,10 +395,6 @@ Ali jo želite prepisati?</translation>
     <message>
         <source>E&amp;xit</source>
         <translation>&amp;Izhod</translation>
-    </message>
-    <message>
-        <source>Create Line</source>
-        <translation>Ustvari črto</translation>
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
@@ -599,6 +566,29 @@ Ali jo želite prepisati?</translation>
     <message>
         <source>RIB</source>
         <translation>Gumijast čoln</translation>
+    </message>
+    <message>
+        <source>RS Feva</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Finn</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Nacra 17</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Diam 24</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SituationModel</name>
+    <message>
+        <source>Protest!</source>
+        <translation></translation>
     </message>
 </context>
 <context>

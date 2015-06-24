@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="it_IT">
+<TS version="2.1" language="it_IT">
+<context>
+    <name>ArrowGraphicsItem</name>
+    <message>
+        <source>Wind</source>
+        <translation>Vento</translation>
+    </message>
+</context>
 <context>
     <name>MainWindow</name>
     <message>
@@ -284,22 +291,6 @@
         <translation>&amp;About</translation>
     </message>
     <message>
-        <source>Create Track</source>
-        <translation>Crear Traccia</translation>
-    </message>
-    <message>
-        <source>Create Boat</source>
-        <translation>Creaa Barca</translation>
-    </message>
-    <message>
-        <source>Create Mark</source>
-        <translation>Crea Boa</translation>
-    </message>
-    <message>
-        <source>Animate</source>
-        <translation>Animazione</translation>
-    </message>
-    <message>
         <source>%1 - %2 [*]</source>
         <translation>%1 - %2 [*]</translation>
     </message>
@@ -340,10 +331,6 @@
         <translation>&amp;%1 %2</translation>
     </message>
     <message>
-        <source>Create Line</source>
-        <translation>Crea Linea</translation>
-    </message>
-    <message>
         <source>The document %1 has been modified.
 Do you want to save your changes?</source>
         <translation>Il documento %1 e stato modificato. Vuoi salvare le modifche?</translation>
@@ -375,20 +362,6 @@ Do you want to save your changes?</source>
     <message>
         <source>xmlscenario Files (*.xbs)</source>
         <translation>xmlscenario Files(*.xbs)</translation>
-    </message>
-    <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation>Il file non puo essere letto %1: %2.</translation>
-    </message>
-    <message>
-        <source>Open Scenario file</source>
-        <translation>Apri scenario</translation>
-    </message>
-    <message>
-        <source>Parse error in file %1 at line %2, column %3:
-%4</source>
-        <translation>Parse errore nel file %1 alla riga %2, columna %3: %4</translation>
     </message>
     <message>
         <source>File loaded</source>
@@ -432,10 +405,6 @@ Do you want to replace it?</source>
     <message>
         <source>Abort</source>
         <translation>Anulla</translation>
-    </message>
-    <message>
-        <source>Protest!</source>
-        <translation>Protesto!</translation>
     </message>
     <message>
         <source>About Boat Scenario</source>
@@ -595,6 +564,29 @@ Do you want to replace it?</source>
     <message>
         <source>470</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>RS Feva</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Finn</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Nacra 17</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Diam 24</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SituationModel</name>
+    <message>
+        <source>Protest!</source>
+        <translation>Protesto!</translation>
     </message>
 </context>
 <context>

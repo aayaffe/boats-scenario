@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="sv">
+<TS version="2.1" language="sv">
+<context>
+    <name>ArrowGraphicsItem</name>
+    <message>
+        <source>Wind</source>
+        <translation>Vind</translation>
+    </message>
+</context>
 <context>
     <name>MainWindow</name>
     <message>
@@ -260,22 +267,6 @@
         <translation>&amp;Om</translation>
     </message>
     <message>
-        <source>Create Track</source>
-        <translation>Skapa spår</translation>
-    </message>
-    <message>
-        <source>Create Boat</source>
-        <translation>Skapa båt</translation>
-    </message>
-    <message>
-        <source>Create Mark</source>
-        <translation>Skapa märke</translation>
-    </message>
-    <message>
-        <source>Animate</source>
-        <translation>Animera</translation>
-    </message>
-    <message>
         <source>%1 - %2 [*]</source>
         <translation></translation>
     </message>
@@ -328,21 +319,6 @@ Vill du spara dina ändringar?</translation>
     <message>
         <source>xmlscenario Files (*.xbs)</source>
         <translation>xmlscenario filer (*.xbs)</translation>
-    </message>
-    <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation>Kan inte läsa filen %1:
-%2.</translation>
-    </message>
-    <message>
-        <source>Open Scenario file</source>
-        <translation>Öppna Scenario-fil</translation>
-    </message>
-    <message>
-        <source>Parse error in file %1 at line %2, column %3:
-%4</source>
-        <translation>Fel vid parsning av fil %1 på rad %2, kolumn %3:￼%4</translation>
     </message>
     <message>
         <source>File loaded</source>
@@ -418,14 +394,6 @@ Vill du ersätta den?</translation>
     <message>
         <source>Choose &amp;Language</source>
         <translation>Välj &amp;språk</translation>
-    </message>
-    <message>
-        <source>Protest!</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Create Line</source>
-        <translation>Skapa linje</translation>
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
@@ -599,6 +567,29 @@ Vill du ersätta den?</translation>
     </message>
     <message>
         <source>470</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>RS Feva</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Finn</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Nacra 17</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Diam 24</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SituationModel</name>
+    <message>
+        <source>Protest!</source>
         <translation></translation>
     </message>
 </context>

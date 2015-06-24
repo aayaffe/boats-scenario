@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="da_DK" sourcelanguage="en">
+<TS version="2.1" language="da_DK" sourcelanguage="en">
+<context>
+    <name>ArrowGraphicsItem</name>
+    <message>
+        <source>Wind</source>
+        <translation>Vind</translation>
+    </message>
+</context>
 <context>
     <name>MainWindow</name>
     <message>
@@ -268,22 +275,6 @@
         <translation>&amp;Om</translation>
     </message>
     <message>
-        <source>Create Track</source>
-        <translation>Opret spor</translation>
-    </message>
-    <message>
-        <source>Create Boat</source>
-        <translation>Opret båd</translation>
-    </message>
-    <message>
-        <source>Create Mark</source>
-        <translation>Opret mærke</translation>
-    </message>
-    <message>
-        <source>Animate</source>
-        <translation>Animér</translation>
-    </message>
-    <message>
         <source>%1 - %2 [*]</source>
         <translation>%1 - %2 [*]</translation>
     </message>
@@ -359,22 +350,6 @@ Vil du gemme ændringerne?</translation>
         <translation>xmlscenario filer (*.xbs)</translation>
     </message>
     <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation>Kan ikke læse filen %1:
-%2.</translation>
-    </message>
-    <message>
-        <source>Open Scenario file</source>
-        <translation>Åben secnarie-fil</translation>
-    </message>
-    <message>
-        <source>Parse error in file %1 at line %2, column %3:
-%4</source>
-        <translation>Fortolkningsfejl i fil %1 linje %2, kolonne %3:
-%4</translation>
-    </message>
-    <message>
         <source>File loaded</source>
         <translation>Fil indlæst</translation>
     </message>
@@ -419,16 +394,8 @@ Vil du overskrive den?</translation>
         <translation>Afbryd</translation>
     </message>
     <message>
-        <source>Protest!</source>
-        <translation>Protest!</translation>
-    </message>
-    <message>
         <source>About Boat Scenario</source>
         <translation>Om Boat Scenario</translation>
-    </message>
-    <message>
-        <source>Create Line</source>
-        <translation>Opret linje</translation>
     </message>
     <message>
         <source>Create &amp;PolyLine</source>
@@ -551,15 +518,15 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>Laser</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Optimist</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Tornado</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Committee boat</source>
@@ -579,27 +546,50 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>Topper</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Firefly</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>29er</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>49er</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>420</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>470</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <source>RS Feva</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Finn</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Nacra 17</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Diam 24</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SituationModel</name>
+    <message>
+        <source>Protest!</source>
+        <translation>Protest!</translation>
     </message>
 </context>
 <context>

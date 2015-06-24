@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="fr">
+<TS version="2.1" language="fr">
+<context>
+    <name>ArrowGraphicsItem</name>
+    <message>
+        <source>Wind</source>
+        <translation>Vent</translation>
+    </message>
+</context>
 <context>
     <name>MainWindow</name>
     <message>
@@ -160,22 +167,6 @@
         <translation>&amp;A Propos</translation>
     </message>
     <message>
-        <source>Create Track</source>
-        <translation>Ajouter un Bateau</translation>
-    </message>
-    <message>
-        <source>Create Boat</source>
-        <translation>Ajouter une Position</translation>
-    </message>
-    <message>
-        <source>Create Mark</source>
-        <translation>Ajouter une Marque</translation>
-    </message>
-    <message>
-        <source>Animate</source>
-        <translation>Animer</translation>
-    </message>
-    <message>
         <source>&amp;File</source>
         <translation>&amp;Fichier</translation>
     </message>
@@ -198,21 +189,6 @@
     <message>
         <source>xmlscenario Files (*.xbs)</source>
         <translation>Fichiers xmlscenario (*.xbs)</translation>
-    </message>
-    <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation>Ne peut pas lire le Fichier %1: %2.</translation>
-    </message>
-    <message>
-        <source>Open Scenario file</source>
-        <translation>Ouvrir un fichier Scénario</translation>
-    </message>
-    <message>
-        <source>Parse error in file %1 at line %2, column %3:
-%4</source>
-        <translation>Erreur dans le fichier %1 ligne %2, colonne %3:
-%4</translation>
     </message>
     <message>
         <source>File loaded</source>
@@ -421,14 +397,6 @@ Voulez-vous le remplacer?</translation>
         <translation>Choisir &amp;Langue</translation>
     </message>
     <message>
-        <source>Protest!</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Create Line</source>
-        <translation>Ajouter une Ligne</translation>
-    </message>
-    <message>
         <source>Create &amp;PolyLine</source>
         <translation>Ajouter une &amp;Polyligne</translation>
     </message>
@@ -597,6 +565,29 @@ Voulez-vous le remplacer?</translation>
     </message>
     <message>
         <source>470</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>RS Feva</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Finn</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Nacra 17</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Diam 24</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SituationModel</name>
+    <message>
+        <source>Protest!</source>
         <translation></translation>
     </message>
 </context>
