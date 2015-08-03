@@ -159,6 +159,7 @@ void StateMachine::setCreateMouseTransitions() {
 
     m_moveState->addTransition(this, SIGNAL(lmbclick()), m_selectState);
     m_moveState->addTransition(this, SIGNAL(move()), m_moveState);
+    m_moveState->addTransition(this, SIGNAL(lmbMove()), m_moveState);
     m_moveState->addTransition(this, SIGNAL(rmbMove()), m_rotateState);
 
     m_rotateState->addTransition(this, SIGNAL(move()), m_moveState);

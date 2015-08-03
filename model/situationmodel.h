@@ -206,6 +206,7 @@ class SituationModel : public QObject {
         void deletePolyLine(PolyLineModel *polyline);
 
         Q_INVOKABLE void setCurPosition(QPointF pos);
+        QPointF curPosition() { return m_curPosition; }
 
         // selection mechanism
         Q_INVOKABLE void clearSelectedModels();

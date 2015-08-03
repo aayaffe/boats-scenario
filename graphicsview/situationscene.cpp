@@ -208,20 +208,20 @@ void SituationScene::keyPressEvent(QKeyEvent *event) {
     if (!m_situation->selectedModels().isEmpty()) {
         QList<PositionModel*> selectedModels = m_situation->selectedModels();
         if (event->key() == Qt::Key_Left) {
-            QPointF pos(-5,0);
-            m_situation->moveModel(pos);
+            m_situation->setCurPosition(m_situation->curPosition() + QPointF(-5,0));
+            m_situation->stateMachine()->lmbMove();
 
         } else if (event->key() == Qt::Key_Right) {
-            QPointF pos(5,0);
-            m_situation->moveModel(pos);
+            m_situation->setCurPosition(m_situation->curPosition() + QPointF(5,0));
+            m_situation->stateMachine()->lmbMove();
 
         } else if (event->key() == Qt::Key_Up) {
-            QPointF pos(0,-5);
-            m_situation->moveModel(pos);
+            m_situation->setCurPosition(m_situation->curPosition() + QPointF(0,-5));
+            m_situation->stateMachine()->lmbMove();
 
         } else if (event->key() == Qt::Key_Down) {
-            QPointF pos(0,5);
-            m_situation->moveModel(pos);
+            m_situation->setCurPosition(m_situation->curPosition() + QPointF(0,5));
+            m_situation->stateMachine()->lmbMove();
 
         } else if (event->key() == Qt::Key_Plus) {
             m_situation->undoStack()->push(new RotateModelsUndoCommand(selectedModels, 5.0));
