@@ -35,7 +35,6 @@
 #include "pointmodel.h"
 
 #include "statemachine.h"
-#include "undocommands.h"
 #include "xmlsituationreader.h"
 #include "xmlsituationwriter.h"
 
@@ -204,6 +203,36 @@ void BoatsEngine::autotrimSail() {
 void BoatsEngine::untrimSail() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
     situation->untrimSail();
+}
+
+void BoatsEngine::trimJib() {
+    SituationModel *situation = m_situationList.at(m_currentSituation);
+    situation->trimJib();
+}
+
+void BoatsEngine::autotrimJib() {
+    SituationModel *situation = m_situationList.at(m_currentSituation);
+    situation->autotrimJib();
+}
+
+void BoatsEngine::untrimJib() {
+    SituationModel *situation = m_situationList.at(m_currentSituation);
+    situation->untrimJib();
+}
+
+void BoatsEngine::trimSpin() {
+    SituationModel *situation = m_situationList.at(m_currentSituation);
+    situation->trimSpin();
+}
+
+void BoatsEngine::autotrimSpin() {
+    SituationModel *situation = m_situationList.at(m_currentSituation);
+    situation->autotrimSpin();
+}
+
+void BoatsEngine::untrimSpin() {
+    SituationModel *situation = m_situationList.at(m_currentSituation);
+    situation->untrimSpin();
 }
 
 void BoatsEngine::togglePortOverlap() {

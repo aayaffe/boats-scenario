@@ -509,6 +509,54 @@ Vil du overskrive den?</translation>
         <source>Label text:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Trim Jib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>,</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto Jib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Untrim Jib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trim Spin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+,</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto Spin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Untrim Spin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

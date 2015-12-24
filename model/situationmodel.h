@@ -166,6 +166,7 @@ class SituationModel : public QObject {
 
         Q_INVOKABLE void moveModel(QPointF pos);
         Q_INVOKABLE void headingModel(QPointF pos);
+        Q_INVOKABLE void rotateModel(qreal angle);
         Q_INVOKABLE void deleteModels();
         Q_INVOKABLE TrackModel *createTrack(QPointF pos);
         Q_INVOKABLE void deleteTrack();
@@ -174,15 +175,30 @@ class SituationModel : public QObject {
         Q_INVOKABLE PolyLineModel *createLine(QPointF pos);
         Q_INVOKABLE PointModel *createPoint(QPointF pos);
 
+        Q_INVOKABLE void setColor(QColor color);
+        Q_INVOKABLE void setShowPath();
+        Q_INVOKABLE void setSeries(Boats::Series series);
+        Q_INVOKABLE void setFollowTrack();
+        Q_INVOKABLE void addWind(qreal wind);
+        Q_INVOKABLE void setWind(int index, qreal wind);
+        Q_INVOKABLE void deleteWind(int index);
         Q_INVOKABLE void trimSail();
         Q_INVOKABLE void autotrimSail();
         Q_INVOKABLE void untrimSail();
+        Q_INVOKABLE void trimJib();
+        Q_INVOKABLE void autotrimJib();
+        Q_INVOKABLE void untrimJib();
+        Q_INVOKABLE void trimSpin();
+        Q_INVOKABLE void autotrimSpin();
+        Q_INVOKABLE void untrimSpin();
         Q_INVOKABLE void togglePortOverlap();
         Q_INVOKABLE void toggleStarboardOverlap();
         Q_INVOKABLE void toggleFlag(Boats::Flag flag);
         Q_INVOKABLE void toggleAcceleration(Boats::Acceleration acceleration);
         Q_INVOKABLE void toggleHidden();
         Q_INVOKABLE void toggleText();
+        Q_INVOKABLE void setText(QString text);
+        Q_INVOKABLE void moveText(QPointF pos);
         Q_INVOKABLE void toggleSpin();
         Q_INVOKABLE void toggleMarkSide();
         Q_INVOKABLE void toggleMarkArrow();

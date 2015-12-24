@@ -37,7 +37,6 @@
 #include "statemachine.h"
 #include "scenarioanimation.h"
 
-#include "undocommands.h"
 #include "xmlsituationreader.h"
 #include "xmlsituationwriter.h"
 
@@ -248,6 +247,30 @@ void MainWindow::createActions() {
     connect(untrimSailAction, SIGNAL(triggered()),
             engine, SLOT(untrimSail()));
 
+    trimJibAction = new QAction(this);
+    connect(trimJibAction, SIGNAL(triggered()),
+            engine, SLOT(trimJib()));
+
+    autotrimJibAction = new QAction(this);
+    connect(autotrimJibAction, SIGNAL(triggered()),
+            engine, SLOT(autotrimJib()));
+
+    untrimJibAction = new QAction(this);
+    connect(untrimJibAction, SIGNAL(triggered()),
+            engine, SLOT(untrimJib()));
+
+    trimSpinAction = new QAction(this);
+    connect(trimSpinAction, SIGNAL(triggered()),
+            engine, SLOT(trimSpin()));
+
+    autotrimSpinAction = new QAction(this);
+    connect(autotrimSpinAction, SIGNAL(triggered()),
+            engine, SLOT(autotrimSpin()));
+
+    untrimSpinAction = new QAction(this);
+    connect(untrimSpinAction, SIGNAL(triggered()),
+            engine, SLOT(untrimSpin()));
+
     togglePortOverlapAction = new QAction(this);
     togglePortOverlapAction->setCheckable(true);
     connect(togglePortOverlapAction, SIGNAL(triggered()),
@@ -399,6 +422,12 @@ void MainWindow::updateActions() {
     trimSailAction->setEnabled(selectedBoats);
     autotrimSailAction->setEnabled(selectedBoats);
     untrimSailAction->setEnabled(selectedBoats);
+    trimJibAction->setEnabled(selectedBoats);
+    autotrimJibAction->setEnabled(selectedBoats);
+    untrimJibAction->setEnabled(selectedBoats);
+    trimSpinAction->setEnabled(selectedBoats);
+    autotrimSpinAction->setEnabled(selectedBoats);
+    untrimSpinAction->setEnabled(selectedBoats);
     togglePortOverlapAction->setEnabled(selectedBoats);
     toggleStarboardOverlapAction->setEnabled(selectedBoats);
     toggleHiddenAction->setEnabled(selectedBoats);
@@ -545,6 +574,12 @@ void MainWindow::createMenus() {
     trackMenu->addAction(trimSailAction);
     trackMenu->addAction(autotrimSailAction);
     trackMenu->addAction(untrimSailAction);
+    trackMenu->addAction(trimJibAction);
+    trackMenu->addAction(autotrimJibAction);
+    trackMenu->addAction(untrimJibAction);
+    trackMenu->addAction(trimSpinAction);
+    trackMenu->addAction(autotrimSpinAction);
+    trackMenu->addAction(untrimSpinAction);
     trackMenu->addAction(togglePortOverlapAction);
     trackMenu->addAction(toggleStarboardOverlapAction);
     trackMenu->addAction(toggleHiddenAction);
@@ -599,6 +634,12 @@ void MainWindow::createMenus() {
     boatPopup->addAction(trimSailAction);
     boatPopup->addAction(autotrimSailAction);
     boatPopup->addAction(untrimSailAction);
+    boatPopup->addAction(trimJibAction);
+    boatPopup->addAction(autotrimJibAction);
+    boatPopup->addAction(untrimJibAction);
+    boatPopup->addAction(trimSpinAction);
+    boatPopup->addAction(autotrimSpinAction);
+    boatPopup->addAction(untrimSpinAction);
     boatPopup->addAction(togglePortOverlapAction);
     boatPopup->addAction(toggleStarboardOverlapAction);
     boatPopup->addAction(toggleHiddenAction);
@@ -1119,6 +1160,24 @@ void MainWindow::changeEvent(QEvent *event) {
 
         untrimSailAction->setText(tr("Untrim Sail"));
         untrimSailAction->setShortcut(tr(">"));
+
+        trimJibAction->setText(tr("Trim Jib"));
+        trimJibAction->setShortcut(tr(","));
+
+        autotrimJibAction->setText(tr("Auto Jib"));
+        autotrimJibAction->setShortcut(tr("?"));
+
+        untrimJibAction->setText(tr("Untrim Jib"));
+        untrimJibAction->setShortcut(tr("."));
+
+        trimSpinAction->setText(tr("Trim Spin"));
+        trimSpinAction->setShortcut(tr("Ctrl+,"));
+
+        autotrimSpinAction->setText(tr("Auto Spin"));
+        autotrimSpinAction->setShortcut(tr("Ctrl+?"));
+
+        untrimSpinAction->setText(tr("Untrim Spin"));
+        untrimSpinAction->setShortcut(tr("Ctrl+."));
 
         togglePortOverlapAction->setText(tr("&Port Overlap"));
         togglePortOverlapAction->setShortcut(tr("Alt+<"));

@@ -176,6 +176,12 @@ class MainWindow : public QMainWindow {
         QAction *trimSailAction;
         QAction *autotrimSailAction;
         QAction *untrimSailAction;
+        QAction *trimJibAction;
+        QAction *autotrimJibAction;
+        QAction *untrimJibAction;
+        QAction *trimSpinAction;
+        QAction *autotrimSpinAction;
+        QAction *untrimSpinAction;
         QAction *togglePortOverlapAction;
         QAction *toggleStarboardOverlapAction;
         QAction *toggleHiddenAction;

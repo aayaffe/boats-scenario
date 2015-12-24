@@ -28,8 +28,6 @@
 
 #include "situationmodel.h"
 
-#include "undocommands.h"
-
 #include <QHeaderView>
 #include <QLineEdit>
 

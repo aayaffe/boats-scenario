@@ -75,6 +75,12 @@ public slots:
     void trimSail();
     void autotrimSail();
     void untrimSail();
+    void trimJib();
+    void autotrimJib();
+    void untrimJib();
+    void trimSpin();
+    void autotrimSpin();
+    void untrimSpin();
     void togglePortOverlap();
     void toggleStarboardOverlap();
     void toggleFlag(Boats::Flag flag);

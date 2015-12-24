@@ -30,7 +30,6 @@
 #include "boats.h"
 #include "situationmodel.h"
 #include "trackmodel.h"
-#include "undocommands.h"
 
 extern int debugLevel;
 
@@ -138,7 +137,9 @@ bool TrackTableModel::setData(const QModelIndex &index, const QVariant &value, i
                 QColor newValue = value.value<QColor>();
                 TrackModel *track = m_situation->tracks()[index.row()];
                 if (newValue != track->color()) {
-                    m_situation->undoStack()->push(new SetColorUndoCommand(track, newValue));
+                    m_situation->clearSelectedModels();
+                    m_situation->addSelectedBoat(track->boats().first());
+                    m_situation->setColor(newValue);
                 }
                 return true;
             }
@@ -148,7 +149,9 @@ bool TrackTableModel::setData(const QModelIndex &index, const QVariant &value, i
                 bool newValue = (static_cast<Qt::CheckState>(value.toInt()) == Qt::Checked);
                 TrackModel *track = m_situation->tracks()[index.row()];
                 if (newValue != track->showPath()) {
-                        m_situation->undoStack()->push(new SetShowPathUndoCommand(track));
+                    m_situation->clearSelectedModels();
+                    m_situation->addSelectedBoat(track->boats().first());
+                    m_situation->setShowPath();
                     }
                     return true;
             }
@@ -160,7 +163,9 @@ bool TrackTableModel::setData(const QModelIndex &index, const QVariant &value, i
                     Boats::Series seriesValue = (Boats::Series)newValue;
                     TrackModel *track = m_situation->tracks()[index.row()];
                     if (seriesValue != track->series()) {
-                        m_situation->undoStack()->push(new SetSeriesUndoCommand(track, seriesValue));
+                        m_situation->clearSelectedModels();
+                        m_situation->addSelectedBoat(track->boats().first());
+                        m_situation->setSeries(seriesValue);
                     }
                     return true;
                 }
@@ -171,7 +176,9 @@ bool TrackTableModel::setData(const QModelIndex &index, const QVariant &value, i
                 bool newValue = (static_cast<Qt::CheckState>(value.toInt()) == Qt::Checked);
                 TrackModel *track = m_situation->tracks()[index.row()];
                 if (newValue != track->followTrack()) {
-                    m_situation->undoStack()->push(new SetFollowTrackUndoCommand(track->situation(), track));
+                    m_situation->clearSelectedModels();
+                    m_situation->addSelectedBoat(track->boats().first());
+                    m_situation->setFollowTrack();
                 }
                 return true;
             }

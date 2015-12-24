@@ -63,8 +63,7 @@ enum {
     keyPressEvent(), mousePressEvent(), mouseReleaseEvent() and
     mouseMoveEvent().
 
-    Specialised methods handle the possible events and generally use
-    Undo Framework classes to modify the ScenarioModel.
+    Specialised methods handle the possible events and modify the ScenarioModel.
 
     QGraphicsItem Objects selection is handled through setSelectedModels()
     slot, and updates the various Lists needed to determine matching Model

@@ -352,6 +352,10 @@ void SituationModel::headingModel(QPointF pos) {
     }
 }
 
+void SituationModel::rotateModel(qreal angle) {
+    m_undoStack->push(new RotateModelsUndoCommand(m_selectedModels, angle));
+}
+
 void SituationModel::deleteModels() {
     foreach (BoatModel *boat, m_selectedBoatModels) {
         TrackModel* track = boat->track();
@@ -497,6 +501,46 @@ void SituationModel::exitCreateState() {
     m_undoStack->undo();
 }
 
+
+void SituationModel::setColor(QColor color) {
+    if (!m_selectedBoatModels.isEmpty()) {
+        TrackModel *track = m_selectedBoatModels.first()->track();
+        m_undoStack->push(new SetColorUndoCommand(track, color));
+    }
+}
+
+void SituationModel::setShowPath() {
+    if (!m_selectedBoatModels.isEmpty()) {
+        TrackModel *track = m_selectedBoatModels.first()->track();
+        m_undoStack->push(new SetShowPathUndoCommand(track));
+    }
+}
+
+void SituationModel::setSeries(Boats::Series series) {
+    if (!m_selectedBoatModels.isEmpty()) {
+        TrackModel *track = m_selectedBoatModels.first()->track();
+        m_undoStack->push(new SetSeriesUndoCommand(track, series));
+    }
+}
+
+void SituationModel::setFollowTrack() {
+    if (!m_selectedBoatModels.isEmpty()) {
+        TrackModel *track = m_selectedBoatModels.first()->track();
+        m_undoStack->push(new SetFollowTrackUndoCommand(this, track));
+    }
+}
+void SituationModel::addWind(qreal wind) {
+    m_undoStack->push(new AddWindUndoCommand(&m_wind, wind));
+}
+
+void SituationModel::setWind(int index, qreal wind) {
+    m_undoStack->push(new SetWindUndoCommand(&m_wind, index, wind));
+}
+
+void SituationModel::deleteWind(int index) {
+    m_undoStack->push(new DeleteWindUndoCommand(&m_wind, index));
+}
+
 void SituationModel::trimSail() {
     if (! m_selectedBoatModels.isEmpty()) {
         qreal trim = m_selectedBoatModels[0]->trim();
@@ -531,6 +575,74 @@ void SituationModel::untrimSail() {
     }
 }
 
+void SituationModel::trimJib() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        qreal trim = m_selectedBoatModels[0]->jibTrim();
+        qreal heading = fmod(m_selectedBoatModels[0]->heading() - m_selectedBoatModels[0]->wind() + 360, 360);
+        if(heading < 0) heading +=360;
+        if (heading < 180) {
+            trim -= 5;
+        } else {
+            trim += 5;
+        }
+        m_undoStack->push(new TrimJibUndoCommand(m_selectedBoatModels, trim));
+    }
+}
+
+void SituationModel::autotrimJib() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        m_undoStack->push(new TrimJibUndoCommand(m_selectedBoatModels, 0));
+    }
+}
+
+void SituationModel::untrimJib() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        qreal trim = m_selectedBoatModels[0]->jibTrim();
+        qreal heading = fmod(m_selectedBoatModels[0]->heading() - m_selectedBoatModels[0]->wind() + 360, 360);
+        if(heading < 0) heading +=360;
+        if (heading < 180) {
+            trim += 5;
+        } else {
+            trim -= 5;
+        }
+        m_undoStack->push(new TrimJibUndoCommand(m_selectedBoatModels, trim));
+    }
+}
+
+void SituationModel::trimSpin() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        qreal trim = m_selectedBoatModels[0]->spinTrim();
+        qreal heading = fmod(m_selectedBoatModels[0]->heading() - m_selectedBoatModels[0]->wind() + 360, 360);
+        if(heading < 0) heading +=360;
+        if (heading < 180) {
+            trim -= 5;
+        } else {
+            trim += 5;
+        }
+        m_undoStack->push(new TrimSpinUndoCommand(m_selectedBoatModels, trim));
+    }
+}
+
+void SituationModel::autotrimSpin() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        m_undoStack->push(new TrimSpinUndoCommand(m_selectedBoatModels, 0));
+    }
+}
+
+void SituationModel::untrimSpin() {
+    if (! m_selectedBoatModels.isEmpty()) {
+        qreal trim = m_selectedBoatModels[0]->spinTrim();
+        qreal heading = fmod(m_selectedBoatModels[0]->heading() - m_selectedBoatModels[0]->wind() + 360, 360);
+        if(heading < 0) heading +=360;
+        if (heading < 180) {
+            trim += 5;
+        } else {
+            trim -= 5;
+        }
+        m_undoStack->push(new TrimSpinUndoCommand(m_selectedBoatModels, trim));
+    }
+}
+
 void SituationModel::togglePortOverlap() {
     if (! m_selectedBoatModels.isEmpty()) {
         m_undoStack->push(new OverlapBoatUndoCommand(this, m_selectedBoatModels, Boats::port));
@@ -556,6 +668,19 @@ void SituationModel::toggleText() {
             text = tr("Protest!");
         }
         m_undoStack->push(new SetTextUndoCommand(m_selectedModels.first(), text));
+    }
+}
+
+void SituationModel::setText(QString text) {
+    if (! m_selectedModels.isEmpty()) {
+        m_undoStack->push(new SetTextUndoCommand(m_selectedModels.first(), text));
+    }
+}
+
+void SituationModel::moveText(QPointF pos) {
+    if (! m_selectedModels.isEmpty()) {
+        PositionModel *model = m_selectedModels.first();
+        m_undoStack->push(new MoveTextUndoCommand(model, pos - model->textPosition()));
     }
 }
 

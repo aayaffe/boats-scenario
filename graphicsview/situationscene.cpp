@@ -25,7 +25,6 @@
 #include "situationscene.h"
 
 #include "commontypes.h"
-#include "undocommands.h"
 
 #include "situationmodel.h"
 #include "trackmodel.h"
@@ -181,29 +180,13 @@ void SituationScene::setAnimation() {
 
 /**
     Reacts to user keyboard actions in the Scene
-    This method modifies the associated SituationModel through the
-    concerned Undo Framework class. Handled keys are for
+    This method modifies the associated SituationModel.
+    Handled keys are for
     - heading of selected boats (+,-)
     - position of selected objects (H (left), L (right), J (down), K (up))
 */
 
 void SituationScene::keyPressEvent(QKeyEvent *event) {
-
-    if (!m_situation->selectedBoatModels().isEmpty()) {
-        QList<BoatModel*> selectedBoatModels = m_situation->selectedBoatModels();
-// Trim just the jib when ',' or '.' is pressed (TrimJibUndoCommand only trims the jib)
-// But not when Ctrl is pressed - reserve that for spinTrim
-        if (event->key() == Qt::Key_Comma && !(event->modifiers() & Qt::ControlModifier)) {
-            m_situation->undoStack()->push(new TrimJibUndoCommand(selectedBoatModels, selectedBoatModels[0]->jibTrim() - 5));
-        } else if (event->key() == Qt::Key_Period && !(event->modifiers() & Qt::ControlModifier)) {
-            m_situation->undoStack()->push(new TrimJibUndoCommand(selectedBoatModels, selectedBoatModels[0]->jibTrim() + 5));
-// Trim the spin when Ctrl+',' or Ctrl+'.' is pressed
-        }else if (event->key() == Qt::Key_Comma && (event->modifiers() & Qt::ControlModifier)) {
-            m_situation->undoStack()->push(new TrimSpinUndoCommand(selectedBoatModels, selectedBoatModels[0]->spinTrim() - 5));
-        } else if (event->key() == Qt::Key_Period && (event->modifiers() & Qt::ControlModifier)) {
-            m_situation->undoStack()->push(new TrimSpinUndoCommand(selectedBoatModels, selectedBoatModels[0]->spinTrim() + 5));
-        }
-    }
 
     if (!m_situation->selectedModels().isEmpty()) {
         QList<PositionModel*> selectedModels = m_situation->selectedModels();
@@ -224,10 +207,10 @@ void SituationScene::keyPressEvent(QKeyEvent *event) {
             m_situation->stateMachine()->lmbMove();
 
         } else if (event->key() == Qt::Key_Plus) {
-            m_situation->undoStack()->push(new RotateModelsUndoCommand(selectedModels, 5.0));
+            m_situation->rotateModel(5.0);
 
         } else if (event->key() == Qt::Key_Minus) {
-            m_situation->undoStack()->push(new RotateModelsUndoCommand(selectedModels, -5.0));
+            m_situation->rotateModel(-5.0);
 
         } else {
             QGraphicsScene::keyPressEvent(event);
@@ -339,7 +322,7 @@ void SituationScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
     m_clickState = DOUBLE;
     m_situation->stateMachine()->noState();
-    m_situation->undoStack()->undo();
+    m_situation->undo();
 }
 
 void SituationScene::mouseSelectEvent(QGraphicsSceneMouseEvent *event) {
@@ -348,6 +331,10 @@ void SituationScene::mouseSelectEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void SituationScene::setSelectedModels() {
+    if (m_situation->stateMachine()->animationState()->active()) {
+        return;
+    }
+
     m_situation->clearSelectedModels();
     foreach (QGraphicsItem *item, selectedItems()) {
         switch(item->type()) {

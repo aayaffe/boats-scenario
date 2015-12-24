@@ -29,8 +29,6 @@
 #include "trackmodel.h"
 #include "boatmodel.h"
 
-#include "undocommands.h"
-
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsScene>
@@ -82,7 +80,8 @@ void BubbleGraphicsItem::updateText(QString value) {
 void BubbleGraphicsItem::setText() {
     if (m_model->situation()) {
         if (document()->toPlainText() != m_model->text()) {
-            m_model->situation()->undoStack()->push(new SetTextUndoCommand(m_model, document()->toPlainText()));
+            m_model->situation()->addSelectedModel(m_model);
+            m_model->situation()->setText(document()->toPlainText());
             setVisible(!document()->toPlainText().isEmpty());
             setTail();
         }
@@ -166,7 +165,8 @@ void BubbleGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     }
     QGraphicsTextItem::mouseReleaseEvent(event);
     if (pos() != m_fromPosition) {
-        m_model->situation()->undoStack()->push(new MoveTextUndoCommand(m_model, pos() - m_fromPosition));
+        m_model->situation()->addSelectedModel(m_model);
+        m_model->situation()->moveText(pos());
     }
 }
 
