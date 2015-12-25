@@ -855,8 +855,10 @@ void MainWindow::unsetTab() {
 }
 
 void MainWindow::setTab(int index) {
-    unsetTab();
-    engine->setIndex(index);
+    if (index != engine->currentIndex()) {
+        unsetTab();
+        engine->setIndex(index);
+    }
     SituationModel *situation = engine->currentModel();
     SituationScene *scene = sceneList.at(index);
     SituationView *view = viewList.at(index);
