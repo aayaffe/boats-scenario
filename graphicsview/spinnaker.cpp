@@ -25,7 +25,6 @@
 #include "spinnaker.h"
 
 #include "commontypes.h"
-#include "situationmodel.h"
 #include "trackmodel.h"
 #include "boatmodel.h"
 

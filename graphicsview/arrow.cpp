@@ -26,7 +26,6 @@
 
 #include "commontypes.h"
 #include "situationscene.h"
-#include "situationmodel.h"
 #include "windmodel.h"
 
 #include <QPainter>

@@ -26,7 +26,6 @@
 #include "flag.h"
 
 #include "commontypes.h"
-#include "situationscene.h"
 
 #include <QPainter>
 

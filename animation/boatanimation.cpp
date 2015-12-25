@@ -30,7 +30,6 @@
 
 #include "angleanimation.h"
 #include "headinganimation.h"
-#include "situationmodel.h"
 #include "splineanimation.h"
 
 #include "trackmodel.h"
