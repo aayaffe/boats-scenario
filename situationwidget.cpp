@@ -50,22 +50,36 @@ SituationWidget::SituationWidget(QWidget *parent)
     optionsForm = new QFormLayout(optionsGroup);
 
     seriesCombo = new QComboBox(optionsGroup);
+    seriesCombo->addItems(Boats::seriesList());
+    connect (seriesCombo, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(setSeries(int)));
     seriesLabel = new QLabel(optionsGroup);
     optionsForm->addRow(seriesLabel, seriesCombo);
 
     laylineCheck = new QCheckBox(optionsGroup);
+    connect(laylineCheck, SIGNAL(toggled(bool)),
+            this, SLOT(setShowLayline(bool)));
     laylineCheckLabel = new QLabel(optionsGroup);
     optionsForm->addRow(laylineCheckLabel, laylineCheck);
 
     laylineSpin = new QSpinBox(optionsGroup);
+    laylineSpin->setRange(0, 359);
+    laylineSpin->setWrapping(true);
+    connect (laylineSpin, SIGNAL(valueChanged(int)),
+            this, SLOT(setLayline(int)));
     laylineSpinLabel = new QLabel(optionsGroup);
     optionsForm->addRow(laylineSpinLabel, laylineSpin);
 
     lengthSpin = new QSpinBox(optionsGroup);
+    lengthSpin->setRange(1,5);
+    connect (lengthSpin, SIGNAL(valueChanged(int)),
+            this, SLOT(setLength(int)));
     lengthSpinLabel = new QLabel(optionsGroup);
     optionsForm->addRow(lengthSpinLabel, lengthSpin);
 
     windCheck = new QCheckBox(optionsGroup);
+    connect(windCheck, SIGNAL(toggled(bool)),
+            this, SLOT(setShowWind(bool)));
     windCheckLabel = new QLabel(optionsGroup);
     optionsForm->addRow(windCheckLabel, windCheck);
 
@@ -110,6 +124,8 @@ SituationWidget::SituationWidget(QWidget *parent)
     scenarioLayout->addWidget(optionsGroup);
     scenarioLayout->addWidget(trackGroup);
     scenarioLayout->addWidget(windGroup);
+    connect(windCheck, SIGNAL(toggled(bool)),
+            windGroup, SLOT(setVisible(bool)));
 
     addTab(scenarioFrame,tr("Scenario"));
 
@@ -122,10 +138,14 @@ SituationWidget::SituationWidget(QWidget *parent)
     descriptionGrid->addLayout(descriptionForm, 0, 0);
 
     titleEdit = new QLineEdit(descriptionFrame);
+    connect (titleEdit, SIGNAL(editingFinished()),
+            this, SLOT(setTitle()));
     titleLabel = new QLabel(descriptionFrame);
     descriptionForm->addRow(titleLabel, titleEdit);
 
     rulesEdit = new QLineEdit(descriptionFrame);
+    connect (rulesEdit, SIGNAL(editingFinished()),
+            this, SLOT(setRules()));
     rulesLabel = new QLabel(descriptionFrame);
     descriptionForm->addRow(rulesLabel, rulesEdit);
 
@@ -135,6 +155,8 @@ SituationWidget::SituationWidget(QWidget *parent)
     abstractEdit = new QPlainTextEdit(descriptionFrame);
     abstractEdit->setUndoRedoEnabled(false);
     abstractEdit->setContextMenuPolicy(Qt::NoContextMenu);
+    connect(abstractEdit->document(), SIGNAL(contentsChanged()),
+            this, SLOT(setAbstract()));
     descriptionGrid->addWidget(abstractEdit,2,0);
 
     descriptionLabel = new QLabel(descriptionFrame);
@@ -143,6 +165,8 @@ SituationWidget::SituationWidget(QWidget *parent)
     descriptionEdit = new QPlainTextEdit(descriptionFrame);
     descriptionEdit->setUndoRedoEnabled(false);
     descriptionEdit->setContextMenuPolicy(Qt::NoContextMenu);
+    connect(descriptionEdit->document(), SIGNAL(contentsChanged()),
+            this, SLOT(setDescription()));
     descriptionGrid->addWidget(descriptionEdit,4,0);
 
     addTab(descriptionFrame,tr("Description"));
@@ -198,55 +222,30 @@ void SituationWidget::setSituation(SituationModel *situation) {
         update();
 
         // Scenario Group
-        connect (titleEdit, SIGNAL(editingFinished()),
-                this, SLOT(setTitle()));
         connect (situation, SIGNAL(titleChanged(QString)),
                 titleEdit, SLOT(setText(QString)));
 
-        connect (rulesEdit, SIGNAL(editingFinished()),
-                this, SLOT(setRules()));
         connect (situation, SIGNAL(rulesChanged(QString)),
                 rulesEdit, SLOT(setText(QString)));
 
-        seriesCombo->addItems(Boats::seriesList());
-        connect (seriesCombo, SIGNAL(currentIndexChanged(int)),
-                this, SLOT(setSeries(int)));
         connect (situation, SIGNAL(seriesChanged(int)),
                 seriesCombo, SLOT(setCurrentIndex(int)));
 
-        connect(laylineCheck, SIGNAL(toggled(bool)),
-                this, SLOT(setShowLayline(bool)));
         connect(situation, SIGNAL(showLaylineChanged(bool)),
                 laylineCheck, SLOT(setChecked(bool)));
 
-        laylineSpin->setRange(0, 359);
-        laylineSpin->setWrapping(true);
-        connect (laylineSpin, SIGNAL(valueChanged(int)),
-                this, SLOT(setLayline(int)));
         connect (situation, SIGNAL(laylineChanged(const int)),
                 laylineSpin, SLOT(setValue(int)));
 
-        lengthSpin->setRange(1,5);
-        connect (lengthSpin, SIGNAL(valueChanged(int)),
-                this, SLOT(setLength(int)));
         connect (situation, SIGNAL(lengthChanged(const int)),
                 lengthSpin, SLOT(setValue(int)));
 
-        connect(windCheck, SIGNAL(toggled(bool)),
-                this, SLOT(setShowWind(bool)));
         connect(&situation->wind(), SIGNAL(windVisibleChanged(bool)),
                 windCheck, SLOT(setChecked(bool)));
 
-        connect(windCheck, SIGNAL(toggled(bool)),
-                windGroup, SLOT(setVisible(bool)));
-
-        connect(abstractEdit->document(), SIGNAL(contentsChanged()),
-                this, SLOT(setAbstract()));
         connect(situation, SIGNAL(abstractChanged(const QString)),
                 this, SLOT(updateAbstract(const QString)));
 
-        connect(descriptionEdit->document(), SIGNAL(contentsChanged()),
-                this, SLOT(setDescription()));
         connect(situation, SIGNAL(descriptionChanged(const QString)),
                 this, SLOT(updateDescription(const QString)));
 
@@ -269,44 +268,34 @@ void SituationWidget::setSituation(SituationModel *situation) {
 void SituationWidget::unSetSituation() {
 
     // Scenario Group
-    disconnect(titleEdit, 0, 0, 0);
-    titleEdit->clear();
 
-    disconnect(rulesEdit, 0, 0, 0);
-    rulesEdit->clear();
-
-    disconnect(seriesCombo, 0, 0, 0);
     disconnect(m_situation, 0, seriesCombo, 0);
-    seriesCombo->clear();
-    seriesCombo->setCurrentIndex(0);
 
-    disconnect(laylineCheck, 0, 0, 0);
     disconnect(m_situation, 0, laylineCheck, 0);
-    laylineCheck->setChecked(true);
 
-    disconnect(laylineSpin,  0, 0, 0);
     disconnect(m_situation, 0, laylineSpin, 0);
-    laylineSpin->setValue(40);
 
-    disconnect(lengthSpin, 0, 0, 0);
     disconnect(m_situation, 0, lengthSpin, 0);
-    lengthSpin->setValue(3);
 
-    disconnect(windCheck, 0, 0, 0);
     disconnect(&m_situation->wind(), 0, windCheck, 0);
-    windCheck->setChecked(false);
 
     disconnect(m_situation, 0, this, 0);
-    disconnect(abstractEdit->document(), 0, 0, 0);
-    abstractEdit->clear();
-    disconnect(descriptionEdit->document(), 0, 0, 0);
-    descriptionEdit->clear();
 
     // Track Group
     disconnect(m_situation, 0, trackTableModel, 0);
     disconnect(&m_situation->wind(), 0, windTableModel, 0);
 
     m_situation = 0;
+
+    titleEdit->clear();
+    rulesEdit->clear();
+    seriesCombo->setCurrentIndex(0);
+    laylineCheck->setChecked(true);
+    laylineSpin->setValue(40);
+    lengthSpin->setValue(3);
+    windCheck->setChecked(false);
+    abstractEdit->clear();
+    descriptionEdit->clear();
 }
 
 void SituationWidget::setTitle() {
