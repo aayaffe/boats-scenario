@@ -733,7 +733,6 @@ void BoatGraphicsItem::deleteItem(BoatModel *boat) {
 }
 
 void BoatGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    static_cast<SituationScene*>(scene())->setModelPressed(m_boat);
     m_multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
     m_trackSelect = (event->modifiers() & Qt::ShiftModifier) != 0;
     bool selection = true;

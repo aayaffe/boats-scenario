@@ -85,7 +85,6 @@ void PointGraphicsItem::deleteItem(PointModel *point) {
 }
 
 void PointGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    static_cast<SituationScene*>(scene())->setModelPressed(m_point);
 
     bool selection = true;
     if ((event->modifiers() & Qt::ControlModifier) != 0) {

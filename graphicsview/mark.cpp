@@ -145,7 +145,6 @@ void MarkGraphicsItem::deleteItem(MarkModel *mark) {
 }
 
 void MarkGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    static_cast<SituationScene*>(scene())->setModelPressed(m_mark);
     m_multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
     bool selection = true;
     if (m_multiSelect) {

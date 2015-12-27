@@ -83,7 +83,6 @@ class SituationScene : public QGraphicsScene {
         SituationScene(SituationModel* situation);
         ~SituationScene() {}
 
-        void setModelPressed(PositionModel *theValue) {m_modelPressed = theValue; }
         void setDefaultPopup(QMenu *theValue) { m_defaultPopup = theValue; }
         void setBoatPopup(QMenu *theValue) { m_boatPopup = theValue; }
         void setMarkPopup(QMenu *theValue) { m_markPopup = theValue; }
@@ -125,9 +124,6 @@ class SituationScene : public QGraphicsScene {
         void mouseSelectEvent(QGraphicsSceneMouseEvent *event);
 
         SituationModel *m_situation;
-
-        /// \a m_modelPressed holds the BoatModel being pressed
-        PositionModel* m_modelPressed;
 
         /// \a m_time holds the timer used for movement filtering
         QTime m_time;

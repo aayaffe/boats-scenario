@@ -189,7 +189,6 @@ void SituationScene::setAnimation() {
 void SituationScene::keyPressEvent(QKeyEvent *event) {
 
     if (!m_situation->selectedModels().isEmpty()) {
-        QList<PositionModel*> selectedModels = m_situation->selectedModels();
         if (event->key() == Qt::Key_Left) {
             m_situation->setCurPosition(m_situation->curPosition() + QPointF(-5,0));
             m_situation->stateMachine()->lmbMove();
