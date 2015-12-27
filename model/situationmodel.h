@@ -164,16 +164,9 @@ class SituationModel : public QObject {
         Q_INVOKABLE void changeDescription(QString description);
         Q_INVOKABLE void toggleWind();
 
-        Q_INVOKABLE void moveModel(QPointF pos);
-        Q_INVOKABLE void headingModel(QPointF pos);
         Q_INVOKABLE void rotateModel(qreal angle);
         Q_INVOKABLE void deleteModels();
-        Q_INVOKABLE TrackModel *createTrack(QPointF pos);
         Q_INVOKABLE void deleteTrack();
-        Q_INVOKABLE BoatModel *createBoat(QPointF pos);
-        Q_INVOKABLE MarkModel *createMark(QPointF pos);
-        Q_INVOKABLE PolyLineModel *createLine(QPointF pos);
-        Q_INVOKABLE PointModel *createPoint(QPointF pos);
 
         Q_INVOKABLE void setColor(QColor color);
         Q_INVOKABLE void setShowPath();

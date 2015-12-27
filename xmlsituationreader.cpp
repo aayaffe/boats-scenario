@@ -297,7 +297,9 @@ void XmlSituationReader::readMark(SituationModel *situation) {
                 discarded.append(readUnknownElement());
         }
     }
-    MarkModel *mark = situation->createMark(pos);
+    AddMarkUndoCommand *command = new AddMarkUndoCommand(situation, pos);
+    situation->undoStack()->push(command);
+    MarkModel *mark = command->mark();
     mark->setColor(color);
     mark->setZone(zone);
     if (length != 0) {
@@ -361,7 +363,9 @@ void XmlSituationReader::readPoint(SituationModel *situation, PolyLineModel *pol
                 discarded.append(readUnknownElement());
         }
     }
-    PointModel *point = situation->createPoint(pos);
+    AddPointUndoCommand *command = new AddPointUndoCommand(polyLine, pos);
+    situation->undoStack()->push(command);
+    PointModel *point = command->point();
     point->setTextPosition(textPos);
     point->setText(text);
     point->setLaylines(laylines);
