@@ -105,9 +105,6 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_bubble holds the bubble to display
         BubbleGraphicsItem *m_bubble;
 
-        /// \a m_selected holds selection information
-        bool m_selected;
-
         /// \a m_order holds the stacking order in the mark list
         int m_order;
 

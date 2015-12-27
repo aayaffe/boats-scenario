@@ -82,9 +82,6 @@ class PointGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_bubble holds the bubble to display
         BubbleGraphicsItem *m_bubble;
 
-        /// \a m_selected holds selection information
-        bool m_selected;
-
         QPolygon m_points;
 
         /// \a m_laylines holds the laylines for the mark

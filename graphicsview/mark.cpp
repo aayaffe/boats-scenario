@@ -46,7 +46,6 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
         m_length(mark->length()),
         m_boatLength(Boats::seriesSizeList()[m_mark->situation()->situationSeries()]),
         m_bubble(new BubbleGraphicsItem(m_mark, this)),
-        m_selected(false),
         m_order(mark->order()),
         m_laylines(new LaylinesGraphicsItem(m_mark, this)),
         m_heading(mark->heading()),

@@ -147,9 +147,6 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_series holds the series of the TrackModel
         Boats::Series m_series;
 
-        /// \a m_selected holds selection information
-        bool m_selected;
-
         /// \a m_order holds the stacking order in the TrackModel
         int m_order;
 

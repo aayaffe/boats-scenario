@@ -56,7 +56,6 @@ BoatGraphicsItem::BoatGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         m_hidden(false),
         m_bubble(new BubbleGraphicsItem(m_boat, this)),
         m_series(Boats::unknown),
-        m_selected(false),
         m_order(0),
         m_numberPath(new QGraphicsPathItem(this)),
         m_laylines(new LaylinesGraphicsItem(boat, this)) {
