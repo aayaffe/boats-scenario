@@ -92,6 +92,11 @@ void PointGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     }
 
     setSelected(selection);
+    if (selection) {
+        m_point->situation()->addSelectedPoint(m_point);
+    } else {
+        m_point->situation()->removeSelectedModel(m_point);
+    }
 }
 
 void PointGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {

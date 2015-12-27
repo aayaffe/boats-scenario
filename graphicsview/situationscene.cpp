@@ -286,6 +286,12 @@ void SituationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
     if (debugLevel & 1 << VIEW) std::cout << "Mouse Release " << m_situation->selectedModels().size() << std::endl;
+
+    // do not deliver events in animation mode
+    if (m_situation->stateMachine()->animationState()->active()) {
+        return;
+    }
+
     bool click = (m_clickTime.elapsed() < 250);
     if (click && (event->button() == Qt::RightButton
                 || (event->button() == Qt::LeftButton
@@ -335,35 +341,6 @@ void SituationScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void SituationScene::setSelectedModels() {
-    if (m_situation->stateMachine()->animationState()->active()) {
-        return;
-    }
-
-    m_situation->clearSelectedModels();
-    foreach (QGraphicsItem *item, selectedItems()) {
-        switch(item->type()) {
-            case BOAT_TYPE: {
-                BoatModel *boat = (qgraphicsitem_cast<BoatGraphicsItem*>(item))->boat();
-                m_situation->addSelectedBoat(boat);
-                }
-                break;
-            case MARK_TYPE: {
-                MarkModel *mark = (qgraphicsitem_cast<MarkGraphicsItem*>(item))->mark();
-                m_situation->addSelectedMark(mark);
-                }
-                break;
-            case POINT_TYPE: {
-                PointModel *point = (qgraphicsitem_cast<PointGraphicsItem*>(item))->point();
-                m_situation->addSelectedPoint(point);
-                }
-                break;
-            case ARROW_TYPE: {
-                WindModel *wind = &m_situation->wind();
-                m_situation->addSelectedModel(wind);
-                }
-                break;
-        }
-    }
     if (debugLevel & 1 << VIEW) std::cout << "SelectedModels update " << m_situation->selectedModels().size() << std::endl;
     emit selectedModelsChanged();
 }

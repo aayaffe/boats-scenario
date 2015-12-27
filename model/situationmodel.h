@@ -223,6 +223,7 @@ class SituationModel : public QObject {
         Q_INVOKABLE void addSelectedMark(MarkModel *mark);
         Q_INVOKABLE void addSelectedPoint(PointModel *point);
         Q_INVOKABLE void addSelectedModel(PositionModel *position);
+        Q_INVOKABLE void removeSelectedModel(PositionModel *position);
 
         void setLookDirection(qreal theValue);
         void setTilt(qreal theValue);

@@ -751,3 +751,10 @@ void SituationModel::addSelectedPoint(PointModel *point) {
 void SituationModel::addSelectedModel(PositionModel *position) {
     m_selectedModels << position;
 }
+
+void SituationModel::removeSelectedModel(PositionModel *position) {
+    m_selectedModels.removeOne(position);
+    m_selectedBoatModels.removeOne(qobject_cast<BoatModel*>(position));
+    m_selectedMarkModels.removeOne(qobject_cast<MarkModel*>(position));
+    m_selectedPointModels.removeOne(qobject_cast<PointModel*>(position));
+}

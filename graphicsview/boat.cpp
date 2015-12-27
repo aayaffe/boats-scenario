@@ -744,6 +744,11 @@ void BoatGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (m_trackSelect) {
         m_boat->track()->setSelected(selection);
     } else {
+        if (selection) {
+            m_boat->situation()->addSelectedBoat(m_boat);
+        } else {
+            m_boat->situation()->removeSelectedModel(m_boat);
+        }
         setSelected(selection);
     }
 

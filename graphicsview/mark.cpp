@@ -153,6 +153,11 @@ void MarkGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     }
 
     setSelected(selection);
+    if (selection) {
+        m_mark->situation()->addSelectedMark(m_mark);
+    } else {
+        m_mark->situation()->removeSelectedModel(m_mark);
+    }
 
     update();
 }
