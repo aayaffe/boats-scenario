@@ -73,6 +73,7 @@ StateMachine::StateMachine(QObject *parent) :
     m_parallelEditionState->setChildMode(QStateMachine::ParallelStates);
     m_editingState->setInitialState(m_noStateState);
     m_editingState->addTransition(this, SIGNAL(animate()), m_animationState);
+    m_editingState->addTransition(this, SIGNAL(noState()), m_noStateState);
     m_mouseState->setInitialState(m_selectState);
     m_selectionState->setInitialState(m_noSelectionState);
 
@@ -88,7 +89,6 @@ StateMachine::StateMachine(QObject *parent) :
     m_noStateState->addTransition(this, SIGNAL(createPoint()), m_createPointState);
 
     m_createTrackState->setToggable(true);
-    m_createTrackState->addTransition(this, SIGNAL(noState()), m_noStateState);
     m_createTrackState->addTransition(this, SIGNAL(lmbclick()), m_createBoatState);
     m_createTrackState->addTransition(this, SIGNAL(createTrack()), m_noStateState);
     m_createTrackState->addTransition(this, SIGNAL(createBoat()), m_createBoatState);
@@ -96,7 +96,6 @@ StateMachine::StateMachine(QObject *parent) :
     m_createTrackState->addTransition(this, SIGNAL(createLine()), m_createLineState);
 
     m_createBoatState->setToggable(true);
-    m_createBoatState->addTransition(this, SIGNAL(noState()), m_noStateState);
     m_createBoatState->addTransition(this, SIGNAL(lmbclick()), m_createBoatState);
     m_createBoatState->addTransition(this, SIGNAL(createTrack()), m_createTrackState);
     m_createBoatState->addTransition(this, SIGNAL(createBoat()), m_noStateState);
@@ -104,14 +103,12 @@ StateMachine::StateMachine(QObject *parent) :
     m_createBoatState->addTransition(this, SIGNAL(createLine()), m_createLineState);
 
     m_createMarkState->setToggable(true);
-    m_createMarkState->addTransition(this, SIGNAL(noState()), m_noStateState);
     m_createMarkState->addTransition(this, SIGNAL(lmbclick()), m_createMarkState);
     m_createMarkState->addTransition(this, SIGNAL(createTrack()), m_createTrackState);
     m_createMarkState->addTransition(this, SIGNAL(createMark()), m_noStateState);
     m_createMarkState->addTransition(this, SIGNAL(createLine()), m_createLineState);
 
     m_createLineState->setToggable(true);
-    m_createLineState->addTransition(this, SIGNAL(noState()), m_noStateState);
     m_createLineState->addTransition(this, SIGNAL(lmbclick()), m_createPointState);
     m_createLineState->addTransition(this, SIGNAL(createTrack()), m_createTrackState);
     m_createLineState->addTransition(this, SIGNAL(createMark()), m_createMarkState);
@@ -119,7 +116,6 @@ StateMachine::StateMachine(QObject *parent) :
     m_createLineState->addTransition(this, SIGNAL(createPoint()), m_createPointState);
 
     m_createPointState->setToggable(true);
-    m_createPointState->addTransition(this, SIGNAL(noState()), m_noStateState);
     m_createPointState->addTransition(this, SIGNAL(lmbclick()), m_createPointState);
     m_createPointState->addTransition(this, SIGNAL(createTrack()), m_createTrackState);
     m_createPointState->addTransition(this, SIGNAL(createMark()), m_createMarkState);
