@@ -220,9 +220,15 @@ void SituationScene::keyPressEvent(QKeyEvent *event) {
 }
 
 void SituationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    if (debugLevel & 1 << VIEW) std::cout << "Mouse Press " << m_situation->selectedModels().size() << std::endl;
 
-    mouseSelectEvent(event);
+    // if we don't use Ctrl, then clear selection
+    if ((event->modifiers() & Qt::ControlModifier) == 0) {
+        m_situation->clearSelectedModels();
+        clearSelection();
+    }
 
+    QGraphicsScene::mousePressEvent(event);
     m_clickTime.start();
 }
 
@@ -279,6 +285,7 @@ void SituationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
+    if (debugLevel & 1 << VIEW) std::cout << "Mouse Release " << m_situation->selectedModels().size() << std::endl;
     bool click = (m_clickTime.elapsed() < 250);
     if (click && (event->button() == Qt::RightButton
                 || (event->button() == Qt::LeftButton
@@ -315,6 +322,9 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         m_situation->stateMachine()->lmbclick();
     }
+    if (m_situation->selectedModels().empty()) {
+        m_situation->stateMachine()->clearSelection();
+    }
 }
 
 void SituationScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
@@ -322,11 +332,6 @@ void SituationScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
     m_clickState = DOUBLE;
     m_situation->stateMachine()->noState();
     m_situation->undo();
-}
-
-void SituationScene::mouseSelectEvent(QGraphicsSceneMouseEvent *event) {
-    // propagate mouse event first for selected items
-    QGraphicsScene::mousePressEvent(event);
 }
 
 void SituationScene::setSelectedModels() {

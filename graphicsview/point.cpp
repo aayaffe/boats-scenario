@@ -89,10 +89,9 @@ void PointGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     bool selection = true;
     if ((event->modifiers() & Qt::ControlModifier) != 0) {
         selection = !isSelected();
-    } else {
-        scene()->clearSelection();
     }
-    QGraphicsItem::setSelected(selection);
+
+    setSelected(selection);
 }
 
 void PointGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {

@@ -120,9 +120,6 @@ class SituationScene : public QGraphicsScene {
         void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
     private:
-        // Specialised Event methods
-        void mouseSelectEvent(QGraphicsSceneMouseEvent *event);
-
         SituationModel *m_situation;
 
         /// \a m_time holds the timer used for movement filtering

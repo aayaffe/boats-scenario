@@ -729,7 +729,6 @@ void SituationModel::clearSelectedModels() {
     m_selectedBoatModels.clear();
     m_selectedMarkModels.clear();
     m_selectedPointModels.clear();
-    m_stateMachine->clearSelection();
 }
 
 void SituationModel::addSelectedBoat(BoatModel *boat) {
