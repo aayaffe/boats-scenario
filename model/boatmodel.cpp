@@ -108,6 +108,7 @@ qreal BoatModel::trimmedSailAngle() const {
 }
 
 void BoatModel::setTrimmedSailAngle(qreal theValue) {
+    m_trim = theValue - sailAngle();
     emit trimmedSailAngleChanged(theValue);
 }
 
@@ -132,6 +133,7 @@ qreal BoatModel::trimmedJibAngle() const {
 }
 
 void BoatModel::setTrimmedJibAngle(qreal theValue) {
+    m_jibTrim = theValue - jibAngle();
     emit trimmedJibAngleChanged(theValue);
 }
 
@@ -176,6 +178,7 @@ qreal BoatModel::trimmedSpinAngle() const {
 }
 
 void BoatModel::setTrimmedSpinAngle(qreal theValue) {
+    m_spinTrim = theValue - spinAngle();
     emit trimmedSpinAngleChanged(theValue);
 }
 
