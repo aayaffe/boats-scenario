@@ -25,6 +25,7 @@ SOURCES += \
 qml {
     TARGET = boats-qml
     QT += quick qml widgets
+    DEFINES += QML
 
     SOURCES += \
         main_qml.cpp
@@ -32,11 +33,11 @@ qml {
     qml_files.files = boats.qml
     INSTALL += qml_files
 }
+
 else {
     TARGET = boats
     QT += widgets printsupport
 
-    include(animation/animation.pri)
     include(graphicsview/graphicsview.pri)
     include(itemviews/itemviews.pri)
     include(locale/locale.pri)
@@ -62,12 +63,17 @@ else {
     }
 
     PRE_TARGETDEPS += compiler_updateqm_make_all
+
+    QMAKE_CFLAGS_RELEASE += -fvisibility=hidden
+    QMAKE_CXXFLAGS_RELEASE += -fvisibility=hidden -fvisibility-inlines-hidden
+
 }
 
+include(animation/animation.pri)
 include(model/model.pri)
 INCLUDEPATH += $$PWD
 
-RESOURCES = images.qrc
+RESOURCES += images.qrc
 
 mac {
     QMAKE_LFLAGS += -static
@@ -107,14 +113,13 @@ unix_deploy {
     INSTALLS += translations
 }
 else {
-    RESOURCES += locales.qrc
-    TRANSLATEDIR = ":/locale"
+    !qml {
+        RESOURCES += locales.qrc
+        TRANSLATEDIR = ":/locale"
+    }
 }
 
 DEFINES += TRANSLATEDIR=\\\"$${TRANSLATEDIR}\\\"
 
 MOC_DIR = .moc/
 OBJECTS_DIR = .obj/
-
-QMAKE_CFLAGS_RELEASE += -fvisibility=hidden
-QMAKE_CXXFLAGS_RELEASE += -fvisibility=hidden -fvisibility-inlines-hidden

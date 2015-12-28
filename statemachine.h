@@ -86,17 +86,17 @@ public:
 signals:
     void edit();
     void animate();
-    void noState();
+    Q_INVOKABLE void noState();
     void createTrack();
     void createBoat();
     void createMark();
     void createLine();
     void createPoint();
-    void move();
-    void lmbMove();
-    void rmbMove();
-    void lmbclick();
-    void rmbclick();
+    Q_INVOKABLE void move();
+    Q_INVOKABLE void lmbMove();
+    Q_INVOKABLE void rmbMove();
+    Q_INVOKABLE void lmbclick();
+    Q_INVOKABLE void rmbclick();
     void selectBoat();
     void selectPoint();
     void clearSelection();
