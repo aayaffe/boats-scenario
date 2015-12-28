@@ -79,6 +79,8 @@ void ScenarioAnimation::setAnimation() {
         m_windAnimation->addAnimation(wind);
     }
 
+    setCurrentTime(0);
+
 }
 
 void ScenarioAnimation::unsetAnimation() {

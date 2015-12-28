@@ -133,6 +133,7 @@ StateMachine::StateMachine(QObject *parent) :
 
     m_playState->addTransition(this, SIGNAL(stop()), m_stopState);
     m_playState->addTransition(this, SIGNAL(pause()), m_pauseState);
+    m_playState->addTransition(this, SIGNAL(play()), m_pauseState);
 
     m_pauseState->setToggable(true);
     m_pauseState->addTransition(this, SIGNAL(stop()), m_stopState);

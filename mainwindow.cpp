@@ -350,20 +350,20 @@ void MainWindow::createActions() {
     startAction->setIcon(QIcon(":/images/player_play.png"));
     startAction->setEnabled(false);
     connect(startAction, SIGNAL(triggered()),
-            this, SLOT(play()));
+            engine, SLOT(play()));
 
     pauseAction  = new QAction(this);
     pauseAction->setIcon(QIcon(":/images/player_pause.png"));
     pauseAction->setEnabled(false);
     pauseAction->setCheckable(true);
-    connect(pauseAction, SIGNAL(triggered(bool)),
-            this, SLOT(pause(bool)));
+    connect(pauseAction, SIGNAL(triggered()),
+            engine, SLOT(pause()));
 
     stopAction = new QAction(this);
     stopAction->setIcon(QIcon(":/images/player_stop.png"));
     stopAction->setEnabled(false);
     connect(stopAction, SIGNAL(triggered()),
-            this, SLOT(stop()));
+            engine, SLOT(stop()));
 
     loopAction = new QAction(this);
     loopAction->setIcon(QIcon(":/images/player_loop.png"));
@@ -1646,7 +1646,7 @@ void MainWindow::animate(bool state, bool interactive) {
 
     if (state) {
         if(!situation->stateMachine()->animationState()->isActive()) {
-            situation->stateMachine()->animate();
+            engine->animate();
 
             undoAction->setEnabled(false);
             redoAction->setEnabled(false);
@@ -1657,7 +1657,6 @@ void MainWindow::animate(bool state, bool interactive) {
             connect(animationSlider, SIGNAL(valueChanged(int)),
                     situation->animation(), SLOT(setCurrentTime(int)));
 
-            situation->animation()->setCurrentTime(0);
             if (interactive) {
                 if (!toggleAnimationToolbarAction->isChecked()) {
                     toggleAnimationToolbarAction->setChecked(true);
@@ -1668,7 +1667,7 @@ void MainWindow::animate(bool state, bool interactive) {
             }
     } else {
         if(situation->stateMachine()->animationState()->isActive()) {
-            situation->stateMachine()->noState();
+            engine->animate();
 
             undoAction->setEnabled(situation->undoStack()->canUndo());
             redoAction->setEnabled(situation->undoStack()->canRedo());
@@ -1680,26 +1679,6 @@ void MainWindow::animate(bool state, bool interactive) {
             situation->animation()->stop();
         }
     }
-}
-
-void MainWindow::play() {
-    if (debugLevel & 1 << ANIMATION) std::cout << "playing" << std::endl;
-    SituationModel *situation = engine->currentModel();
-    situation->stateMachine()->play();
-}
-
-void MainWindow::pause(bool pause) {
-    Q_UNUSED(pause);
-    if (debugLevel & 1 << ANIMATION) std::cout << "pausing" << std::endl;
-    SituationModel *situation = engine->currentModel();
-    situation->stateMachine()->pause();
-}
-
-void MainWindow::stop() {
-    if (debugLevel & 1 << ANIMATION) std::cout << "stopping" << std::endl;
-    SituationModel *situation = engine->currentModel();
-    situation->stateMachine()->stop();
-    situation->animation()->setCurrentTime(0);
 }
 
 void MainWindow::loop(bool loop) {

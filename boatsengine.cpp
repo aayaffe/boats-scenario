@@ -35,6 +35,7 @@
 #include "pointmodel.h"
 
 #include "statemachine.h"
+#include "scenarioanimation.h"
 #include "xmlsituationreader.h"
 #include "xmlsituationwriter.h"
 
@@ -188,6 +189,30 @@ void BoatsEngine::addPolyLine() {
 void BoatsEngine::addPoint() {
     SituationModel *situation = m_situationList.at(m_currentSituation);
     situation->stateMachine()->createPoint();
+}
+
+void BoatsEngine::animate() {
+    SituationModel *situation = m_situationList.at(m_currentSituation);
+    situation->stateMachine()->animate();
+}
+
+void BoatsEngine::play() {
+    if (debugLevel & 1 << ANIMATION) std::cout << "playing" << std::endl;
+    SituationModel *situation = m_situationList.at(m_currentSituation);
+    situation->stateMachine()->play();
+}
+
+void BoatsEngine::pause() {
+    if (debugLevel & 1 << ANIMATION) std::cout << "pausing" << std::endl;
+    SituationModel *situation = m_situationList.at(m_currentSituation);
+    situation->stateMachine()->pause();
+}
+
+void BoatsEngine::stop() {
+    if (debugLevel & 1 << ANIMATION) std::cout << "stopping" << std::endl;
+    SituationModel *situation = m_situationList.at(m_currentSituation);
+    situation->stateMachine()->stop();
+    situation->animation()->setCurrentTime(0);
 }
 
 void BoatsEngine::trimSail() {

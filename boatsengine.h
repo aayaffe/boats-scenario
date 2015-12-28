@@ -70,6 +70,10 @@ public slots:
     void addMark();
     void addPolyLine();
     void addPoint();
+    void animate();
+    void play();
+    void pause();
+    void stop();
 
     // Boat actions
     void trimSail();

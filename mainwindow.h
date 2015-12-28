@@ -93,9 +93,6 @@ class MainWindow : public QMainWindow {
 
         // Animation actions
         void animate(bool state, bool interactive=true);
-        void play();
-        void pause(bool pause);
-        void stop();
         void loop(bool loop);
         void changeAnimationState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 
