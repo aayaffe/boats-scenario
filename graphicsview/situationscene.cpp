@@ -110,6 +110,8 @@ SituationScene::SituationScene(SituationModel *situation)
     connect(situation->stateMachine()->animationState(), SIGNAL(entered()),
             this, SLOT(setAnimation()));
 
+    connect(situation->stateMachine()->noSelectionState(), SIGNAL(entered()),
+            this, SLOT(clearSelection()));
 }
 
 void SituationScene::addTrack(TrackModel *track) {

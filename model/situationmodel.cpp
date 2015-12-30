@@ -469,6 +469,8 @@ void SituationModel::setCurPosition(QPointF pos) {
 void SituationModel::exitCreateState() {
     m_undoStack->endMacro();
     m_undoStack->undo();
+    clearSelectedModels();
+    m_stateMachine->clearSelection();
 }
 
 
