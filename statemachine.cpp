@@ -49,25 +49,25 @@ StateMachine::StateMachine(QObject *parent) :
     m_pauseState(new EnableState(m_animationState))
 {
     m_parallelEditionState->setObjectName("ParallelEdition");
-    m_editingState->setObjectName("Editing");
+    m_editingState->setObjectName("Edition");
     m_mouseState->setObjectName("Mouse");
     m_animationState->setObjectName("ANIMATE");
-    m_noStateState->setObjectName("NO_STATE");
-    m_createState->setObjectName("Create");
-    m_createTrackState->setObjectName("CREATE_TRACK");
-    m_createBoatState->setObjectName("CREATE_BOAT");
-    m_createMarkState->setObjectName("CREATE_MARK");
-    m_createLineState->setObjectName("CREATE_LINE");
-    m_createPointState->setObjectName("CREATE_POINT");
-    m_selectState->setObjectName("Select");
-    m_moveState->setObjectName("Move");
-    m_rotateState->setObjectName("Rotate");
-    m_noSelectionState->setObjectName("No Selection");
-    m_boatSelectionState->setObjectName("Boat Selection");
-    m_pointSelectionState->setObjectName("Point Selection");
-    m_stopState->setObjectName("STOP");
-    m_playState->setObjectName("PLAY");
-    m_pauseState->setObjectName("PAUSE");
+    m_noStateState->setObjectName("Edition_NO_STATE");
+    m_createState->setObjectName("Edition_Create");
+    m_createTrackState->setObjectName("Edition_CREATE_TRACK");
+    m_createBoatState->setObjectName("Edition_CREATE_BOAT");
+    m_createMarkState->setObjectName("Edition_CREATE_MARK");
+    m_createLineState->setObjectName("Edition_CREATE_LINE");
+    m_createPointState->setObjectName("Edition_CREATE_POINT");
+    m_selectState->setObjectName("Mouse_Select");
+    m_moveState->setObjectName("Mouse_Move");
+    m_rotateState->setObjectName("Mouse_Rotate");
+    m_noSelectionState->setObjectName("Mouse_Select_No Selection");
+    m_boatSelectionState->setObjectName("Mouse_Select_Boat");
+    m_pointSelectionState->setObjectName("Mouse_Select_Point");
+    m_stopState->setObjectName("Animation_STOP");
+    m_playState->setObjectName("Animation_PLAY");
+    m_pauseState->setObjectName("Animation_PAUSE");
 
     setInitialState(m_parallelEditionState);
     m_parallelEditionState->setChildMode(QStateMachine::ParallelStates);
