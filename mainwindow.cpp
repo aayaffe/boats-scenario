@@ -419,27 +419,13 @@ void MainWindow::updateActions() {
     bool selectedBoats = !situation->selectedBoatModels().isEmpty();
     bool selectedMarks = !situation->selectedMarkModels().isEmpty();
 
-    trimSailAction->setEnabled(selectedBoats);
-    autotrimSailAction->setEnabled(selectedBoats);
-    untrimSailAction->setEnabled(selectedBoats);
-    trimJibAction->setEnabled(selectedBoats);
-    autotrimJibAction->setEnabled(selectedBoats);
-    untrimJibAction->setEnabled(selectedBoats);
-    trimSpinAction->setEnabled(selectedBoats);
-    autotrimSpinAction->setEnabled(selectedBoats);
-    untrimSpinAction->setEnabled(selectedBoats);
-    togglePortOverlapAction->setEnabled(selectedBoats);
-    toggleStarboardOverlapAction->setEnabled(selectedBoats);
-    toggleHiddenAction->setEnabled(selectedBoats);
     toggleTextAction->setEnabled(selectedItems);
-    flagMenu->setEnabled(selectedBoats);
-    accelerationMenu->setEnabled(selectedBoats);
+
     toggleMarkSideAction->setEnabled(selectedMarks);
     toggleMarkArrowAction->setEnabled(selectedMarks);
     toggleMarkLabelAction->setEnabled(selectedMarks);
     setMarkColorAction->setEnabled(selectedMarks);
     editMarkLabelAction->setEnabled(selectedMarks);
-    deleteTrackAction->setEnabled(selectedBoats);
     deleteAction->setEnabled(selectedItems);
 
     bool allPortSet = 1;
@@ -881,6 +867,66 @@ void MainWindow::setTab(int index) {
             addBoatAction, SLOT(setChecked(bool)));
     addBoatAction->setEnabled(machine->boatSelectionState()->isActive());
     addBoatAction->setChecked(machine->createBoatState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            trimSailAction, SLOT(setEnabled(bool)));
+    trimSailAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            autotrimSailAction, SLOT(setEnabled(bool)));
+    autotrimSailAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            untrimSailAction, SLOT(setEnabled(bool)));
+    untrimSailAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            trimJibAction, SLOT(setEnabled(bool)));
+    trimJibAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            autotrimJibAction, SLOT(setEnabled(bool)));
+    autotrimJibAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            untrimJibAction, SLOT(setEnabled(bool)));
+    untrimJibAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            trimSpinAction, SLOT(setEnabled(bool)));
+    trimSpinAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            autotrimSpinAction, SLOT(setEnabled(bool)));
+    autotrimSpinAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            untrimSpinAction, SLOT(setEnabled(bool)));
+    untrimSpinAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            togglePortOverlapAction, SLOT(setEnabled(bool)));
+    togglePortOverlapAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            toggleStarboardOverlapAction, SLOT(setEnabled(bool)));
+    toggleStarboardOverlapAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            toggleHiddenAction, SLOT(setEnabled(bool)));
+    toggleHiddenAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            flagMenu, SLOT(setEnabled(bool)));
+    flagMenu->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            accelerationMenu, SLOT(setEnabled(bool)));
+    accelerationMenu->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            deleteTrackAction, SLOT(setEnabled(bool)));
+    deleteTrackAction->setEnabled(machine->boatSelectionState()->isActive());
 
     connect(machine->createMarkState(), SIGNAL(enabledChanged(bool)),
             addMarkAction, SLOT(setEnabled(bool)));
