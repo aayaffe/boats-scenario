@@ -330,9 +330,6 @@ void SituationScene::mouseClickEvent(QGraphicsSceneMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         m_situation->stateMachine()->lmbclick();
     }
-    if (m_situation->selectedModels().empty()) {
-        m_situation->stateMachine()->clearSelection();
-    }
 }
 
 void SituationScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {

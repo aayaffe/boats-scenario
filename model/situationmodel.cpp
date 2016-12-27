@@ -470,7 +470,6 @@ void SituationModel::exitCreateState() {
     m_undoStack->endMacro();
     m_undoStack->undo();
     clearSelectedModels();
-    m_stateMachine->clearSelection();
 }
 
 
@@ -733,6 +732,7 @@ void SituationModel::clearSelectedModels() {
     m_selectedBoatModels.clear();
     m_selectedMarkModels.clear();
     m_selectedPointModels.clear();
+    m_stateMachine->clearSelection();
 }
 
 void SituationModel::addSelectedBoat(BoatModel *boat) {
