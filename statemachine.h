@@ -50,6 +50,7 @@ class StateMachine : public QStateMachine
     Q_PROPERTY(EnableState* moveState READ moveState CONSTANT)
     Q_PROPERTY(EnableState* rotateState READ rotateState CONSTANT)
 
+    Q_PROPERTY(EnableState* noSelectionState READ noSelectionState CONSTANT)
     Q_PROPERTY(EnableState* boatSelectionState READ boatSelectionState CONSTANT)
     Q_PROPERTY(EnableState* pointSelectionState READ pointSelectionState CONSTANT)
 
