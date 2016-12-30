@@ -744,6 +744,7 @@ void SituationModel::addSelectedBoat(BoatModel *boat) {
 void SituationModel::addSelectedMark(MarkModel *mark) {
     m_selectedMarkModels << mark;
     m_selectedModels << mark;
+    m_stateMachine->selectMark();
 }
 
 void SituationModel::addSelectedPoint(PointModel *point) {

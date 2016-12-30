@@ -52,6 +52,7 @@ class StateMachine : public QStateMachine
 
     Q_PROPERTY(EnableState* noSelectionState READ noSelectionState CONSTANT)
     Q_PROPERTY(EnableState* boatSelectionState READ boatSelectionState CONSTANT)
+    Q_PROPERTY(EnableState* markSelectionState READ markSelectionState CONSTANT)
     Q_PROPERTY(EnableState* pointSelectionState READ pointSelectionState CONSTANT)
 
     Q_PROPERTY(EnableState* stopState READ stopState CONSTANT)
@@ -74,12 +75,16 @@ public:
     EnableState *createMarkState();
     EnableState *createLineState();
     EnableState *createPointState();
+
     EnableState *selectState();
     EnableState *moveState();
     EnableState *rotateState();
+
     EnableState *noSelectionState();
     EnableState *boatSelectionState();
+    EnableState *markSelectionState();
     EnableState *pointSelectionState();
+
     EnableState *stopState();
     EnableState *playState();
     EnableState *pauseState();
@@ -98,6 +103,7 @@ signals:
     Q_INVOKABLE void lmbclick();
     Q_INVOKABLE void rmbclick();
     void selectBoat();
+    void selectMark();
     void selectPoint();
     void clearSelection();
     void stop();
@@ -131,6 +137,7 @@ private:
 
     EnableState* m_noSelectionState;
     EnableState* m_boatSelectionState;
+    EnableState* m_markSelectionState;
     EnableState* m_pointSelectionState;
 
     EnableState* m_stopState;

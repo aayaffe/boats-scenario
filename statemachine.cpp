@@ -43,6 +43,7 @@ StateMachine::StateMachine(QObject *parent) :
     m_rotateState(new EnableState(m_mouseState)),
     m_noSelectionState(new EnableState(m_selectionState)),
     m_boatSelectionState(new EnableState(m_selectionState)),
+    m_markSelectionState(new EnableState(m_selectionState)),
     m_pointSelectionState(new EnableState(m_selectionState)),
     m_stopState(new EnableState(m_animationState)),
     m_playState(new EnableState(m_animationState)),
@@ -64,6 +65,7 @@ StateMachine::StateMachine(QObject *parent) :
     m_rotateState->setObjectName("Mouse_Rotate");
     m_noSelectionState->setObjectName("Mouse_Select_No Selection");
     m_boatSelectionState->setObjectName("Mouse_Select_Boat");
+    m_markSelectionState->setObjectName("Mouse_Select_Mark");
     m_pointSelectionState->setObjectName("Mouse_Select_Point");
     m_stopState->setObjectName("Animation_STOP");
     m_playState->setObjectName("Animation_PLAY");
@@ -123,9 +125,12 @@ StateMachine::StateMachine(QObject *parent) :
     m_createPointState->addTransition(this, SIGNAL(createPoint()), m_noStateState);
 
     m_noSelectionState->addTransition(this, SIGNAL(selectBoat()), m_boatSelectionState);
+    m_noSelectionState->addTransition(this, SIGNAL(selectMark()), m_markSelectionState);
     m_noSelectionState->addTransition(this, SIGNAL(selectPoint()), m_pointSelectionState);
 
     m_boatSelectionState->addTransition(this, SIGNAL(clearSelection()), m_noSelectionState);
+
+    m_markSelectionState->addTransition(this, SIGNAL(clearSelection()), m_noSelectionState);
 
     m_pointSelectionState->addTransition(this, SIGNAL(clearSelection()), m_noSelectionState);
 
@@ -273,6 +278,10 @@ EnableState *StateMachine::noSelectionState() {
 
 EnableState *StateMachine::boatSelectionState() {
     return m_boatSelectionState;
+}
+
+EnableState *StateMachine::markSelectionState() {
+    return m_markSelectionState;
 }
 
 EnableState *StateMachine::pointSelectionState() {
