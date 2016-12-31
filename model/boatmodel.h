@@ -105,6 +105,15 @@ class BoatModel : public PositionModel {
         qreal trimmedGennAngle() const;
         void setTrimmedGennAngle(qreal theValue);
 
+        qreal maxNormalSailAngle() const {return m_maxNormalSailAngle; }
+        void setMaxNormalSailAngle(const qreal& theValue);
+        qreal maxNormalJibAngle() const {return m_maxNormalJibAngle; }
+        void setMaxNormalJibAngle(const qreal& theValue);
+        qreal maxWithSpinSailAngle() const {return m_maxWithSpinSailAngle; }
+        void setMaxWithSpinSailAngle(const qreal& theValue);
+        qreal maxWithSpinJibAngle() const {return m_maxWithSpinJibAngle; }
+        void setMaxWithSpinJibAngle(const qreal& theValue);
+
         Boats::Overlaps overlap() const {return m_overlap; }
         void setOverlap(const Boats::Overlaps theValue);
 
@@ -129,15 +138,6 @@ class BoatModel : public PositionModel {
         void setWind(qreal wind);
 
         qreal gennAngle(qreal heading = -1) const;
-
-        qreal maxNormalSailAngle() const {return m_maxNormalSailAngle; }
-        void setMaxNormalSailAngle(const qreal& theValue) { m_maxNormalSailAngle = theValue; }
-        qreal maxNormalJibAngle() const {return m_maxNormalJibAngle; }
-        void setMaxNormalJibAngle(const qreal& theValue) { m_maxNormalJibAngle = theValue; }
-        qreal maxWithSpinSailAngle() const {return m_maxWithSpinSailAngle; }
-        void setMaxWithSpinSailAngle(const qreal& theValue) { m_maxWithSpinSailAngle = theValue; }
-        qreal maxWithSpinJibAngle() const {return m_maxWithSpinJibAngle; }
-        void setMaxWithSpinJibAngle(const qreal& theValue) { m_maxWithSpinJibAngle = theValue; }
 
         void setDim(int dim);
         int dim() const { return m_dim; }

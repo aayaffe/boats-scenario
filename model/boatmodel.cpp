@@ -190,6 +190,27 @@ void BoatModel::setTrimmedGennAngle(qreal theValue) {
     emit trimmedGennAngleChanged(theValue);
 }
 
+
+void BoatModel::setMaxNormalSailAngle(const qreal& theValue) {
+    m_maxNormalSailAngle = theValue;
+    emit trimmedSailAngleChanged(trimmedSailAngle());
+}
+
+void BoatModel::setMaxNormalJibAngle(const qreal& theValue) {
+    m_maxNormalJibAngle = theValue;
+    emit trimmedJibAngleChanged(trimmedJibAngle());
+}
+
+void BoatModel::setMaxWithSpinSailAngle(const qreal& theValue) {
+    m_maxWithSpinSailAngle = theValue;
+    emit trimmedSailAngleChanged(trimmedSailAngle());
+}
+
+void BoatModel::setMaxWithSpinJibAngle(const qreal& theValue) {
+    m_maxWithSpinJibAngle = theValue;
+    emit trimmedJibAngleChanged(trimmedJibAngle());
+}
+
 void BoatModel::setOverlap(const  Boats::Overlaps theValue) {
     if (theValue != m_overlap) {
         if (debugLevel & 1 << MODEL) std::cout
