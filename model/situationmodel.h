@@ -84,6 +84,7 @@ class SituationModel : public QObject {
         Q_PROPERTY(int size READ size NOTIFY tracksChanged)
 
         Q_PROPERTY(StateMachine* stateMachine READ stateMachine CONSTANT)
+        Q_PROPERTY(ScenarioAnimation *animation READ animation CONSTANT)
         Q_PROPERTY(bool canUndo READ canUndo NOTIFY canUndoChanged)
         Q_PROPERTY(bool canRedo READ canRedo NOTIFY canRedoChanged)
 

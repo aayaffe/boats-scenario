@@ -84,7 +84,6 @@ public:
     EnableState *pauseState();
 
 signals:
-    void edit();
     void animate();
     Q_INVOKABLE void noState();
     void createTrack();

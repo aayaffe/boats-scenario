@@ -46,11 +46,16 @@ class TrackModel;
 
 class TrackAnimation: public QParallelAnimationGroup
 {
+    Q_OBJECT
+    Q_PROPERTY(BoatModel* boat READ boat CONSTANT)
+    Q_PROPERTY(TrackModel* track READ track CONSTANT)
+
 public:
-    TrackAnimation(TrackModel *track, BoatModel *boat, QObject *parent = 0);
+    TrackAnimation(TrackModel *track = 0, BoatModel *boat = 0, QObject *parent = 0);
     ~TrackAnimation();
 
     BoatModel *boat() const {return m_boat; }
+    TrackModel *track() const {return m_track; }
 
 private:
 

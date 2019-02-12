@@ -157,7 +157,7 @@ void SituationScene::setWind(bool visible) {
 void SituationScene::setAnimation() {
 
     clearSelection();
-    foreach (TrackAnimation *track, m_situation->animation()->m_animationItems) {
+    foreach (TrackAnimation *track, m_situation->animation()->animationItems()) {
         BoatGraphicsItem *boatItem = new BoatGraphicsItem(track->boat());
         boatItem->setOrder(0);
         addItem(boatItem);

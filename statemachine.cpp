@@ -79,7 +79,7 @@ StateMachine::StateMachine(QObject *parent) :
 
     m_animationState->setInitialState(m_stopState);
     m_animationState->setToggable(true);
-    m_animationState->addTransition(this, SIGNAL(edit()), m_editingState);
+    m_animationState->addTransition(this, SIGNAL(animate()), m_editingState);
     m_animationState->addTransition(this, SIGNAL(noState()), m_editingState);
 
     m_noStateState->addTransition(this, SIGNAL(createTrack()), m_createTrackState);

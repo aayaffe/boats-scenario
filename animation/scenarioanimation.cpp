@@ -69,6 +69,7 @@ void ScenarioAnimation::setAnimation() {
         TrackAnimation *animation = new TrackAnimation(track, animationBoat, this);
         addAnimation(animation);
         m_animationItems.push_back(animation);
+        emit trackAnimationsChanged();
     }
 
     for (int i = 0; i < m_situation->wind().size()-1; ++i) {
@@ -90,6 +91,7 @@ void ScenarioAnimation::unsetAnimation() {
         m_situation->removingBoat(animation->boat());
         removeAnimation(animation);
         m_animationItems.removeOne(animation);
+        emit trackAnimationsChanged();
         delete animation->boat();
         delete animation;
     }
@@ -109,3 +111,13 @@ void ScenarioAnimation::updateCurrentTime(int currentTime)
     QParallelAnimationGroup::updateCurrentTime(currentTime);
     emit timeChanged(currentTime);
 }
+
+QList<TrackAnimation*> ScenarioAnimation::animationItems() {
+    return m_animationItems;
+}
+
+#ifdef QML
+QQmlListProperty<TrackAnimation> ScenarioAnimation::trackAnimationList() {
+    return QQmlListProperty<TrackAnimation>(this, m_animationItems);
+}
+#endif
