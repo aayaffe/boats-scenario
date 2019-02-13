@@ -1,5 +1,4 @@
 TRANSLATIONS += \
-    $$PWD/boats.ts \
     $$PWD/boats_da.ts \
     $$PWD/boats_de.ts \
     $$PWD/boats_es.ts \
@@ -9,6 +8,7 @@ TRANSLATIONS += \
     $$PWD/boats_nl.ts \
     $$PWD/boats_pl.ts \
     $$PWD/boats_pt.ts \
+    $$PWD/boats_ru.ts \
     $$PWD/boats_sl.ts \
     $$PWD/boats_sv.ts
 

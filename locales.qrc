@@ -9,6 +9,7 @@
      <file>locale/boats_nl.qm</file>
      <file>locale/boats_pl.qm</file>
      <file>locale/boats_pt.qm</file>
+     <file>locale/boats_ru.qm</file>
      <file>locale/boats_sl.qm</file>
      <file>locale/boats_sv.qm</file>
 </qresource>
