@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2014 Thibaut GRIDEL
+// Copyright (c) 2008-2019 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -1762,7 +1762,7 @@ void MainWindow::about() {
 	QString("<center><img src=\":/images/about.png\">"
             "<p><b>Boat Scenario</b> - a Race Scenario drawing tool.</p>"
             "<p>Version %1</p></center>"
-            "<p>Copyright (C) 2008-2014 Thibaut GRIDEL </p>"
+            "<p>Copyright (C) 2008-2019 Thibaut GRIDEL </p>"
             "<p></p>"
             "<p>visit <a href=\"http://boats.sf.net\">http://boats.sf.net</a></p>"
             "<p>This program is free software; you can redistribute it and/or modify "

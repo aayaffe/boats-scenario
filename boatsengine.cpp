@@ -41,8 +41,6 @@
 
 #include <iostream>
 
-#define VERSION "201307"
-
 extern int debugLevel;
 
 BoatsEngine::BoatsEngine(QObject *parent) :
