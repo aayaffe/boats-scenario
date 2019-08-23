@@ -1,19 +1,10 @@
 #!/usr/bin/make -f
 
-export QMAKE_OPT=GIF_EXPORT=1 CONFIG+=unix_deploy
+export QT_SELECT = qt5
+export QMAKE_OPT = GIF_EXPORT=1 CONFIG+=unix_deploy
 
 %:
 	dh $@
 
 override_dh_auto_configure:
 	dh_auto_configure -- $(QMAKE_OPT)
-
-override_dh_clean:
-	qmake boats.pro $(QMAKE_OPT)
-	$(MAKE) distclean
-
-override_dh_install:
-	dh_install
-	rm $(CURDIR)/debian/boats/usr/share/mime/boats.xml
-	install -m644 $(CURDIR)/boats.xml \
-		$(CURDIR)/debian/boats.sharedmimeinfo
