@@ -1,3 +1,12 @@
+boats (201307-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Fix build using giflib 5. Closes: #803298.
+  * Remove debian/boats.debhelper.log in clean target to avoid
+    no targets specified and no makefile found errors.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 01 Jan 2016 19:39:39 +0100
+
 boats (201307-1) unstable; urgency=low
 
   * New upstream release.
