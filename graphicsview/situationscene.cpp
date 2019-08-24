@@ -346,7 +346,7 @@ void SituationScene::setSelectedModels() {
 
 void SituationScene::setLaylines(const int angle) {
     if (!m_situation->showLayline()) {
-        if (debugLevel & 1 << VIEW) std::cout << "reseting empty Background" << std::endl;
+        if (debugLevel & 1 << VIEW) std::cout << "resetting empty Background" << std::endl;
         setBackgroundBrush(Qt::NoBrush);
         return;
     }
