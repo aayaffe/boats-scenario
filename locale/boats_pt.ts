@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="pt">
+<TS version="2.1" language="pt">
+<context>
+    <name>ArrowGraphicsItem</name>
+    <message>
+        <source>Wind</source>
+        <translation>Vento</translation>
+    </message>
+</context>
 <context>
     <name>MainWindow</name>
     <message>
@@ -284,22 +291,6 @@
         <translation>&amp;Acerca de</translation>
     </message>
     <message>
-        <source>Create Track</source>
-        <translation>Criar Trajecto</translation>
-    </message>
-    <message>
-        <source>Create Boat</source>
-        <translation>Criar Barco</translation>
-    </message>
-    <message>
-        <source>Create Mark</source>
-        <translation>Criar Baliza</translation>
-    </message>
-    <message>
-        <source>Animate</source>
-        <translation>Animaçao</translation>
-    </message>
-    <message>
         <source>%1 - %2 [*]</source>
         <translation></translation>
     </message>
@@ -340,10 +331,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Create Line</source>
-        <translation>Criar Linha</translation>
-    </message>
-    <message>
         <source>The document %1 has been modified.
 Do you want to save your changes?</source>
         <translation>Este documento %1 foi alterado. Deseja salvar as alteraçoes?</translation>
@@ -375,20 +362,6 @@ Do you want to save your changes?</source>
     <message>
         <source>xmlscenario Files (*.xbs)</source>
         <translation>xmlscenario Files(*.xbs)</translation>
-    </message>
-    <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation>Nao pode ler ficheiro %1: %2.</translation>
-    </message>
-    <message>
-        <source>Open Scenario file</source>
-        <translation>Abrir ficheiro de cenario</translation>
-    </message>
-    <message>
-        <source>Parse error in file %1 at line %2, column %3:
-%4</source>
-        <translation>Analisar erro no ficheiro %1 na linha %2, columna %3: %4</translation>
     </message>
     <message>
         <source>File loaded</source>
@@ -432,10 +405,6 @@ Do you want to replace it?</source>
     <message>
         <source>Abort</source>
         <translation>Abortar</translation>
-    </message>
-    <message>
-        <source>Protest!</source>
-        <translation>Protesto!</translation>
     </message>
     <message>
         <source>About Boat Scenario</source>
@@ -537,6 +506,54 @@ Do you want to replace it?</source>
         <source>Label text:</source>
         <translation>Texto da etiqueta:</translation>
     </message>
+    <message>
+        <source>Trim Jib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>,</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto Jib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Untrim Jib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trim Spin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+,</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto Spin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Untrim Spin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -595,6 +612,29 @@ Do you want to replace it?</source>
     <message>
         <source>470</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>RS Feva</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Finn</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Nacra 17</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Diam 24</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SituationModel</name>
+    <message>
+        <source>Protest!</source>
+        <translation>Protesto!</translation>
     </message>
 </context>
 <context>

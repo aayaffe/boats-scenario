@@ -25,7 +25,7 @@
 #ifndef WINDDELEGATE_H
 #define WINDDELEGATE_H
 
-#include <QtGui>
+#include <QItemDelegate>
 
 class WindDelegate : public QItemDelegate
 {

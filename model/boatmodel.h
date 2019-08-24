@@ -25,11 +25,10 @@
 #ifndef BOATMODEL_H
 #define BOATMODEL_H
 
-#include <QtGui>
+#include <QPainterPath>
 
 #include "boats.h"
 #include "positionmodel.h"
-#include "situationmodel.h"
 
 class SituationModel;
 class TrackModel;
@@ -55,17 +54,27 @@ class TrackModel;
 
 class BoatModel : public PositionModel {
         Q_OBJECT
-        Q_PROPERTY(qreal trimSailAngle READ trimmedSailAngle WRITE setTrimmedSailAngle)
-        Q_PROPERTY(qreal trimJibAngle READ trimmedJibAngle WRITE setTrimmedJibAngle)
-        Q_PROPERTY(bool spin READ spin WRITE setSpin)
-        Q_PROPERTY(qreal trimSpinAngle READ trimmedSpinAngle WRITE setTrimmedSpinAngle)
-        Q_PROPERTY(qreal trimGennAngle READ trimmedGennAngle WRITE setTrimmedGennAngle)
-        Q_PROPERTY(Boats::Overlaps overlap READ overlap WRITE setOverlap)
-        Q_PROPERTY(Boats::Flag flag READ flag WRITE setFlag)
-        Q_PROPERTY(int dim READ dim WRITE setDim)
+        Q_PROPERTY(qreal trim READ trim WRITE setTrim NOTIFY trimmedSailAngleChanged)
+        Q_PROPERTY(qreal maxNormalSailAngle READ maxNormalSailAngle WRITE setMaxNormalSailAngle)
+        Q_PROPERTY(qreal maxWithSpinSailAngle READ maxWithSpinSailAngle WRITE setMaxWithSpinSailAngle)
+        Q_PROPERTY(qreal trimSailAngle READ trimmedSailAngle WRITE setTrimmedSailAngle NOTIFY trimmedSailAngleChanged)
+
+        Q_PROPERTY(qreal jibTrim READ jibTrim WRITE setJibTrim NOTIFY trimmedJibAngleChanged)
+        Q_PROPERTY(qreal maxNormalJibAngle READ maxNormalJibAngle WRITE setMaxNormalJibAngle)
+        Q_PROPERTY(qreal maxWithSpinJibAngle READ maxWithSpinJibAngle WRITE setMaxWithSpinJibAngle)
+        Q_PROPERTY(qreal trimJibAngle READ trimmedJibAngle WRITE setTrimmedJibAngle NOTIFY trimmedJibAngleChanged)
+
+        Q_PROPERTY(bool spin READ spin WRITE setSpin NOTIFY spinChanged)
+        Q_PROPERTY(qreal spinTrim READ spinTrim WRITE setSpinTrim NOTIFY trimmedSpinAngleChanged)
+        Q_PROPERTY(qreal trimSpinAngle READ trimmedSpinAngle WRITE setTrimmedSpinAngle NOTIFY trimmedSpinAngleChanged)
+        Q_PROPERTY(qreal trimGennAngle READ trimmedGennAngle WRITE setTrimmedGennAngle NOTIFY trimmedGennAngleChanged)
+
+        Q_PROPERTY(Boats::Overlaps overlap READ overlap WRITE setOverlap NOTIFY overlapChanged)
+        Q_PROPERTY(Boats::Flag flag READ flag WRITE setFlag NOTIFY flagChanged)
+        Q_PROPERTY(int dim READ dim WRITE setDim NOTIFY dimChanged)
 
     public:
-        BoatModel(TrackModel *track, QObject *parent = 0);
+        BoatModel(TrackModel *track = 0, QObject *parent = 0);
         ~BoatModel();
 
         // Setters and Getters for Model Data
@@ -75,14 +84,12 @@ class BoatModel : public PositionModel {
 
         qreal trim() const { return m_trim; }
         void setTrim(const qreal& theValue);
-
-        qreal trimmedSailAngle() const { return sailAngle() + m_trim; }
+        qreal trimmedSailAngle() const;
         void setTrimmedSailAngle(qreal theValue);
 
         qreal jibTrim() const { return m_jibTrim; }
         void setJibTrim(const qreal& theValue);
-
-        qreal trimmedJibAngle() const { return jibAngle() + m_jibTrim; }
+        qreal trimmedJibAngle() const;
         void setTrimmedJibAngle(qreal theValue);
 
         bool hasSpin() const {return m_hasSpin; }
@@ -93,12 +100,19 @@ class BoatModel : public PositionModel {
 
         qreal spinTrim() const { return m_spinTrim; }
         void setSpinTrim(const qreal& theValue);
-
-        qreal trimmedSpinAngle() const { return spinAngle() + m_spinTrim; }
+        qreal trimmedSpinAngle() const;
         void setTrimmedSpinAngle(qreal theValue);
-
-        qreal trimmedGennAngle() const { return gennAngle() + m_spinTrim; }
+        qreal trimmedGennAngle() const;
         void setTrimmedGennAngle(qreal theValue);
+
+        qreal maxNormalSailAngle() const {return m_maxNormalSailAngle; }
+        void setMaxNormalSailAngle(const qreal& theValue);
+        qreal maxNormalJibAngle() const {return m_maxNormalJibAngle; }
+        void setMaxNormalJibAngle(const qreal& theValue);
+        qreal maxWithSpinSailAngle() const {return m_maxWithSpinSailAngle; }
+        void setMaxWithSpinSailAngle(const qreal& theValue);
+        qreal maxWithSpinJibAngle() const {return m_maxWithSpinJibAngle; }
+        void setMaxWithSpinJibAngle(const qreal& theValue);
 
         Boats::Overlaps overlap() const {return m_overlap; }
         void setOverlap(const Boats::Overlaps theValue);
@@ -113,7 +127,7 @@ class BoatModel : public PositionModel {
         void setAcceleration(const Boats::Acceleration theValue);
 
         // Setters and Getters for Non model Data
-        TrackModel* track() const { return m_track; }
+        Q_INVOKABLE TrackModel* track() const { return m_track; }
 
         qreal sailAngle(qreal heading = -1) const;
 
@@ -124,15 +138,6 @@ class BoatModel : public PositionModel {
         void setWind(qreal wind);
 
         qreal gennAngle(qreal heading = -1) const;
-
-        qreal maxNormalSailAngle() const {return m_maxNormalSailAngle; }
-        void setMaxNormalSailAngle(const qreal& theValue) { m_maxNormalSailAngle = theValue; }
-        qreal maxNormalJibAngle() const {return m_maxNormalJibAngle; }
-        void setMaxNormalJibAngle(const qreal& theValue) { m_maxNormalJibAngle = theValue; }
-        qreal maxWithSpinSailAngle() const {return m_maxWithSpinSailAngle; }
-        void setMaxWithSpinSailAngle(const qreal& theValue) { m_maxWithSpinSailAngle = theValue; }
-        qreal maxWithSpinJibAngle() const {return m_maxWithSpinJibAngle; }
-        void setMaxWithSpinJibAngle(const qreal& theValue) { m_maxWithSpinJibAngle = theValue; }
 
         void setDim(int dim);
         int dim() const { return m_dim; }

@@ -6,3 +6,4 @@ Exec=boats %F
 Icon=boats.png
 Categories=Education;Qt;
 MimeType=application/x-boats
+Keywords=drawing;scenario;sailing;regatta

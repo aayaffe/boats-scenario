@@ -31,6 +31,8 @@
 #include "commontypes.h"
 #include "boats.h"
 
+#include <QPainter>
+
 extern int debugLevel;
 
 void TrackDelegate::paint(QPainter *painter,
@@ -43,7 +45,7 @@ void TrackDelegate::paint(QPainter *painter,
 
     switch (index.column()) {
         case TRACK_COLOR: {
-            QColor trackColor = qVariantValue<QColor>(index.data());
+            QColor trackColor = index.data().value<QColor>();
             painter->setPen(Qt::NoPen);
             painter->setBrush(trackColor);
             qreal height = option.rect.height() / 8.0;
@@ -54,7 +56,7 @@ void TrackDelegate::paint(QPainter *painter,
             }
             break;
         case TRACK_SERIES: {
-            int series = qVariantValue<int>(index.data());
+            int series = index.data().value<int>();
             drawDisplay(painter, option, option.rect, Boats::seriesList().at(series));
             }
             break;
@@ -75,6 +77,7 @@ QSize TrackDelegate::sizeHint(const QStyleOptionViewItem &option,
 QWidget * TrackDelegate::createEditor(QWidget *parent,
     const QStyleOptionViewItem &option,
     const QModelIndex &index) const {
+    Q_UNUSED(option);
     if (debugLevel & 1 << DELEGATE) std::cout << "createEditor " << index.column() << std::endl;
 
     switch (index.column()) {
@@ -106,13 +109,13 @@ void TrackDelegate::setEditorData(QWidget *editor,
     switch (index.column()) {
         case TRACK_COLOR: {
             ColorPickerWidget *colorEditor = getColorEditor(editor);
-            QColor color = qVariantValue<QColor>(index.data());
+            QColor color = index.data().value<QColor>();
             colorEditor->setColor(color);
             }
             break;
         case TRACK_SERIES: {
             QComboBox *seriesEditor = getComboEditor(editor);
-            int series = qVariantValue<int>(index.data());
+            int series = index.data().value<int>();
             seriesEditor->setCurrentIndex(series);
             }
             break;

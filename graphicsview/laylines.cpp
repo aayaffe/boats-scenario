@@ -22,15 +22,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
-
-#include <QPainter>
-#include <QGraphicsScene>
-
 #include "laylines.h"
 
 #include "commontypes.h"
 #include "situationmodel.h"
+
+#include <QPainter>
+#include <QGraphicsScene>
+
+#include <iostream>
 
 extern int debugLevel;
 

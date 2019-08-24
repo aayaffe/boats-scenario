@@ -22,11 +22,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
-
-#include <QPainter>
-#include <QGraphicsScene>
-
 #include "mark.h"
 
 #include "commontypes.h"
@@ -34,6 +29,12 @@
 #include "situationmodel.h"
 #include "markmodel.h"
 #include "bubble.h"
+
+#include <QPainter>
+#include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
+
+#include <iostream>
 
 extern int debugLevel;
 
@@ -45,7 +46,6 @@ MarkGraphicsItem::MarkGraphicsItem(MarkModel *mark, QGraphicsItem *parent)
         m_length(mark->length()),
         m_boatLength(Boats::seriesSizeList()[m_mark->situation()->situationSeries()]),
         m_bubble(new BubbleGraphicsItem(m_mark, this)),
-        m_selected(false),
         m_order(mark->order()),
         m_laylines(new LaylinesGraphicsItem(m_mark, this)),
         m_heading(mark->heading()),
@@ -145,38 +145,29 @@ void MarkGraphicsItem::deleteItem(MarkModel *mark) {
 }
 
 void MarkGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    static_cast<SituationScene*>(scene())->setModelPressed(m_mark);
     m_multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
-    if (!isSelected()) {
-        if (!m_multiSelect) {
-            scene()->clearSelection();
-        }
-        setSelected(true);
-        m_actOnMouseRelease=false;
+
+    bool selection = true;
+    if (m_multiSelect) {
+        selection = !isSelected();
+    }
+
+    setSelected(selection);
+    if (selection) {
+        m_mark->situation()->addSelectedMark(m_mark);
     } else {
-        m_actOnMouseRelease=true;
+        m_mark->situation()->removeSelectedModel(m_mark);
     }
-    if ((event->button() & Qt::RightButton) != 0) {
-        m_actOnMouseRelease = false;
-    }
+
     update();
 }
 
 void MarkGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
-    m_actOnMouseRelease=false;
 }
 
 void MarkGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
-    if (m_actOnMouseRelease) {
-        if (!m_multiSelect) {
-            scene()->clearSelection();
-            setSelected(true);
-        } else {
-            setSelected(false);
-        }
-    }
 }
 
 void MarkGraphicsItem::setHeading(qreal heading) {

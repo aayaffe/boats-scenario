@@ -25,10 +25,11 @@
 #ifndef UNDOCOMMANDS_H
 #define UNDOCOMMANDS_H
 
+#include "boats.h"
+
 #include <QUndoCommand>
 #include <QPointF>
-
-#include "boats.h"
+#include <QColor>
 
 class SituationModel;
 class TrackModel;
@@ -38,6 +39,7 @@ class MarkModel;
 class PolyLineModel;
 class PointModel;
 class WindModel;
+
 
 enum {
     SET_TITLE,

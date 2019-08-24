@@ -32,7 +32,8 @@ enum DebugTraces {
     ANIMATION,
     DELEGATE,
     XML,
-    EXPORT
+    EXPORT,
+    STATE
 };
 
 typedef enum {

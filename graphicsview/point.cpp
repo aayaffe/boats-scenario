@@ -22,11 +22,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
-
-#include <QPainter>
-#include <QGraphicsScene>
-
 #include "point.h"
 
 #include "commontypes.h"
@@ -34,6 +29,13 @@
 #include "situationmodel.h"
 #include "polylinemodel.h"
 #include "pointmodel.h"
+
+#include <QPainter>
+
+#include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
+
+#include <iostream>
 
 extern int debugLevel;
 const int size = 3;
@@ -43,7 +45,6 @@ PointGraphicsItem::PointGraphicsItem(PointModel *point, QGraphicsItem *parent)
         : QGraphicsItem(parent),
         m_point(point),
         m_bubble(new BubbleGraphicsItem(m_point, this)),
-        m_selected(false),
         m_laylines(new LaylinesGraphicsItem(m_point, this)) {
     setZValue(1);
     setFlag(QGraphicsItem::ItemIsMovable);
@@ -81,6 +82,29 @@ void PointGraphicsItem::deleteItem(PointModel *point) {
         scene()->removeItem(this);
         delete this;
     }
+}
+
+void PointGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+
+    bool selection = true;
+    if ((event->modifiers() & Qt::ControlModifier) != 0) {
+        selection = !isSelected();
+    }
+
+    setSelected(selection);
+    if (selection) {
+        m_point->situation()->addSelectedPoint(m_point);
+    } else {
+        m_point->situation()->removeSelectedModel(m_point);
+    }
+}
+
+void PointGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+    Q_UNUSED(event);
+}
+
+void PointGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+    Q_UNUSED(event);
 }
 
 QRectF PointGraphicsItem::boundingRect() const {

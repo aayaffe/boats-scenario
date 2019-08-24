@@ -29,7 +29,6 @@
 #include "commontypes.h"
 #include "situationmodel.h"
 #include "windmodel.h"
-#include "undocommands.h"
 
 extern int debugLevel;
 
@@ -45,8 +44,9 @@ WindTableModel::~WindTableModel() {
 
 void WindTableModel::setWind(WindModel *wind)  {
     if (m_wind != wind) {
+        beginResetModel();
         m_wind = wind;
-        reset();
+        endResetModel();
     }
 }
 
@@ -119,14 +119,14 @@ bool WindTableModel::setData(const QModelIndex &index, const QVariant &value, in
 
     switch (index.column()) {
         case WIND_DIRECTION:
-            if (qVariantCanConvert<qreal>(value)) {
-                qreal newValue = qVariantValue<qreal>(value);
+            if (value.canConvert<qreal>()) {
+                qreal newValue = value.value<qreal>();
                 if (debugLevel & 1 << MODEL) std::cout << "setting wind " << newValue;
                 if (index.row() == m_wind->size()) {
-                    m_wind->situation()->undoStack()->push(new AddWindUndoCommand(m_wind, newValue));
+                    m_wind->situation()->addWind(newValue);
                 } else {
                     if (newValue != m_wind->windAt(index.row())) {
-                        m_wind->situation()->undoStack()->push(new SetWindUndoCommand(m_wind, index.row(), newValue));
+                        m_wind->situation()->setWind(index.row(), newValue);
                     }
                 }
                 return true;
@@ -135,7 +135,7 @@ bool WindTableModel::setData(const QModelIndex &index, const QVariant &value, in
         case WIND_DELETE:
             if (debugLevel & 1 << MODEL) std::cout << "deleting index " << index.row();
             if (index.row() < m_wind->size()) {
-                m_wind->situation()->undoStack()->push(new DeleteWindUndoCommand(m_wind, index.row()));
+                m_wind->situation()->deleteWind(index.row());
             }
             return true;
             break;
@@ -147,5 +147,6 @@ bool WindTableModel::setData(const QModelIndex &index, const QVariant &value, in
 }
 
 void WindTableModel::updateWind() {
-    reset();
+    beginResetModel();
+    endResetModel();
 }

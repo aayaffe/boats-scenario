@@ -25,12 +25,12 @@
 #ifndef POINT_H
 #define POINT_H
 
-#include <QGraphicsItem>
-#include <QObject>
-
 #include "commontypes.h"
 #include "bubble.h"
 #include "laylines.h"
+
+#include <QObject>
+#include <QGraphicsItem>
 
 class PointModel;
 
@@ -70,15 +70,17 @@ class PointGraphicsItem : public QObject, public QGraphicsItem {
         void setPosition(QPointF position);
         void deleteItem(PointModel *point);
 
+    protected:
+        virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
     private:
         /// \a m_point holds the PointModel being represented
         PointModel *m_point;
 
         /// \a m_bubble holds the bubble to display
         BubbleGraphicsItem *m_bubble;
-
-        /// \a m_selected holds selection information
-        bool m_selected;
 
         QPolygon m_points;
 

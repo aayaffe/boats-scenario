@@ -22,19 +22,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
-#include <cmath>
-
-#include <QPainter>
-#include <QGraphicsScene>
-
-
 #include "arrow.h"
 
 #include "commontypes.h"
 #include "situationscene.h"
-#include "situationmodel.h"
 #include "windmodel.h"
+
+#include <QPainter>
+#include <QGraphicsScene>
+
+#include <iostream>
+#include <cmath>
 
 extern int debugLevel;
 
@@ -48,14 +46,14 @@ ArrowGraphicsItem::ArrowGraphicsItem(WindModel *wind, QGraphicsItem *parent)
     setPosition(wind->position());
 
     setZValue(0);
-    m_path.moveTo(0,30);
-    m_path.lineTo(7,23);
-    m_path.lineTo(2,23);
-    m_path.lineTo(2,-30);
-    m_path.lineTo(-2,-30);
-    m_path.lineTo(-2,23);
-    m_path.lineTo(-7,23);
-    m_path.lineTo(0,30);
+    m_path.moveTo(-15,-15);
+    m_path.lineTo(15,-15);
+    m_path.lineTo(15,0);
+    m_path.lineTo(25,0);
+    m_path.lineTo(0,17);
+    m_path.lineTo(-25,0);
+    m_path.lineTo(-15,0);
+    m_path.lineTo(-15,-15);
 
     connect(wind, SIGNAL(windVisibleChanged(bool)),
             this, SLOT(deleteItem(bool)));
@@ -97,7 +95,7 @@ void ArrowGraphicsItem::deleteItem(bool visible) {
 }
 
 QRectF ArrowGraphicsItem::boundingRect() const {
-    return QRectF(-7, -30, 14, 60);
+    return QRectF(-25,-15,50,32);
 }
 
 QPainterPath ArrowGraphicsItem::shape() const {
@@ -113,8 +111,13 @@ void ArrowGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
     else
         painter->setPen(Qt::black);
 
-    painter->setBrush(Qt::black);
+    painter->setBrush(QColor(191,191,255,255));
+
     painter->drawPath(m_path);
+
+    QString label = tr("Wind");
+    painter->setPen(Qt::black);
+    painter->drawText(QRectF(-15,-15,30,15),Qt::AlignCenter,label);
 }
 
 

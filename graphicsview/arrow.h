@@ -25,9 +25,9 @@
 #ifndef ARROW_H
 #define ARROW_H
 
-#include <QGraphicsItem>
 #include <QObject>
 #include <QColor>
+#include <QGraphicsItem>
 
 class WindModel;
 

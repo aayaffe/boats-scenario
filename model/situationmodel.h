@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2011 Thibaut GRIDEL
+// Copyright (c) 2008-2014 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,16 +25,23 @@
 #ifndef SITUATIONMODEL_H
 #define SITUATIONMODEL_H
 
-#include <QtGui>
-
 #include "boats.h"
 #include "windmodel.h"
+
+#include <QObject>
+#include <QUndoStack>
+#ifdef QML
+#include <QQmlListProperty>
+#endif
 
 class TrackModel;
 class BoatModel;
 class MarkModel;
 class PolyLineModel;
 class PointModel;
+class StateMachine;
+class ScenarioAnimation;
+
 
 /**
     \class SituationModel
@@ -57,7 +64,30 @@ class PointModel;
 
 class SituationModel : public QObject {
         Q_OBJECT
+        Q_ENUMS(Boats::Series)
     public:
+
+        Q_PROPERTY(QString title READ title WRITE changeTitle NOTIFY titleChanged)
+        Q_PROPERTY(QString rules READ rules WRITE changeRules NOTIFY rulesChanged)
+        Q_PROPERTY(bool grid READ showLayline WRITE toggleShowLayline NOTIFY showLaylineChanged)
+        Q_PROPERTY(int laylineAngle READ laylineAngle WRITE changeLaylineAngle NOTIFY laylineChanged)
+        Q_PROPERTY(Boats::Series situationSeries READ situationSeries WRITE changeSeries NOTIFY seriesChanged)
+        Q_PROPERTY(int situationLength READ situationLength WRITE changeLength NOTIFY lengthChanged)
+        Q_PROPERTY(QString abstract READ abstract WRITE changeAbstract NOTIFY abstractChanged)
+        Q_PROPERTY(QString description READ description WRITE changeDescription NOTIFY descriptionChanged)
+        Q_PROPERTY(qreal lookDirection READ lookDirection WRITE setLookDirection NOTIFY lookDirectionChanged)
+        Q_PROPERTY(qreal tilt READ tilt WRITE setTilt NOTIFY tiltChanged)
+#ifdef QML
+        Q_PROPERTY(QQmlListProperty<TrackModel> trackList READ trackList NOTIFY tracksChanged)
+        Q_PROPERTY(QQmlListProperty<MarkModel> markList READ markList NOTIFY marksChanged)
+#endif
+        Q_PROPERTY(int size READ size NOTIFY tracksChanged)
+
+        Q_PROPERTY(StateMachine* stateMachine READ stateMachine CONSTANT)
+        Q_PROPERTY(ScenarioAnimation *animation READ animation CONSTANT)
+        Q_PROPERTY(bool canUndo READ canUndo NOTIFY canUndoChanged)
+        Q_PROPERTY(bool canRedo READ canRedo NOTIFY canRedoChanged)
+
         SituationModel(QObject *parent = 0);
         ~SituationModel();
 
@@ -87,26 +117,56 @@ class SituationModel : public QObject {
         void setDescription(const QString theValue);
 
         qreal lookDirection() const { return m_lookDirection; }
+        void setLookDirection(qreal theValue);
+
         qreal tilt() const { return m_tilt; }
+        void setTilt(qreal theValue);
 
         int size() const { return m_tracks.size();}
         const QList<TrackModel*> tracks() const { return m_tracks; }
-
+#ifdef QML
+        QQmlListProperty<TrackModel> trackList();
+        QQmlListProperty<MarkModel> markList();
+#endif
         int markSize() const { return m_marks.size();}
         const QList<MarkModel*> marks() const { return m_marks; }
 
         const QList<PolyLineModel*> polyLines() const { return m_lines; }
 
-        WindModel& wind() { return m_wind; };
+        WindModel& wind() { return m_wind; }
 
         // Setters and Getters for Non model Data
         QUndoStack * undoStack() const { return m_undoStack;}
+
+        StateMachine *stateMachine(){ return m_stateMachine; }
+
+        ScenarioAnimation *animation() const { return m_scenarioAnimation; }
+
+        QList< PositionModel * > selectedModels() { return m_selectedModels; }
+        QList< BoatModel * > selectedBoatModels() { return m_selectedBoatModels; }
+        QList< MarkModel * > selectedMarkModels() { return m_selectedMarkModels; }
+        QList< PointModel * > selectedPointModels() { return m_selectedPointModels; }
 
         QStringList discardedXml() const { return m_discardedXml; }
         void appendDiscardedXml(const QString& theValue);
 
         QString fileName() const { return m_fileName; }
         void setFileName(const QString theValue) {m_fileName = theValue; }
+
+        // Tracks
+        void addTrack(TrackModel *track, int order = -1);
+        void deleteTrack(TrackModel *track);
+
+        // Marks
+        void addMark(MarkModel *mark, int order = -1);
+        int deleteMark(MarkModel *mark);
+
+        // Lines
+        void addPolyLine(PolyLineModel *polyline, int order = -1);
+        void deletePolyLine(PolyLineModel *polyline);
+
+        Q_INVOKABLE void setCurPosition(QPointF pos);
+        QPointF curPosition() { return m_curPosition; }
 
         // Helper to remotely trigger boat signals from elsewhere
         void addingBoat(BoatModel *boat) {emit boatAdded(boat);}
@@ -116,10 +176,96 @@ class SituationModel : public QObject {
         void addingPoint(PointModel *point) {emit pointAdded(point);}
         void removingPoint(PointModel *point) {emit pointRemoved(point);}
 
+        // UndoCommand actions
+        Q_INVOKABLE void undo() { m_undoStack->undo(); }
+        bool canUndo() { return m_undoStack->canUndo(); }
+        Q_INVOKABLE void redo() { m_undoStack->redo(); }
+        bool canRedo() { return m_undoStack->canRedo(); }
+
+        // Scenario undo actions
+        void changeTitle(QString title);
+        void changeRules(QString rules);
+        void toggleShowLayline(bool showlayline);
+        void changeLaylineAngle(int angle);
+        void changeSeries(Boats::Series series);
+        void changeLength(int length);
+        void changeAbstract(QString abstract);
+        void changeDescription(QString description);
+        void setLookAt(int direction, int tilt);
+
+        Q_INVOKABLE void rotateModel(qreal angle);
+        void deleteModels();
+        void deleteTrack();
+
+        // Track undo actions
+        Q_INVOKABLE void setColor(QColor color);
+        Q_INVOKABLE void setShowPath();
+        Q_INVOKABLE void setSeries(Boats::Series series);
+        Q_INVOKABLE void setFollowTrack();
+
+        // Wind undo actions
+        Q_INVOKABLE void toggleWind();
+        Q_INVOKABLE void addWind(qreal wind);
+        Q_INVOKABLE void setWind(int index, qreal wind);
+        Q_INVOKABLE void deleteWind(int index);
+
+        // Boat undo actions
+        void trimSail();
+        void autotrimSail();
+        void untrimSail();
+        void trimJib();
+        void autotrimJib();
+        void untrimJib();
+        void trimSpin();
+        void autotrimSpin();
+        void untrimSpin();
+        void togglePortOverlap();
+        void toggleStarboardOverlap();
+        void toggleFlag(Boats::Flag flag);
+        void toggleAcceleration(Boats::Acceleration acceleration);
+        void toggleHidden();
+        void toggleText();
+        Q_INVOKABLE void setText(QString text);
+        Q_INVOKABLE void moveText(QPointF pos);
+        void toggleSpin();
+
+        // Mark undo actions
+        void toggleMarkSide();
+        void toggleMarkArrow();
+        void toggleMarkZone();
+        void setMarkColor(QColor color);
+        void toggleMarkLabel();
+        void editMarkLabel(QString text);
+        void toggleLaylines();
+
+        // selection mechanism
+        Q_INVOKABLE void clearSelectedModels();
+        Q_INVOKABLE void addSelectedBoat(BoatModel *boat);
+        Q_INVOKABLE void addSelectedMark(MarkModel *mark);
+        Q_INVOKABLE void addSelectedPoint(PointModel *point);
+        Q_INVOKABLE void addSelectedModel(PositionModel *position);
+        Q_INVOKABLE void removeSelectedModel(PositionModel *position);
+
+    public slots:
+        // Wind
+        void resetWind();
+
+        // Slots for state signals
+        void createTrack();
+        void createBoat();
+        void createMark();
+        void createLine();
+        void createPoint();
+
+        void moveModel();
+        void rotateModel();
+        void exitCreateState();
+
     signals:
         // Signals for Track
         void trackAdded(TrackModel *track);
         void trackRemoved(TrackModel *track);
+        void tracksChanged();
 
         // Signals for Boat
         void boatAdded(BoatModel *boat);
@@ -140,6 +286,7 @@ class SituationModel : public QObject {
         // Signals for Marks
         void markAdded(MarkModel *mark);
         void markRemoved(MarkModel *mark);
+        void marksChanged();
 
         // Signals for Lines
         void polyLineAdded(PolyLineModel *polyline);
@@ -149,24 +296,8 @@ class SituationModel : public QObject {
         void pointAdded(PointModel *point);
         void pointRemoved(PointModel *point);
 
-    public slots:
-        // Slots for Tracks
-        void addTrack(TrackModel *track, int order = -1);
-        void deleteTrack(TrackModel *track);
-
-        // Slots for Marks
-        void addMark(MarkModel *mark, int order = -1);
-        int deleteMark(MarkModel *mark);
-
-        // Slots for Lines
-        void addPolyLine(PolyLineModel *polyline, int order = -1);
-        void deletePolyLine(PolyLineModel *polyline);
-
-        // Slot for Wind
-        void resetWind();
-
-        void setLookDirection(qreal theValue);
-        void setTilt(qreal theValue);
+        void canUndoChanged(bool canUndo);
+        void canRedoChanged(bool canRedo);
 
     private:
         // Model Data
@@ -213,10 +344,32 @@ class SituationModel : public QObject {
         /// \a m_lines holds the List of PolyLines of the Scenario
         QList<PolyLineModel*> m_lines;
 
-
         // Non model Data
         /// \a m_undoStack maintains the Undo Stack for the Scenario
         QUndoStack *m_undoStack;
+
+        /// \a m_state holds the SceneState for the current scenario
+        StateMachine *m_stateMachine;
+
+        /// \a m_scenarioAnimation holds the general AnimationGroup
+        /// manipulated during animation mode
+        ScenarioAnimation* m_scenarioAnimation;
+
+        /// \a m_curPosition holds the QPointF where mouse was last seen
+        QPointF m_curPosition;
+
+        // Bookkeeping references to selected models
+        /// \a m_selectedModels holds the list of selected PositionModel
+        QList<PositionModel*> m_selectedModels;
+
+        /// \a m_selectedBoatsModels holds the list of selected BoatModel
+        QList<BoatModel*> m_selectedBoatModels;
+
+        /// \a m_selectedMarkModels holds the list of selected MarkModel
+        QList<MarkModel*> m_selectedMarkModels;
+
+        /// \a m_selectedPointModels holds the list of selected PointModel
+        QList<PointModel*> m_selectedPointModels;
 
         /// \a m_discardedXml keeps all unparsed xml tags
         QStringList m_discardedXml;

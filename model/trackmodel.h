@@ -26,7 +26,9 @@
 #define TRACKMODEL_H
 
 #include <QtGui>
-
+#ifdef QML
+#include <QQmlListProperty>
+#endif
 #include "boats.h"
 
 class SituationModel;
@@ -53,7 +55,19 @@ class BoatModel;
 
 class TrackModel : public QObject {
         Q_OBJECT
+        Q_ENUMS(Boats::Series)
     public:
+
+        Q_PROPERTY(int order READ order WRITE setOrder NOTIFY orderChanged)
+        Q_PROPERTY(QColor trackColor READ color WRITE setColor NOTIFY colorChanged)
+        Q_PROPERTY(Boats::Series series READ series WRITE setSeries NOTIFY seriesChanged)
+        Q_PROPERTY(bool showPath READ showPath WRITE setShowPath NOTIFY showPathChanged)
+        Q_PROPERTY(bool followTrack READ followTrack WRITE setFollowTrack NOTIFY followTrackChanged)
+#ifdef QML
+        Q_PROPERTY(QQmlListProperty<BoatModel> boatList READ boatList NOTIFY boatsChanged)
+#endif
+        Q_PROPERTY(int size READ size NOTIFY boatsChanged)
+
         TrackModel(SituationModel* situation = 0, QObject *parent = 0);
         ~TrackModel();
 
@@ -81,7 +95,9 @@ class TrackModel : public QObject {
 
         int size() const { return m_boats.size();}
         const QList<BoatModel*> boats() const { return m_boats; }
-
+#ifdef QML
+        QQmlListProperty<BoatModel> boatList();
+#endif
         const QPainterPath path() const { return m_path; }
 
         // Setters and Getters for Non model Data
@@ -92,11 +108,11 @@ class TrackModel : public QObject {
         QStringList discardedXml() const { return m_discardedXml; }
         void appendDiscardedXml(const QString& theValue);
 
-        qreal headingForNext(int index, QPointF point);
+        Q_INVOKABLE qreal headingForNext(int index, QPointF point);
 
         void changingTrack(TrackModel *track);
 
-        void setSelected(bool selected);
+        Q_INVOKABLE void setSelected(bool selected);
 
     signals:
         // Signals for TrackModel parameters
@@ -106,6 +122,7 @@ class TrackModel : public QObject {
         void showPathChanged(bool showPath);
         void followTrackChanged(bool followTrack);
         void trackChanged(TrackModel *track);
+        void boatsChanged();
         void trackSelected(bool selected);
 
     private:

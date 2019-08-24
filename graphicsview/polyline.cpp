@@ -22,18 +22,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
-#include <cmath>
-
-#include <QPainter>
-#include <QGraphicsScene>
-
-
 #include "polyline.h"
 
 #include "commontypes.h"
 #include "situationmodel.h"
 #include "polylinemodel.h"
+
+#include <QPainter>
+#include <QGraphicsScene>
+
+#include <iostream>
+#include <cmath>
 
 extern int debugLevel;
 

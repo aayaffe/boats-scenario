@@ -25,10 +25,10 @@
 #ifndef SAIL_H
 #define SAIL_H
 
-#include <QGraphicsPathItem>
-#include <QObject>
-
 #include "boats.h"
+
+#include <QObject>
+#include <QGraphicsPathItem>
 
 class BoatModel;
 

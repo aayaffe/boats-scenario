@@ -22,24 +22,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
+#include "sail.h"
+
+#include "commontypes.h"
+#include "trackmodel.h"
+#include "boatmodel.h"
 
 #include <QPainter>
 #include <QGraphicsScene>
 
-#include "sail.h"
-
-#include "commontypes.h"
-#include "situationmodel.h"
-#include "trackmodel.h"
-#include "boatmodel.h"
+#include <iostream>
 
 extern int debugLevel;
 
 SailGraphicsItem::SailGraphicsItem(BoatModel *boat, QGraphicsItem *parent)
         : QGraphicsPathItem(parent),
         m_boat(boat),
-        m_sailAngle(0) {
+        m_sailAngle(0),
+        m_sailSize(0) {
     setZValue(0);
     setBrush(QBrush(Qt::white));
 }

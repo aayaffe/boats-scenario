@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="nl_NL">
+<TS version="2.1" language="nl_NL">
+<context>
+    <name>ArrowGraphicsItem</name>
+    <message>
+        <source>Wind</source>
+        <translation>Wind</translation>
+    </message>
+</context>
 <context>
     <name>MainWindow</name>
     <message>
@@ -284,22 +291,6 @@
         <translation>&amp;Over</translation>
     </message>
     <message>
-        <source>Create Track</source>
-        <translation>Koers</translation>
-    </message>
-    <message>
-        <source>Create Boat</source>
-        <translation>Boot</translation>
-    </message>
-    <message>
-        <source>Create Mark</source>
-        <translation>Boei</translation>
-    </message>
-    <message>
-        <source>Animate</source>
-        <translation>Animatie</translation>
-    </message>
-    <message>
         <source>%1 - %2 [*]</source>
         <translation>%1 - %2 [*]</translation>
     </message>
@@ -340,10 +331,6 @@
         <translation>&amp;%1 %2</translation>
     </message>
     <message>
-        <source>Create Line</source>
-        <translation>Lijn</translation>
-    </message>
-    <message>
         <source>The document %1 has been modified.
 Do you want to save your changes?</source>
         <translation>Het document %1 is gewijzigd.
@@ -376,22 +363,6 @@ Wil u de wijzigingen opslaan?</translation>
     <message>
         <source>xmlscenario Files (*.xbs)</source>
         <translation>xmlscenario Bestanden (*.xbs)</translation>
-    </message>
-    <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation>Kan bestand niet openen %1:
-%2.</translation>
-    </message>
-    <message>
-        <source>Open Scenario file</source>
-        <translation>Open Scenario bestand</translation>
-    </message>
-    <message>
-        <source>Parse error in file %1 at line %2, column %3:
-%4</source>
-        <translation>Parsing fout in bestand %1 in regel %2, kolom %3:
-%4</translation>
     </message>
     <message>
         <source>File loaded</source>
@@ -436,10 +407,6 @@ Wilt u het vervangen?</translation>
     <message>
         <source>Abort</source>
         <translation>Afsluiten</translation>
-    </message>
-    <message>
-        <source>Protest!</source>
-        <translation>Protest!</translation>
     </message>
     <message>
         <source>About Boat Scenario</source>
@@ -541,6 +508,54 @@ Wilt u het vervangen?</translation>
         <source>Label text:</source>
         <translation>Label tekst:</translation>
     </message>
+    <message>
+        <source>Trim Jib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>,</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto Jib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Untrim Jib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trim Spin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+,</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto Spin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Untrim Spin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -599,6 +614,29 @@ Wilt u het vervangen?</translation>
     <message>
         <source>470</source>
         <translation>470</translation>
+    </message>
+    <message>
+        <source>RS Feva</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Finn</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Nacra 17</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Diam 24</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SituationModel</name>
+    <message>
+        <source>Protest!</source>
+        <translation>Protest!</translation>
     </message>
 </context>
 <context>

@@ -26,6 +26,7 @@
 #define BOATAPPLICATION_H
 
 #include <QApplication>
+
 #include <QObject>
 
 class MainWindow;

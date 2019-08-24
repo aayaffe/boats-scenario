@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2011 Thibaut GRIDEL
+// Copyright (c) 2008-2019 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,10 +22,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-#include <iostream>
-
-#include <QtGui>
-
 #include "mainwindow.h"
 
 #include "commontypes.h"
@@ -38,9 +34,9 @@
 #include "polylinemodel.h"
 #include "pointmodel.h"
 
+#include "statemachine.h"
 #include "scenarioanimation.h"
 
-#include "undocommands.h"
 #include "xmlsituationreader.h"
 #include "xmlsituationwriter.h"
 
@@ -53,7 +49,24 @@
 #include "gifwriter.h"
 #endif
 
-#define VERSION "201307"
+#include "boatsengine.h"
+
+#include <QMenuBar>
+#include <QToolBar>
+#include <QTabWidget>
+#include <QDockWidget>
+#include <QStatusBar>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QProgressDialog>
+#include <QInputDialog>
+#include <QLineEdit>
+#include <QPrintDialog>
+#include <QPrintPreviewDialog>
+
+#include <iostream>
+
+#define VERSION "201908"
 
 extern int debugLevel;
 
@@ -69,7 +82,8 @@ MainWindow::MainWindow(QWidget *parent)
         situationWidget(new SituationWidget(situationDock)),
         statusbar(new QStatusBar(this)),
         qtTranslator(new QTranslator(this)),
-        translator(new QTranslator(this)) {
+        translator(new QTranslator(this)),
+        engine(new BoatsEngine()) {
 
     // Actions
     createActions();
@@ -195,84 +209,108 @@ void MainWindow::createActions() {
     addTrackAction->setIcon(QIcon(":/images/addtrack.png"));
     addTrackAction->setCheckable(true);
     connect(addTrackAction, SIGNAL(triggered()),
-            this, SLOT(addTrack()));
+            engine, SLOT(addTrack()));
 
     addBoatAction = new QAction(this);
     addBoatAction->setIcon(QIcon(":/images/addboat.png"));
     addBoatAction->setCheckable(true);
     connect(addBoatAction, SIGNAL(triggered()),
-            this, SLOT(addBoat()));
+            engine, SLOT(addBoat()));
 
     addMarkAction = new QAction(this);
     addMarkAction->setIcon(QIcon(":/images/addmark.png"));
     addMarkAction->setCheckable(true);
     connect(addMarkAction, SIGNAL(triggered()),
-            this, SLOT(addMark()));
+            engine, SLOT(addMark()));
 
     addPolyLineAction = new QAction(this);
     addPolyLineAction->setIcon(QIcon(":/images/addpoly.png"));
     addPolyLineAction->setCheckable(true);
     connect(addPolyLineAction, SIGNAL(triggered()),
-            this, SLOT(addPolyLine()));
+            engine, SLOT(addPolyLine()));
 
     addPointAction = new QAction(this);
     addPointAction->setIcon(QIcon(":/images/addpoint.png"));
     addPointAction->setCheckable(true);
     connect(addPointAction, SIGNAL(triggered()),
-            this, SLOT(addPoint()));
+            engine, SLOT(addPoint()));
 
     trimSailAction = new QAction(this);
     connect(trimSailAction, SIGNAL(triggered()),
-            this, SLOT(trimSail()));
+            engine, SLOT(trimSail()));
 
     autotrimSailAction = new QAction(this);
     connect(autotrimSailAction, SIGNAL(triggered()),
-            this, SLOT(autotrimSail()));
+            engine, SLOT(autotrimSail()));
 
     untrimSailAction = new QAction(this);
     connect(untrimSailAction, SIGNAL(triggered()),
-            this, SLOT(untrimSail()));
+            engine, SLOT(untrimSail()));
+
+    trimJibAction = new QAction(this);
+    connect(trimJibAction, SIGNAL(triggered()),
+            engine, SLOT(trimJib()));
+
+    autotrimJibAction = new QAction(this);
+    connect(autotrimJibAction, SIGNAL(triggered()),
+            engine, SLOT(autotrimJib()));
+
+    untrimJibAction = new QAction(this);
+    connect(untrimJibAction, SIGNAL(triggered()),
+            engine, SLOT(untrimJib()));
+
+    trimSpinAction = new QAction(this);
+    connect(trimSpinAction, SIGNAL(triggered()),
+            engine, SLOT(trimSpin()));
+
+    autotrimSpinAction = new QAction(this);
+    connect(autotrimSpinAction, SIGNAL(triggered()),
+            engine, SLOT(autotrimSpin()));
+
+    untrimSpinAction = new QAction(this);
+    connect(untrimSpinAction, SIGNAL(triggered()),
+            engine, SLOT(untrimSpin()));
 
     togglePortOverlapAction = new QAction(this);
     togglePortOverlapAction->setCheckable(true);
     connect(togglePortOverlapAction, SIGNAL(triggered()),
-            this, SLOT(togglePortOverlap()));
+            engine, SLOT(togglePortOverlap()));
 
     toggleStarboardOverlapAction = new QAction(this);
     toggleStarboardOverlapAction->setCheckable(true);
     connect(toggleStarboardOverlapAction, SIGNAL(triggered()),
-            this, SLOT(toggleStarboardOverlap()));
+            engine, SLOT(toggleStarboardOverlap()));
 
     toggleHiddenAction = new QAction(this);
     toggleHiddenAction->setCheckable(true);
     connect(toggleHiddenAction, SIGNAL(triggered()),
-            this, SLOT(toggleHidden()));
+            engine, SLOT(toggleHidden()));
 
     toggleTextAction = new QAction(this);
     toggleTextAction->setCheckable(true);
     connect(toggleTextAction, SIGNAL(triggered()),
-            this, SLOT(toggleText()));
+            engine, SLOT(toggleText()));
 
     toggleSpinAction = new QAction(this);
     toggleSpinAction->setCheckable(true);
     toggleSpinAction->setEnabled(false);
     connect(toggleSpinAction, SIGNAL(triggered()),
-            this, SLOT(toggleSpin()));
+            engine, SLOT(toggleSpin()));
 
     toggleMarkSideAction = new QAction(this);
     connect(toggleMarkSideAction, SIGNAL(triggered()),
-            this, SLOT(toggleMarkSide()));
+            engine, SLOT(toggleMarkSide()));
 
     toggleMarkArrowAction = new QAction(this);
     toggleMarkArrowAction->setCheckable(true);
     connect(toggleMarkArrowAction, SIGNAL(triggered()),
-            this, SLOT(toggleMarkArrow()));
+            engine, SLOT(toggleMarkArrow()));
 
     toggleMarkZoneAction = new QAction(this);
     toggleMarkZoneAction->setIcon(QIcon(":/images/zone.png"));
     toggleMarkZoneAction->setCheckable(true);
     connect(toggleMarkZoneAction, SIGNAL(triggered()),
-            this, SLOT(toggleMarkZone()));
+            engine, SLOT(toggleMarkZone()));
 
     setMarkColorAction = new QAction(this);
     setMarkColorAction->setIcon(QIcon());
@@ -283,12 +321,12 @@ void MainWindow::createActions() {
     toggleLaylinesAction->setIcon(QIcon(":/images/laylines.png"));
     toggleLaylinesAction->setCheckable(true);
     connect(toggleLaylinesAction, SIGNAL(triggered()),
-            this, SLOT(toggleLaylines()));
+            engine, SLOT(toggleLaylines()));
 
     toggleMarkLabelAction = new QAction(this);
     toggleMarkLabelAction->setCheckable(true);
     connect(toggleMarkLabelAction, SIGNAL(triggered()),
-            this, SLOT(toggleMarkLabel()));
+            engine, SLOT(toggleMarkLabel()));
 
     editMarkLabelAction = new QAction(this);
     connect(editMarkLabelAction, SIGNAL(triggered()),
@@ -296,11 +334,11 @@ void MainWindow::createActions() {
 
     deleteTrackAction = new QAction(this);
     connect(deleteTrackAction, SIGNAL(triggered()),
-            this, SLOT(deleteTrack()));
+            engine, SLOT(deleteTrack()));
 
     deleteAction = new QAction(this);
     connect(deleteAction, SIGNAL(triggered()),
-            this, SLOT(deleteModels()));
+            engine, SLOT(deleteModels()));
 
     animateAction = new QAction(this);
     animateAction->setIcon(QIcon(":/images/animate.png"));
@@ -312,20 +350,20 @@ void MainWindow::createActions() {
     startAction->setIcon(QIcon(":/images/player_play.png"));
     startAction->setEnabled(false);
     connect(startAction, SIGNAL(triggered()),
-            this, SLOT(play()));
+            engine, SLOT(play()));
 
     pauseAction  = new QAction(this);
     pauseAction->setIcon(QIcon(":/images/player_pause.png"));
     pauseAction->setEnabled(false);
     pauseAction->setCheckable(true);
-    connect(pauseAction, SIGNAL(triggered(bool)),
-            this, SLOT(pause(bool)));
+    connect(pauseAction, SIGNAL(triggered()),
+            engine, SLOT(pause()));
 
     stopAction = new QAction(this);
     stopAction->setIcon(QIcon(":/images/player_stop.png"));
     stopAction->setEnabled(false);
     connect(stopAction, SIGNAL(triggered()),
-            this, SLOT(stop()));
+            engine, SLOT(stop()));
 
     loopAction = new QAction(this);
     loopAction->setIcon(QIcon(":/images/player_loop.png"));
@@ -375,30 +413,19 @@ void MainWindow::createActions() {
 }
 
 void MainWindow::updateActions() {
-    SituationScene *scene = sceneList.at(currentSituation);
+    SituationModel *situation = engine->currentModel();
 
-    bool selectedItems = !scene->selectedItems().isEmpty();
-    bool selectedBoats = !scene->selectedBoatModels().isEmpty();
-    bool selectedPoints = !scene->selectedPointModels().isEmpty();
-    bool selectedMarks = !scene->selectedMarkModels().isEmpty();
+    bool selectedItems = !situation->selectedModels().isEmpty();
+    bool selectedBoats = !situation->selectedBoatModels().isEmpty();
+    bool selectedMarks = !situation->selectedMarkModels().isEmpty();
 
-    addBoatAction->setEnabled(selectedBoats || scene->state() == CREATE_BOAT);
-    addPointAction->setEnabled(selectedPoints || scene->state() == CREATE_POINT);
-    trimSailAction->setEnabled(selectedBoats);
-    autotrimSailAction->setEnabled(selectedBoats);
-    untrimSailAction->setEnabled(selectedBoats);
-    togglePortOverlapAction->setEnabled(selectedBoats);
-    toggleStarboardOverlapAction->setEnabled(selectedBoats);
-    toggleHiddenAction->setEnabled(selectedBoats);
     toggleTextAction->setEnabled(selectedItems);
-    flagMenu->setEnabled(selectedBoats);
-    accelerationMenu->setEnabled(selectedBoats);
+
     toggleMarkSideAction->setEnabled(selectedMarks);
     toggleMarkArrowAction->setEnabled(selectedMarks);
     toggleMarkLabelAction->setEnabled(selectedMarks);
     setMarkColorAction->setEnabled(selectedMarks);
     editMarkLabelAction->setEnabled(selectedMarks);
-    deleteTrackAction->setEnabled(selectedBoats);
     deleteAction->setEnabled(selectedItems);
 
     bool allPortSet = 1;
@@ -420,7 +447,7 @@ void MainWindow::updateActions() {
     for(int i=0; i<accelerationSize; i++) {
         allAccelerationSet[i] = 1;
     }
-    foreach(BoatModel *boat, scene->selectedBoatModels()) {
+    foreach(BoatModel *boat, situation->selectedBoatModels()) {
         allPortSet = allPortSet && (boat->overlap() & Boats::port);
         allStarboardSet = allStarboardSet && (boat->overlap() & Boats::starboard);
         allHiddenSet = allHiddenSet && boat->hidden();
@@ -439,11 +466,11 @@ void MainWindow::updateActions() {
     toggleSpinAction->setChecked(selectedBoats && allSpinSet);
     toggleSpinAction->setEnabled(selectedBoats && allSpinBoat);
 
-    foreach(PositionModel *position, scene->selectedModels()) {
+    foreach(PositionModel *position, situation->selectedModels()) {
         allTextSet = allTextSet && (!position->text().isEmpty());
         allLaylinesSet = allLaylinesSet && position->laylines();
     }
-    toggleTextAction->setEnabled(scene->selectedModels().size()==1);
+    toggleTextAction->setEnabled(situation->selectedModels().size()==1);
     toggleTextAction->setChecked(selectedItems && allTextSet);
     for (int i = 0; i < flagSize; i++) {
         QAction *flagAction = flagMenu->actions()[i];
@@ -456,7 +483,7 @@ void MainWindow::updateActions() {
     toggleLaylinesAction->setChecked(selectedItems && allLaylinesSet);
     toggleLaylinesAction->setEnabled(selectedItems);
 
-    foreach(MarkModel *mark, scene->selectedMarkModels()) {
+    foreach(MarkModel *mark, situation->selectedMarkModels()) {
         allMarkArrowSet = allMarkArrowSet && mark->arrowVisible();
         allMarkLabelSet = allMarkLabelSet && mark->labelVisible();
     }
@@ -464,84 +491,18 @@ void MainWindow::updateActions() {
     toggleMarkLabelAction->setChecked(allMarkLabelSet);
 }
 
-void MainWindow::changeState(SceneState newState) {
-    SituationView *view = viewList.at(currentSituation);
+void MainWindow::enterCreateState() {
+    SituationView *view = viewList.at(engine->currentIndex());
+    view->setCursor(Qt::CrossCursor);
+}
 
-    switch(newState) {
-        case CREATE_TRACK:
-            view->setCursor(Qt::CrossCursor);
-            statusbar->showMessage(tr("Create Track"));
-            addTrackAction->setChecked(true);
-            addBoatAction->setChecked(false);
-            addMarkAction->setChecked(false);
-            addPolyLineAction->setChecked(false);
-            addPointAction->setChecked(false);
-            animateAction->setChecked(false);
-            break;
-        case CREATE_BOAT:
-            view->setCursor(Qt::CrossCursor);
-            statusbar->showMessage(tr("Create Boat"));
-            addTrackAction->setChecked(false);
-            addBoatAction->setChecked(true);
-            addMarkAction->setChecked(false);
-            addPolyLineAction->setChecked(false);
-            addPointAction->setChecked(false);
-            animateAction->setChecked(false);
-            break;
-        case CREATE_MARK:
-            view->setCursor(Qt::CrossCursor);
-            statusbar->showMessage(tr("Create Mark"));
-            addTrackAction->setChecked(false);
-            addBoatAction->setChecked(false);
-            addMarkAction->setChecked(true);
-            addPolyLineAction->setChecked(false);
-            addPointAction->setChecked(false);
-            animateAction->setChecked(false);
-            break;
-        case CREATE_LINE:
-            view->setCursor(Qt::CrossCursor);
-            statusbar->showMessage(tr("Create Line"));
-            addTrackAction->setChecked(false);
-            addBoatAction->setChecked(false);
-            addMarkAction->setChecked(false);
-            addPolyLineAction->setChecked(true);
-            addPointAction->setChecked(false);
-            animateAction->setChecked(false);
-            break;
-        case CREATE_POINT:
-            view->setCursor(Qt::CrossCursor);
-            statusbar->showMessage(tr("Create Line"));
-            addTrackAction->setChecked(false);
-            addBoatAction->setChecked(false);
-            addMarkAction->setChecked(false);
-            addPolyLineAction->setChecked(false);
-            addPointAction->setChecked(true);
-            animateAction->setChecked(false);
-            break;
-        case ANIMATE:
-            statusbar->showMessage(tr("Animate"));
-            addTrackAction->setChecked(false);
-            addBoatAction->setChecked(false);
-            addMarkAction->setChecked(false);
-            addPolyLineAction->setChecked(false);
-            addPointAction->setChecked(false);
-            animateAction->setChecked(true);
-            break;
-        default:
-            view->unsetCursor();
-            statusbar->clearMessage();
-            addTrackAction->setChecked(false);
-            addBoatAction->setChecked(false);
-            addMarkAction->setChecked(false);
-            addPolyLineAction->setChecked(false);
-            addPointAction->setChecked(false);
-            animateAction->setChecked(false);
-    }
-    updateActions();
+void MainWindow::exitCreateState() {
+    SituationView *view = viewList.at(engine->currentIndex());
+    view->unsetCursor();
 }
 
 void MainWindow::cleanState(bool state) {
-    SituationModel *situation = situationList.at(currentSituation);
+    SituationModel *situation = engine->currentModel();
     if (situation->fileName().isEmpty())
         saveFileAction->setEnabled(false);
     else
@@ -550,9 +511,9 @@ void MainWindow::cleanState(bool state) {
     QString shownName = QFileInfo(situation->fileName()).fileName();
     setWindowTitle(tr("%1 - %2 [*]").arg(tr("Boat Scenario")).arg(shownName));
     if (!state) {
-        tabWidget->setTabText(currentSituation,shownName.append(" *"));
+        tabWidget->setTabText(engine->currentIndex(),shownName.append(" *"));
     } else {
-        tabWidget->setTabText(currentSituation,shownName);
+        tabWidget->setTabText(engine->currentIndex(),shownName);
     }
     setWindowModified(!state);
 }
@@ -599,6 +560,12 @@ void MainWindow::createMenus() {
     trackMenu->addAction(trimSailAction);
     trackMenu->addAction(autotrimSailAction);
     trackMenu->addAction(untrimSailAction);
+    trackMenu->addAction(trimJibAction);
+    trackMenu->addAction(autotrimJibAction);
+    trackMenu->addAction(untrimJibAction);
+    trackMenu->addAction(trimSpinAction);
+    trackMenu->addAction(autotrimSpinAction);
+    trackMenu->addAction(untrimSpinAction);
     trackMenu->addAction(togglePortOverlapAction);
     trackMenu->addAction(toggleStarboardOverlapAction);
     trackMenu->addAction(toggleHiddenAction);
@@ -653,6 +620,12 @@ void MainWindow::createMenus() {
     boatPopup->addAction(trimSailAction);
     boatPopup->addAction(autotrimSailAction);
     boatPopup->addAction(untrimSailAction);
+    boatPopup->addAction(trimJibAction);
+    boatPopup->addAction(autotrimJibAction);
+    boatPopup->addAction(untrimJibAction);
+    boatPopup->addAction(trimSpinAction);
+    boatPopup->addAction(autotrimSpinAction);
+    boatPopup->addAction(untrimSpinAction);
     boatPopup->addAction(togglePortOverlapAction);
     boatPopup->addAction(toggleStarboardOverlapAction);
     boatPopup->addAction(toggleHiddenAction);
@@ -802,11 +775,11 @@ void MainWindow::createDocks() {
 }
 
 void MainWindow::newTab() {
-    SituationModel *situation = new SituationModel(this);
+    engine->newFile();
+    SituationModel *situation = engine->currentModel();
     SituationScene *scene = new SituationScene(situation);
     SituationView *view =new SituationView(scene);
 
-    situationList.append(situation);
     sceneList.append(scene);
     scene->setDefaultPopup(defaultPopup);
     scene->setBoatPopup(boatPopup);
@@ -815,28 +788,43 @@ void MainWindow::newTab() {
     viewList.append(view);
     tabWidget->addTab(view, "");
 
-    tabWidget->setCurrentIndex(situationList.size()-1);
+    tabWidget->setCurrentIndex(engine->situationSize() - 1);
     view->setFocus();
     view->setMouseTracking(true);
-    if (situationList.size() > 1) {
+    if (engine->situationSize() > 1) {
         removeTabAction->setEnabled(true);
         removeTabButton->setEnabled(true);
     }
 }
 
 void MainWindow::unsetTab() {
-    if (situationList.size() == 1) {
+    if (engine->situationSize() == 1) {
         return;
     }
 
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-    if (scene->state() == ANIMATE) {
-        scene->setState(NO_STATE);
-    }
+    SituationModel *situation = engine->currentModel();
+    SituationScene *scene = sceneList.at(engine->currentIndex());
+    StateMachine *machine = situation->stateMachine();
+    SituationView *view = viewList.at(engine->currentIndex());
 
-    disconnect(situation->undoStack(), 0, 0, 0);
+    animate(false);
+
+    disconnect(situation->undoStack(), 0, this, 0);
     disconnect(scene, 0, this, 0);
+    disconnect(view, 0, 0, 0);
+
+    disconnect(machine->createState(), 0, this, 0);
+    disconnect(machine->createTrackState(), 0, this, 0);
+    disconnect(machine->boatSelectionState(), 0, this, 0);
+    disconnect(machine->createBoatState(), 0, this, 0);
+    disconnect(machine->createMarkState(), 0, this, 0);
+    disconnect(machine->createLineState(), 0, this, 0);
+    disconnect(machine->pointSelectionState(), 0, this, 0);
+    disconnect(machine->createPointState(), 0, this, 0);
+    disconnect(machine->animationState(), 0, this, 0);
+    disconnect(machine->playState(), 0, this, 0);
+    disconnect(machine->pauseState(), 0, this, 0);
+    disconnect(machine->stopState(), 0, this, 0);
 
     disconnect(undoAction, 0, 0, 0);
     disconnect(redoAction, 0, 0, 0);
@@ -853,17 +841,154 @@ void MainWindow::unsetTab() {
 }
 
 void MainWindow::setTab(int index) {
-    unsetTab();
-    currentSituation = index;
-    SituationModel *situation = situationList.at(index);
+    if (index != engine->currentIndex()) {
+        unsetTab();
+        engine->setIndex(index);
+    }
+    SituationModel *situation = engine->currentModel();
     SituationScene *scene = sceneList.at(index);
     SituationView *view = viewList.at(index);
+    StateMachine *machine = situation->stateMachine();
+
+    connect(machine->createState(), SIGNAL(entered()),
+            this, SLOT(enterCreateState()));
+    connect(machine->createState(), SIGNAL(exited()),
+            this, SLOT(exitCreateState()));
+    connect(machine->createTrackState(), SIGNAL(enabledChanged(bool)),
+            addTrackAction, SLOT(setEnabled(bool)));
+    connect(machine->createTrackState(), SIGNAL(activeChanged(bool)),
+            addTrackAction, SLOT(setChecked(bool)));
+    addTrackAction->setEnabled(machine->createTrackState()->isEnabled());
+    addTrackAction->setChecked(machine->createTrackState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            addBoatAction, SLOT(setEnabled(bool)));
+    connect(machine->createBoatState(), SIGNAL(activeChanged(bool)),
+            addBoatAction, SLOT(setChecked(bool)));
+    addBoatAction->setEnabled(machine->boatSelectionState()->isActive());
+    addBoatAction->setChecked(machine->createBoatState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            trimSailAction, SLOT(setEnabled(bool)));
+    trimSailAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            autotrimSailAction, SLOT(setEnabled(bool)));
+    autotrimSailAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            untrimSailAction, SLOT(setEnabled(bool)));
+    untrimSailAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            trimJibAction, SLOT(setEnabled(bool)));
+    trimJibAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            autotrimJibAction, SLOT(setEnabled(bool)));
+    autotrimJibAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            untrimJibAction, SLOT(setEnabled(bool)));
+    untrimJibAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            trimSpinAction, SLOT(setEnabled(bool)));
+    trimSpinAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            autotrimSpinAction, SLOT(setEnabled(bool)));
+    autotrimSpinAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            untrimSpinAction, SLOT(setEnabled(bool)));
+    untrimSpinAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            togglePortOverlapAction, SLOT(setEnabled(bool)));
+    togglePortOverlapAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            toggleStarboardOverlapAction, SLOT(setEnabled(bool)));
+    toggleStarboardOverlapAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            toggleHiddenAction, SLOT(setEnabled(bool)));
+    toggleHiddenAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            flagMenu, SLOT(setEnabled(bool)));
+    flagMenu->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            accelerationMenu, SLOT(setEnabled(bool)));
+    accelerationMenu->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->boatSelectionState(), SIGNAL(activeChanged(bool)),
+            deleteTrackAction, SLOT(setEnabled(bool)));
+    deleteTrackAction->setEnabled(machine->boatSelectionState()->isActive());
+
+    connect(machine->createMarkState(), SIGNAL(enabledChanged(bool)),
+            addMarkAction, SLOT(setEnabled(bool)));
+    connect(machine->createMarkState(), SIGNAL(activeChanged(bool)),
+            addMarkAction, SLOT(setChecked(bool)));
+    addMarkAction->setEnabled(machine->createMarkState()->isEnabled());
+    addMarkAction->setChecked(machine->createMarkState()->isActive());
+
+    connect(machine->createLineState(), SIGNAL(enabledChanged(bool)),
+            addPolyLineAction, SLOT(setEnabled(bool)));
+    connect(machine->createLineState(), SIGNAL(activeChanged(bool)),
+            addPolyLineAction, SLOT(setChecked(bool)));
+    addPolyLineAction->setEnabled(machine->createLineState()->isEnabled());
+    addPolyLineAction->setChecked(machine->createLineState()->isActive());
+
+    connect(machine->pointSelectionState(), SIGNAL(activeChanged(bool)),
+            addPointAction, SLOT(setEnabled(bool)));
+    connect(machine->createPointState(), SIGNAL(activeChanged(bool)),
+            addPointAction, SLOT(setChecked(bool)));
+    addPointAction->setEnabled(machine->pointSelectionState()->isActive());
+    addPointAction->setChecked(machine->createPointState()->isActive());
+
+    connect(machine->animationState(), SIGNAL(enabledChanged(bool)),
+            animateAction, SLOT(setEnabled(bool)));
+    connect(machine->animationState(), SIGNAL(activeChanged(bool)),
+            animateAction, SLOT(setChecked(bool)));
+    animateAction->setEnabled(machine->animationState()->isEnabled());
+    animateAction->setChecked(machine->animationState()->isActive());
+
+    connect(machine->animationState(), SIGNAL(enabledChanged(bool)),
+            loopAction, SLOT(setEnabled(bool)));
+    connect(machine->animationState(), SIGNAL(activeChanged(bool)),
+            loopAction, SLOT(setChecked(bool)));
+    loopAction->setEnabled(machine->animationState()->isEnabled());
+    loopAction->setChecked(machine->animationState()->isActive());
+
+    connect(machine->playState(), SIGNAL(enabledChanged(bool)),
+            startAction, SLOT(setEnabled(bool)));
+    connect(machine->playState(), SIGNAL(activeChanged(bool)),
+            startAction, SLOT(setChecked(bool)));
+    startAction->setEnabled(machine->playState()->isEnabled());
+    startAction->setChecked(machine->playState()->isActive());
+
+    connect(machine->pauseState(), SIGNAL(enabledChanged(bool)),
+            pauseAction, SLOT(setEnabled(bool)));
+    connect(machine->pauseState(), SIGNAL(activeChanged(bool)),
+            pauseAction, SLOT(setChecked(bool)));
+    pauseAction->setEnabled(machine->pauseState()->isEnabled());
+    pauseAction->setChecked(machine->pauseState()->isActive());
+
+    connect(machine->stopState(), SIGNAL(enabledChanged(bool)),
+            stopAction, SLOT(setEnabled(bool)));
+    connect(machine->stopState(), SIGNAL(activeChanged(bool)),
+            stopAction, SLOT(setChecked(bool)));
+    stopAction->setEnabled(machine->stopState()->isEnabled());
+    stopAction->setChecked(machine->stopState()->isActive());
 
     connect(undoAction, SIGNAL(triggered()),
             situation->undoStack(), SLOT(undo()));
     connect(situation->undoStack(), SIGNAL(canUndoChanged(bool)),
             undoAction, SLOT(setEnabled(bool)));
-    undoAction->setEnabled(situation->undoStack()->canUndo()),
+    undoAction->setEnabled(situation->undoStack()->canUndo());
 
     connect(redoAction, SIGNAL(triggered()),
             situation->undoStack(), SLOT(redo()));
@@ -894,9 +1019,6 @@ void MainWindow::setTab(int index) {
             this, SLOT(setLookAt()));
 
     situationWidget->setSituation(situation);
-    connect(scene, SIGNAL(stateChanged(SceneState)),
-            this, SLOT(changeState(SceneState)));
-    changeState(scene->state());
 
     connect(scene, SIGNAL(selectedModelsChanged()),
             this, SLOT(updateActions()));
@@ -905,28 +1027,26 @@ void MainWindow::setTab(int index) {
 
 void MainWindow::removeTab() {
     int index = tabWidget->currentIndex();
-    SituationModel *situation = situationList.at(index);
     SituationScene *scene = sceneList.at(index);
     SituationView *view = viewList.at(index);
 
-    if (!maybeSave(situation)) {
+    if (!maybeSave()) {
         return;
     }
 
-    if (index == situationList.size() - 1) {
+    if (index == engine->situationSize() - 1) {
         tabWidget->setCurrentIndex(index - 1);
-    } else if (index != situationList.size() - 2) {
+    } else if (index != engine->situationSize() - 2) {
         tabWidget->setCurrentIndex(index + 1);
     }
-    situationList.removeAt(index);
     sceneList.removeAt(index);
     viewList.removeAt(index);
 
     tabWidget->removeTab(index);
     view->deleteLater();
     scene->deleteLater();
-    situation->deleteLater();
-    if (situationList.size() == 1) {
+    engine->removeFile(index);
+    if (engine->situationSize() == 1) {
         removeTabAction->setEnabled(false);
         removeTabButton->setEnabled(false);
     }
@@ -943,14 +1063,8 @@ void MainWindow::writeSettings() {
     settings.setValue("ToolBar", toolbar->isVisible());
     settings.setValue("ToolBarArea", toolBarArea(toolbar));
     settings.setValue("ScenarioDock", situationDock->isVisible());
-    QStringList fileList;
-    foreach(SituationModel *situation, situationList) {
-        if (!situation->fileName().isEmpty()) {
-            fileList.append(situation->fileName());
-        }
-    }
     settings.setValue("recentList", recentList);
-    settings.setValue("fileList",fileList);
+    settings.setValue("fileList",engine->fileList());
     settings.setValue("filePath", filePath);
     settings.endGroup();
 }
@@ -996,7 +1110,8 @@ void MainWindow::updateRecentList() {
     }
 }
 
-bool MainWindow::maybeSave(SituationModel *situation) {
+bool MainWindow::maybeSave() {
+    SituationModel *situation = engine->currentModel();
     if (!situation->undoStack()->isClean()) {
         QString shownName = QFileInfo(situation->fileName()).fileName();
         QMessageBox::StandardButton ret;
@@ -1005,7 +1120,7 @@ bool MainWindow::maybeSave(SituationModel *situation) {
                         "Do you want to save your changes?").arg(shownName),
                     QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         if (ret == QMessageBox::Save) {
-            return saveSituation(situation, "");
+            return saveSituation("");
         } else if (ret == QMessageBox::Cancel) {
             return false;
         }
@@ -1014,17 +1129,14 @@ bool MainWindow::maybeSave(SituationModel *situation) {
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
-    SituationScene *scene = sceneList.at(currentSituation);
+    animate(false);
 
-    bool animated = (scene->state() == ANIMATE);
-    if (animated) {
-        scene->setState(NO_STATE);
-    }
-    foreach(SituationModel *situation, situationList) {
-        if (!maybeSave(situation)) {
+    while(engine->situationSize()>1) {
+        if (!maybeSave()) {
             event->ignore();
             return;
         }
+        removeTab();
     }
     writeSettings();
     event->accept();
@@ -1096,6 +1208,24 @@ void MainWindow::changeEvent(QEvent *event) {
 
         untrimSailAction->setText(tr("Untrim Sail"));
         untrimSailAction->setShortcut(tr(">"));
+
+        trimJibAction->setText(tr("Trim Jib"));
+        trimJibAction->setShortcut(tr(","));
+
+        autotrimJibAction->setText(tr("Auto Jib"));
+        autotrimJibAction->setShortcut(tr("?"));
+
+        untrimJibAction->setText(tr("Untrim Jib"));
+        untrimJibAction->setShortcut(tr("."));
+
+        trimSpinAction->setText(tr("Trim Spin"));
+        trimSpinAction->setShortcut(tr("Ctrl+,"));
+
+        autotrimSpinAction->setText(tr("Auto Spin"));
+        autotrimSpinAction->setShortcut(tr("Ctrl+?"));
+
+        untrimSpinAction->setText(tr("Untrim Spin"));
+        untrimSpinAction->setShortcut(tr("Ctrl+."));
 
         togglePortOverlapAction->setText(tr("&Port Overlap"));
         togglePortOverlapAction->setShortcut(tr("Alt+<"));
@@ -1194,16 +1324,13 @@ void MainWindow::changeEvent(QEvent *event) {
 }
 
 void MainWindow::newFile() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-    SituationView *view = viewList.at(currentSituation);
+    SituationModel *situation = engine->currentModel();
+    SituationView *view = viewList.at(engine->currentIndex());
 
-    if (maybeSave(situation)) {
-        scene->setState(NO_STATE);
-        situation->undoStack()->setIndex(0);
-        setCurrentFile(situation, "");
-        situation->undoStack()->clear();
-        situation->wind().clearWind();
+    if (maybeSave()) {
+        // tidy up animation (does no harm if not in animation mode)
+        animate(false);
+        engine->resetFile();
         situationWidget->unSetSituation();
         situationWidget->setSituation(situation);
         view->centerOn(0,0);
@@ -1251,42 +1378,25 @@ void MainWindow::openFile(const QString &fileName, bool inNewTab) {
     if (inNewTab) {
         // create new tab
         newTab();
-        tabWidget->setCurrentIndex(situationList.size() - 1);
+        tabWidget->setCurrentIndex(engine->situationSize() - 1);
     } else {
         // delete situation;
         newFile();
     }
 
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-    SituationView *view = viewList.at(currentSituation);
-
-    QFile file(fileName);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        QMessageBox::warning(this, tr("Open Scenario File"),
-                             tr("Cannot read file %1:\n%2.")
-                             .arg(fileName)
-                             .arg(file.errorString()));
-        return;
-    }
-
-    XmlSituationReader reader(situation);
-    if (!reader.read(&file)) {
-        QMessageBox::warning(this, tr("Open Scenario file"),
-                             tr("Parse error in file %1 at line %2, column %3:\n%4")
-                             .arg(fileName)
-                             .arg(reader.lineNumber())
-                             .arg(reader.columnNumber())
-                             .arg(reader.errorString()));
+    if (!engine->openFile(fileName)) {
         return;
     }
     situationWidget->update();
-    setCurrentFile(situation, fileName);
+
+    SituationScene *scene = sceneList.at(engine->currentIndex());
+    SituationView *view = viewList.at(engine->currentIndex());
     view->centerOn(scene->itemsBoundingRect().center());
     statusbar->showMessage(tr("File loaded"), 2000);
 }
 
-bool MainWindow::saveSituation(SituationModel *situation, QString fileName) {
+bool MainWindow::saveSituation(QString fileName) {
+    SituationModel *situation = engine->currentModel();
     QString name = fileName;
     if (name.isEmpty()) {
         QString defaultFile;
@@ -1324,22 +1434,19 @@ bool MainWindow::saveSituation(SituationModel *situation, QString fileName) {
                             .arg(file.errorString()));
         return false;
     }
-    XmlSituationWriter writer(situation);
-    writer.writeFile(&file);
-    setCurrentFile(situation, name);
+    if(!engine->saveSituation(name)) {
+        return false;
+    }
     statusbar->showMessage(tr("File saved"), 2000);
     return true;
 }
 
 bool MainWindow::saveFile() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
+    SituationModel *situation = engine->currentModel();
 
-    bool animated = (scene->state() == ANIMATE);
-    if (animated) {
-        scene->setState(NO_STATE);
-    }
-    bool saved = saveSituation(situation, situation->fileName());
+    bool animated = situation->stateMachine()->animationState()->isActive();
+    animate(false);
+    bool saved = saveSituation(situation->fileName());
     if (animated) {
         animate(true);
     }
@@ -1347,14 +1454,11 @@ bool MainWindow::saveFile() {
 }
 
 bool MainWindow::saveAs() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
+    SituationModel *situation = engine->currentModel();
 
-    bool animated = (scene->state() == ANIMATE);
-    if (animated) {
-        scene->setState(NO_STATE);
-    }
-    bool saved = saveSituation(situation, "");
+    bool animated = situation->stateMachine()->animationState()->isActive();
+    animate(false);
+    bool saved = saveSituation("");
     if (animated) {
         animate(true);
     }
@@ -1362,9 +1466,9 @@ bool MainWindow::saveAs() {
 }
 
 void MainWindow::print() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-    SituationView *view = viewList.at(currentSituation);
+    SituationModel *situation = engine->currentModel();
+    SituationScene *scene = sceneList.at(engine->currentIndex());
+    SituationView *view = viewList.at(engine->currentIndex());
     QPrinter printer(QPrinter::HighResolution);
 
     QPrintDialog *dialog = new QPrintDialog(&printer, this);
@@ -1380,9 +1484,9 @@ void MainWindow::print() {
 }
 
 void MainWindow::printPreview() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-    SituationView *view = viewList.at(currentSituation);
+    SituationModel *situation = engine->currentModel();
+    SituationScene *scene = sceneList.at(engine->currentIndex());
+    SituationView *view = viewList.at(engine->currentIndex());
 
     scene->clearSelection();
     SituationPrint printSituation(situation, view);
@@ -1396,9 +1500,9 @@ void MainWindow::printPreview() {
 }
 
 void MainWindow::exportPdf() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-    SituationView *view = viewList.at(currentSituation);
+    SituationModel *situation = engine->currentModel();
+    SituationScene *scene = sceneList.at(engine->currentIndex());
+    SituationView *view = viewList.at(engine->currentIndex());
 
     QString defaultName(situation->fileName());
     defaultName.chop(4);
@@ -1419,9 +1523,9 @@ void MainWindow::exportPdf() {
 }
 
 void MainWindow::exportImage() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-    SituationView *view = viewList.at(currentSituation);
+    SituationModel *situation = engine->currentModel();
+    SituationScene *scene = sceneList.at(engine->currentIndex());
+    SituationView *view = viewList.at(engine->currentIndex());
 
     QString defaultName(situation->fileName());
     defaultName.chop(4);
@@ -1444,7 +1548,7 @@ void MainWindow::exportImage() {
     }
 
     // if no provided extension or incorrect extension, use selected filter
-    if (!formatsList.contains(QFileInfo(fileName).suffix().toAscii())) {
+    if (!formatsList.contains(QFileInfo(fileName).suffix().toUtf8())) {
 #if defined(Q_WS_MAC)
 	fileName.append(".png");
 #else
@@ -1467,9 +1571,8 @@ void MainWindow::exportImage() {
 
 #ifdef GIF_EXPORT
 void MainWindow::exportAnimation() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationView *view = viewList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
+    SituationModel *situation = engine->currentModel();
+    SituationView *view = viewList.at(engine->currentIndex());
 
     QString defaultName(situation->fileName());
     defaultName.chop(4);
@@ -1488,24 +1591,24 @@ void MainWindow::exportAnimation() {
     int dotIndex = fileName.lastIndexOf(".");
     QString baseName = fileName.left(dotIndex);
     QString newExt = fileName.right(fileName.size()-dotIndex-1);
-    if (!newExt.toAscii().contains("gif")) {
+    if (!newExt.toUtf8().contains("gif")) {
         fileName.append(".gif");
     }
 
     GifWriter *writer = new GifWriter();
 
     animate(true, false);
-    QProgressDialog progress(tr("Exporting Animation..."), tr("Abort"), 0, scene->animation()->duration(), this);
+    QProgressDialog progress(tr("Exporting Animation..."), tr("Abort"), 0, situation->animation()->duration(), this);
     progress.setWindowModality(Qt::WindowModal);
     statusbar->showMessage("Exporting animation");
-    scene->animation()->setCurrentTime(scene->animation()->duration()/2);
+    situation->animation()->setCurrentTime(situation->animation()->duration()/2);
     QPixmap pixmap = view->screenShot();
     QImage shot = pixmap.toImage().convertToFormat(QImage::Format_Indexed8);
     writer->setColorMap(shot);
 
     QList<QImage*> imageList;
-    for (int i=0; i<=scene->animation()->duration(); i+=80) {
-        scene->animation()->setCurrentTime(i);
+    for (int i=0; i<=situation->animation()->duration(); i+=80) {
+        situation->animation()->setCurrentTime(i);
         pixmap = view->screenShot();
         QImage *image = new QImage(pixmap.toImage()
                                    .convertToFormat(QImage::Format_Indexed8, writer->colormap()));
@@ -1531,329 +1634,49 @@ void MainWindow::exportAnimation() {
 }
 #endif
 
-void MainWindow::setCurrentFile(SituationModel *situation, const QString &fileName) {
-    situation->setFileName(fileName);
-    situation->undoStack()->setClean();
-
-    if (!fileName.isEmpty()) {
-        recentList.removeAll(fileName);
-        recentList.prepend(fileName);
-        while (recentList.size() > maxRecent)
-            recentList.removeLast();
-        updateRecentList();
-    }
-}
-
-void MainWindow::addTrack() {
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    if(scene->state() == CREATE_TRACK) {
-        scene->setState(NO_STATE);
-    } else {
-        scene->setState(CREATE_TRACK);
-    }
-}
-
-void MainWindow::deleteTrack() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    // TODO trick to delete first selected track
-    if (!scene->selectedBoatModels().isEmpty()) {
-        BoatModel *boat = scene->selectedBoatModels()[0];
-        TrackModel * track = boat->track();
-        situation->undoStack()->push(new DeleteTrackUndoCommand(situation, track));
-    }
-}
-
-void MainWindow::addBoat() {
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    if (scene->state() == CREATE_BOAT) {
-        scene->setState(NO_STATE);
-    } else {
-        scene->setState(CREATE_BOAT);
-    }
-}
-
-void MainWindow::deleteModels() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    foreach (BoatModel *boat, scene->selectedBoatModels()) {
-        TrackModel* track = boat->track();
-        if (track->size() > 1) {
-            situation->undoStack()->push(new DeleteBoatUndoCommand(track, boat));
-        } else {
-            situation->undoStack()->push(new DeleteTrackUndoCommand(situation, track));
-        }
-    }
-    foreach (MarkModel *mark, scene->selectedMarkModels()) {
-        situation->undoStack()->push(new DeleteMarkUndoCommand(situation, mark));
-    }
-
-    foreach (PointModel *point, scene->selectedPointModels()) {
-        PolyLineModel *polyLine = point->polyLine();
-        if (polyLine->size() > 1) {
-            situation->undoStack()->push(new DeletePointUndoCommand(polyLine, point));
-        } else {
-            situation->undoStack()->push(new DeletePolyLineUndoCommand(situation, polyLine));
-        }
-    }
-}
-
-void MainWindow::addMark() {
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    if (scene->state() == CREATE_MARK) {
-        scene->setState(NO_STATE);
-    } else {
-        scene->setState(CREATE_MARK);
-    }
-}
-
-void MainWindow::addPolyLine() {
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    if (scene->state() == CREATE_LINE) {
-        scene->setState(NO_STATE);
-    } else {
-        scene->setState(CREATE_LINE);
-    }
-}
-
-void MainWindow::addPoint() {
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    if (scene->state() == CREATE_POINT) {
-        scene->setState(NO_STATE);
-    } else {
-        scene->setState(CREATE_POINT);
-    }
-}
-
-void MainWindow::trimSail() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
-    if (! boatList.isEmpty()) {
-        qreal trim = boatList[0]->trim();
-        qreal heading = fmod(boatList[0]->heading() - boatList[0]->wind() + 360, 360);
-        if(heading < 0) heading +=360;
-        if (heading < 180) {
-            trim -= 5;
-        } else {
-            trim += 5;
-        }
-        situation->undoStack()->push(new TrimBoatUndoCommand(boatList, trim));
-    }
-}
-
-void MainWindow::autotrimSail() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
-    if (! boatList.isEmpty()) {
-        situation->undoStack()->push(new TrimBoatUndoCommand(boatList, 0));
-    }
-}
-
-void MainWindow::untrimSail() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
-    if (! boatList.isEmpty()) {
-        qreal trim = boatList[0]->trim();
-        qreal heading = fmod(boatList[0]->heading() - boatList[0]->wind() + 360, 360);
-        if(heading < 0) heading +=360;
-        if (heading < 180) {
-            trim += 5;
-        } else {
-            trim -= 5;
-        }
-        situation->undoStack()->push(new TrimBoatUndoCommand(boatList, trim));
-    }
-}
-
-void MainWindow::togglePortOverlap() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
-    if (! boatList.isEmpty()) {
-        situation->undoStack()->push(new OverlapBoatUndoCommand(situation, boatList, Boats::port));
-    }
-}
-
-void MainWindow::toggleStarboardOverlap() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
-    if (! boatList.isEmpty()) {
-        situation->undoStack()->push(new OverlapBoatUndoCommand(situation, boatList, Boats::starboard));
-    }
-}
-
-void MainWindow::toggleHidden() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
-    if (! boatList.isEmpty()) {
-        situation->undoStack()->push(new HiddenBoatUndoCommand(situation, boatList, !boatList.first()->hidden()));
-    }
-}
-
-void MainWindow::toggleText() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    QList<PositionModel *> modelList = scene->selectedModels();
-    if (! modelList.isEmpty()) {
-        QString text;
-        if (modelList.first()->text().isEmpty()) {
-            text = tr("Protest!");
-        }
-        situation->undoStack()->push(new SetTextUndoCommand(modelList.first(), text));
-    }
-}
-
 void MainWindow::toggleFlag() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
         Boats::Flag flag = (Boats::Flag)action->data().toInt();
-
-        QList<BoatModel *> boatList = scene->selectedBoatModels();
-        if (! boatList.isEmpty()) {
-            situation->undoStack()->push(new FlagBoatUndoCommand(situation, boatList, flag));
-        }
-    }
+        engine->toggleFlag(flag);
+   }
 }
 
 void MainWindow::toggleAcceleration() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
         Boats::Acceleration acceleration = (Boats::Acceleration)action->data().toInt();
-
-        QList<BoatModel *> boatList = scene->selectedBoatModels();
-        if (! boatList.isEmpty()) {
-            situation->undoStack()->push(new AccelerateBoatUndoCommand(situation, boatList, acceleration));
-        }
-    }
-}
-
-void MainWindow::toggleSpin() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    QList<BoatModel *> boatList = scene->selectedBoatModels();
-    if (! boatList.isEmpty()) {
-        situation->undoStack()->push(new SpinBoatUndoCommand(situation, boatList, !boatList.first()->spin()));
-    }
-}
-
-void MainWindow::toggleMarkSide() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
-
-    QList<MarkModel *> markList = scene->selectedMarkModels();
-    if (! markList.isEmpty()) {
-        situation->undoStack()->push(new ToggleMarkSideUndoCommand(markList));
-    } else {
-        situation->undoStack()->push(new ToggleMarkSideUndoCommand(situation->marks()));
-    }
-}
-
-void MainWindow::toggleMarkArrow() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
-
-    QList<MarkModel *> markList = scene->selectedMarkModels();
-    if (! markList.isEmpty()) {
-        situation->undoStack()->push(new ToggleMarkArrowUndoCommand(markList));
-    } else {
-        situation->undoStack()->push(new ToggleMarkArrowUndoCommand(situation->marks()));
-    }
-}
-
-void MainWindow::toggleMarkZone() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    QList<MarkModel *> markList = scene->selectedMarkModels();
-    if (! markList.isEmpty()) {
-        situation->undoStack()->push(new ZoneMarkUndoCommand(situation, markList));
-    } else {
-        situation->undoStack()->push(new ZoneMarkUndoCommand(situation, situation->marks()));
+        engine->toggleAcceleration(acceleration);
     }
 }
 
 void MainWindow::setMarkColor() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    QList<MarkModel *> markList = scene->selectedMarkModels();
-    if (! markList.isEmpty()) {
+    if (! engine->currentModel()->selectedMarkModels().isEmpty()) {
         ColorPickerWidget colorEditor;
-        colorEditor.setColor( markList.first()->color());
-        situation->undoStack()->push(new ColorMarkUndoCommand(situation, markList, colorEditor.color()));
-    }
-}
-
-void MainWindow::toggleMarkLabel() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
-
-    QList<MarkModel *> markList = scene->selectedMarkModels();
-    if (! markList.isEmpty()) {
-        situation->undoStack()->push(new ToggleMarkLabelUndoCommand(markList));
-    } else {
-        situation->undoStack()->push(new ToggleMarkLabelUndoCommand(situation->marks()));
+        colorEditor.setColor( engine->currentModel()->selectedMarkModels().first()->color());
+        engine->setMarkColor(colorEditor.color());
     }
 }
 
 void MainWindow::editMarkLabel() {
-    SituationModel *situation = situationList.at(tabWidget->currentIndex());
-    SituationScene *scene = sceneList.at(tabWidget->currentIndex());
-    QList<MarkModel *> markList = scene->selectedMarkModels();
+    SituationModel *situation = engine->currentModel();
+    QList<MarkModel *> markList = situation->selectedMarkModels();
 
     if (! markList.isEmpty()) {
         QString oldText = markList.first()->labelText();
         bool ok;
         QString newText = QInputDialog::getText(this, tr("Edit mark label"), tr("Label text:"), QLineEdit::Normal, oldText, &ok);
         if (ok) {
-            situation->undoStack()->push(new SetMarkLabelUndoCommand(markList.first(), newText));
+            engine->editMarkLabel(newText);
         }
     }
 }
 
-void MainWindow::toggleLaylines() {
-    SituationModel *situation = situationList.at(currentSituation);
-    SituationScene *scene = sceneList.at(currentSituation);
-
-    QList<PositionModel *> modelList = scene->selectedModels();
-    if (! modelList.isEmpty()) {
-        situation->undoStack()->push(new SetLaylinesUndoCommand(modelList, !modelList.first()->laylines()));
-    }
-}
-
 void MainWindow::setLookAt() {
-    SituationModel *situation = situationList.at(currentSituation);
-    situation->undoStack()->push(new SetLookAtUndoCommand(situation, lookDirectionSlider->value(), tiltSlider->value()));
+    engine->setLookAt(lookDirectionSlider->value(), tiltSlider->value());
 }
 
 void MainWindow::toggleLang() {
-
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
 
@@ -1865,83 +1688,53 @@ void MainWindow::toggleLang() {
 }
 
 void MainWindow::animate(bool state, bool interactive) {
-    SituationScene *scene = sceneList.at(currentSituation);
+    SituationModel *situation = engine->currentModel();
 
     if (state) {
-        if (scene->state() != ANIMATE) {
-            scene->setState(ANIMATE);
-            scene->clearSelection();
-            scene->setAnimation();
+        if(!situation->stateMachine()->animationState()->isActive()) {
+            engine->animate();
 
-            connect(scene->animation(), SIGNAL(stateChanged(QAbstractAnimation::State, QAbstractAnimation::State)),
+            undoAction->setEnabled(false);
+            redoAction->setEnabled(false);
+            connect(situation->animation(), SIGNAL(stateChanged(QAbstractAnimation::State, QAbstractAnimation::State)),
                     this, SLOT(changeAnimationState(QAbstractAnimation::State, QAbstractAnimation::State)));
-            connect(scene->animation(), SIGNAL(timeChanged(int)),
+            connect(situation->animation(), SIGNAL(timeChanged(int)),
                     animationSlider, SLOT(setValue(int)));
             connect(animationSlider, SIGNAL(valueChanged(int)),
-                    scene->animation(), SLOT(setCurrentTime(int)));
+                    situation->animation(), SLOT(setCurrentTime(int)));
 
-            scene->animation()->setCurrentTime(0);
             if (interactive) {
                 if (!toggleAnimationToolbarAction->isChecked()) {
                     toggleAnimationToolbarAction->setChecked(true);
                 }
-                animationSlider->setRange(0,scene->animation()->duration());
+                animationSlider->setRange(0,situation->animation()->duration());
                 animationSlider->setEnabled(true);
-                startAction->setEnabled(true);
-                loopAction->setEnabled(true);
                 }
             }
     } else {
-        if (scene->state() == ANIMATE) {
-            scene->setState(NO_STATE);
-            scene->unSetAnimation();
+        if(situation->stateMachine()->animationState()->isActive()) {
+            engine->animate();
+
+            undoAction->setEnabled(situation->undoStack()->canUndo());
+            redoAction->setEnabled(situation->undoStack()->canRedo());
             disconnect(this, SLOT(changeAnimationState(QAbstractAnimation::State,QAbstractAnimation::State)));
             disconnect(animationSlider, SLOT(setValue(int)));
-            disconnect(scene->animation(), SLOT(setCurrentTime(int)));
+            disconnect(situation->animation(), SLOT(setCurrentTime(int)));
 
             animationSlider->setEnabled(false);
-            scene->animation()->stop();
-            startAction->setEnabled(false);
-            stopAction->setEnabled(false);
-            loopAction->setEnabled(false);
+            situation->animation()->stop();
         }
     }
 }
 
-void MainWindow::play() {
-    if (debugLevel & 1 << ANIMATION) std::cout << "playing" << std::endl;
-    SituationScene *scene = sceneList.at(currentSituation);
-    pauseAction->setChecked(false);
-    scene->animation()->start();
-}
-
-void MainWindow::pause(bool pause) {
-    SituationScene *scene = sceneList.at(currentSituation);
-    if (pause) {
-        if (debugLevel & 1 << ANIMATION) std::cout << "pausing" << std::endl;
-        scene->animation()->setPaused(true);
-    } else {
-        if (debugLevel & 1 << ANIMATION) std::cout << "resuming" << std::endl;
-        scene->animation()->setPaused(false);
-    }
-}
-
-void MainWindow::stop() {
-    if (debugLevel & 1 << ANIMATION) std::cout << "stopping" << std::endl;
-    SituationScene *scene = sceneList.at(currentSituation);
-    pauseAction->setChecked(false);
-    scene->animation()->stop();
-    scene->animation()->setCurrentTime(0);
-}
-
 void MainWindow::loop(bool loop) {
-    SituationScene *scene = sceneList.at(currentSituation);
+    SituationModel *situation = engine->currentModel();
     if (loop) {
         if (debugLevel & 1 << ANIMATION) std::cout << "loop play" << std::endl;
-        scene->animation()->setLoopCount(0);
+        situation->animation()->setLoopCount(-1);
     } else {
         if (debugLevel & 1 << ANIMATION) std::cout << "single play" << std::endl;
-        scene->animation()->setLoopCount(1);
+        situation->animation()->setLoopCount(1);
     }
 }
 
@@ -1949,25 +1742,16 @@ void MainWindow::changeAnimationState(QAbstractAnimation::State newState, QAbstr
     switch(newState) {
         case QAbstractAnimation::Running:
             if (debugLevel & 1 << ANIMATION) std::cout << "state running" << std::endl;
-            startAction->setEnabled(false);
-            pauseAction->setEnabled(true);
-            stopAction->setEnabled(true);
             animationSlider->blockSignals(true);
             break;
 
         case QAbstractAnimation::Paused:
             if (debugLevel & 1 << ANIMATION) std::cout << "state paused" << std::endl;
-            startAction->setEnabled(true);
-            pauseAction->setEnabled(true);
-            stopAction->setEnabled(true);
             animationSlider->blockSignals(false);
             break;
 
         case QAbstractAnimation::Stopped:
             if (debugLevel & 1 << ANIMATION) std::cout << "state not running" << std::endl;
-            startAction->setEnabled(true);
-            pauseAction->setEnabled(false);
-            stopAction->setEnabled(false);
             animationSlider->blockSignals(false);
             break;
     }
@@ -1978,7 +1762,7 @@ void MainWindow::about() {
 	QString("<center><img src=\":/images/about.png\">"
             "<p><b>Boat Scenario</b> - a Race Scenario drawing tool.</p>"
             "<p>Version %1</p></center>"
-            "<p>Copyright (C) 2008-2011 Thibaut GRIDEL </p>"
+            "<p>Copyright (C) 2008-2019 Thibaut GRIDEL </p>"
             "<p></p>"
             "<p>visit <a href=\"http://boats.sf.net\">http://boats.sf.net</a></p>"
             "<p>This program is free software; you can redistribute it and/or modify "

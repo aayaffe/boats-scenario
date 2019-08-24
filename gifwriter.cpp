@@ -45,11 +45,11 @@ bool GifWriter::write(QList<QImage*> imageList) {
     int retrn;
     QImage *image = imageList.first();
 
-    fileType = EGifOpen((void*) this, myOutputFunc);
-    EGifSetGifVersion("89a");
+    fileType = EGifOpen((void*) this, myOutputFunc, &retrn);
+    EGifSetGifVersion(fileType, true);
 
     int colors = 256;
-    ColorMapObject * cmap = MakeMapObject(colors, NULL);
+    ColorMapObject * cmap = GifMakeMapObject(colors, NULL);
     for (int i = 0; i< qMin(colors, m_colormap.size()); i++) {
         QRgb color = m_colormap[i];
         cmap->Colors[i].Blue = qBlue(color);
@@ -58,13 +58,14 @@ bool GifWriter::write(QList<QImage*> imageList) {
     }
 
     retrn = EGifPutScreenDesc(fileType, image->width(), image->height(), 8, 0, cmap);
-    FreeMapObject(cmap);
+    GifFreeMapObject(cmap);
 
     char nameExtension[11] = { 'N','E','T','S','C','A','P','E','2','.','0' };
     char loopExtension[3] = { 1, 0, 0 };
-    retrn = EGifPutExtensionFirst(fileType, 0xFF, 11, &nameExtension);
-    retrn = EGifPutExtensionNext(fileType, 0xFF, 3, &loopExtension);
-    retrn = EGifPutExtensionLast(fileType, 0xFF, 0, NULL);
+    retrn = EGifPutExtensionLeader(fileType, 0xFF);
+    retrn = EGifPutExtensionBlock(fileType, 11, &nameExtension);
+    retrn = EGifPutExtensionBlock(fileType, 3, &loopExtension);
+    retrn = EGifPutExtensionTrailer(fileType);
     retrn = EGifPutComment(fileType, "Boat Scenario http://boats.berlios.de");
 
     char gifExtension[4] = { 0, 8, 0, 0 };
@@ -80,6 +81,6 @@ bool GifWriter::write(QList<QImage*> imageList) {
         }
     }
 
-    retrn = EGifCloseFile(fileType);
+    retrn = EGifCloseFile(fileType, &retrn);
     return true;
 }

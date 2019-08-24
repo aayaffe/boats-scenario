@@ -48,8 +48,11 @@ class SituationModel;
 
 class MarkModel : public PositionModel {
         Q_OBJECT
+        Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
+        Q_PROPERTY(bool zone READ zone WRITE setZone NOTIFY zoneChanged)
+        Q_PROPERTY(bool arrowVisible READ arrowVisible WRITE setArrowVisible NOTIFY arrowVisibilityChanged)
     public:
-        MarkModel(SituationModel *situation, QObject *parent = 0);
+        MarkModel(SituationModel *situation = 0, QObject *parent = 0);
         ~MarkModel();
 
         // Setters and Getters for Model Data

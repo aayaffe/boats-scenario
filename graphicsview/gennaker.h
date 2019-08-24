@@ -26,11 +26,11 @@
 #ifndef GENNAKER_H
 #define GENNAKER_H
 
-#include <QGraphicsPathItem>
-#include <QObject>
-
 #include "boats.h"
 #include "sail.h"
+
+#include <QObject>
+#include <QGraphicsPathItem>
 
 class BoatModel;
 

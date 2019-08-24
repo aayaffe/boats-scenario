@@ -25,10 +25,19 @@
 #ifndef SITUATIONWIDGET_H
 #define SITUATIONWIDGET_H
 
-#include <QtGui>
 
 #include "tracktablemodel.h"
 #include "windtablemodel.h"
+
+#include <QTableWidget>
+#include <QVBoxLayout>
+#include <QGroupBox>
+#include <QLabel>
+#include <QCheckBox>
+#include <QSpinBox>
+#include <QComboBox>
+#include <QFormLayout>
+#include <QPlainTextEdit>
 
 class SituationModel;
 

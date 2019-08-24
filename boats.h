@@ -25,7 +25,9 @@
 #ifndef BOATS_H
 #define BOATS_H
 
-#include <QtGui>
+#include <QObject>
+#include <QList>
+#include <QMetaEnum>
 
 #define ENUM_NAME(o,e,v) (o::staticMetaObject.enumerator(o::staticMetaObject.indexOfEnumerator(#e)).valueToKey((v)))
 
@@ -45,14 +47,18 @@ public:
         keelboat,
         keelboatwithgenn,
         int49er,
+        rsfeva,
         int470,
         int420,
         int29er,
+        finn,
         laser,
         firefly,
         topper,
         optimist,
         tornado,
+        nacra17,
+        diam24,
         startboat,
         rib,
         unknown

@@ -25,7 +25,7 @@
 #ifndef COLORPICKERWIDGET_H
 #define COLORPICKERWIDGET_H
 
-#include <QtGui>
+#include <QWidget>
 
 class ColorPickerWidget : public QWidget
 {

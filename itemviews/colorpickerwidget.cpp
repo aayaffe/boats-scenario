@@ -28,6 +28,8 @@
 
 #include "commontypes.h"
 
+#include <QColorDialog>
+
 extern int debugLevel;
 
 ColorPickerWidget::ColorPickerWidget(QWidget *parent)

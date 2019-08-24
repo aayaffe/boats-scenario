@@ -1,114 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="da_DK" sourcelanguage="en">
+<TS version="2.1">
 <context>
     <name>ArrowGraphicsItem</name>
     <message>
         <source>Wind</source>
-        <translation>Vind</translation>
+        <translation>ветер</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>&amp;New File</source>
-        <translation>&amp;Ny fil</translation>
+        <translation>Создать</translation>
     </message>
     <message>
         <source>Ctrl+N</source>
-        <translation>Ctrl+N</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Open File...</source>
-        <translation>&amp;Åbn fil...</translation>
+        <translation>Открыть...</translation>
     </message>
     <message>
         <source>Ctrl+O</source>
-        <translation>Ctrl+O</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Save File</source>
-        <translation>&amp;Gem fil</translation>
+        <translation>Сохранить</translation>
     </message>
     <message>
         <source>Ctrl+S</source>
-        <translation>Ctrl+S</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Save &amp;As...</source>
-        <translation>Gem &amp;som...</translation>
+        <translation>Сохранить как...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+S</source>
-        <translation>Ctrl+Shift+S</translation>
+        <translation></translation>
     </message>
     <message>
         <source>New &amp;Tab</source>
-        <translation>Nyt &amp;faneblad</translation>
+        <translation>Новая вкладка</translation>
     </message>
     <message>
         <source>Ctrl+T</source>
-        <translation>Ctrl+T</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Close Tab</source>
-        <translation>&amp;Luk faneblad</translation>
+        <translation>Закрыть вкладку</translation>
     </message>
     <message>
         <source>Ctrl+W</source>
-        <translation>Ctrl+W</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Restore Last Session...</source>
-        <translation>&amp;Gendan sidste session...</translation>
+        <translation>Восстановить предыдущий сеанс...</translation>
     </message>
     <message>
         <source>&amp;Print...</source>
-        <translation>&amp;Udskriv...</translation>
+        <translation>Печать...</translation>
     </message>
     <message>
         <source>Print P&amp;review...</source>
-        <translation>&amp;Vis udskrift...</translation>
+        <translation>Предварительный просмотр...</translation>
     </message>
     <message>
         <source>&amp;Export Pdf...</source>
-        <translation>Eksporter &amp;Pdf...</translation>
+        <translation>Экспорт в PDF-файл...</translation>
     </message>
     <message>
         <source>Ctrl+E</source>
-        <translation>Ctrl+E</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Export &amp;Image...</source>
-        <translation>Eksporter &amp;billede...</translation>
+        <translation>Экспорт в файл изображения...</translation>
     </message>
     <message>
         <source>Ctrl+I</source>
-        <translation>Ctrl+I</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Export Ani&amp;mation...</source>
-        <translation>Eksporter &amp;Animation...</translation>
+        <translation>Экспорт анимации...</translation>
     </message>
     <message>
         <source>Ctrl+V</source>
-        <translation>Ctrl+V</translation>
+        <translation></translation>
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation>Afsl&amp;ut</translation>
+        <translation>Выход</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
-        <translation>Ctrl+Q</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Exit the application</source>
-        <translation>Afslut programmet</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Create &amp;Track</source>
-        <translation>Opret &amp;Spor</translation>
+        <translation>Создать траекторию</translation>
     </message>
     <message>
         <source>Ctrl+Ins</source>
@@ -116,7 +116,7 @@
     </message>
     <message>
         <source>Create &amp;Boat</source>
-        <translation>Opret &amp;Båd</translation>
+        <translation>Создать лодку</translation>
     </message>
     <message>
         <source>Ins</source>
@@ -124,15 +124,27 @@
     </message>
     <message>
         <source>Create &amp;Mark</source>
-        <translation>Opret &amp;mærke</translation>
+        <translation>Создать знак</translation>
     </message>
     <message>
         <source>Alt+Ins</source>
         <translation>Alt+Ins</translation>
     </message>
     <message>
+        <source>Create &amp;PolyLine</source>
+        <translation>Создать линию</translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+Ins</source>
+        <translation>Ctrl+Alt+Ins</translation>
+    </message>
+    <message>
+        <source>Create Poin&amp;t</source>
+        <translation>Создать точку</translation>
+    </message>
+    <message>
         <source>&amp;Port Overlap</source>
-        <translation>&amp;Bagbord overlap</translation>
+        <translation>Связанность слева</translation>
     </message>
     <message>
         <source>Alt+&lt;</source>
@@ -140,7 +152,7 @@
     </message>
     <message>
         <source>&amp;Starboard Overlap</source>
-        <translation>&amp;Styrbord overlap</translation>
+        <translation>Связанность справа</translation>
     </message>
     <message>
         <source>Alt+&gt;</source>
@@ -148,19 +160,23 @@
     </message>
     <message>
         <source>&amp;Text</source>
-        <translation>&amp;Tekst</translation>
+        <translation>Текст</translation>
     </message>
     <message>
         <source>Alt+T</source>
         <translation>Alt+T</translation>
     </message>
     <message>
+        <source>Toggle &amp;Spinnaker</source>
+        <translation>Нарисовать спинакер</translation>
+    </message>
+    <message>
         <source>Toggle Mark &amp;Zone</source>
-        <translation>Vis/skjul mærke&amp;zone</translation>
+        <translation>Обозначить зону у знака</translation>
     </message>
     <message>
         <source>Delete Track</source>
-        <translation>Slet spor</translation>
+        <translation>Удалить траекторию</translation>
     </message>
     <message>
         <source>Ctrl+Del</source>
@@ -168,7 +184,7 @@
     </message>
     <message>
         <source>&amp;Delete Selection</source>
-        <translation>Slet &amp;markering</translation>
+        <translation>Удалить выбранные объекты</translation>
     </message>
     <message>
         <source>Del</source>
@@ -176,7 +192,7 @@
     </message>
     <message>
         <source>&amp;Animate</source>
-        <translation>&amp;Animér</translation>
+        <translation>Анимация</translation>
     </message>
     <message>
         <source>Ctrl+A</source>
@@ -184,7 +200,7 @@
     </message>
     <message>
         <source>&amp;Play</source>
-        <translation>A&amp;fspil</translation>
+        <translation>Старт</translation>
     </message>
     <message>
         <source>P</source>
@@ -192,7 +208,7 @@
     </message>
     <message>
         <source>&amp;Pause</source>
-        <translation>&amp;Pause</translation>
+        <translation>Пауза</translation>
     </message>
     <message>
         <source>M</source>
@@ -200,15 +216,15 @@
     </message>
     <message>
         <source>&amp;Stop</source>
-        <translation>&amp;Stop</translation>
+        <translation>Стоп</translation>
     </message>
     <message>
         <source>Space</source>
-        <translation>Space</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Loop</source>
-        <translation>&amp;Løkke</translation>
+        <translation>В цикле</translation>
     </message>
     <message>
         <source>L</source>
@@ -216,7 +232,7 @@
     </message>
     <message>
         <source>&amp;Undo</source>
-        <translation>&amp;Fortryd</translation>
+        <translation>Отменить</translation>
     </message>
     <message>
         <source>Ctrl+Z</source>
@@ -224,7 +240,7 @@
     </message>
     <message>
         <source>&amp;Redo</source>
-        <translation>&amp;Omgør</translation>
+        <translation>Вернуть</translation>
     </message>
     <message>
         <source>Ctrl+Y</source>
@@ -232,11 +248,11 @@
     </message>
     <message>
         <source>Shift+Ctrl+Z</source>
-        <translation>Ctrl+Shift+Z</translation>
+        <translation>Shift+Ctrl+Z</translation>
     </message>
     <message>
         <source>Zoom &amp;In</source>
-        <translation>Zoom &amp;ind</translation>
+        <translation>Увеличить</translation>
     </message>
     <message>
         <source>Ctrl++</source>
@@ -244,7 +260,7 @@
     </message>
     <message>
         <source>Zoom &amp;Out</source>
-        <translation>Zoom &amp;ud</translation>
+        <translation>Уменьшить</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
@@ -252,7 +268,7 @@
     </message>
     <message>
         <source>Zoom &amp;Fit</source>
-        <translation>Zoo&amp;m tilpas</translation>
+        <translation>В размер страницы</translation>
     </message>
     <message>
         <source>Ctrl+F</source>
@@ -260,19 +276,19 @@
     </message>
     <message>
         <source>Main Toolbar</source>
-        <translation>Hovedværktøjslinje</translation>
+        <translation>Основная панель инструментов</translation>
     </message>
     <message>
         <source>Animation Toolbar</source>
-        <translation>Værktøjslinjen Animation</translation>
+        <translation>Панель инструментов Анимация</translation>
     </message>
     <message>
         <source>Scenario Dock</source>
-        <translation>Scenarie dock</translation>
+        <translation>Панель моделирования</translation>
     </message>
     <message>
         <source>&amp;About</source>
-        <translation>&amp;Om</translation>
+        <translation>О программе</translation>
     </message>
     <message>
         <source>%1 - %2 [*]</source>
@@ -280,35 +296,35 @@
     </message>
     <message>
         <source>Boat Scenario</source>
-        <translation>Bådsecnarie</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Recent</source>
-        <translation>N&amp;ylige</translation>
+        <translation>Последние</translation>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation>&amp;Fil</translation>
+        <translation>Файл</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>&amp;Redigér</translation>
+        <translation>Редактирование</translation>
     </message>
     <message>
         <source>&amp;History</source>
-        <translation>&amp;Historie</translation>
+        <translation>История</translation>
     </message>
     <message>
         <source>&amp;Animation</source>
-        <translation>&amp;Animation</translation>
+        <translation>Анимация</translation>
     </message>
     <message>
         <source>&amp;Zoom</source>
-        <translation>&amp;Zoom</translation>
+        <translation>Масштаб</translation>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation>&amp;Vis</translation>
+        <translation>Просмотр</translation>
     </message>
     <message>
         <source>&amp;%1 %2</source>
@@ -317,101 +333,82 @@
     <message>
         <source>The document %1 has been modified.
 Do you want to save your changes?</source>
-        <translation>Dokumentet %1 er ændret.\n
-Vil du gemme ændringerne?</translation>
+        <translation>Файл был изменен. Сохранить изменения?</translation>
     </message>
     <message>
         <source>Ctrl+P</source>
-        <translatorcomment>Ctrl+P</translatorcomment>
         <translation></translation>
     </message>
     <message>
         <source>Ctrl+R</source>
-        <translation>Ctrl+R</translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Flag</source>
-        <translation>&amp;Flag</translation>
+        <translation>Флаг</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;Hjælp</translation>
+        <translation>Помощь</translation>
     </message>
     <message>
         <source>Choose &amp;Language</source>
-        <translation>Væ&amp;lg sprog</translation>
+        <translation>Выбрать язык интерфейса</translation>
     </message>
     <message>
         <source>Open Scenario File</source>
-        <translation>Åben senarie-fil</translation>
+        <translation></translation>
     </message>
     <message>
         <source>xmlscenario Files (*.xbs)</source>
-        <translation>xmlscenario filer (*.xbs)</translation>
+        <translation>Файл xmlscenario (*.xbs)</translation>
     </message>
     <message>
         <source>File loaded</source>
-        <translation>Fil indlæst</translation>
+        <translation>Ôàéë çàãðóæåí</translation>
     </message>
     <message>
         <source>Save Scenario</source>
-        <translation>Gem scenarie</translation>
+        <translation>Сохранить</translation>
     </message>
     <message>
         <source>%1 already exists.
 Do you want to replace it?</source>
-        <translation>%1 findes allerede.
-Vil du overskrive den?</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Cannot write file %1:
 %2.</source>
-        <translation>Kan ikke skrive fil %1:
-%2.</translation>
+        <translation> %1:
+ %2.</translation>
     </message>
     <message>
         <source>File saved</source>
-        <translation>Fil gemt</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Print Document</source>
-        <translation>Udskriv dokument</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Export Image</source>
-        <translation>Eksportér billede</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Export Animation</source>
-        <translation>Eksportér animation</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Exporting Animation...</source>
-        <translation>Eksporteter animation...</translation>
+        <translation>...</translation>
     </message>
     <message>
         <source>Abort</source>
-        <translation>Afbryd</translation>
+        <translation></translation>
     </message>
     <message>
         <source>About Boat Scenario</source>
-        <translation>Om Boat Scenario</translation>
-    </message>
-    <message>
-        <source>Create &amp;PolyLine</source>
-        <translation>Opret &amp;polylinje</translation>
-    </message>
-    <message>
-        <source>Ctrl+Alt+Ins</source>
-        <translation>Ctrl+Alt+Ins</translation>
-    </message>
-    <message>
-        <source>Create Poin&amp;t</source>
-        <translation>Opret punk&amp;t</translation>
-    </message>
-    <message>
-        <source>Toggle &amp;Spinnaker</source>
-        <translation>Vis/skjul &amp;spiler</translation>
+        <translation>О Boat Scenario</translation>
     </message>
     <message>
         <source>Alt+S</source>
@@ -423,7 +420,7 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>&amp;Hide</source>
-        <translation>Skjul</translation>
+        <translation>Скрыть</translation>
     </message>
     <message>
         <source>Alt+D</source>
@@ -431,7 +428,7 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>Trim Sail</source>
-        <translation>Hal hjem</translation>
+        <translation>Добрать парус</translation>
     </message>
     <message>
         <source>&lt;</source>
@@ -439,7 +436,7 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>Auto Trim</source>
-        <translation>Automatisk skødning</translation>
+        <translation>Автонастройка парусов</translation>
     </message>
     <message>
         <source>=</source>
@@ -447,7 +444,7 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>Untrim Sail</source>
-        <translation>Slæk ud</translation>
+        <translation>Потравить парус</translation>
     </message>
     <message>
         <source>&gt;</source>
@@ -455,11 +452,11 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>&amp;Acceleration</source>
-        <translation>Acceleration</translation>
+        <translation>Скорость</translation>
     </message>
     <message>
         <source>Toggle &amp;Laylines</source>
-        <translation>Vis/skjul laylines</translation>
+        <translation>Обозначить Laylines</translation>
     </message>
     <message>
         <source>Alt+L</source>
@@ -467,47 +464,47 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>Set Mark &amp;Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Изменить цвет знака</translation>
     </message>
     <message>
         <source>Alt+C</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle &amp;Mark Side</source>
-        <translation type="unfinished"></translation>
+        <translation>Изменить направление огибания знака</translation>
     </message>
     <message>
         <source>Alt+M</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle Mark Arro&amp;w</source>
-        <translation type="unfinished"></translation>
+        <translation>Направление огибания знака</translation>
     </message>
     <message>
         <source>Alt+W</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toggle Mark &amp;Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Обозначить номер знака</translation>
     </message>
     <message>
         <source>&amp;Edit Mark Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Изменить номер знака</translation>
     </message>
     <message>
         <source>Alt+E</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Edit mark label</source>
-        <translation type="unfinished"></translation>
+        <translation>Изменить номер знака</translation>
     </message>
     <message>
         <source>Label text:</source>
-        <translation type="unfinished"></translation>
+        <translation>Текст:</translation>
     </message>
     <message>
         <source>Trim Jib</source>
@@ -562,7 +559,7 @@ Vil du overskrive den?</translation>
     <name>QObject</name>
     <message>
         <source>The file is not an xmlscenario version 1.0 file.</source>
-        <translation>Filen er ikke en xmlscenario version 1.0 fil.</translation>
+        <translation>Äàííûé ôàéë íå ÿâëÿåòñÿ ôàéëîì  xmlscenario 1.0.</translation>
     </message>
     <message>
         <source>Laser</source>
@@ -578,19 +575,19 @@ Vil du overskrive den?</translation>
     </message>
     <message>
         <source>Committee boat</source>
-        <translation type="unfinished"></translation>
+        <translation>Судно Гоночного комитета</translation>
     </message>
     <message>
         <source>RIB</source>
-        <translation type="unfinished"></translation>
+        <translation>Катер</translation>
     </message>
     <message>
         <source>Spin Keelboat</source>
-        <translation type="unfinished"></translation>
+        <translation>Килевая яхта со спинакером</translation>
     </message>
     <message>
         <source>Gennaker Keelboat</source>
-        <translation type="unfinished"></translation>
+        <translation>Килевая яхта с геннакером</translation>
     </message>
     <message>
         <source>Topper</source>
@@ -637,103 +634,103 @@ Vil du overskrive den?</translation>
     <name>SituationModel</name>
     <message>
         <source>Protest!</source>
-        <translation>Protest!</translation>
+        <translation>!</translation>
     </message>
 </context>
 <context>
     <name>SituationPrint</name>
     <message>
         <source>Rule</source>
-        <translation>Regel</translation>
+        <translation>Правила</translation>
     </message>
 </context>
 <context>
     <name>SituationWidget</name>
     <message>
         <source>Options</source>
-        <translation>Indstillinger</translation>
+        <translation>Параметры</translation>
     </message>
     <message>
         <source>Series</source>
-        <translation>Bådtype</translation>
+        <translation>Класс</translation>
     </message>
     <message>
         <source>Zone Length</source>
-        <translation>Mærkexone længde</translation>
+        <translation>Длина зоны</translation>
     </message>
     <message>
         <source>Tracks</source>
-        <translation>Spor</translation>
+        <translation>Траектории</translation>
     </message>
     <message>
         <source>Scenario</source>
-        <translation>Situation</translation>
+        <translation>Ситуация</translation>
     </message>
     <message>
         <source>Title</source>
-        <translation>Titel</translation>
+        <translation>Заголовок</translation>
     </message>
     <message>
         <source>Rules</source>
-        <translation>Regler</translation>
+        <translation>Правила</translation>
     </message>
     <message>
         <source>Abstract</source>
-        <translation>Opsummering</translation>
+        <translation>Краткое описание</translation>
     </message>
     <message>
         <source>Description</source>
-        <translation>Beskrivelse</translation>
+        <translation>Описание</translation>
     </message>
     <message>
         <source>Wind</source>
-        <translation>Vind</translation>
+        <translation>ветер</translation>
     </message>
     <message>
         <source>Show Wind</source>
-        <translation>Vis vind</translation>
+        <translation>Показать ветер</translation>
     </message>
     <message>
         <source>Show Grid</source>
-        <translation>Vis gitter</translation>
+        <translation>Показать сетку</translation>
     </message>
     <message>
         <source>Layline Angle</source>
-        <translation>Layline vinkel</translation>
+        <translation>Угол Layline</translation>
     </message>
 </context>
 <context>
     <name>TrackTableModel</name>
     <message>
         <source>Color</source>
-        <translation>Farve</translation>
+        <translation>Цвет</translation>
     </message>
     <message>
         <source>Path</source>
-        <translation>Spor</translation>
+        <translation>Отобразить</translation>
     </message>
     <message>
         <source>Series</source>
-        <translation>Bådtype</translation>
+        <translation>Класс</translation>
     </message>
     <message>
         <source>Follow</source>
-        <translation type="unfinished"></translation>
+        <translation>Следовать курсу</translation>
     </message>
 </context>
 <context>
     <name>WindTableModel</name>
     <message>
         <source>Index</source>
-        <translation>Indeks</translation>
+        <translation>№</translation>
     </message>
     <message>
         <source>Direction</source>
-        <translation>Retning</translation>
+        <translation>Направление</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Slet</translation>
+        <translation>Удалить</translation>
     </message>
 </context>
 </TS>

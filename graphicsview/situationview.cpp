@@ -23,10 +23,13 @@
 //
 //
 #include <iostream>
+#include <cmath>
 
 #include "commontypes.h"
 
 #include "situationview.h"
+
+#include <QtGui/QWheelEvent>
 
 extern int debugLevel;
 
@@ -105,16 +108,13 @@ void SituationView::zoomOut() {
 */
 
 void SituationView::zoomFit() {
-    QMatrix old = matrix();
-    fitInView(scene()->itemsBoundingRect(),Qt::KeepAspectRatio);
-    qreal s = matrix().m11();
+    fitInView(scene()->itemsBoundingRect(),Qt::KeepAspectRatio); // Qt doesn't seem to get this quite right when the view is tilted, but close enough
+    qreal s = sqrt (transform().det());
     if (s < 10.0 && s > 0.1) {
-        // adopt scaling
-        scaleValue = (round(s * 20)) / 20.0;
+        // adapt scaling
+        scaleValue = pow(1.1, round(log(s)/log(1.1)));
     }
-    // apply calculated or default scale
-    QMatrix m(scaleValue, old.m21(), old.m21(), scaleValue, old.dx(), old.dy());
-    setMatrix(m);
+    transformView();
 }
 
 void SituationView::setLookDirection(qreal value) {

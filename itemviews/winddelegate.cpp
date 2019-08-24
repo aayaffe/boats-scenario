@@ -29,11 +29,14 @@
 #include "commontypes.h"
 #include "boats.h"
 
+#include <QDoubleSpinBox>
+
 extern int debugLevel;
 
 QWidget * WindDelegate::createEditor(QWidget *parent,
     const QStyleOptionViewItem &option,
     const QModelIndex &index) const {
+    Q_UNUSED(option);
     if (debugLevel & 1 << DELEGATE) std::cout << "createEditor " << index.column() << std::endl;
 
     switch (index.column()) {
@@ -59,7 +62,7 @@ void WindDelegate::setEditorData(QWidget *editor,
     switch (index.column()) {
         case WIND_DIRECTION: {
             QDoubleSpinBox *spin = static_cast<QDoubleSpinBox*>(editor);
-            spin->setValue(qVariantValue<qreal>(index.data()));
+            spin->setValue(index.data().value<qreal>());
             }
             break;
         default:

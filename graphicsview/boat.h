@@ -25,10 +25,6 @@
 #ifndef BOAT_H
 #define BOAT_H
 
-#include <QGraphicsItem>
-#include <QObject>
-#include <QColor>
-
 #include "boats.h"
 #include "sail.h"
 #include "spinnaker.h"
@@ -36,6 +32,10 @@
 #include "flag.h"
 #include "bubble.h"
 #include "laylines.h"
+
+#include <QObject>
+#include <QColor>
+#include <QGraphicsItem>
 
 class BoatModel;
 
@@ -147,9 +147,6 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_series holds the series of the TrackModel
         Boats::Series m_series;
 
-        /// \a m_selected holds selection information
-        bool m_selected;
-
         /// \a m_order holds the stacking order in the TrackModel
         int m_order;
 
@@ -163,14 +160,9 @@ class BoatGraphicsItem : public QObject, public QGraphicsItem {
         LaylinesGraphicsItem *m_laylines;
 
         /// \a m_multiSelect is true if Ctrl-modified was in effect when mousePressEvent happened
-        /// Need to save this state until receive mouseReleaseEvent to determine what to do
         bool m_multiSelect;
 
-        /// \a if m_actOnMouseRelease is true then need to do something when mouse button is released
-        bool m_actOnMouseRelease;
-
         /// \a m_trackSelect is true if mousePressEvent is Shift-modified
-        /// Need to save this state until receive mouseReleaseEvent to determine what to do
         bool m_trackSelect;
 };
 

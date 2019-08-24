@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0">
+<TS version="2.1">
+<context>
+    <name>ArrowGraphicsItem</name>
+    <message>
+        <source>Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>MainWindow</name>
     <message>
@@ -268,22 +275,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Create Track</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Create Boat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Create Mark</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Animate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>%1 - %2 [*]</source>
         <translation type="unfinished"></translation>
     </message>
@@ -357,20 +348,6 @@ Do you want to save your changes?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open Scenario file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Parse error in file %1 at line %2, column %3:
-%4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>File loaded</source>
         <translation type="unfinished"></translation>
     </message>
@@ -413,15 +390,7 @@ Do you want to replace it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Protest!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>About Boat Scenario</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Create Line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -536,6 +505,54 @@ Do you want to replace it?</source>
         <source>Label text:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Trim Jib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>,</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto Jib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Untrim Jib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trim Spin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+,</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto Spin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Untrim Spin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -593,6 +610,29 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>470</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RS Feva</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Finn</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nacra 17</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Diam 24</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SituationModel</name>
+    <message>
+        <source>Protest!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -25,13 +25,13 @@
 #ifndef MARK_H
 #define MARK_H
 
-#include <QGraphicsItem>
-#include <QObject>
-#include <QColor>
-
 #include "commontypes.h"
 #include "bubble.h"
 #include "laylines.h"
+
+#include <QObject>
+#include <QColor>
+#include <QGraphicsItem>
 
 class MarkModel;
 
@@ -105,9 +105,6 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_bubble holds the bubble to display
         BubbleGraphicsItem *m_bubble;
 
-        /// \a m_selected holds selection information
-        bool m_selected;
-
         /// \a m_order holds the stacking order in the mark list
         int m_order;
 
@@ -126,9 +123,6 @@ class MarkGraphicsItem : public QObject, public QGraphicsItem {
         /// \a m_multiSelect is true if Ctrl-modified was in effect when mousePressEvent happened
         /// Need to save this state until receive mouseReleaseEvent to determine what to do
         bool m_multiSelect;
-
-        /// \a if m_actOnMouseRelease is true then need to do something when mouse button is released
-        bool m_actOnMouseRelease;
 
         bool m_labelVisible;
         QString m_labelText;

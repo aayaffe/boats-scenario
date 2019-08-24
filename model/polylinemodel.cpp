@@ -68,6 +68,8 @@ PointModel* PolyLineModel::addPoint(PointModel *point, int order) {
         order = m_points.size();
     }
     m_points.insert(order, point);
+    connect(&m_situation->wind(), SIGNAL(directionChanged(qreal)),
+            point, SLOT(setWind(qreal)));
     m_situation->addingPoint(point);
     if (debugLevel & 1 << MODEL) std::cout << "Adding Point " << order+1 << std::endl;
     changingPolyLine(this);

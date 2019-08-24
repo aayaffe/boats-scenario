@@ -6,7 +6,7 @@
 //
 // Author: Thibaut GRIDEL <tgridel@free.fr>
 //
-// Copyright (c) 2008-2011 Thibaut GRIDEL
+// Copyright (c) 2008-2014 Thibaut GRIDEL
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,13 +25,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui>
-
 #include "situationwidget.h"
 #include "situationscene.h"
 #include "situationview.h"
 #include "situationprint.h"
 
+#include <QMainWindow>
+#include <QPushButton>
+
+class BoatsEngine;
 class SituationModel;
 class TrackWidget;
 
@@ -58,9 +60,10 @@ class MainWindow : public QMainWindow {
 
     public slots:
         // State management
-        void changeState(SceneState newState);
         void cleanState(bool state);
         void updateActions();
+        void enterCreateState();
+        void exitCreateState();
 
         // File actions
         void newTab();
@@ -82,37 +85,14 @@ class MainWindow : public QMainWindow {
         void exportAnimation();
 #endif
         // Track actions
-        void addTrack();
-        void addBoat();
-        void addMark();
-        void addPolyLine();
-        void addPoint();
-        void trimSail();
-        void autotrimSail();
-        void untrimSail();
-        void togglePortOverlap();
-        void toggleStarboardOverlap();
         void toggleFlag();
         void toggleAcceleration();
-        void toggleHidden();
-        void toggleText();
-        void toggleSpin();
-        void toggleMarkSide();
-        void toggleMarkArrow();
-        void toggleMarkZone();
         void setMarkColor();
-        void toggleLaylines();
-        void toggleMarkLabel();
         void editMarkLabel();
-        void deleteTrack();
-        void deleteModels();
         void setLookAt();
 
         // Animation actions
         void animate(bool state, bool interactive=true);
-        void play();
-        void pause(bool pause);
-        void stop();
         void loop(bool loop);
         void changeAnimationState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 
@@ -137,17 +117,14 @@ class MainWindow : public QMainWindow {
         void writeSettings();
         void readSettings();
         void updateRecentList();
-        bool maybeSave(SituationModel *situation);
+        bool maybeSave();
 
         // File methods
-        bool saveSituation(SituationModel *situation, QString name);
-        void setCurrentFile(SituationModel *situation, const QString &fileName);
+        bool saveSituation(QString name);
 
         // GraphicsView Framework
-        QList<SituationModel *> situationList;
         QList<SituationScene *> sceneList;
         QList<SituationView *> viewList;
-        int currentSituation;
         static const int maxRecent;
         QStringList recentList;
         QStringList fileList;
@@ -168,6 +145,8 @@ class MainWindow : public QMainWindow {
         QSlider *animationSlider;
         QTranslator *qtTranslator;
         QTranslator *translator;
+
+        BoatsEngine *engine;
 
         // QActions
         QAction *newFileAction;
@@ -194,6 +173,12 @@ class MainWindow : public QMainWindow {
         QAction *trimSailAction;
         QAction *autotrimSailAction;
         QAction *untrimSailAction;
+        QAction *trimJibAction;
+        QAction *autotrimJibAction;
+        QAction *untrimJibAction;
+        QAction *trimSpinAction;
+        QAction *autotrimSpinAction;
+        QAction *untrimSpinAction;
         QAction *togglePortOverlapAction;
         QAction *toggleStarboardOverlapAction;
         QAction *toggleHiddenAction;
