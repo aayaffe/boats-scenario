@@ -103,7 +103,7 @@ unix_deploy {
     icons.files = images/icons/*
     INSTALLS += icons
 
-    mimetype.path = $${PREFIX}/share/mime
+    mimetype.path = $${PREFIX}/share/mime/packages
     mimetype.files = resources/boats.xml
     INSTALLS += mimetype
 
