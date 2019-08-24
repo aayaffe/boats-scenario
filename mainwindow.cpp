@@ -66,7 +66,7 @@
 
 #include <iostream>
 
-#define VERSION "201307"
+#define VERSION "201908"
 
 extern int debugLevel;
 
