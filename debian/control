@@ -3,7 +3,7 @@ Section: x11
 Priority: optional
 Maintainer: Thibaut Gridel <tgridel@free.fr>
 Build-Depends: debhelper (>= 12), qtbase5-dev, qttools5-dev-tools, libgif-dev
-Standards-Version: 3.9.4
+Standards-Version: 4.4.0
 Vcs-Browser: https://sourceforge.net/p/boats/code/ci/debian/tree/
 Vcs-Git: https://git.code.sf.net/p/boats/code -b debian
 Homepage: http://boats.sf.net
