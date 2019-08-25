@@ -1,17 +1,17 @@
 Source: boats
 Section: x11
-Priority: extra
+Priority: optional
 Maintainer: Thibaut Gridel <tgridel@free.fr>
-Build-Depends: debhelper (>= 9), qtbase5-dev, qttools5-dev-tools, libgif-dev
+Build-Depends: debhelper (>= 12), qtbase5-dev, qttools5-dev-tools, libgif-dev
 Standards-Version: 3.9.4
-Vcs-Browser: https://sourceforge.net/p/boats/code/?branch=ref%2Fdebian
-Vcs-Git: git://git.code.sf.net/p/boats/code -b debian
+Vcs-Browser: https://sourceforge.net/p/boats/code/ci/debian/tree/
+Vcs-Git: https://git.code.sf.net/p/boats/code -b debian
 Homepage: http://boats.sf.net
 
 Package: boats
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: race scenario drawing tool 
+Description: race scenario drawing tool
  Boat Scenario is a drawing tool. It is your ideal companion for training
  sessions, rule learning, strategy explanations and more. It lets you make
  a presentation of a situation, describing the facts as you represent the
