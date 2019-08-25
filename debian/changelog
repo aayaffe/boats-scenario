@@ -3,8 +3,9 @@ boats (201908-1) UNRELEASED; urgency=medium
   * ACK'ing NMU. Thanks: Matthias Klose
   * New upstream release. Closes: #834409, #874833.
   * Updating debhelper.
+  * Fixing debian/control: lintian problems and Vcs-changes.
 
- -- Thibaut Gridel <tgridel@free.fr>  Sun, 25 Aug 2019 09:33:24 +0200
+ -- Thibaut Gridel <tgridel@free.fr>  Sun, 25 Aug 2019 09:36:12 +0200
 
 boats (201307-1.1) unstable; urgency=medium
 
